@@ -40,6 +40,18 @@
     <button class="button" onclick="openProfile()">Member Profile पूरा करें</button>
     <button class="button secondary" onclick="logout()">Logout</button>
   </div>
+  <div class="status" style="margin-top:18px">
+    <h3 style="color:#8b0000;margin-top:0">Member Services</h3>
+    <div class="dashgrid">
+      <div class="dashcard"><div>💳</div><b>₹365 Membership</b><span class="small">Payment बाद में भी कर सकते हैं</span><button class="button" style="margin-top:10px" onclick="startPayment()">Payment खोलें</button></div>
+      <div class="dashcard"><div>🔗</div><b>Referral</b><span class="small" id="referralCodeText">Code loading...</span><button class="button" style="margin-top:10px" onclick="copyReferral()">Link Copy करें</button></div>
+      <div class="dashcard"><div>🪪</div><b>Digital ID Card</b><span class="small">अपना verified ID Card खोलें</span><button class="button" style="margin-top:10px" onclick="openIdCard()">ID Card खोलें</button></div>
+      <div class="dashcard"><div>📱</div><b>QR Verification</b><span class="small">अपने ID का verification link</span><button class="button" style="margin-top:10px" onclick="openVerification()">Verify खोलें</button></div>
+      <div class="dashcard"><div>📜</div><b>Certificate</b><span class="small">उपलब्ध होने पर प्रमाण पत्र</span><button class="button" style="margin-top:10px" onclick="openCertificate()">खोलें</button></div>
+      <div class="dashcard"><div>🛟</div><b>Help & Support</b><span class="small">सदस्य सहायता</span><button class="button" style="margin-top:10px" onclick="openHelp()">सहायता</button></div>
+    </div>
+    <div id="dashboardServiceMsg" class="small" style="margin-top:10px"></div>
+  </div>
 </div>
 <div id="profileView" class="hidden"><div class="steps"><div class="step active" id="s1">1. Basic</div><div class="step" id="s2">2. Personal</div><div class="step" id="s3">3. Address</div><div class="step" id="s4">4. Membership</div></div><div id="appMessage"></div>
 <section id="step1"><h2>Step 1 — Basic Details</h2><p>यह चरण पूरा हो चुका है। आपका Login और Member ID सुरक्षित है।</p><div class="status" id="basicStatus"></div><div class="actions"><button class="button" onclick="goStep(2)">Step 2 पर जाएँ</button><button class="button secondary" onclick="logout()">Logout</button></div></section>
@@ -97,11 +109,54 @@ function updateDashboard(){
  $('profileProgress').style.width=pct+'%';
  $('profileHint').textContent=pct>=100?'Profile पूरी हो गई है।':'कुछ जानकारी बाकी है। आप जब चाहें Profile पूरा कर सकते हैं।';
  $('profilePopup').classList.toggle('hidden',pct>=100 || sessionStorage.getItem('sbpf_popup_seen')==='1');
+ if(window.dashboardData){
+   $('referralCodeText').textContent=dashboardData.referral_code?'Code: '+dashboardData.referral_code+' • Referrals: '+dashboardData.referral_count:'Referral code उपलब्ध नहीं';
+ }
+}
+let dashboardData=null;
+async function loadDashboardData(){
+ try{
+   const data=await rpc('get_my_member_dashboard',{});
+   dashboardData=Array.isArray(data)?data[0]:data;
+   if(dashboardData) updateDashboard();
+ }catch(e){ console.warn('dashboard data',e.message); }
+}
+async function copyReferral(){
+ if(!dashboardData?.referral_link){$('dashboardServiceMsg').textContent='Referral link अभी उपलब्ध नहीं है।';return}
+ try{await navigator.clipboard.writeText(dashboardData.referral_link);$('dashboardServiceMsg').textContent='Referral link copy हो गया।';}
+ catch(e){prompt('Referral link copy करें:',dashboardData.referral_link)}
+}
+function startPayment(){
+ $('dashboardServiceMsg').textContent='Membership fee ₹365 है। Payment बाद में भी कर सकते हैं। AtoPay gateway connection अभी configure किया जाना बाकी है; अभी कोई payment नहीं लिया गया है।';
+}
+function openVerification(){
+ if(!dashboardData?.verification_url){$('dashboardServiceMsg').textContent='Verification link अभी उपलब्ध नहीं है।';return}
+ window.open(dashboardData.verification_url,'_blank');
+}
+function openHelp(){
+ $('dashboardServiceMsg').textContent='सदस्य सहायता के लिए अपना Member ID और समस्या का विवरण सुरक्षित रखें।';
+ window.location.href='mailto:sbpf@swarnim.com?subject=SBPF Member Support '+encodeURIComponent(profile?.member_id||'');
+}
+async function openIdCard(){
+ try{
+   const data=await rpc('get_my_member_id_card_url',{});
+   const url=Array.isArray(data)?data[0]:data;
+   if(!url){$('dashboardServiceMsg').textContent='ID Card अभी उपलब्ध नहीं है।';return}
+   window.open(url,'_blank');
+ }catch(e){$('dashboardServiceMsg').textContent='ID Card खोलने में समस्या: '+e.message;}
+}
+async function openCertificate(){
+ try{
+   const data=await rpc('get_my_certificate',{});
+   if(!data || (Array.isArray(data)&&!data.length)){ $('dashboardServiceMsg').textContent='प्रमाण पत्र अभी उपलब्ध नहीं है।'; return; }
+   const token=accessToken;
+   window.open(SUPABASE_URL+'/functions/v1/member-certificate?access_token='+encodeURIComponent(token),'_blank');
+ }catch(e){$('dashboardServiceMsg').textContent='प्रमाण पत्र अभी उपलब्ध नहीं है।';}
 }
 function openProfile(){sessionStorage.setItem('sbpf_popup_seen','1');$('dashboardView').classList.add('hidden');$('profileView').classList.remove('hidden');goStep(profile.profile_completed?4:(profile.address||profile.father_name?3:2));}
 function closeProfile(){ $('profileView').classList.add('hidden');$('dashboardView').classList.remove('hidden');updateDashboard(); }
 function closePopup(){sessionStorage.setItem('sbpf_popup_seen','1');$('profilePopup').classList.add('hidden');}
-function showApp(){$('authBox').classList.add('hidden');$('loginBox').classList.add('hidden');$('appBox').classList.remove('hidden');$('memberIdBox').textContent='Member ID: '+(profile.member_id||'निर्माणाधीन');$('basicStatus').innerHTML='नाम: <b>'+esc(profile.full_name)+'</b><br>मोबाइल: <b>'+esc(profile.mobile)+'</b><br>Referral Code: <b>'+esc(profile.referral_code||'—')+'</b>';$('fatherName').value=profile.father_name||'';$('dob').value=profile.dob||'';$('gender').value=profile.gender||'';$('address').value=profile.address||'';$('district').value=profile.district||'';$('state').value=profile.state||'Uttar Pradesh';$('pincode').value=profile.pincode||'';$('payStatus').textContent=profile.payment_status||'pending';$('profileView').classList.add('hidden');$('dashboardView').classList.remove('hidden');updateDashboard();}
+function showApp(){$('authBox').classList.add('hidden');$('loginBox').classList.add('hidden');$('appBox').classList.remove('hidden');$('memberIdBox').textContent='Member ID: '+(profile.member_id||'निर्माणाधीन');$('basicStatus').innerHTML='नाम: <b>'+esc(profile.full_name)+'</b><br>मोबाइल: <b>'+esc(profile.mobile)+'</b><br>Referral Code: <b>'+esc(profile.referral_code||'—')+'</b>';$('fatherName').value=profile.father_name||'';$('dob').value=profile.dob||'';$('gender').value=profile.gender||'';$('address').value=profile.address||'';$('district').value=profile.district||'';$('state').value=profile.state||'Uttar Pradesh';$('pincode').value=profile.pincode||'';$('payStatus').textContent=profile.payment_status||'pending';$('profileView').classList.add('hidden');$('dashboardView').classList.remove('hidden');updateDashboard();loadDashboardData();}
 async function saveStep2(){clearMsg('appMessage');try{profile=await rpc('save_member_step2',{p_father_name:$('fatherName').value,p_dob:$('dob').value||null,p_gender:$('gender').value});msg('appMessage','Step 2 सुरक्षित हो गया।','success');updateDashboard();goStep(3)}catch(e){msg('appMessage',e.message,'error')}}
 async function saveStep3(){clearMsg('appMessage');try{profile=await rpc('save_member_step3',{p_address:$('address').value,p_district:$('district').value,p_state:$('state').value,p_pincode:$('pincode').value});msg('appMessage','Step 3 सुरक्षित हो गया।','success');updateDashboard();goStep(4)}catch(e){msg('appMessage',e.message,'error')}}
 async function finishProfile(){try{profile=await rpc('complete_member_profile',{});$('payStatus').textContent=profile.payment_status||'pending';msg('appMessage','Step 4 की जानकारी सुरक्षित है। Profile पूरी हो सकती है; Membership Payment आप बाद में भी कर सकते हैं।','success');updateDashboard()}catch(e){msg('appMessage',e.message,'error')}}
@@ -109,6 +164,7 @@ async function logout(){accessToken='';localStorage.removeItem('sbpf_access_toke
 $('authForm').addEventListener('submit',async e=>{e.preventDefault();clearMsg('message');const b=e.submitter||e.target.querySelector('button[type=submit]');const old=b.textContent;b.disabled=true;b.textContent='कृपया प्रतीक्षा करें...';try{const d=draft();if(!/^\d{10}$/.test(d.mobile)){msg('message','कृपया 10 अंकों का मोबाइल नंबर दें।','error');return}localStorage.setItem('sbpf_step1',JSON.stringify(d));const j=await authSignup(d.email,$('password').value,d);if(accessToken){if(await registerAfterLogin())await loadProfile()}else{msg('message','Account बन गया है। यदि email confirmation माँगा जाए तो email verify करें, फिर इसी पेज पर Login करके Step 1 पूरा करें।','success');$('authBox').classList.add('hidden');$('loginBox').classList.remove('hidden')}}catch(e){msg('message','तकनीकी समस्या: '+e.message,'error')}finally{b.disabled=false;b.textContent=old}});
 $('loginForm').addEventListener('submit',async e=>{e.preventDefault();clearMsg('loginMessage');const b=e.submitter||e.target.querySelector('button[type=submit]');const old=b.textContent;b.disabled=true;b.textContent='Login हो रहा है...';try{await authLogin($('loginEmail').value,$('loginPassword').value);if(localStorage.getItem('sbpf_step1'))await registerAfterLogin();if(!(await loadProfile()))msg('loginMessage','Member profile नहीं मिला। कृपया Step 1 से registration शुरू करें।','error')}catch(e){msg('loginMessage','तकनीकी समस्या: '+e.message,'error')}finally{b.disabled=false;b.textContent=old}});
 $('resendConfirm').onclick=async()=>{clearMsg('loginMessage');const email=$('loginEmail').value.trim();if(!email){msg('loginMessage','पहले अपना email लिखें।','error');return}try{await api('/auth/v1/resend',{type:'signup',email,options:{email_redirect_to:'https://swarnimbharatparivar.netlify.app/member'}},false);msg('loginMessage','Confirmation email फिर भेज दिया गया है। नया email खोलकर Confirm करें।','success')}catch(e){msg('loginMessage','Email भेजने में समस्या: '+e.message,'error')}};
+const urlReferral=new URLSearchParams(location.search).get('ref');if(urlReferral&&!$('referral').value)$('referral').value=urlReferral;
 $('showLogin').onclick=()=>{$('authBox').classList.add('hidden');$('loginBox').classList.remove('hidden')};
 $('showSignup').onclick=()=>{$('loginBox').classList.add('hidden');$('authBox').classList.remove('hidden')};
 setSystem('System तैयार है।','success');
