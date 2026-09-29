@@ -33,7 +33,7 @@
 .levelGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:14px}.levelCard{background:#fff;border-radius:12px;padding:18px;text-align:center;border:1px solid #eee}.levelIcon{width:52px;height:52px;border-radius:50%;margin:auto;background:linear-gradient(135deg,#66bb6a,#159447);color:#fff;display:grid;place-items:center;font-size:24px}.locked{background:#d9dddf!important;color:#777}.panelNote{margin-top:14px}
 @media(max-width:700px){.panelSide{width:155px;flex-basis:155px}.panelMain{padding:12px}.statsGrid{grid-template-columns:repeat(2,1fr)}.panelCards,.levelGrid{grid-template-columns:1fr}.panelSearch{max-width:none}.panelUser{display:none}.welcomeCard h2{font-size:20px}}
 @media(max-width:480px){.panelSide{width:125px;flex-basis:125px;padding:10px 6px}.panelNav button{font-size:11px;padding:8px 6px}.panelBrand{font-size:11px}.panelMain{padding:9px}.statsGrid{gap:7px}.statCard{padding:10px}.statCard strong{font-size:15px}.welcomeCard{padding:18px}}
-.categoryList{display:flex;flex-direction:column;gap:14px}.categoryBlock{background:#fff;border:1px solid #e7e7e7;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.04)}.categoryHead{display:flex;align-items:center;gap:12px;border-bottom:1px solid #eee;padding-bottom:12px}.categoryHead>span{width:44px;height:44px;border-radius:10px;background:#eaf7ec;display:grid;place-items:center;font-size:22px}.categoryHead b{display:block;color:#222;font-size:17px}.categoryHead small{color:#777}.subGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;padding-top:12px}.subItem{border:1px solid #dfe5e0;background:#f8fbf8;border-radius:8px;padding:10px;cursor:pointer;color:#315c39;font-size:12px}.subItem:hover{background:#e6f5e9}@media(max-width:600px){.subGrid{grid-template-columns:repeat(2,1fr)}}</style>
+.categoryList{display:flex;flex-direction:column;gap:14px}.categoryBlock{background:#fff;border:1px solid #e7e7e7;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.04)}.categoryHead{display:flex;align-items:center;gap:12px;border-bottom:1px solid #eee;padding-bottom:12px}.categoryHead>span{width:44px;height:44px;border-radius:10px;background:#eaf7ec;display:grid;place-items:center;font-size:22px}.categoryHead b{display:block;color:#222;font-size:17px}.categoryHead small{color:#777}.subGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;padding-top:12px}.subItem{border:1px solid #dfe5e0;background:#f8fbf8;border-radius:8px;padding:10px;cursor:pointer;color:#315c39;font-size:12px}.subItem:hover{background:#e6f5e9}@media(max-width:600px){.subGrid{grid-template-columns:repeat(2,1fr)}}.categoryList{display:flex;flex-direction:column;gap:9px}.mainCategory{width:100%;display:flex;align-items:center;gap:12px;border:1px solid #e5e7eb;background:#fff;border-radius:11px;padding:15px 16px;cursor:pointer;text-align:left;font-size:15px;color:#222;box-shadow:0 2px 7px rgba(0,0,0,.04)}.mainCategory b{flex:1}.mainCategory span{font-size:22px;color:#777}.subCategory{display:none;grid-template-columns:repeat(3,1fr);gap:9px;background:#f7faf7;border:1px solid #e5e7eb;border-top:0;border-radius:0 0 11px 11px;padding:10px;margin-top:-9px}.subCategory.open{display:grid}.subCategory button{border:1px solid #dce7de;background:#fff;border-radius:8px;padding:10px;cursor:pointer;color:#315c39;font-size:12px}.subCategory button:hover{background:#e8f5ea}@media(max-width:600px){.subCategory{grid-template-columns:repeat(2,1fr)}}</style>
 </head>
 <body>
 <header><h1>स्वर्णिम भारत परिवार फाउंडेशन</h1><div>सदस्य पंजीकरण</div></header>
@@ -85,48 +85,26 @@
     </div>
 
     <div class="categoryList">
-  <div class="categoryBlock">
-    <div class="categoryHead"><span>👤</span><div><b>Profile</b><small>सदस्य की सभी व्यक्तिगत जानकारी और KYC</small></div></div>
-    <div class="subGrid">
-      <button class="subItem" onclick="openProfile()">Personal Details</button>
-      <button class="subItem" onclick="openProfile()">Address Details</button>
-      <button class="subItem" onclick="openProfile()">Aadhaar & PAN</button>
-      <button class="subItem" onclick="openProfile()">KYC Verification</button>
-      <button class="subItem" onclick="openProfile()">Profile Edit</button>
-      <button class="subItem" onclick="openProfile()">Profile Completion</button>
-    </div>
-  </div>
-  <div class="categoryBlock">
-    <div class="categoryHead"><span>🪪</span><div><b>Member ID Card</b><small>डिजिटल पहचान और सत्यापन</small></div></div>
-    <div class="subGrid">
-      <button class="subItem" onclick="openIdCard()">Digital ID Card</button>
-      <button class="subItem" onclick="openVerification()">QR Verification</button>
-    </div>
-  </div>
-  <div class="categoryBlock">
-    <div class="categoryHead"><span>💳</span><div><b>Payment</b><small>सदस्यता भुगतान और स्थिति</small></div></div>
-    <div class="subGrid">
-      <button class="subItem" onclick="startPayment()">Membership ₹365</button>
-      <button class="subItem" onclick="startPayment()">Payment Status</button>
-      <button class="subItem" onclick="startPayment()">Payment History</button>
-    </div>
-  </div>
-  <div class="categoryBlock">
-    <div class="categoryHead"><span>📜</span><div><b>Certificate</b><small>सदस्य प्रमाण पत्र</small></div></div>
-    <div class="subGrid">
-      <button class="subItem" onclick="openCertificate()">View Certificate</button>
-      <button class="subItem" onclick="openCertificate()">Download Certificate</button>
-    </div>
-  </div>
-  <div class="categoryBlock">
-    <div class="categoryHead"><span>🌳</span><div><b>Volunteer Tree</b><small>रेफरल और स्वयंसेवक नेटवर्क</small></div></div>
-    <div class="subGrid">
-      <button class="subItem" onclick="panelComing('Volunteer Tree')">My Tree</button>
-      <button class="subItem" onclick="copyReferral()">Referral Link</button>
-      <button class="subItem" onclick="panelComing('Volunteer Levels')">Levels</button>
-      <button class="subItem" onclick="panelComing('Volunteer Team')">My Team</button>
-    </div>
-  </div>
+  <button class="mainCategory" onclick="toggleCategory('catProfile')">👤 <b>Profile</b><span>›</span></button>
+  <div id="catProfile" class="subCategory"><button onclick="openProfile()">Personal Details</button><button onclick="openProfile()">Address Details</button><button onclick="openProfile()">Aadhaar & PAN</button><button onclick="openProfile()">KYC Verification</button><button onclick="openProfile()">Edit Profile</button><button onclick="openProfile()">Profile Completion</button></div>
+
+  <button class="mainCategory" onclick="toggleCategory('catId')">🪪 <b>Member ID Card</b><span>›</span></button>
+  <div id="catId" class="subCategory"><button onclick="openIdCard()">Digital ID Card</button><button onclick="openVerification()">QR Verification</button></div>
+
+  <button class="mainCategory" onclick="toggleCategory('catPayment')">💳 <b>Payment</b><span>›</span></button>
+  <div id="catPayment" class="subCategory"><button onclick="startPayment()">Membership ₹365</button><button onclick="startPayment()">Payment Status</button><button onclick="startPayment()">Payment History</button></div>
+
+  <button class="mainCategory" onclick="toggleCategory('catCertificate')">📜 <b>Certificate</b><span>›</span></button>
+  <div id="catCertificate" class="subCategory"><button onclick="openCertificate()">View Certificate</button><button onclick="openCertificate()">Download Certificate</button></div>
+
+  <button class="mainCategory" onclick="toggleCategory('catVolunteer')">🌳 <b>Volunteer Tree</b><span>›</span></button>
+  <div id="catVolunteer" class="subCategory"><button onclick="panelComing('My Tree')">My Tree</button><button onclick="copyReferral()">Referral Link</button><button onclick="panelComing('Levels')">Levels</button><button onclick="panelComing('My Team')">My Team</button></div>
+
+  <button class="mainCategory" onclick="toggleCategory('catComplaint')">📝 <b>Complaint</b><span>›</span></button>
+  <div id="catComplaint" class="subCategory"><button onclick="panelComing('Department Complaint')">Department Complaint</button><button onclick="panelComing('Portal Complaint')">Portal Complaint</button><button onclick="panelComing('My Complaints')">My Complaints</button></div>
+
+  <button class="mainCategory" onclick="toggleCategory('catServices')">🏛️ <b>Services</b><span>›</span></button>
+  <div id="catServices" class="subCategory"><button onclick="panelComing('Lectures')">Lectures</button><button onclick="panelComing('Campaigns')">Campaigns</button><button onclick="panelComing('Government Schemes')">Govt Schemes</button><button onclick="panelComing('Legal Documents')">Legal Documents</button><button onclick="openHelp()">Help & Support</button></div>
 </div><div class="referralPanel"><b>🔗 Your Referral Link</b><div class="small">Share this link to invite new members.</div><div class="referralRow"><input id="referralPanelInput" readonly value=""><button class="panelBtn" onclick="copyReferral()">Copy Link</button></div></div>
 
     <h3 style="color:#333;margin:20px 0 6px">Volunteer Levels Progress</h3>
@@ -233,6 +211,7 @@ async function copyReferral(){
  catch(e){prompt('Referral link copy करें:',dashboardData.referral_link)}
 }
 
+function toggleCategory(id){document.querySelectorAll('.subCategory').forEach(x=>{if(x.id!==id)x.classList.remove('open')});const x=$(id);if(x)x.classList.toggle('open')}
 function panelHome(){ $('profileView').classList.add('hidden'); $('dashboardView').classList.remove('hidden'); updateDashboard(); }
 function panelComing(name){ showServiceMsg(name+' panel तैयार किया जा रहा है।'); }
 
