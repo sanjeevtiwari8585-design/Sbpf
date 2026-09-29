@@ -33,7 +33,7 @@
 .levelGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:14px}.levelCard{background:#fff;border-radius:12px;padding:18px;text-align:center;border:1px solid #eee}.levelIcon{width:52px;height:52px;border-radius:50%;margin:auto;background:linear-gradient(135deg,#66bb6a,#159447);color:#fff;display:grid;place-items:center;font-size:24px}.locked{background:#d9dddf!important;color:#777}.panelNote{margin-top:14px}
 @media(max-width:700px){.panelSide{width:155px;flex-basis:155px}.panelMain{padding:12px}.statsGrid{grid-template-columns:repeat(2,1fr)}.panelCards,.levelGrid{grid-template-columns:1fr}.panelSearch{max-width:none}.panelUser{display:none}.welcomeCard h2{font-size:20px}}
 @media(max-width:480px){.panelSide{width:125px;flex-basis:125px;padding:10px 6px}.panelNav button{font-size:11px;padding:8px 6px}.panelBrand{font-size:11px}.panelMain{padding:9px}.statsGrid{gap:7px}.statCard{padding:10px}.statCard strong{font-size:15px}.welcomeCard{padding:18px}}
-</style>
+.categoryList{display:flex;flex-direction:column;gap:14px}.categoryBlock{background:#fff;border:1px solid #e7e7e7;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.04)}.categoryHead{display:flex;align-items:center;gap:12px;border-bottom:1px solid #eee;padding-bottom:12px}.categoryHead>span{width:44px;height:44px;border-radius:10px;background:#eaf7ec;display:grid;place-items:center;font-size:22px}.categoryHead b{display:block;color:#222;font-size:17px}.categoryHead small{color:#777}.subGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;padding-top:12px}.subItem{border:1px solid #dfe5e0;background:#f8fbf8;border-radius:8px;padding:10px;cursor:pointer;color:#315c39;font-size:12px}.subItem:hover{background:#e6f5e9}@media(max-width:600px){.subGrid{grid-template-columns:repeat(2,1fr)}}</style>
 </head>
 <body>
 <header><h1>स्वर्णिम भारत परिवार फाउंडेशन</h1><div>सदस्य पंजीकरण</div></header>
@@ -84,16 +84,50 @@
       <div class="statCard"><span class="statIcon">♙</span><small>Current Status</small><strong id="dashStatus2">Pending</strong><div class="statLine"></div></div>
     </div>
 
-    <div class="panelCards">
-      <div class="panelCard"><div class="bigIcon">👤</div><h3>Personal Details</h3><p>View and manage your personal profile information.</p><button class="panelBtn" onclick="openProfile()">View Details</button></div>
-      <div class="panelCard"><div class="bigIcon">🛡</div><h3>KYC Details</h3><p>Complete and verify your KYC information.</p><button class="panelBtn" onclick="openProfile()">View KYC</button></div>
-      <div class="panelCard"><div class="bigIcon">◉</div><h3>Membership Payment</h3><p>Annual membership fee ₹365. Payment can be done later.</p><button class="panelBtn" onclick="startPayment()">Payment</button></div>
-      <div class="panelCard"><div class="bigIcon">🪪</div><h3>Digital ID Card</h3><p>View your member ID card.</p><button class="panelBtn" onclick="openIdCard()">View ID</button></div>
-      <div class="panelCard"><div class="bigIcon">📱</div><h3>QR Verification</h3><p>Open your secure member verification page.</p><button class="panelBtn" onclick="openVerification()">Verify</button></div>
-      <div class="panelCard"><div class="bigIcon">📜</div><h3>Certificate</h3><p>View certificate when available.</p><button class="panelBtn" onclick="openCertificate()">Certificate</button></div>
+    <div class="categoryList">
+  <div class="categoryBlock">
+    <div class="categoryHead"><span>👤</span><div><b>Profile</b><small>सदस्य की सभी व्यक्तिगत जानकारी और KYC</small></div></div>
+    <div class="subGrid">
+      <button class="subItem" onclick="openProfile()">Personal Details</button>
+      <button class="subItem" onclick="openProfile()">Address Details</button>
+      <button class="subItem" onclick="openProfile()">Aadhaar & PAN</button>
+      <button class="subItem" onclick="openProfile()">KYC Verification</button>
+      <button class="subItem" onclick="openProfile()">Profile Edit</button>
+      <button class="subItem" onclick="openProfile()">Profile Completion</button>
     </div>
-
-    <div class="referralPanel"><b>🔗 Your Referral Link</b><div class="small">Share this link to invite new members.</div><div class="referralRow"><input id="referralPanelInput" readonly value=""><button class="panelBtn" onclick="copyReferral()">Copy Link</button></div></div>
+  </div>
+  <div class="categoryBlock">
+    <div class="categoryHead"><span>🪪</span><div><b>Member ID Card</b><small>डिजिटल पहचान और सत्यापन</small></div></div>
+    <div class="subGrid">
+      <button class="subItem" onclick="openIdCard()">Digital ID Card</button>
+      <button class="subItem" onclick="openVerification()">QR Verification</button>
+    </div>
+  </div>
+  <div class="categoryBlock">
+    <div class="categoryHead"><span>💳</span><div><b>Payment</b><small>सदस्यता भुगतान और स्थिति</small></div></div>
+    <div class="subGrid">
+      <button class="subItem" onclick="startPayment()">Membership ₹365</button>
+      <button class="subItem" onclick="startPayment()">Payment Status</button>
+      <button class="subItem" onclick="startPayment()">Payment History</button>
+    </div>
+  </div>
+  <div class="categoryBlock">
+    <div class="categoryHead"><span>📜</span><div><b>Certificate</b><small>सदस्य प्रमाण पत्र</small></div></div>
+    <div class="subGrid">
+      <button class="subItem" onclick="openCertificate()">View Certificate</button>
+      <button class="subItem" onclick="openCertificate()">Download Certificate</button>
+    </div>
+  </div>
+  <div class="categoryBlock">
+    <div class="categoryHead"><span>🌳</span><div><b>Volunteer Tree</b><small>रेफरल और स्वयंसेवक नेटवर्क</small></div></div>
+    <div class="subGrid">
+      <button class="subItem" onclick="panelComing('Volunteer Tree')">My Tree</button>
+      <button class="subItem" onclick="copyReferral()">Referral Link</button>
+      <button class="subItem" onclick="panelComing('Volunteer Levels')">Levels</button>
+      <button class="subItem" onclick="panelComing('Volunteer Team')">My Team</button>
+    </div>
+  </div>
+</div><div class="referralPanel"><b>🔗 Your Referral Link</b><div class="small">Share this link to invite new members.</div><div class="referralRow"><input id="referralPanelInput" readonly value=""><button class="panelBtn" onclick="copyReferral()">Copy Link</button></div></div>
 
     <h3 style="color:#333;margin:20px 0 6px">Volunteer Levels Progress</h3>
     <div class="levelGrid">
