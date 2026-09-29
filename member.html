@@ -1,166 +1,45 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>सदस्य पंजीकरण | स्वर्णिम भारत परिवार फाउंडेशन</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f7fa;color:#222}
-header{background:linear-gradient(135deg,#8b0000,#d4af37);color:#fff;text-align:center;padding:22px 15px}
-.wrap{max-width:760px;margin:25px auto;padding:0 15px}.box{background:#fff;border-radius:12px;padding:25px;box-shadow:0 4px 18px rgba(0,0,0,.09)}
-h1{font-size:25px;margin:0 0 6px}h2{color:#8b0000;margin-top:0}
-.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:0 0 25px}.step{padding:10px 5px;text-align:center;border-radius:8px;background:#eee;font-size:13px}.step.active{background:#8b0000;color:#fff}.step.done{background:#d4af37;color:#111}
-label{display:block;font-weight:bold;margin:13px 0 6px}input,select,textarea{width:100%;padding:12px;border:1px solid #ccc;border-radius:7px;font-size:15px}textarea{min-height:90px;resize:vertical}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.actions{display:flex;gap:10px;margin-top:22px}.button{border:0;cursor:pointer;background:#8b0000;color:#fff;padding:12px 20px;border-radius:7px;font-weight:bold}.secondary{background:#555}.hidden{display:none}.msg{padding:11px;border-radius:7px;margin:12px 0;background:#fff8e1}.error{background:#ffebee;color:#b00020}.success{background:#e8f5e9;color:#1b5e20}.memberid{font-size:22px;font-weight:bold;color:#8b0000;text-align:center;padding:15px;background:#fff8e1;border-radius:8px}
-.small{font-size:13px;color:#666}.link{color:#8b0000;font-weight:bold;cursor:pointer}.status{margin-top:12px;padding:12px;background:#f7f7f7;border-radius:8px}
-@media(max-width:600px){.row{grid-template-columns:1fr}.steps{font-size:11px}.box{padding:18px}}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f7fa;color:#222}.wrap{max-width:760px;margin:25px auto;padding:0 15px}.box{background:#fff;border-radius:12px;padding:25px;box-shadow:0 4px 18px rgba(0,0,0,.09)}header{background:linear-gradient(135deg,#8b0000,#d4af37);color:#fff;text-align:center;padding:22px 15px}h1{font-size:25px;margin:0 0 6px}h2{color:#8b0000;margin-top:0}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:0 0 25px}.step{padding:10px 5px;text-align:center;border-radius:8px;background:#eee;font-size:13px}.step.active{background:#8b0000;color:#fff}.step.done{background:#d4af37;color:#111}label{display:block;font-weight:bold;margin:13px 0 6px}input,select,textarea{width:100%;padding:12px;border:1px solid #ccc;border-radius:7px;font-size:15px}textarea{min-height:90px}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.actions{display:flex;gap:10px;margin-top:22px}.button{border:0;cursor:pointer;background:#8b0000;color:#fff;padding:12px 20px;border-radius:7px;font-weight:bold}.secondary{background:#555}.hidden{display:none}.msg{padding:11px;border-radius:7px;margin:12px 0;background:#fff8e1}.error{background:#ffebee;color:#b00020}.success{background:#e8f5e9;color:#1b5e20}.memberid{font-size:22px;font-weight:bold;color:#8b0000;text-align:center;padding:15px;background:#fff8e1;border-radius:8px}.small{font-size:13px;color:#666}.link{color:#8b0000;font-weight:bold;cursor:pointer}.status{margin-top:12px;padding:12px;background:#f7f7f7;border-radius:8px}@media(max-width:600px){.row{grid-template-columns:1fr}.steps{font-size:11px}.box{padding:18px}}
 </style>
 </head>
 <body>
 <header><h1>स्वर्णिम भारत परिवार फाउंडेशन</h1><div>सदस्य पंजीकरण</div></header>
-<div class="wrap">
-<div class="box">
-<div id="authBox">
-<h2 id="authTitle">नया सदस्य पंजीकरण</h2>
-<p class="small">पहले चरण में Login account और Member ID बनाया जाएगा। बाकी चरण बाद में Login करके पूरे किए जा सकते हैं।</p>
-<div id="message"></div>
-<form id="authForm">
-<label>पूरा नाम *</label><input id="fullName" required>
-<label>मोबाइल नंबर *</label><input id="mobile" inputmode="numeric" maxlength="10" required>
-<label>ईमेल *</label><input id="email" type="email" required>
-<label>पासवर्ड *</label><input id="password" type="password" minlength="6" required>
-<label>Referral Code (यदि हो)</label><input id="referral">
-<div class="actions"><button class="button" type="submit">Step 1 पूरा करें</button></div>
-</form>
-<p class="small">पहले से सदस्य हैं? <span class="link" id="showLogin">Login करें</span></p>
-</div>
-
-<div id="loginBox" class="hidden">
-<h2>Member Login</h2><div id="loginMessage"></div>
-<form id="loginForm">
-<label>ईमेल *</label><input id="loginEmail" type="email" required>
-<label>पासवर्ड *</label><input id="loginPassword" type="password" required>
-<div class="actions"><button class="button" type="submit">Login</button></div>
-</form>
-<p class="small">नया सदस्य? <span class="link" id="showSignup">पंजीकरण शुरू करें</span></p>
-</div>
-
-<div id="appBox" class="hidden">
-<div class="memberid" id="memberIdBox"></div>
-<div class="steps">
-<div class="step active" id="s1">1. Basic</div><div class="step" id="s2">2. Personal</div><div class="step" id="s3">3. Address</div><div class="step" id="s4">4. Membership</div>
-</div>
-<div id="appMessage"></div>
-
+<div class="wrap"><div class="box">
+<div id="authBox"><h2>नया सदस्य पंजीकरण</h2><p class="small">पहले चरण में Login account और Member ID बनाया जाएगा। बाकी चरण बाद में Login करके पूरे किए जा सकते हैं।</p><div id="message"></div>
+<form id="authForm"><label>पूरा नाम *</label><input id="fullName" required><label>मोबाइल नंबर *</label><input id="mobile" inputmode="numeric" maxlength="10" required><label>ईमेल *</label><input id="email" type="email" required><label>पासवर्ड *</label><input id="password" type="password" minlength="6" required><label>Referral Code (यदि हो)</label><input id="referral"><div class="actions"><button class="button" type="submit">Step 1 पूरा करें</button></div></form>
+<p class="small">पहले से सदस्य हैं? <span class="link" id="showLogin">Login करें</span></p></div>
+<div id="loginBox" class="hidden"><h2>Member Login</h2><div id="loginMessage"></div><form id="loginForm"><label>ईमेल *</label><input id="loginEmail" type="email" required><label>पासवर्ड *</label><input id="loginPassword" type="password" required><div class="actions"><button class="button" type="submit">Login</button></div></form><p class="small">नया सदस्य? <span class="link" id="showSignup">पंजीकरण शुरू करें</span></p></div>
+<div id="appBox" class="hidden"><div class="memberid" id="memberIdBox"></div><div class="steps"><div class="step active" id="s1">1. Basic</div><div class="step" id="s2">2. Personal</div><div class="step" id="s3">3. Address</div><div class="step" id="s4">4. Membership</div></div><div id="appMessage"></div>
 <section id="step1"><h2>Step 1 — Basic Details</h2><p>यह चरण पूरा हो चुका है। आपका Login और Member ID सुरक्षित है।</p><div class="status" id="basicStatus"></div><div class="actions"><button class="button" onclick="goStep(2)">Step 2 पर जाएँ</button><button class="button secondary" onclick="logout()">Logout</button></div></section>
-
-<section id="step2" class="hidden"><h2>Step 2 — Personal Details</h2>
-<label>पिता / अभिभावक का नाम</label><input id="fatherName">
-<div class="row"><div><label>जन्म तिथि</label><input id="dob" type="date"></div><div><label>लिंग</label><select id="gender"><option value="">चुनें</option><option>पुरुष</option><option>महिला</option><option>अन्य</option></select></div></div>
-<div class="actions"><button class="button secondary" onclick="goStep(1)">पिछला</button><button class="button" onclick="saveStep2()">Save & Step 3</button></div></section>
-
-<section id="step3" class="hidden"><h2>Step 3 — Address & KYC</h2>
-<label>पूरा पता</label><textarea id="address"></textarea>
-<div class="row"><div><label>जिला</label><input id="district"></div><div><label>राज्य</label><input id="state" value="Uttar Pradesh"></div></div>
-<label>पिन कोड</label><input id="pincode" inputmode="numeric" maxlength="6">
-<p class="small">Aadhaar/PAN document upload को अगली सुरक्षित KYC storage setup के साथ जोड़ा जाएगा। अभी कोई document यहाँ upload न करें।</p>
-<div class="actions"><button class="button secondary" onclick="goStep(2)">पिछला</button><button class="button" onclick="saveStep3()">Save & Step 4</button></div></section>
-
-<section id="step4" class="hidden"><h2>Step 4 — Membership & Payment</h2>
-<p>आपकी सदस्यता अभी <b>Pending</b> है। Payment पूरा होने और आवश्यक verification के बाद membership active की जाएगी।</p>
-<div class="status">Membership type: Annual<br>Payment status: <b id="payStatus">Pending</b></div>
-<p class="small">Payment gateway को जोड़ने के बाद इसी चरण में सुरक्षित payment button आएगा। अभी कोई payment न करें।</p>
-<div class="actions"><button class="button secondary" onclick="goStep(3)">पिछला</button><button class="button" onclick="finishProfile()">Step 4 Save करें</button></div></section>
-</div>
-</div>
-</div>
-
+<section id="step2" class="hidden"><h2>Step 2 — Personal Details</h2><label>पिता / अभिभावक का नाम</label><input id="fatherName"><div class="row"><div><label>जन्म तिथि</label><input id="dob" type="date"></div><div><label>लिंग</label><select id="gender"><option value="">चुनें</option><option>पुरुष</option><option>महिला</option><option>अन्य</option></select></div></div><div class="actions"><button class="button secondary" onclick="goStep(1)">पिछला</button><button class="button" onclick="saveStep2()">Save & Step 3</button></div></section>
+<section id="step3" class="hidden"><h2>Step 3 — Address & KYC</h2><label>पूरा पता</label><textarea id="address"></textarea><div class="row"><div><label>जिला</label><input id="district"></div><div><label>राज्य</label><input id="state" value="Uttar Pradesh"></div></div><label>पिन कोड</label><input id="pincode" inputmode="numeric" maxlength="6"><p class="small">Aadhaar/PAN document upload को अगली सुरक्षित KYC storage setup के साथ जोड़ा जाएगा। अभी कोई document यहाँ upload न करें।</p><div class="actions"><button class="button secondary" onclick="goStep(2)">पिछला</button><button class="button" onclick="saveStep3()">Save & Step 4</button></div></section>
+<section id="step4" class="hidden"><h2>Step 4 — Membership & Payment</h2><p>आपकी सदस्यता अभी <b>Pending</b> है। Payment पूरा होने और आवश्यक verification के बाद membership active की जाएगी।</p><div class="status">Membership type: Annual<br>Payment status: <b id="payStatus">Pending</b></div><p class="small">Payment gateway को जोड़ने के बाद इसी चरण में सुरक्षित payment button आएगा। अभी कोई payment न करें।</p><div class="actions"><button class="button secondary" onclick="goStep(3)">पिछला</button><button class="button" onclick="finishProfile()">Step 4 Save करें</button></div></section>
+</div></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL='https://dxowhzghrdghfzoggorx.supabase.co';
 const SUPABASE_KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
-const supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let profile=null;
-
+const supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);let profile=null;
 const $=id=>document.getElementById(id);
 function msg(id,text,type='msg'){ $(id).innerHTML='<div class="'+type+'">'+text+'</div>'; }
 function clearMsg(id){$(id).innerHTML='';}
 function draft(){return {fullName:$('fullName').value.trim(),mobile:$('mobile').value.trim(),email:$('email').value.trim(),referral:$('referral').value.trim()};}
-
-async function registerAfterLogin(){
- const d=JSON.parse(localStorage.getItem('sbpf_step1')||'null');
- if(!d)return false;
- const {data,error}=await supabase.rpc('register_my_member',{p_full_name:d.fullName,p_mobile:d.mobile,p_address:'',p_district:'',p_state:'Uttar Pradesh',p_referral_code:d.referral||null});
- if(error){msg('message',error.message,'error');return false}
- localStorage.removeItem('sbpf_step1');
- profile=data;
- return true;
-}
-async function loadProfile(){
- const {data,error}=await supabase.rpc('get_my_member_profile');
- if(error||!data){return false}
- profile=Array.isArray(data)?data[0]:data;
- showApp();
- return true;
-}
-function showApp(){
- $('authBox').classList.add('hidden');$('loginBox').classList.add('hidden');$('appBox').classList.remove('hidden');
- $('memberIdBox').textContent='Member ID: '+(profile.member_id||'निर्माणाधीन');
- $('basicStatus').innerHTML='नाम: <b>'+esc(profile.full_name)+'</b><br>मोबाइल: <b>'+esc(profile.mobile)+'</b><br>Referral Code: <b>'+esc(profile.referral_code||'—')+'</b>';
- $('fatherName').value=profile.father_name||'';$('dob').value=profile.dob||'';$('gender').value=profile.gender||'';
- $('address').value=profile.address||'';$('district').value=profile.district||'';$('state').value=profile.state||'Uttar Pradesh';$('pincode').value=profile.pincode||'';
- $('payStatus').textContent=profile.payment_status||'pending';
- let step=profile.profile_completed?4:(profile.address||profile.father_name?3:2);goStep(step);
-}
+async function registerAfterLogin(){const d=JSON.parse(localStorage.getItem('sbpf_step1')||'null');if(!d)return false;const {data,error}=await supabase.rpc('register_my_member',{p_full_name:d.fullName,p_mobile:d.mobile,p_address:'',p_district:'',p_state:'Uttar Pradesh',p_referral_code:d.referral||null});if(error){msg('message',error.message,'error');return false}localStorage.removeItem('sbpf_step1');profile=data;return true;}
+async function loadProfile(){const {data,error}=await supabase.rpc('get_my_member_profile');if(error||!data)return false;profile=Array.isArray(data)?data[0]:data;showApp();return true;}
+function showApp(){$('authBox').classList.add('hidden');$('loginBox').classList.add('hidden');$('appBox').classList.remove('hidden');$('memberIdBox').textContent='Member ID: '+(profile.member_id||'निर्माणाधीन');$('basicStatus').innerHTML='नाम: <b>'+esc(profile.full_name)+'</b><br>मोबाइल: <b>'+esc(profile.mobile)+'</b><br>Referral Code: <b>'+esc(profile.referral_code||'—')+'</b>';$('fatherName').value=profile.father_name||'';$('dob').value=profile.dob||'';$('gender').value=profile.gender||'';$('address').value=profile.address||'';$('district').value=profile.district||'';$('state').value=profile.state||'Uttar Pradesh';$('pincode').value=profile.pincode||'';$('payStatus').textContent=profile.payment_status||'pending';let step=profile.profile_completed?4:(profile.address||profile.father_name?3:2);goStep(step);}
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
-function goStep(n){
- [1,2,3,4].forEach(i=>{$('step'+i).classList.toggle('hidden',i!==n);$('s'+i).classList.toggle('active',i===n);$('s'+i).classList.toggle('done',i<n)});
-}
-async function saveStep2(){
- clearMsg('appMessage');
- const {data,error}=await supabase.rpc('save_member_step2',{p_father_name:$('fatherName').value,p_dob:$('dob').value||null,p_gender:$('gender').value});
- if(error){msg('appMessage',error.message,'error');return}
- profile=data;msg('appMessage','Step 2 सुरक्षित हो गया।','success');goStep(3);
-}
-async function saveStep3(){
- clearMsg('appMessage');
- const {data,error}=await supabase.rpc('save_member_step3',{p_address:$('address').value,p_district:$('district').value,p_state:$('state').value,p_pincode:$('pincode').value});
- if(error){msg('appMessage',error.message,'error');return}
- profile=data;msg('appMessage','Step 3 सुरक्षित हो गया।','success');goStep(4);
-}
-async function finishProfile(){
- const {data,error}=await supabase.rpc('complete_member_profile');
- if(error){msg('appMessage',error.message,'error');return}
- profile=data;$('payStatus').textContent=profile.payment_status||'pending';
- msg('appMessage','Step 4 की जानकारी सुरक्षित है। Payment/verification के बाद membership active होगी।','success');
-}
-async function logout(){await supabase.auth.signOut();location.reload()}
-
-$('authForm').addEventListener('submit',async e=>{
- e.preventDefault();clearMsg('message');
- const d=draft();if(!/^\\d{10}$/.test(d.mobile)){msg('message','कृपया 10 अंकों का मोबाइल नंबर दें।','error');return}
- localStorage.setItem('sbpf_step1',JSON.stringify(d));
- const {data,error}=await supabase.auth.signUp({email:d.email,password:$('password').value,options:{data:{full_name:d.fullName,mobile:d.mobile}}});
- if(error){msg('message',error.message,'error');return}
- if(data.session){
-   if(await registerAfterLogin()) await loadProfile();
- }else{
-   msg('message','Account बन गया है। यदि email confirmation माँगा जाए तो email verify करें, फिर इसी पेज पर Login करके Step 1 पूरा करें।','success');
-   $('authBox').classList.add('hidden');$('loginBox').classList.remove('hidden');
- }
-});
-$('loginForm').addEventListener('submit',async e=>{
- e.preventDefault();clearMsg('loginMessage');
- const {error}=await supabase.auth.signInWithPassword({email:$('loginEmail').value,password:$('loginPassword').value});
- if(error){msg('loginMessage',error.message,'error');return}
- const hadDraft=localStorage.getItem('sbpf_step1');
- if(hadDraft) await registerAfterLogin();
- if(!(await loadProfile())) msg('loginMessage','Member profile नहीं मिला। कृपया Step 1 से registration शुरू करें।','error');
-});
-$('showLogin').onclick=()=>{$('authBox').classList.add('hidden');$('loginBox').classList.remove('hidden')};
-$('showSignup').onclick=()=>{$('loginBox').classList.add('hidden');$('authBox').classList.remove('hidden')};
-
+function goStep(n){[1,2,3,4].forEach(i=>{$('step'+i).classList.toggle('hidden',i!==n);$('s'+i).classList.toggle('active',i===n);$('s'+i).classList.toggle('done',i<n);});}
+async function saveStep2(){clearMsg('appMessage');const {data,error}=await supabase.rpc('save_member_step2',{p_father_name:$('fatherName').value,p_dob:$('dob').value||null,p_gender:$('gender').value});if(error){msg('appMessage',error.message,'error');return}profile=data;msg('appMessage','Step 2 सुरक्षित हो गया।','success');goStep(3);}
+async function saveStep3(){clearMsg('appMessage');const {data,error}=await supabase.rpc('save_member_step3',{p_address:$('address').value,p_district:$('district').value,p_state:$('state').value,p_pincode:$('pincode').value});if(error){msg('appMessage',error.message,'error');return}profile=data;msg('appMessage','Step 3 सुरक्षित हो गया।','success');goStep(4);}
+async function finishProfile(){const {data,error}=await supabase.rpc('complete_member_profile');if(error){msg('appMessage',error.message,'error');return}profile=data;$('payStatus').textContent=profile.payment_status||'pending';msg('appMessage','Step 4 की जानकारी सुरक्षित है। Payment/verification के बाद membership active होगी।','success');}
+async function logout(){await supabase.auth.signOut();location.reload();}
+$('authForm').addEventListener('submit',async e=>{e.preventDefault();clearMsg('message');const d=draft();if(!/^\d{10}$/.test(d.mobile)){msg('message','कृपया 10 अंकों का मोबाइल नंबर दें।','error');return}localStorage.setItem('sbpf_step1',JSON.stringify(d));const {data,error}=await supabase.auth.signUp({email:d.email,password:$('password').value,options:{data:{full_name:d.fullName,mobile:d.mobile}}});if(error){msg('message',error.message,'error');return}if(data.session){if(await registerAfterLogin())await loadProfile();}else{msg('message','Account बन गया है। यदि email confirmation माँगा जाए तो email verify करें, फिर इसी पेज पर Login करके Step 1 पूरा करें।','success');$('authBox').classList.add('hidden');$('loginBox').classList.remove('hidden');}});
+$('loginForm').addEventListener('submit',async e=>{e.preventDefault();clearMsg('loginMessage');const {error}=await supabase.auth.signInWithPassword({email:$('loginEmail').value,password:$('loginPassword').value});if(error){msg('loginMessage',error.message,'error');return}if(localStorage.getItem('sbpf_step1'))await registerAfterLogin();if(!(await loadProfile()))msg('loginMessage','Member profile नहीं मिला। कृपया Step 1 से registration शुरू करें।','error');});
+$('showLogin').onclick=()=>{$('authBox').classList.add('hidden');$('loginBox').classList.remove('hidden')};$('showSignup').onclick=()=>{$('loginBox').classList.add('hidden');$('authBox').classList.remove('hidden')};
 (async()=>{const {data:{session}}=await supabase.auth.getSession();if(session){if(localStorage.getItem('sbpf_step1'))await registerAfterLogin();await loadProfile();}})();
-</script>
-</body>
-</html>
+</script></body></html>
