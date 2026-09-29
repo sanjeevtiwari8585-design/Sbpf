@@ -107,7 +107,23 @@
 </div><div id="profileView" class="hidden"><div class="steps"><div class="step active" id="s1">1. Basic</div><div class="step" id="s2">2. Personal</div><div class="step" id="s3">3. Address</div><div class="step" id="s4">4. Membership</div></div><div id="appMessage"></div>
 <section id="step1"><h2>Step 1 — Basic Details</h2><p>यह चरण पूरा हो चुका है। आपका Login और Member ID सुरक्षित है।</p><div class="status" id="basicStatus"></div><div class="actions"><button class="button" onclick="goStep(2)">Step 2 पर जाएँ</button><button class="button secondary" onclick="logout()">Logout</button></div></section>
 <section id="step2" class="hidden"><h2>Step 2 — Personal Details</h2><label>पिता / अभिभावक का नाम</label><input id="fatherName"><div class="row"><div><label>जन्म तिथि</label><input id="dob" type="date"></div><div><label>लिंग</label><select id="gender"><option value="">चुनें</option><option>पुरुष</option><option>महिला</option><option>अन्य</option></select></div></div><div class="actions"><button class="button secondary" onclick="goStep(1)">पिछला</button><button class="button" onclick="saveStep2()">Save & Step 3</button></div></section>
-<section id="step3" class="hidden"><h2>Step 3 — Address & KYC</h2><label>पूरा पता</label><textarea id="address"></textarea><div class="row"><div><label>जिला</label><input id="district"></div><div><label>राज्य</label><input id="state" value="Uttar Pradesh"></div></div><label>पिन कोड</label><input id="pincode" inputmode="numeric" maxlength="6"><p class="small">Aadhaar/PAN document upload को अगली सुरक्षित KYC storage setup के साथ जोड़ा जाएगा। अभी कोई document यहाँ upload न करें।</p><div class="actions"><button class="button secondary" onclick="goStep(2)">पिछला</button><button class="button" onclick="saveStep3()">Save & Step 4</button></div></section>
+<section id="step3" class="hidden"><h2>Step 3 — Address & KYC</h2><label>पूरा पता</label><textarea id="address"></textarea><div class="row"><div><label>जिला</label><input id="district"></div><div><label>राज्य</label><input id="state" value="Uttar Pradesh"></div></div><label>पिन कोड</label><input id="pincode" inputmode="numeric" maxlength="6"><div class="status" style="margin-top:16px">
+<h3 style="color:#8b0000;margin-top:0">KYC Verification</h3>
+<p class="small">Aadhaar और PAN की फोटो/स्कैन यहाँ सुरक्षित रूप से जमा करें। JPG, PNG या PDF • अधिकतम 5 MB.</p>
+<div class="row">
+  <div>
+    <label>Aadhaar Document</label>
+    <input id="aadhaarFile" type="file" accept="image/jpeg,image/png,application/pdf">
+    <button class="button" style="margin-top:8px" onclick="uploadKyc('aadhaar')">Aadhaar Upload</button>
+  </div>
+  <div>
+    <label>PAN Document</label>
+    <input id="panFile" type="file" accept="image/jpeg,image/png,application/pdf">
+    <button class="button" style="margin-top:8px" onclick="uploadKyc('pan')">PAN Upload</button>
+  </div>
+</div>
+<div id="kycStatus" class="msg" style="margin-top:12px">KYC Status: <b>profile?.kyc_status||"Pending"</b></div>
+</div><div class="actions"><button class="button secondary" onclick="goStep(2)">पिछला</button><button class="button" onclick="saveStep3()">Save & Step 4</button></div></section>
 <section id="step4" class="hidden"><h2>Step 4 — Membership Details</h2><p>यह Step 4 की जानकारी सुरक्षित करने के लिए है। <b>Membership Payment अभी करना जरूरी नहीं है।</b> आप profile के सभी 4 steps पूरे करके बाद में भी payment कर सकते हैं।</p><div class="status">Membership type: Annual<br>Payment status: <b id="payStatus">Pending</b></div><p class="small">Payment gateway (AtoPay) जोड़ने के बाद Dashboard से भी सुरक्षित payment किया जा सकेगा। जब तक payment नहीं होता, membership status Pending रहेगा।</p><div class="actions"><button class="button secondary" onclick="goStep(3)">पिछला</button><button class="button" onclick="finishProfile()">Step 4 Save करें • Payment बाद में</button></div></section>
 </div>
 </div>
@@ -221,6 +237,25 @@ function openProfile(){sessionStorage.setItem('sbpf_popup_seen','1');$('dashboar
 function closeProfile(){ $('profileView').classList.add('hidden');$('dashboardView').classList.remove('hidden');updateDashboard(); }
 function closePopup(){sessionStorage.setItem('sbpf_popup_seen','1');$('profilePopup').classList.add('hidden');}
 function showApp(){$('authBox').classList.add('hidden');$('loginBox').classList.add('hidden');$('appBox').classList.remove('hidden');$('memberIdBox').textContent='Member ID: '+(profile.member_id||'निर्माणाधीन');$('basicStatus').innerHTML='नाम: <b>'+esc(profile.full_name)+'</b><br>मोबाइल: <b>'+esc(profile.mobile)+'</b><br>Referral Code: <b>'+esc(profile.referral_code||'—')+'</b>';$('fatherName').value=profile.father_name||'';$('dob').value=profile.dob||'';$('gender').value=profile.gender||'';$('address').value=profile.address||'';$('district').value=profile.district||'';$('state').value=profile.state||'Uttar Pradesh';$('pincode').value=profile.pincode||'';$('payStatus').textContent=profile.payment_status||'pending';$('profileView').classList.add('hidden');$('dashboardView').classList.remove('hidden');updateDashboard();loadDashboardData();}
+async function uploadKyc(kind){
+  const input=$(kind==='aadhaar'?'aadhaarFile':'panFile');
+  const file=input?.files?.[0];
+  if(!file){msg('appMessage','पहले '+(kind==='aadhaar'?'Aadhaar':'PAN')+' document चुनें।','error');return}
+  if(file.size>5*1024*1024){msg('appMessage','File 5 MB से छोटी होनी चाहिए।','error');return}
+  const allowed=['image/jpeg','image/png','application/pdf'];
+  if(!allowed.includes(file.type)){msg('appMessage','केवल JPG, PNG या PDF file मान्य है।','error');return}
+  const fd=new FormData();fd.append('document_type',kind);fd.append('file',file);
+  try{
+    msg('appMessage',(kind==='aadhaar'?'Aadhaar':'PAN')+' upload हो रहा है...','msg');
+    const r=await fetch(SUPABASE_URL+'/functions/v1/kyc-upload',{method:'POST',headers:{'Authorization':'Bearer '+accessToken,'apikey':SUPABASE_KEY},body:fd});
+    const t=await r.text();
+    if(!r.ok)throw new Error(t||'Upload failed');
+    profile=await rpc('get_my_member_profile',{});
+    profile=Array.isArray(profile)?profile[0]:profile;
+    $('kycStatus').innerHTML='KYC Status: <b>'+(profile?.kyc_status||'submitted')+'</b>';
+    msg('appMessage',(kind==='aadhaar'?'Aadhaar':'PAN')+' सुरक्षित रूप से जमा हो गया। KYC verification admin द्वारा की जाएगी।','success');
+  }catch(e){msg('appMessage','Upload में समस्या: '+e.message,'error')}
+}
 async function saveStep2(){clearMsg('appMessage');try{profile=await rpc('save_member_step2',{p_father_name:$('fatherName').value,p_dob:$('dob').value||null,p_gender:$('gender').value});msg('appMessage','Step 2 सुरक्षित हो गया।','success');updateDashboard();goStep(3)}catch(e){msg('appMessage',e.message,'error')}}
 async function saveStep3(){clearMsg('appMessage');try{profile=await rpc('save_member_step3',{p_address:$('address').value,p_district:$('district').value,p_state:$('state').value,p_pincode:$('pincode').value});msg('appMessage','Step 3 सुरक्षित हो गया।','success');updateDashboard();goStep(4)}catch(e){msg('appMessage',e.message,'error')}}
 async function finishProfile(){try{profile=await rpc('complete_member_profile',{});$('payStatus').textContent=profile.payment_status||'pending';msg('appMessage','Step 4 की जानकारी सुरक्षित है। Profile पूरी हो सकती है; Membership Payment आप बाद में भी कर सकते हैं।','success');updateDashboard()}catch(e){msg('appMessage',e.message,'error')}}
