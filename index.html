@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Swarnim Bharat Parivar Foundation</title>
-  <meta name="description" content="Swarnim Bharat Parivar Foundation - सेवा, सहयोग, स्वावलंबन और सशक्तिकरण के लिए समर्पित सामाजिक संगठन।">
+  <link rel="icon" id="sbpfFavicon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Ccircle cx=%2232%22 cy=%2232%22 r=%2230%22 fill=%22%23d4af37%22/%3E%3C/svg%3E"><meta name="description" content="Swarnim Bharat Parivar Foundation - सेवा, सहयोग, स्वावलंबन और सशक्तिकरण के लिए समर्पित सामाजिक संगठन।">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: Arial, sans-serif; background: #f5f7fa; color: #222; line-height: 1.6; }
@@ -36,9 +36,32 @@
       .section h2 { font-size: 24px; }
     }
   </style>
+<style>
+.sbpf-logo{width:min(360px,82vw);height:auto;display:block;margin:0 auto;object-fit:contain}
+.sbpf-logo-header{width:clamp(210px,42vw,430px);max-height:118px}
+.sbpf-logo-footer{width:170px;max-height:95px;margin:0 auto 10px}
+</style>
+<script>
+const SBPF_BRANDING_URL='https://dxowhzghrdghfzoggorx.supabase.co';
+const SBPF_PUBLISHABLE_KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
+async function loadSbpfBranding(){
+  try{
+    const r=await fetch(SBPF_BRANDING_URL+'/rest/v1/branding_assets?asset_key=eq.sbpf-logo&is_active=eq.true&select=asset_content&limit=1',{headers:{apikey:SBPF_PUBLISHABLE_KEY}});
+    if(!r.ok)return;
+    const rows=await r.json(), svg=rows?.[0]?.asset_content;
+    if(!svg)return;
+    const cleanSvg=svg.replace(/<rect[^>]*fill="#fffdf8"[^>]*\/>/i,'');
+    const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(cleanSvg);
+    document.querySelectorAll('.sbpf-logo').forEach(img=>{img.src=src;img.removeAttribute('data-fallback')});
+    const icon=document.getElementById('sbpfFavicon'); if(icon)icon.href=src;
+  }catch(e){console.warn('SBPF branding fallback',e)}
+}
+document.addEventListener('DOMContentLoaded',loadSbpfBranding);
+</script>
 </head>
 <body>
   <header>
+    <img class="sbpf-logo sbpf-logo-header" data-fallback alt="स्वर्णिम भारत परिवार फाउंडेशन" src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Ccircle cx=%2232%22 cy=%2232%22 r=%2230%22 fill=%22%23d4af37%22/%3E%3C/svg%3E">
     <h1>स्वर्णिम भारत परिवार फाउंडेशन</h1>
     <p>सेवा • सहयोग • स्वावलंबन • सशक्तिकरण</p>
   </header>
@@ -105,6 +128,7 @@
   </section>
 
   <footer>
+    <img class="sbpf-logo sbpf-logo-footer" alt="स्वर्णिम भारत परिवार फाउंडेशन">
     <p>© 2026 Swarnim Bharat Parivar Foundation</p>
     <p>सेवा • सहयोग • स्वावलंबन • सशक्तिकरण</p>
   </footer>
