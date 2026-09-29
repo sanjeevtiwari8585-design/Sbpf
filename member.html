@@ -34,9 +34,31 @@
 @media(max-width:700px){.panelMain{padding:12px}.statsGrid{grid-template-columns:repeat(2,1fr)}.panelCards,.levelGrid{grid-template-columns:1fr}.panelSearch{max-width:none}.panelUser{display:none}.welcomeCard h2{font-size:20px}}
 @media(max-width:480px){.panelShell.menuOpen .panelSide{width:205px;flex-basis:205px}.panelNav button{font-size:11px;padding:8px 6px}.panelBrand{font-size:11px}.panelMain{padding:9px}.statsGrid{gap:7px}.statCard{padding:10px}.statCard strong{font-size:15px}.welcomeCard{padding:18px}}
 .categoryList{display:flex;flex-direction:column;gap:14px}.categoryBlock{background:#fff;border:1px solid #e7e7e7;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.04)}.categoryHead{display:flex;align-items:center;gap:12px;border-bottom:1px solid #eee;padding-bottom:12px}.categoryHead>span{width:44px;height:44px;border-radius:10px;background:#eaf7ec;display:grid;place-items:center;font-size:22px}.categoryHead b{display:block;color:#222;font-size:17px}.categoryHead small{color:#777}.subGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;padding-top:12px}.subItem{border:1px solid #dfe5e0;background:#f8fbf8;border-radius:8px;padding:10px;cursor:pointer;color:#315c39;font-size:12px}.subItem:hover{background:#e6f5e9}@media(max-width:600px){.subGrid{grid-template-columns:repeat(2,1fr)}}.categoryList{display:flex;flex-direction:column;gap:9px}.mainCategory{width:100%;display:flex;align-items:center;gap:12px;border:1px solid #e5e7eb;background:#fff;border-radius:11px;padding:15px 16px;cursor:pointer;text-align:left;font-size:15px;color:#222;box-shadow:0 2px 7px rgba(0,0,0,.04)}.mainCategory b{flex:1}.mainCategory span{font-size:22px;color:#777}.subCategory{display:none;grid-template-columns:repeat(3,1fr);gap:9px;background:#f7faf7;border:1px solid #e5e7eb;border-top:0;border-radius:0 0 11px 11px;padding:10px;margin-top:-9px}.subCategory.open{display:grid}.subCategory button{border:1px solid #dce7de;background:#fff;border-radius:8px;padding:10px;cursor:pointer;color:#315c39;font-size:12px}.subCategory button:hover{background:#e8f5ea}@media(max-width:600px){.subCategory{grid-template-columns:repeat(2,1fr)}}</style>
+<style>
+.sbpf-logo{width:min(330px,78vw);height:auto;display:block;margin:0 auto;object-fit:contain}
+.sbpf-logo-auth{max-height:105px}
+.sbpf-logo-panel{width:38px;height:38px;margin:0;object-fit:contain;flex:0 0 38px}
+.sbpf-logo-top{width:54px;height:54px;margin:0;object-fit:contain}
+</style>
+<script>
+const SBPF_BRANDING_URL='https://dxowhzghrdghfzoggorx.supabase.co';
+const SBPF_PUBLISHABLE_KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
+async function loadSbpfBranding(){
+  try{
+    const r=await fetch(SBPF_BRANDING_URL+'/rest/v1/branding_assets?asset_key=eq.sbpf-logo&is_active=eq.true&select=asset_content&limit=1',{headers:{apikey:SBPF_PUBLISHABLE_KEY}});
+    if(!r.ok)return;
+    const rows=await r.json(), svg=rows?.[0]?.asset_content;
+    if(!svg)return;
+    const cleanSvg=svg.replace(/<rect[^>]*fill="#fffdf8"[^>]*\/>/i,'');
+    const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(cleanSvg);
+    document.querySelectorAll('.sbpf-logo').forEach(img=>{img.src=src;img.removeAttribute('data-fallback')});
+  }catch(e){console.warn('SBPF branding fallback',e)}
+}
+document.addEventListener('DOMContentLoaded',loadSbpfBranding);
+</script>
 </head>
 <body>
-<header><h1>स्वर्णिम भारत परिवार फाउंडेशन</h1><div>सदस्य पंजीकरण</div></header>
+<header><img class="sbpf-logo sbpf-logo-auth" alt="स्वर्णिम भारत परिवार फाउंडेशन"><h1>स्वर्णिम भारत परिवार फाउंडेशन</h1><div>सदस्य पंजीकरण</div></header>
 <div class="wrap"><div class="box">
 <div id="authBox"><h2>नया सदस्य पंजीकरण</h2><p class="small">पहले चरण में Login account और Member ID बनाया जाएगा। बाकी चरण बाद में Login करके पूरे किए जा सकते हैं।</p><div id="message"></div>
 <form id="authForm"><label>पूरा नाम *</label><input id="fullName" required><label>मोबाइल नंबर *</label><input id="mobile" inputmode="numeric" maxlength="10" required><label>ईमेल *</label><input id="email" type="email" required><label>पासवर्ड *</label><input id="password" type="password" minlength="6" required><label>Referral Code (यदि हो)</label><input id="referral"><div class="actions"><button class="button" type="submit">Step 1 पूरा करें</button></div></form>
@@ -47,7 +69,7 @@
 <div class="panelShell">
   <aside class="panelSide">
     <button class="sideMenuBtn" onclick="toggleSideMenu()" aria-label="Menu">☰</button>
-    <div class="panelBrand"><div class="brandMark">SB</div><div>Swarnim Bharat<br><small>Parivar</small></div></div>
+    <div class="panelBrand"><img class="sbpf-logo sbpf-logo-panel" alt="SBPF"><div>Swarnim Bharat<br><small>Parivar</small></div></div>
     <nav class="panelNav">
       <button class="active" onclick="panelHome()">⌂ &nbsp; Dashboard</button>
       <button onclick="openProfile();closeSideMenu()">👤 &nbsp; Profile</button>
@@ -64,7 +86,7 @@
   <main class="panelMain">
     <div class="panelTop">
       <div class="panelSearch">⌕ &nbsp; Search this view</div>
-      <div class="panelUser">SB &nbsp; <b id="panelUserName">Swarnim Bharat Parivar Foundation</b></div>
+      <div class="panelUser"><img class="sbpf-logo sbpf-logo-top" alt="SBPF"> <b id="panelUserName">Swarnim Bharat Parivar Foundation</b></div>
     </div>
 
     <div class="welcomeCard">
