@@ -9,7 +9,7 @@
 /* SBPF unified member panel */
 .panelShell{display:flex;min-height:720px;background:#fff}
 .panelSide{width:58px;flex:0 0 58px;border-right:1px solid #e5e7eb;background:#fff;padding:12px 7px;transition:width .22s ease;overflow:hidden;position:relative;z-index:20}.panelShell.menuOpen .panelSide{width:220px;flex-basis:220px}
-.panelBrand{display:none;align-items:center;gap:8px;padding:8px 5px 18px;font-weight:bold;color:#2f7d32}.panelShell.menuOpen .panelBrand{display:flex}.sideMenuBtn{width:44px;height:44px;border:0;border-radius:10px;background:#2e9d4d;color:#fff;font-size:21px;cursor:pointer;display:grid;place-items:center;margin:2px auto 14px}.sideMenuBtn:hover{background:#267f3e}
+.panelBrand{display:none;align-items:center;gap:8px;padding:8px 5px 18px;font-weight:bold;color:#2f7d32}.profilePhotoBox{display:flex;align-items:center;gap:16px;background:#fffdf4;border:1px solid #ead9a1;border-radius:12px;padding:14px;margin:12px 0}.profileAvatar{width:82px;height:82px;border-radius:50%;object-fit:cover;border:3px solid #d4af37;background:#eee;display:block}.profilePhotoActions{flex:1}.profilePhotoActions p{margin:4px 0 8px;color:#666;font-size:13px}.panelShell.menuOpen .panelBrand{display:flex}.sideMenuBtn{width:44px;height:44px;border:0;border-radius:10px;background:#2e9d4d;color:#fff;font-size:21px;cursor:pointer;display:grid;place-items:center;margin:2px auto 14px}.sideMenuBtn:hover{background:#267f3e}
 .brandMark{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#66bb6a,#2e7d32);display:grid;place-items:center;color:#fff;font-size:14px}
 .panelNav{display:none;flex-direction:column;gap:5px}.panelShell.menuOpen .panelNav{display:flex}
 .panelNav button{width:100%;text-align:left;border:0;background:transparent;color:#666;padding:10px 9px;border-radius:9px;cursor:pointer;font-size:13px}
@@ -112,7 +112,17 @@
   </main>
 </div>
 </div><div id="profileView" class="hidden"><div class="steps"><div class="step active" id="s1">1. Basic</div><div class="step" id="s2">2. Personal</div><div class="step" id="s3">3. Address</div><div class="step" id="s4">4. Membership</div></div><div id="appMessage"></div>
-<section id="step1"><h2>Step 1 — Basic Details</h2><p>यह चरण पूरा हो चुका है। आपका Login और Member ID सुरक्षित है।</p><div class="status" id="basicStatus"></div><div class="actions"><button class="button" onclick="goStep(2)">Step 2 पर जाएँ</button><button class="button secondary" onclick="logout()">Logout</button></div></section>
+<section id="step1"><h2>Step 1 — Basic Details</h2><p>यह चरण पूरा हो चुका है। आपका Login और Member ID सुरक्षित है।</p>
+<div class="profilePhotoBox">
+  <img id="profilePhotoPreview" class="profileAvatar" alt="Profile Photo" src="">
+  <div class="profilePhotoActions">
+    <b>Profile Photo</b>
+    <p>अपना साफ़ फोटो अपलोड करें। JPG/PNG • अधिकतम 2 MB</p>
+    <input id="profilePhotoFile" type="file" accept="image/jpeg,image/png">
+    <button class="button" style="margin-top:8px" onclick="uploadProfilePhoto()">Photo Upload करें</button>
+    <div id="profilePhotoMsg" class="small"></div>
+  </div>
+</div><div class="status" id="basicStatus"></div><div class="actions"><button class="button" onclick="goStep(2)">Step 2 पर जाएँ</button><button class="button secondary" onclick="logout()">Logout</button></div></section>
 <section id="step2" class="hidden"><h2>Step 2 — Personal Details</h2><label>पिता / अभिभावक का नाम</label><input id="fatherName"><div class="row"><div><label>जन्म तिथि</label><input id="dob" type="date"></div><div><label>लिंग</label><select id="gender"><option value="">चुनें</option><option>पुरुष</option><option>महिला</option><option>अन्य</option></select></div></div><div class="actions"><button class="button secondary" onclick="goStep(1)">पिछला</button><button class="button" onclick="saveStep2()">Save & Step 3</button></div></section>
 <section id="step3" class="hidden"><h2>Step 3 — Address & KYC</h2><label>पूरा पता</label><textarea id="address"></textarea><div class="row"><div><label>जिला</label><input id="district"></div><div><label>राज्य</label><input id="state" value="Uttar Pradesh"></div></div><label>पिन कोड</label><input id="pincode" inputmode="numeric" maxlength="6"><div class="status" style="margin-top:16px">
 <h3 style="color:#8b0000;margin-top:0">KYC Verification</h3>
@@ -201,6 +211,49 @@ async function copyReferral(){
 function toggleCategory(id){document.querySelectorAll('.subCategory').forEach(x=>{if(x.id!==id)x.classList.remove('open')});const x=$(id);if(x)x.classList.toggle('open')}
 function toggleSideMenu(){document.querySelector('.panelShell')?.classList.toggle('menuOpen')}
 function closeSideMenu(){document.querySelector('.panelShell')?.classList.remove('menuOpen')}
+async function getProfilePhotoUrl(path){
+ if(!path)return '';
+ try{
+   const r=await fetch(SUPABASE_URL+'/storage/v1/object/sign/profile-photos/'+path.split('/').map(encodeURIComponent).join('/'),{
+     method:'POST',
+     headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+accessToken,'Content-Type':'application/json'},
+     body:JSON.stringify({expiresIn:3600})
+   });
+   const j=await r.json();
+   if(!r.ok)throw new Error(j?.message||'Photo URL error');
+   return SUPABASE_URL+(j.signedURL||j.signedUrl||'');
+ }catch(e){return ''}
+}
+async function refreshProfilePhoto(){
+ const el=$('profilePhotoPreview'); if(!el)return;
+ if(!profile?.profile_photo_path){el.removeAttribute('src');return}
+ const url=await getProfilePhotoUrl(profile.profile_photo_path);
+ if(url)el.src=url;
+}
+async function uploadProfilePhoto(){
+ const input=$('profilePhotoFile'), file=input?.files?.[0];
+ if(!file){$('profilePhotoMsg').textContent='पहले फोटो चुनें।';return}
+ if(file.size>2*1024*1024){$('profilePhotoMsg').textContent='Photo 2 MB से छोटी होनी चाहिए।';return}
+ if(!['image/jpeg','image/png'].includes(file.type)){$('profilePhotoMsg').textContent='केवल JPG या PNG फोटो मान्य है।';return}
+ if(!profile?.member_id){$('profilePhotoMsg').textContent='Member profile उपलब्ध नहीं है।';return}
+ const ext=file.type==='image/png'?'png':'jpg';
+ const path=profile.member_id+'/'+crypto.randomUUID()+'.'+ext;
+ try{
+   $('profilePhotoMsg').textContent='Photo upload हो रही है...';
+   const r=await fetch(SUPABASE_URL+'/storage/v1/object/profile-photos/'+path.split('/').map(encodeURIComponent).join('/'),{
+     method:'POST',
+     headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+accessToken,'Content-Type':file.type,'x-upsert':'false'},
+     body:file
+   });
+   const t=await r.text();
+   if(!r.ok)throw new Error(t||'Upload failed');
+   profile=await rpc('save_my_profile_photo',{p_path:path});
+   profile=Array.isArray(profile)?profile[0]:profile;
+   $('profilePhotoMsg').textContent='Profile photo सुरक्षित रूप से upload हो गया।';
+   await refreshProfilePhoto();
+ }catch(e){$('profilePhotoMsg').textContent='Upload में समस्या: '+e.message}
+}
+function closeSideMenu(){document.querySelector('.panelShell')?.classList.remove('menuOpen')}
 function panelHome(){ $('profileView').classList.add('hidden'); $('dashboardView').classList.remove('hidden'); updateDashboard(); }
 function panelComing(name){ showServiceMsg(name+' panel तैयार किया जा रहा है।'); }
 
@@ -238,7 +291,7 @@ async function openCertificate(){
 function openProfile(){sessionStorage.setItem('sbpf_popup_seen','1');$('dashboardView').classList.add('hidden');$('profileView').classList.remove('hidden');goStep(profile.profile_completed?4:(profile.address||profile.father_name?3:2));}
 function closeProfile(){ $('profileView').classList.add('hidden');$('dashboardView').classList.remove('hidden');updateDashboard(); }
 function closePopup(){sessionStorage.setItem('sbpf_popup_seen','1');$('profilePopup').classList.add('hidden');}
-function showApp(){$('authBox').classList.add('hidden');$('loginBox').classList.add('hidden');$('appBox').classList.remove('hidden');$('basicStatus').innerHTML='नाम: <b>'+esc(profile.full_name)+'</b><br>मोबाइल: <b>'+esc(profile.mobile)+'</b><br>Referral Code: <b>'+esc(profile.referral_code||'—')+'</b>';$('fatherName').value=profile.father_name||'';$('dob').value=profile.dob||'';$('gender').value=profile.gender||'';$('address').value=profile.address||'';$('district').value=profile.district||'';$('state').value=profile.state||'Uttar Pradesh';$('pincode').value=profile.pincode||'';$('payStatus').textContent=profile.payment_status||'pending';$('profileView').classList.add('hidden');$('dashboardView').classList.remove('hidden');updateDashboard();loadDashboardData();}
+function showApp(){$('authBox').classList.add('hidden');$('loginBox').classList.add('hidden');$('appBox').classList.remove('hidden');$('basicStatus').innerHTML='नाम: <b>'+esc(profile.full_name)+'</b><br>मोबाइल: <b>'+esc(profile.mobile)+'</b><br>Referral Code: <b>'+esc(profile.referral_code||'—')+'</b>';$('fatherName').value=profile.father_name||'';$('dob').value=profile.dob||'';$('gender').value=profile.gender||'';$('address').value=profile.address||'';$('district').value=profile.district||'';$('state').value=profile.state||'Uttar Pradesh';$('pincode').value=profile.pincode||'';$('payStatus').textContent=profile.payment_status||'pending';$('profileView').classList.add('hidden');$('dashboardView').classList.remove('hidden');updateDashboard();refreshProfilePhoto();loadDashboardData();}
 async function uploadKyc(kind){
   const input=$(kind==='aadhaar'?'aadhaarFile':'panFile');
   const file=input?.files?.[0];
