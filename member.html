@@ -24,54 +24,36 @@
 <script>
 const SUPABASE_URL='https://dxowhzghrdghfzoggorx.supabase.co';
 const SUPABASE_KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
-let supabase=null, profile=null;
+let accessToken=localStorage.getItem('sbpf_access_token')||'', profile=null;
 const $=id=>document.getElementById(id);
-function msg(id,text,type='msg'){ $(id).innerHTML='<div class="'+type+'">'+text+'</div>'; }
-function clearMsg(id){$(id).innerHTML='';}
-function setSystem(text,type=''){ $('systemStatus').textContent=text; $('systemStatus').style.color=type==='error'?'#b00020':type==='success'?'#1b5e20':'#666'; }
-function draft(){return {fullName:$('fullName').value.trim(),mobile:$('mobile').value.trim(),email:$('email').value.trim(),referral:$('referral').value.trim()};}
-function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
-function goStep(n){[1,2,3,4].forEach(i=>{$('step'+i).classList.toggle('hidden',i!==n);$('s'+i).classList.toggle('active',i===n);$('s'+i).classList.toggle('done',i<n);});}
-function showApp(){$('authBox').classList.add('hidden');$('loginBox').classList.add('hidden');$('appBox').classList.remove('hidden');$('memberIdBox').textContent='Member ID: '+(profile.member_id||'निर्माणाधीन');$('basicStatus').innerHTML='नाम: <b>'+esc(profile.full_name)+'</b><br>मोबाइल: <b>'+esc(profile.mobile)+'</b><br>Referral Code: <b>'+esc(profile.referral_code||'—')+'</b>';$('fatherName').value=profile.father_name||'';$('dob').value=profile.dob||'';$('gender').value=profile.gender||'';$('address').value=profile.address||'';$('district').value=profile.district||'';$('state').value=profile.state||'Uttar Pradesh';$('pincode').value=profile.pincode||'';$('payStatus').textContent=profile.payment_status||'pending';let step=profile.profile_completed?4:(profile.address||profile.father_name?3:2);goStep(step);}
-async function registerAfterLogin(){const d=JSON.parse(localStorage.getItem('sbpf_step1')||'null');if(!d)return false;const {data,error}=await supabase.rpc('register_my_member',{p_full_name:d.fullName,p_mobile:d.mobile,p_address:'',p_district:'',p_state:'Uttar Pradesh',p_referral_code:d.referral||null});if(error){msg('message',error.message,'error');return false}localStorage.removeItem('sbpf_step1');profile=data;return true;}
-async function loadProfile(){const {data,error}=await supabase.rpc('get_my_member_profile');if(error||!data)return false;profile=Array.isArray(data)?data[0]:data;showApp();return true;}
-async function saveStep2(){clearMsg('appMessage');const {data,error}=await supabase.rpc('save_member_step2',{p_father_name:$('fatherName').value,p_dob:$('dob').value||null,p_gender:$('gender').value});if(error){msg('appMessage',error.message,'error');return}profile=data;msg('appMessage','Step 2 सुरक्षित हो गया।','success');goStep(3);}
-async function saveStep3(){clearMsg('appMessage');const {data,error}=await supabase.rpc('save_member_step3',{p_address:$('address').value,p_district:$('district').value,p_state:$('state').value,p_pincode:$('pincode').value});if(error){msg('appMessage',error.message,'error');return}profile=data;msg('appMessage','Step 3 सुरक्षित हो गया।','success');goStep(4);}
-async function finishProfile(){const {data,error}=await supabase.rpc('complete_member_profile');if(error){msg('appMessage',error.message,'error');return}profile=data;$('payStatus').textContent=profile.payment_status||'pending';msg('appMessage','Step 4 की जानकारी सुरक्षित है। Payment/verification के बाद membership active होगी।','success');}
-async function logout(){if(supabase)await supabase.auth.signOut();location.reload();}
-async function initApp(){
-  try{
-    if(!window.supabase){throw new Error('Supabase library load नहीं हुई।')}
-    supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-    setSystem('System तैयार है।','success');
-    $('authForm').addEventListener('submit',async e=>{
-      e.preventDefault(); clearMsg('message');
-      const btn=e.submitter||e.target.querySelector('button[type="submit"]');
-      const old=btn.textContent; btn.disabled=true; btn.textContent='कृपया प्रतीक्षा करें...';
-      try{
-        const d=draft();
-        if(!/^\d{10}$/.test(d.mobile)){msg('message','कृपया 10 अंकों का मोबाइल नंबर दें।','error');return}
-        localStorage.setItem('sbpf_step1',JSON.stringify(d));
-        const {data,error}=await supabase.auth.signUp({email:d.email,password:$('password').value,options:{data:{full_name:d.fullName,mobile:d.mobile}}});
-        if(error){msg('message',error.message,'error');return}
-        if(data.session){if(await registerAfterLogin())await loadProfile();}
-        else{msg('message','Account बन गया है। यदि email confirmation माँगा जाए तो email verify करें, फिर इसी पेज पर Login करके Step 1 पूरा करें।','success');$('authBox').classList.add('hidden');$('loginBox').classList.remove('hidden');}
-      }catch(err){msg('message','तकनीकी समस्या: '+(err.message||err),'error');}finally{btn.disabled=false;btn.textContent=old;}
-    });
-    $('loginForm').addEventListener('submit',async e=>{
-      e.preventDefault();clearMsg('loginMessage');
-      const btn=e.submitter||e.target.querySelector('button[type="submit"]');const old=btn.textContent;btn.disabled=true;btn.textContent='Login हो रहा है...';
-      try{const {error}=await supabase.auth.signInWithPassword({email:$('loginEmail').value,password:$('loginPassword').value});if(error){msg('loginMessage',error.message,'error');return}if(localStorage.getItem('sbpf_step1'))await registerAfterLogin();if(!(await loadProfile()))msg('loginMessage','Member profile नहीं मिला। कृपया Step 1 से registration शुरू करें।','error');}catch(err){msg('loginMessage','तकनीकी समस्या: '+(err.message||err),'error');}finally{btn.disabled=false;btn.textContent=old;}
-    });
-    $('showLogin').onclick=()=>{$('authBox').classList.add('hidden');$('loginBox').classList.remove('hidden')};
-    $('showSignup').onclick=()=>{$('loginBox').classList.add('hidden');$('authBox').classList.remove('hidden')};
-    const {data:{session}}=await supabase.auth.getSession();
-    if(session){if(localStorage.getItem('sbpf_step1'))await registerAfterLogin();await loadProfile();}
-  }catch(err){setSystem('System शुरू नहीं हो पाया: '+(err.message||err),'error');msg('message','पेज की तकनीकी सेवा शुरू नहीं हुई। कृपया पेज Refresh करें।','error');}
+function msg(id,text,type='msg'){$(id).innerHTML='<div class="'+type+'">'+text+'</div>'}
+function clearMsg(id){$(id).innerHTML=''}
+function setSystem(text,type=''){ $('systemStatus').textContent=text; $('systemStatus').style.color=type==='error'?'#b00020':type==='success'?'#1b5e20':'#666'}
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function goStep(n){[1,2,3,4].forEach(i=>{$('step'+i).classList.toggle('hidden',i!==n);$('s'+i).classList.toggle('active',i===n);$('s'+i).classList.toggle('done',i<n)})}
+function draft(){return{fullName:$('fullName').value.trim(),mobile:$('mobile').value.trim(),email:$('email').value.trim(),referral:$('referral').value.trim()}}
+async function api(path,body,auth=true){
+ const h={'apikey':SUPABASE_KEY,'Content-Type':'application/json'};
+ if(auth&&accessToken)h.Authorization='Bearer '+accessToken;
+ const r=await fetch(SUPABASE_URL+path,{method:'POST',headers:h,body:JSON.stringify(body||{})});
+ let j=null;try{j=await r.json()}catch(e){}
+ if(!r.ok)throw new Error(j?.msg||j?.message||j?.error_description||j?.error||('Server error '+r.status));
+ return j;
 }
-function loadSupabase(src, fallback){
-  const s=document.createElement('script');s.src=src;s.onload=initApp;s.onerror=()=>{if(fallback)loadSupabase(fallback,null);else{setSystem('Supabase library load नहीं हुई।','error');msg('message','Internet/CDN समस्या के कारण registration service शुरू नहीं हुई। कृपया Refresh करें।','error')}};document.head.appendChild(s);
-}
-setSystem('System शुरू हो रहा है...');
-loadSupabase('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2','https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js');
-</script></body></html>
+async function authSignup(email,password,d){const j=await api('/auth/v1/signup',{email,password,data:{full_name:d.fullName,mobile:d.mobile}},false);if(j.access_token){accessToken=j.access_token;localStorage.setItem('sbpf_access_token',accessToken)}return j}
+async function authLogin(email,password){const j=await api('/auth/v1/token?grant_type=password',{email,password},false);if(!j.access_token)throw new Error('Login token नहीं मिला।');accessToken=j.access_token;localStorage.setItem('sbpf_access_token',accessToken);return j}
+async function rpc(name,body){return api('/rest/v1/rpc/'+name,body,true)}
+async function registerAfterLogin(){const d=JSON.parse(localStorage.getItem('sbpf_step1')||'null');if(!d)return false;const data=await rpc('register_my_member',{p_full_name:d.fullName,p_mobile:d.mobile,p_address:'',p_district:'',p_state:'Uttar Pradesh',p_referral_code:d.referral||null});localStorage.removeItem('sbpf_step1');profile=data;return true}
+async function loadProfile(){try{const data=await rpc('get_my_member_profile',{});if(!data)return false;profile=Array.isArray(data)?data[0]:data;showApp();return true}catch(e){return false}}
+function showApp(){$('authBox').classList.add('hidden');$('loginBox').classList.add('hidden');$('appBox').classList.remove('hidden');$('memberIdBox').textContent='Member ID: '+(profile.member_id||'निर्माणाधीन');$('basicStatus').innerHTML='नाम: <b>'+esc(profile.full_name)+'</b><br>मोबाइल: <b>'+esc(profile.mobile)+'</b><br>Referral Code: <b>'+esc(profile.referral_code||'—')+'</b>';$('fatherName').value=profile.father_name||'';$('dob').value=profile.dob||'';$('gender').value=profile.gender||'';$('address').value=profile.address||'';$('district').value=profile.district||'';$('state').value=profile.state||'Uttar Pradesh';$('pincode').value=profile.pincode||'';$('payStatus').textContent=profile.payment_status||'pending';goStep(profile.profile_completed?4:(profile.address||profile.father_name?3:2))}
+async function saveStep2(){clearMsg('appMessage');try{profile=await rpc('save_member_step2',{p_father_name:$('fatherName').value,p_dob:$('dob').value||null,p_gender:$('gender').value});msg('appMessage','Step 2 सुरक्षित हो गया।','success');goStep(3)}catch(e){msg('appMessage',e.message,'error')}}
+async function saveStep3(){clearMsg('appMessage');try{profile=await rpc('save_member_step3',{p_address:$('address').value,p_district:$('district').value,p_state:$('state').value,p_pincode:$('pincode').value});msg('appMessage','Step 3 सुरक्षित हो गया।','success');goStep(4)}catch(e){msg('appMessage',e.message,'error')}}
+async function finishProfile(){try{profile=await rpc('complete_member_profile',{});$('payStatus').textContent=profile.payment_status||'pending';msg('appMessage','Step 4 की जानकारी सुरक्षित है। Payment/verification के बाद membership active होगी।','success')}catch(e){msg('appMessage',e.message,'error')}}
+async function logout(){accessToken='';localStorage.removeItem('sbpf_access_token');location.reload()}
+$('authForm').addEventListener('submit',async e=>{e.preventDefault();clearMsg('message');const b=e.submitter||e.target.querySelector('button[type=submit]');const old=b.textContent;b.disabled=true;b.textContent='कृपया प्रतीक्षा करें...';try{const d=draft();if(!/^\d{10}$/.test(d.mobile)){msg('message','कृपया 10 अंकों का मोबाइल नंबर दें।','error');return}localStorage.setItem('sbpf_step1',JSON.stringify(d));const j=await authSignup(d.email,$('password').value,d);if(accessToken){if(await registerAfterLogin())await loadProfile()}else{msg('message','Account बन गया है। यदि email confirmation माँगा जाए तो email verify करें, फिर इसी पेज पर Login करके Step 1 पूरा करें।','success');$('authBox').classList.add('hidden');$('loginBox').classList.remove('hidden')}}catch(e){msg('message','तकनीकी समस्या: '+e.message,'error')}finally{b.disabled=false;b.textContent=old}});
+$('loginForm').addEventListener('submit',async e=>{e.preventDefault();clearMsg('loginMessage');const b=e.submitter||e.target.querySelector('button[type=submit]');const old=b.textContent;b.disabled=true;b.textContent='Login हो रहा है...';try{await authLogin($('loginEmail').value,$('loginPassword').value);if(localStorage.getItem('sbpf_step1'))await registerAfterLogin();if(!(await loadProfile()))msg('loginMessage','Member profile नहीं मिला। कृपया Step 1 से registration शुरू करें।','error')}catch(e){msg('loginMessage','तकनीकी समस्या: '+e.message,'error')}finally{b.disabled=false;b.textContent=old}});
+$('showLogin').onclick=()=>{$('authBox').classList.add('hidden');$('loginBox').classList.remove('hidden')};
+$('showSignup').onclick=()=>{$('loginBox').classList.add('hidden');$('authBox').classList.remove('hidden')};
+setSystem('System तैयार है।','success');
+if(accessToken){loadProfile().then(ok=>{if(!ok){accessToken='';localStorage.removeItem('sbpf_access_token')}})}
+</script>
