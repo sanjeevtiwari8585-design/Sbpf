@@ -4,7 +4,7 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>सदस्य पंजीकरण | स्वर्णिम भारत परिवार फाउंडेशन</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f7fa;color:#222}.wrap{max-width:760px;margin:25px auto;padding:0 15px}.box{background:#fff;border-radius:12px;padding:25px;box-shadow:0 4px 18px rgba(0,0,0,.09)}header{background:linear-gradient(135deg,#8b0000,#d4af37);color:#fff;text-align:center;padding:22px 15px}h1{font-size:25px;margin:0 0 6px}h2{color:#8b0000;margin-top:0}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:0 0 25px}.step{padding:10px 5px;text-align:center;border-radius:8px;background:#eee;font-size:13px}.step.active{background:#8b0000;color:#fff}.step.done{background:#d4af37;color:#111}label{display:block;font-weight:bold;margin:13px 0 6px}input,select,textarea{width:100%;padding:12px;border:1px solid #ccc;border-radius:7px;font-size:15px}textarea{min-height:90px}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.actions{display:flex;gap:10px;margin-top:22px}.button{border:0;cursor:pointer;background:#8b0000;color:#fff;padding:12px 20px;border-radius:7px;font-weight:bold}.secondary{background:#555}.hidden{display:none}.msg{padding:11px;border-radius:7px;margin:12px 0;background:#fff8e1}.error{background:#ffebee;color:#b00020}.success{background:#e8f5e9;color:#1b5e20}.memberid{font-size:22px;font-weight:bold;color:#8b0000;text-align:center;padding:15px;background:#fff8e1;border-radius:8px}.dashboard{margin-bottom:20px}.dashgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:15px 0}.dashcard{background:#f8f8f8;border-radius:9px;padding:15px;text-align:center}.dashcard b{display:block;font-size:20px;color:#8b0000;margin-top:5px}.progress{height:10px;background:#eee;border-radius:20px;overflow:hidden;margin:8px 0}.progressbar{height:100%;background:#d4af37;width:0;transition:width .3s}.popup{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:18px;z-index:99}.popup.hidden{display:none}.popupbox{background:#fff;border-radius:14px;max-width:430px;width:100%;padding:25px;box-shadow:0 10px 35px rgba(0,0,0,.25);text-align:center}.popupbox h3{color:#8b0000;margin-top:0}.popupbox p{margin:10px 0}.small{font-size:13px;color:#666}.link{color:#8b0000;font-weight:bold;cursor:pointer}.status{margin-top:12px;padding:12px;background:#f7f7f7;border-radius:8px}@media(max-width:600px){.row{grid-template-columns:1fr}.steps{font-size:11px}.box{padding:18px}.dashgrid{grid-template-columns:1fr}}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f7fa;color:#222}.wrap{max-width:760px;margin:25px auto;padding:0 15px}.box{background:#fff;border-radius:12px;padding:25px;box-shadow:0 4px 18px rgba(0,0,0,.09)}header{background:linear-gradient(135deg,#8b0000,#d4af37);color:#fff;text-align:center;padding:22px 15px}h1{font-size:25px;margin:0 0 6px}h2{color:#8b0000;margin-top:0}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:0 0 25px}.step{padding:10px 5px;text-align:center;border-radius:8px;background:#eee;font-size:13px}.step.active{background:#8b0000;color:#fff}.step.done{background:#d4af37;color:#111}label{display:block;font-weight:bold;margin:13px 0 6px}input,select,textarea{width:100%;padding:12px;border:1px solid #ccc;border-radius:7px;font-size:15px}textarea{min-height:90px}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.actions{display:flex;gap:10px;margin-top:22px}.button{border:0;cursor:pointer;background:#8b0000;color:#fff;padding:12px 20px;border-radius:7px;font-weight:bold}.secondary{background:#555}.hidden{display:none}.msg{padding:11px;border-radius:7px;margin:12px 0;background:#fff8e1}.error{background:#ffebee;color:#b00020}.success{background:#e8f5e9;color:#1b5e20}.memberid{font-size:22px;font-weight:bold;color:#8b0000;text-align:center;padding:15px;background:#fff8e1;border-radius:8px}.dashboard{margin-bottom:20px}.dashHeader{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:18px 0}.summaryGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:15px 0}.summaryCard{background:#fff8e1;border:1px solid #ead9a1;border-radius:10px;padding:16px;text-align:center}.summaryCard b{display:block;font-size:20px;color:#8b0000;margin-top:6px}.profileStatus{background:#fffdf4;border:1px solid #ead9a1}.profileTitle{display:flex;justify-content:space-between;gap:10px;align-items:center}.profileTitle span{font-size:13px;color:#666}.progress{height:10px;background:#eee;border-radius:20px;overflow:hidden;margin:10px 0 14px}.progressbar{height:100%;background:#d4af37;width:0;transition:width .3s}.serviceSection{margin-top:18px}.serviceSection h3{color:#8b0000;margin-bottom:4px}.serviceGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.serviceCard{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:16px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.05);display:flex;flex-direction:column;align-items:center}.serviceCard b{font-size:17px;color:#8b0000;margin:7px 0}.serviceCard span{font-size:13px;color:#666;min-height:38px;display:flex;align-items:center;justify-content:center}.serviceCard .button{margin-top:12px}.serviceIcon{font-size:28px}.paymentNote{margin-top:18px;background:#f8f8f8}.msg.hidden{display:none}@media(max-width:600px){.row{grid-template-columns:1fr}.steps{font-size:11px}.box{padding:18px}.dashgrid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -17,43 +17,46 @@
 <div id="appBox" class="hidden">
 <div id="dashboardView" class="dashboard">
   <div class="memberid" id="memberIdBox"></div>
-  <h2 style="margin-top:18px">Member Dashboard</h2>
-  <div class="dashgrid">
-    <div class="dashcard">सदस्य नाम<b id="dashName">—</b></div>
-    <div class="dashcard">प्रोफाइल<b id="dashPercent">0%</b></div>
-    <div class="dashcard">Membership<b id="dashMembership">Pending</b></div>
-  </div>
-  <div class="status">
-    <b>Profile Completion</b>
-    <div class="progress"><div id="profileProgress" class="progressbar"></div></div>
-    <span id="profileHint">अपनी प्रोफाइल पूरी करें।</span>
-  </div>
-  <div class="dashgrid">
-    <div class="dashcard"><span>👤</span><br>Member Profile<b class="small">जानकारी अपडेट करें</b><button class="button" style="margin-top:10px" onclick="openProfile()">Profile खोलें</button></div>
-    <div class="dashcard"><span>💳</span><br>Membership Payment<b class="small" id="dashPaymentNote">Payment बाद में भी कर सकते हैं</b></div>
-    <div class="dashcard"><span>🔗</span><br>Referral<b class="small">Referral सुविधा</b></div>
-    <div class="dashcard"><span>🪪</span><br>Digital ID<b class="small">आगे उपलब्ध होगी</b></div>
-    <div class="dashcard"><span>📱</span><br>QR Verification<b class="small">आगे उपलब्ध होगी</b></div>
-    <div class="dashcard"><span>📞</span><br>Help & Support<b class="small">सहायता केंद्र</b></div>
-  </div>
-  <div class="actions">
-    <button class="button" onclick="openProfile()">Member Profile पूरा करें</button>
+  <div class="dashHeader">
+    <div>
+      <h2 style="margin:0;color:#8b0000">Member Dashboard</h2>
+      <div class="small">आपकी सदस्य सेवाएँ और प्रोफाइल की स्थिति</div>
+    </div>
     <button class="button secondary" onclick="logout()">Logout</button>
   </div>
-  <div class="status" style="margin-top:18px">
-    <h3 style="color:#8b0000;margin-top:0">Member Services</h3>
-    <div class="dashgrid">
-      <div class="dashcard"><div>💳</div><b>₹365 Membership</b><span class="small">Payment बाद में भी कर सकते हैं</span><button class="button" style="margin-top:10px" onclick="startPayment()">Payment खोलें</button></div>
-      <div class="dashcard"><div>🔗</div><b>Referral</b><span class="small" id="referralCodeText">Code loading...</span><button class="button" style="margin-top:10px" onclick="copyReferral()">Link Copy करें</button></div>
-      <div class="dashcard"><div>🪪</div><b>Digital ID Card</b><span class="small">अपना verified ID Card खोलें</span><button class="button" style="margin-top:10px" onclick="openIdCard()">ID Card खोलें</button></div>
-      <div class="dashcard"><div>📱</div><b>QR Verification</b><span class="small">अपने ID का verification link</span><button class="button" style="margin-top:10px" onclick="openVerification()">Verify खोलें</button></div>
-      <div class="dashcard"><div>📜</div><b>Certificate</b><span class="small">उपलब्ध होने पर प्रमाण पत्र</span><button class="button" style="margin-top:10px" onclick="openCertificate()">खोलें</button></div>
-      <div class="dashcard"><div>🛟</div><b>Help & Support</b><span class="small">सदस्य सहायता</span><button class="button" style="margin-top:10px" onclick="openHelp()">सहायता</button></div>
-    </div>
-    <div id="dashboardServiceMsg" class="small" style="margin-top:10px"></div>
+
+  <div class="summaryGrid">
+    <div class="summaryCard"><span class="small">सदस्य नाम</span><b id="dashName">—</b></div>
+    <div class="summaryCard"><span class="small">Profile</span><b id="dashPercent">0%</b></div>
+    <div class="summaryCard"><span class="small">Membership</span><b id="dashMembership">Pending</b></div>
   </div>
-</div>
-<div id="profileView" class="hidden"><div class="steps"><div class="step active" id="s1">1. Basic</div><div class="step" id="s2">2. Personal</div><div class="step" id="s3">3. Address</div><div class="step" id="s4">4. Membership</div></div><div id="appMessage"></div>
+
+  <div class="status profileStatus">
+    <div class="profileTitle"><b>Profile Completion</b><span id="profileHint">कुछ जानकारी बाकी है।</span></div>
+    <div class="progress"><div id="profileProgress" class="progressbar"></div></div>
+    <button class="button" onclick="openProfile()">Member Profile पूरा करें</button>
+  </div>
+
+  <div class="serviceSection">
+    <h3>मुख्य सदस्य सुविधाएँ</h3>
+    <p class="small">नीचे से जिस सुविधा की जरूरत हो, उसे सीधे खोलें।</p>
+    <div class="serviceGrid">
+      <div class="serviceCard"><div class="serviceIcon">👤</div><b>Member Profile</b><span>4 Step में जानकारी पूरी/अपडेट करें</span><button class="button" onclick="openProfile()">Profile खोलें</button></div>
+      <div class="serviceCard"><div class="serviceIcon">💳</div><b>Membership Payment</b><span>वार्षिक शुल्क ₹365 • Payment बाद में भी</span><button class="button" onclick="startPayment()">Payment</button></div>
+      <div class="serviceCard"><div class="serviceIcon">🔗</div><b>Referral</b><span id="referralCodeText">Referral code लोड हो रहा है...</span><button class="button" onclick="copyReferral()">Referral Link Copy</button></div>
+      <div class="serviceCard"><div class="serviceIcon">🪪</div><b>Digital ID Card</b><span>अपना सदस्य ID Card देखें</span><button class="button" onclick="openIdCard()">ID Card खोलें</button></div>
+      <div class="serviceCard"><div class="serviceIcon">📱</div><b>QR Verification</b><span>Member verification link खोलें</span><button class="button" onclick="openVerification()">Verification</button></div>
+      <div class="serviceCard"><div class="serviceIcon">📜</div><b>Certificate</b><span>उपलब्ध होने पर प्रमाण पत्र</span><button class="button" onclick="openCertificate()">Certificate</button></div>
+      <div class="serviceCard"><div class="serviceIcon">🛟</div><b>Help & Support</b><span>सदस्य सहायता प्राप्त करें</span><button class="button" onclick="openHelp()">सहायता</button></div>
+    </div>
+    <div id="dashboardServiceMsg" class="msg hidden"></div>
+  </div>
+
+  <div class="status paymentNote">
+    <b>💳 Membership Payment Status</b>
+    <p class="small">आप पहले 4 Step में अपनी Profile पूरी कर सकते हैं। <b>Membership Payment तुरंत करना जरूरी नहीं है।</b> Payment बाद में करने पर ही membership status आगे update होगा।</p>
+  </div>
+</div><div id="profileView" class="hidden"><div class="steps"><div class="step active" id="s1">1. Basic</div><div class="step" id="s2">2. Personal</div><div class="step" id="s3">3. Address</div><div class="step" id="s4">4. Membership</div></div><div id="appMessage"></div>
 <section id="step1"><h2>Step 1 — Basic Details</h2><p>यह चरण पूरा हो चुका है। आपका Login और Member ID सुरक्षित है।</p><div class="status" id="basicStatus"></div><div class="actions"><button class="button" onclick="goStep(2)">Step 2 पर जाएँ</button><button class="button secondary" onclick="logout()">Logout</button></div></section>
 <section id="step2" class="hidden"><h2>Step 2 — Personal Details</h2><label>पिता / अभिभावक का नाम</label><input id="fatherName"><div class="row"><div><label>जन्म तिथि</label><input id="dob" type="date"></div><div><label>लिंग</label><select id="gender"><option value="">चुनें</option><option>पुरुष</option><option>महिला</option><option>अन्य</option></select></div></div><div class="actions"><button class="button secondary" onclick="goStep(1)">पिछला</button><button class="button" onclick="saveStep2()">Save & Step 3</button></div></section>
 <section id="step3" class="hidden"><h2>Step 3 — Address & KYC</h2><label>पूरा पता</label><textarea id="address"></textarea><div class="row"><div><label>जिला</label><input id="district"></div><div><label>राज्य</label><input id="state" value="Uttar Pradesh"></div></div><label>पिन कोड</label><input id="pincode" inputmode="numeric" maxlength="6"><p class="small">Aadhaar/PAN document upload को अगली सुरक्षित KYC storage setup के साथ जोड़ा जाएगा। अभी कोई document यहाँ upload न करें।</p><div class="actions"><button class="button secondary" onclick="goStep(2)">पिछला</button><button class="button" onclick="saveStep3()">Save & Step 4</button></div></section>
@@ -122,36 +125,40 @@ async function loadDashboardData(){
  }catch(e){ console.warn('dashboard data',e.message); }
 }
 async function copyReferral(){
- if(!dashboardData?.referral_link){$('dashboardServiceMsg').textContent='Referral link अभी उपलब्ध नहीं है।';return}
- try{await navigator.clipboard.writeText(dashboardData.referral_link);$('dashboardServiceMsg').textContent='Referral link copy हो गया।';}
+ if(!dashboardData?.referral_link){showServiceMsg('Referral link अभी उपलब्ध नहीं है।');return}
+ try{await navigator.clipboard.writeText(dashboardData.referral_link);showServiceMsg('Referral link copy हो गया।');}
  catch(e){prompt('Referral link copy करें:',dashboardData.referral_link)}
 }
+function showServiceMsg(text){
+ $('dashboardServiceMsg').textContent=text;
+ $('dashboardServiceMsg').classList.remove('hidden');
+}
 function startPayment(){
- $('dashboardServiceMsg').textContent='Membership fee ₹365 है। Payment बाद में भी कर सकते हैं। AtoPay gateway connection अभी configure किया जाना बाकी है; अभी कोई payment नहीं लिया गया है।';
+ showServiceMsg('Membership fee ₹365 है। Payment बाद में भी कर सकते हैं। AtoPay gateway connection अभी configure किया जाना बाकी है; अभी कोई payment नहीं लिया गया है।');
 }
 function openVerification(){
- if(!dashboardData?.verification_url){$('dashboardServiceMsg').textContent='Verification link अभी उपलब्ध नहीं है।';return}
+ if(!dashboardData?.verification_url){showServiceMsg('Verification link अभी उपलब्ध नहीं है।');return}
  window.open(dashboardData.verification_url,'_blank');
 }
 function openHelp(){
- $('dashboardServiceMsg').textContent='सदस्य सहायता के लिए अपना Member ID और समस्या का विवरण सुरक्षित रखें।';
+ showServiceMsg('सदस्य सहायता के लिए अपना Member ID और समस्या का विवरण सुरक्षित रखें।');
  window.location.href='mailto:sbpf@swarnim.com?subject=SBPF Member Support '+encodeURIComponent(profile?.member_id||'');
 }
 async function openIdCard(){
  try{
    const data=await rpc('get_my_member_id_card_url',{});
    const url=Array.isArray(data)?data[0]:data;
-   if(!url){$('dashboardServiceMsg').textContent='ID Card अभी उपलब्ध नहीं है।';return}
+   if(!url){showServiceMsg('ID Card अभी उपलब्ध नहीं है।');return}
    window.open(url,'_blank');
- }catch(e){$('dashboardServiceMsg').textContent='ID Card खोलने में समस्या: '+e.message;}
+ }catch(e){showServiceMsg('ID Card खोलने में समस्या: '+e.message);}
 }
 async function openCertificate(){
  try{
    const data=await rpc('get_my_certificate',{});
-   if(!data || (Array.isArray(data)&&!data.length)){ $('dashboardServiceMsg').textContent='प्रमाण पत्र अभी उपलब्ध नहीं है।'; return; }
+   if(!data || (Array.isArray(data)&&!data.length)){ showServiceMsg('प्रमाण पत्र अभी उपलब्ध नहीं है।'); return; }
    const token=accessToken;
    window.open(SUPABASE_URL+'/functions/v1/member-certificate?access_token='+encodeURIComponent(token),'_blank');
- }catch(e){$('dashboardServiceMsg').textContent='प्रमाण पत्र अभी उपलब्ध नहीं है।';}
+ }catch(e){showServiceMsg('प्रमाण पत्र अभी उपलब्ध नहीं है।');}
 }
 function openProfile(){sessionStorage.setItem('sbpf_popup_seen','1');$('dashboardView').classList.add('hidden');$('profileView').classList.remove('hidden');goStep(profile.profile_completed?4:(profile.address||profile.father_name?3:2));}
 function closeProfile(){ $('profileView').classList.add('hidden');$('dashboardView').classList.remove('hidden');updateDashboard(); }
