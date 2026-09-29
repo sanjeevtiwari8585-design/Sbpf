@@ -50,19 +50,13 @@
     <div class="panelBrand"><div class="brandMark">SB</div><div>Swarnim Bharat<br><small>Parivar</small></div></div>
     <nav class="panelNav">
       <button class="active" onclick="panelHome()">⌂ &nbsp; Dashboard</button>
-      <button onclick="openProfile()">▣ &nbsp; My Profile</button>
-      <button onclick="panelComing('विभाग Complaint')">▤ &nbsp; विभाग Complaint</button>
-      <button onclick="panelComing('Portal Complaint')">▱ &nbsp; Portal Complaint</button>
-      <button onclick="startPayment()">▤ &nbsp; Payment</button>
-      <button onclick="panelComing('Lectures')">▣ &nbsp; Lectures</button>
-      <button onclick="panelComing('Volunteer Tree')">♧ &nbsp; Volunteer Tree</button>
-      <button onclick="panelComing('Campaigns')">⚑ &nbsp; Campaigns</button>
-      <button onclick="panelComing('Govt Schemes')">▥ &nbsp; Govt Schemes</button>
-      <button onclick="panelComing('Legal Documents')">▱ &nbsp; Legal Documents</button>
-      <button onclick="openIdCard()">▣ &nbsp; Digital ID</button>
-      <button onclick="openVerification()">⌁ &nbsp; QR Verification</button>
-      <button onclick="openCertificate()">▤ &nbsp; Certificate</button>
-      <button onclick="openHelp()">◉ &nbsp; Help & Support</button>
+      <button onclick="openProfile();closeSideMenu()">👤 &nbsp; Profile</button>
+      <button onclick="toggleCategory('catId');closeSideMenu()">🪪 &nbsp; Member ID Card</button>
+      <button onclick="toggleCategory('catPayment');closeSideMenu()">💳 &nbsp; Payment</button>
+      <button onclick="toggleCategory('catCertificate');closeSideMenu()">📜 &nbsp; Certificate</button>
+      <button onclick="toggleCategory('catVolunteer');closeSideMenu()">🌳 &nbsp; Volunteer Tree</button>
+      <button onclick="toggleCategory('catComplaint');closeSideMenu()">📝 &nbsp; Complaint</button>
+      <button onclick="toggleCategory('catServices');closeSideMenu()">🏛️ &nbsp; Services</button>
       <button class="logoutNav" onclick="logout()">⇥ &nbsp; Logout</button>
     </nav>
   </aside>
@@ -206,6 +200,7 @@ async function copyReferral(){
 
 function toggleCategory(id){document.querySelectorAll('.subCategory').forEach(x=>{if(x.id!==id)x.classList.remove('open')});const x=$(id);if(x)x.classList.toggle('open')}
 function toggleSideMenu(){document.querySelector('.panelShell')?.classList.toggle('menuOpen')}
+function closeSideMenu(){document.querySelector('.panelShell')?.classList.remove('menuOpen')}
 function panelHome(){ $('profileView').classList.add('hidden'); $('dashboardView').classList.remove('hidden'); updateDashboard(); }
 function panelComing(name){ showServiceMsg(name+' panel तैयार किया जा रहा है।'); }
 
@@ -259,7 +254,7 @@ async function uploadKyc(kind){
     if(!r.ok)throw new Error(t||'Upload failed');
     profile=await rpc('get_my_member_profile',{});
     profile=Array.isArray(profile)?profile[0]:profile;
-    $('kycStatus').innerHTML='KYC Status: <b>'+(profile?.kyc_status||'submitted')+'</b>';
+    $('kycStatus').innerHTML='KYC Status: <b>'+(profile?.kyc_status||'Submitted')+'</b>';
     msg('appMessage',(kind==='aadhaar'?'Aadhaar':'PAN')+' सुरक्षित रूप से जमा हो गया। KYC verification admin द्वारा की जाएगी।','success');
   }catch(e){msg('appMessage','Upload में समस्या: '+e.message,'error')}
 }
