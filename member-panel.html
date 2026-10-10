@@ -97,7 +97,17 @@ async function rpc(name,body={}){return api('/rest/v1/rpc/'+name,{method:'POST',
 async function branding(){try{const r=await api('/rest/v1/branding_assets?asset_key=eq.sbpf-logo&is_active=eq.true&select=asset_content&limit=1');const svg=r?.[0]?.asset_content;if(svg){const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);$('logo').src=src;$('authLogo').src=src}}catch{}}
 function msg(t,c=''){ $('authMsg').innerHTML='<div class="notice '+c+'">'+esc(t)+'</div>'}
 async function login(){const b=$('loginBtn');b.disabled=true;b.textContent='प्रवेश हो रहा है...';try{const j=await api('/auth/v1/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:$('email').value.trim(),password:$('password').value})});token=j.access_token;localStorage.setItem('sbpf_access_token',token);await load()}catch(e){msg('Login में समस्या: '+e.message,'error')}finally{b.disabled=false;b.textContent='प्रवेश करें'}}
-async function load(){try{const p=await rpc('get_my_member_profile');profile=Array.isArray(p)?p[0]:p;if(!profile)throw Error('Member profile नहीं मिला');const d=await rpc('get_my_member_dashboard');dashboard=Array.isArray(d)?d[0]:d;$('auth').classList.add('hidden');$('app').classList.remove('hidden');render()}catch(e){token='';localStorage.removeItem('sbpf_access_token');msg(e.message,'error')}}
+async function load(){try{
+ const p=await rpc('get_my_member_profile');profile=Array.isArray(p)?p[0]:p;
+ if(!profile)throw Error('Member profile नहीं मिला');
+ const currentUser=await api('/auth/v1/user');
+ if(!currentUser?.id)throw Error('लॉगिन सत्यापित नहीं हुआ। कृपया दोबारा प्रवेश करें।');
+ // Read only the signed-in member's own extra profile fields; members_select_own RLS policy applies.
+ const extra=await api('/rest/v1/members?select=father_name,dob,gender,pincode,kyc_status,aadhaar_document_path,pan_document_path,profile_photo_path,user_id&user_id=eq.'+encodeURIComponent(currentUser.id)+'&limit=1');
+ if(Array.isArray(extra)&&extra[0]&&extra[0].user_id===currentUser.id)profile={...profile,...extra[0]};
+ const d=await rpc('get_my_member_dashboard');dashboard=Array.isArray(d)?d[0]:d;
+ $('auth').classList.add('hidden');$('app').classList.remove('hidden');render();
+ }catch(e){token='';localStorage.removeItem('sbpf_access_token');msg(e.message,'error')}}
 function render(){ $('name').textContent=profile.full_name||'सदस्य';$('memberId').textContent=profile.member_id||'—';$('status').textContent=profile.status||profile.membership_status||'Pending';$('validity').textContent=profile.membership_end_date?'वैधता: '+profile.membership_end_date:'';branding(); if(dashboard?.profile_photo_url)$('photo').src=dashboard.profile_photo_url; }
 function home(){$('home').classList.remove('hidden');$('view').classList.add('hidden')}
 const titles={profile:'मेरी जानकारी',family:'परिवार रजिस्टर',kyc:'पहचान दस्तावेज़',id:'Digital Member ID Card',payment:'सदस्यता शुल्क व रसीद',certificate:'प्रमाण-पत्र',education:'शिक्षा',services:'सेवा क्षेत्र',network:'मेरा नेटवर्क',updates:'नई जानकारी','work-education':'शिक्षा','work-health':'स्वास्थ्य','work-employment':'रोजगार अवसर एवं कौशल','work-women':'महिला सशक्तिकरण','work-child':'बाल विकास','work-public':'जनसेवा','work-samvad':'शिकायत संवाद','work-civic':'नागरिक सहायता','work-environment':'पर्यावरण व समाज सेवा','work-activities':'मेरे कार्य'};
