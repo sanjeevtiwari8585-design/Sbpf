@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#12345b">
+<title>SBPF Admin | परिवार रजिस्टर समीक्षा</title>
+<style>
+:root{--navy:#12345b;--green:#13805b;--gold:#d4a72c;--paper:#f5f7fa;--ink:#1c2430;--muted:#5e6878;--line:#dce3eb;--danger:#a21f2d}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+header{background:linear-gradient(120deg,#12345b,#176d68);color:white;padding:20px max(18px,calc((100% - 1160px)/2));display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:4px solid var(--gold)}
+header h1{font-size:clamp(20px,3vw,29px);margin:0}header p{margin:3px 0 0;color:#e3f2ee;font-size:13px}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:9px;padding:10px 14px;font-weight:750;background:var(--navy);color:white}button:disabled{opacity:.55;cursor:not-allowed}
+.btn-light{background:white;color:var(--navy);border:1px solid var(--line)}.btn-green{background:var(--green)}.btn-red{background:var(--danger)}
+.wrap{max-width:1160px;margin:auto;padding:22px 16px 50px}.hidden{display:none!important}
+.box{background:white;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 4px 18px #12243b09}
+.login{max-width:480px;margin:7vh auto}.login h2,.box h2{margin:0 0 8px;color:var(--navy)}.muted{color:var(--muted);font-size:13px}
+label{display:block;font-size:13px;font-weight:700;margin:12px 0 5px}input,select,textarea{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:9px;background:white;color:var(--ink)}
+.msg{border-radius:10px;padding:11px;margin-top:12px;background:#fff5d8;white-space:pre-wrap;overflow-wrap:anywhere}.err{background:#fff0f0;border:1px solid #ffd0d0;color:#842029}.ok{background:#eaf8ef;border:1px solid #b8e2c4;color:#175c2b}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}.filters{display:flex;gap:10px;flex-wrap:wrap}.filters select,.filters input{min-width:185px;width:auto}
+.list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.family h3{color:var(--navy);margin:0 0 5px;font-size:18px}.pill{display:inline-block;border-radius:30px;padding:4px 9px;font-size:12px;font-weight:800;background:#fff4d7;color:#725300}.pill.verified{background:#e2f7e8;color:#176331}.pill.inactive{background:#fbe4e6;color:#982331}
+.data{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px;margin-top:12px}.kv{padding:8px 0;border-bottom:1px solid #eef1f5;min-width:0;overflow-wrap:anywhere}.kv b{display:block;font-size:11px;color:var(--muted);margin-bottom:2px}.kv span{font-size:13px}
+.people{border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:10px;background:#fbfcfe}.person{padding:8px 0;border-bottom:1px dashed var(--line);font-size:13px}.person:last-child{border-bottom:0}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.actions button{font-size:12px}.note{width:100%;margin-top:9px}
+.empty{padding:25px;text-align:center;color:var(--muted)}.small{font-size:12px;color:var(--muted)}
+@media(max-width:820px){.list{grid-template-columns:1fr}header{align-items:flex-start;flex-direction:column}.data{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.data{grid-template-columns:1fr}.filters select,.filters input{width:100%;min-width:0}.toolbar{align-items:stretch}.toolbar button{width:100%}.wrap{padding:14px 10px 35px}}
+</style>
+</head>
+<body>
+<header>
+ <div><h1>स्वर्णिम भारत परिवार फाउंडेशन</h1><p>Admin Console • परिवार रजिस्टर सत्यापन</p></div>
+ <button id="logoutBtn" class="btn-light hidden" type="button">लॉगआउट</button>
+</header>
+<main class="wrap">
+ <section id="loginPanel" class="box login">
+  <h2>अधिकृत एडमिन प्रवेश</h2>
+  <p class="muted">यह स्क्रीन केवल SBPF के अधिकृत एडमिन के लिए है। परिवार की निजी जानकारी सर्वर की Admin अनुमति से ही दिखाई जाती है।</p>
+  <form id="loginForm">
+   <label for="email">एडमिन ईमेल</label><input id="email" type="email" autocomplete="username" required>
+   <label for="password">पासवर्ड</label><input id="password" type="password" autocomplete="current-password" required>
+   <button id="loginBtn" type="submit" style="width:100%;margin-top:14px">सुरक्षित प्रवेश करें</button>
+  </form>
+  <div id="loginMsg" class="msg hidden" role="status"></div>
+ </section>
+ <section id="adminPanel" class="hidden">
+  <div class="box">
+   <div class="toolbar"><div><h2>परिवार रजिस्टर की समीक्षा</h2><div class="muted">सूची और निर्णय Supabase के admin-only RPC से लोड/सेव होते हैं।</div></div><button id="refreshBtn" type="button">सूची फिर लोड करें</button></div>
+   <div id="summary" class="msg">लोड हो रहा है…</div>
+   <div class="toolbar" style="margin-top:14px">
+    <div class="filters"><select id="statusFilter" aria-label="स्थिति फ़िल्टर"><option value="">सभी स्थितियाँ</option><option value="pending">समीक्षा लंबित</option><option value="verified">सत्यापित</option><option value="inactive">निष्क्रिय</option></select><input id="search" placeholder="परिवार कोड, नाम, जिला खोजें" aria-label="परिवार खोजें"></div>
+   </div>
+  </div>
+  <div id="familyList" class="list"></div>
+ </section>
+</main>
+<script>
+const API='https://dxowhzghrdghfzoggorx.supabase.co';
+const KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
+const $=id=>document.getElementById(id);
+let accessToken=localStorage.getItem('sbpf_access_token')||'';
+let families=[];
+const esc=value=>String(value??'—').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+async function api(path,options={}){
+ const headers={apikey:KEY,...(options.headers||{})};
+ if(accessToken)headers.Authorization='Bearer '+accessToken;
+ const response=await fetch(API+path,{...options,headers});
+ let data=null;try{data=await response.json()}catch{}
+ if(!response.ok)throw new Error(data?.message||data?.msg||data?.error_description||'अनुरोध विफल हुआ ('+response.status+')');
+ return data;
+}
+async function rpc(name,args={}){
+ return api('/rest/v1/rpc/'+name,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(args)});
+}
+function showMessage(element,message,kind=''){
+ element.className='msg'+(kind?' '+kind:'');element.textContent=message;element.classList.remove('hidden');
+}
+function pill(status){
+ const value=String(status||'pending');
+ const label=value==='verified'?'सत्यापित':value==='inactive'?'निष्क्रिय':'समीक्षा लंबित';
+ return '<span class="pill '+esc(value)+'">'+label+'</span>';
+}
+function kv(label,value){return '<div class="kv"><b>'+esc(label)+'</b><span>'+esc(value??'—')+'</span></div>';}
+function render(){
+ const filter=$('statusFilter').value;
+ const query=$('search').value.trim().toLocaleLowerCase('hi');
+ const items=families.filter(f=>(!filter||f.status===filter)&&(!query||[f.family_code,f.family_name,f.member_id,f.head_name,f.district,f.pincode].some(v=>String(v||'').toLocaleLowerCase('hi').includes(query))));
+ const counts=families.reduce((acc,f)=>{acc[f.status||'pending']=(acc[f.status||'pending']||0)+1;return acc;},{});
+ showMessage($('summary'),'कुल रजिस्टर: '+families.length+' • लंबित: '+(counts.pending||0)+' • सत्यापित: '+(counts.verified||0)+' • निष्क्रिय: '+(counts.inactive||0),'ok');
+ if(!items.length){$('familyList').innerHTML='<div class="box empty">इस फ़िल्टर में कोई परिवार रजिस्टर नहीं मिला।</div>';return;}
+ $('familyList').innerHTML=items.map(f=>{
+  const people=Array.isArray(f.people)?f.people:[];
+  const personHtml=people.length?people.map(p=>'<div class="person"><b>'+esc(p.name)+'</b> — '+esc(p.relation)+'<br>जन्म तिथि: '+esc(p.dob)+' • शिक्षा: '+esc(p.education)+' • काम: '+esc(p.occupation)+(p.disability_help?'<br>दिव्यांग सहायता की आवश्यकता बताई गई है।':'')+'</div>').join(''):'<div class="person">परिवार सदस्य विवरण उपलब्ध नहीं।</div>';
+  return '<article class="box family" data-family-id="'+Number(f.id)+'">'+
+   '<div class="toolbar"><div><h3>'+esc(f.family_name)+'</h3><div class="small">परिवार कोड: <b>'+esc(f.family_code)+'</b> • सदस्य ID: '+esc(f.member_id)+'</div></div>'+pill(f.status)+'</div>'+
+   '<div class="data">'+kv('परिवार मुखिया',f.head_name)+kv('संपर्क मोबाइल',f.mobile)+kv('जिला / राज्य',String(f.district||'—')+' / '+String(f.state||'—'))+kv('पिन कोड',f.pincode)+kv('वार्षिक आय (₹)',f.annual_income)+kv('राशन कार्ड',f.ration_card_type)+kv('आवास',f.housing_status)+kv('भूमि स्वामित्व',f.land_ownership)+kv('आजीविका',f.livelihood_type)+kv('सामाजिक श्रेणी',f.social_category)+kv('सहायता की ज़रूरत',Array.isArray(f.family_needs)?f.family_needs.join('، '):'—')+kv('जमा तिथि',f.created_at?new Date(f.created_at).toLocaleString('hi-IN'):'—')+'</div>'+
+   '<div class="people"><b>परिवार सदस्य ('+Number(f.member_count||0)+')</b>'+personHtml+'</div>'+
+   '<label for="note-'+Number(f.id)+'">एडमिन समीक्षा टिप्पणी (वैकल्पिक)</label><textarea id="note-'+Number(f.id)+'" class="note" rows="2" maxlength="800" placeholder="सत्यापन या कमी का संक्षिप्त कारण"></textarea>'+
+   '<div class="actions"><button class="btn-green" data-review="verified" data-id="'+Number(f.id)+'" type="button">सत्यापित करें</button><button class="btn-light" data-review="pending" data-id="'+Number(f.id)+'" type="button">लंबित रखें</button><button class="btn-red" data-review="inactive" data-id="'+Number(f.id)+'" type="button">निष्क्रिय करें</button></div></article>';
+ }).join('');
+}
+async function loadFamilies(){
+ showMessage($('summary'),'Supabase से परिवार रजिस्टर लोड हो रहे हैं…');
+ $('familyList').innerHTML='<div class="box empty">लोड हो रहा है…</div>';
+ try{
+   const data=await rpc('admin_list_member_pariwar');
+   families=Array.isArray(data)?data:[];
+   render();
+ }catch(error){
+   families=[];$('familyList').innerHTML='<div class="box msg err"><b>एडमिन सूची नहीं खुल सकी।</b><br>'+esc(error.message)+'<br><small>सामान्य सदस्य के खाते को अनुमति नहीं होगी। यदि यह एडमिन खाता है, तो Supabase के admin_users में उसका user_id और is_admin() जाँचें।</small></div>';
+   showMessage($('summary'),'सुरक्षित सूची लोड नहीं हुई। कोई डेटा बदला नहीं गया।','err');
+ }
+}
+async function login(event){
+ event.preventDefault();const btn=$('loginBtn');btn.disabled=true;btn.textContent='सत्यापन हो रहा है…';
+ try{
+  const data=await api('/auth/v1/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:$('email').value.trim(),password:$('password').value})});
+  if(!data?.access_token)throw new Error('लॉगिन टोकन नहीं मिला।');
+  accessToken=data.access_token;localStorage.setItem('sbpf_access_token',accessToken);
+  await enterAdmin();
+ }catch(error){showMessage($('loginMsg'),'प्रवेश नहीं हुआ: '+error.message,'err');}
+ finally{btn.disabled=false;btn.textContent='सुरक्षित प्रवेश करें';}
+}
+async function enterAdmin(){
+ // The server-side admin_list_member_pariwar RPC verifies is_admin(); UI state is not the security boundary.
+ await api('/auth/v1/user');
+ $('loginPanel').classList.add('hidden');$('adminPanel').classList.remove('hidden');$('logoutBtn').classList.remove('hidden');
+ await loadFamilies();
+}
+async function review(id,decision){
+ const family=families.find(f=>Number(f.id)===Number(id));if(!family)return;
+ const label=decision==='verified'?'सत्यापित':decision==='inactive'?'निष्क्रिय':'समीक्षा लंबित';
+ if(!confirm('परिवार '+(family.family_code||'')+' की स्थिति "'+label+'" करनी है?'))return;
+ const note=$('note-'+Number(id))?.value.trim()||null;
+ const buttons=document.querySelectorAll('[data-id="'+Number(id)+'"][data-review]');
+ buttons.forEach(b=>b.disabled=true);
+ try{
+  const result=await rpc('admin_review_member_pariwar',{p_family_id:Number(id),p_decision:decision,p_note:note});
+  showMessage($('summary'),'परिवार '+esc(result?.family_code||family.family_code)+' की स्थिति अपडेट हुई: '+label,'ok');
+  await loadFamilies();
+ }catch(error){
+  showMessage($('summary'),'स्थिति अपडेट नहीं हुई: '+error.message,'err');
+ }finally{buttons.forEach(b=>b.disabled=false);}
+}
+function logout(){
+ accessToken='';localStorage.removeItem('sbpf_access_token');families=[];
+ $('adminPanel').classList.add('hidden');$('logoutBtn').classList.add('hidden');$('loginPanel').classList.remove('hidden');$('password').value='';
+ showMessage($('loginMsg'),'सुरक्षित रूप से लॉगआउट हो गया।');
+}
+$('loginForm').addEventListener('submit',login);
+$('refreshBtn').addEventListener('click',loadFamilies);
+$('statusFilter').addEventListener('change',render);
+$('search').addEventListener('input',render);
+$('familyList').addEventListener('click',event=>{
+ const button=event.target.closest('button[data-review][data-id]');
+ if(button)review(button.dataset.id,button.dataset.review);
+});
+$('logoutBtn').addEventListener('click',logout);
+if(accessToken){
+ enterAdmin().catch(error=>{
+  accessToken='';localStorage.removeItem('sbpf_access_token');
+  showMessage($('loginMsg'),'पहला लॉगिन सत्र स्वीकार नहीं हुआ। कृपया एडमिन से दोबारा प्रवेश करें। '+error.message,'err');
+ });
+}
+</script>
+</body>
+</html>
