@@ -335,7 +335,10 @@ $('showSignupBtn').onclick=()=>toggleSignup(true);
 $('cancelSignupBtn').onclick=()=>toggleSignup(false);
 $('signupForm').addEventListener('submit',registerAccount);
 $('password').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
-branding();if(token)load();
+branding();
+const referralParam=new URLSearchParams(window.location.search).get('ref');
+if(referralParam&&referralParam.length<=40){toggleSignup(true);$('signupReferral').value=referralParam}
+if(token)load();
 </script>
 </body>
 </html>
