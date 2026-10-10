@@ -34,6 +34,7 @@ main{padding:14px}.hero{background:linear-gradient(135deg,#7d1020,#a71f31);color
 .focusAreaCard h4{margin:0;font-size:14px;color:var(--maroon)}
 .focusAreaCard p{margin:0;font-size:12px;color:var(--muted);line-height:1.5;flex:1}
 .focusAreaCard button{border:1px solid var(--line);background:var(--cream);color:var(--maroon);border-radius:9px;padding:8px 10px;font-weight:700;font-size:12px;width:100%}
+.campaignCard .campaignLink{display:block;margin-top:5px;width:100%;text-align:center;text-decoration:none;border:1px solid var(--line);background:var(--cream);color:var(--maroon);border-radius:9px;padding:8px 10px;font-weight:700;font-size:12px}
 .areaRequestForm label{display:block;font-size:12px;font-weight:700;margin:10px 0 5px}
 .areaRequestForm input,.areaRequestForm select,.areaRequestForm textarea{width:100%;padding:10px;border:1px solid #d9d9d9;border-radius:9px}
 .areaRequestForm textarea{min-height:100px;resize:vertical}
@@ -92,6 +93,11 @@ main{padding:14px}.hero{background:linear-gradient(135deg,#7d1020,#a71f31);color
    <div class="cardHead"><div class="icon">🧭</div><div><h3>सभी सक्रिय कार्यक्षेत्र</h3><small>सूची Supabase से अपने-आप अपडेट होगी</small></div></div>
    <div id="focusAreasMessage" class="notice" style="margin-top:12px">कार्य क्षेत्र लोड हो रहे हैं…</div>
    <div id="focusAreasGrid" class="focusGrid"></div>
+  </section>
+  <section class="panel" id="campaignsPanel" style="margin:14px 0">
+   <div class="cardHead"><div class="icon">📢</div><div><h3>सभी सक्रिय स्वर्णिम अभियान</h3><small>अभियान की सामग्री, जानकारी और गतिविधियाँ देखें</small></div></div>
+   <div id="campaignsMessage" class="notice" style="margin-top:12px">स्वर्णिम अभियान लोड हो रहे हैं…</div>
+   <div id="campaignsGrid" class="focusGrid"></div>
   </section>
   <div class="categories">
    <article class="card"><div class="cardHead"><div class="icon">👤</div><div><h3>मेरी जानकारी</h3><small>मेरी सभी व्यक्तिगत सुविधाएँ</small></div></div><div class="items">
@@ -180,7 +186,7 @@ async function load(){try{
  if(Array.isArray(extra)&&extra[0]&&extra[0].user_id===currentUser.id)profile={...profile,...extra[0]};
  const d=await rpc('get_my_member_dashboard');dashboard=Array.isArray(d)?d[0]:d;
  $('auth').classList.add('hidden');$('app').classList.remove('hidden');render();
- await loadFocusAreas();
+ await Promise.all([loadFocusAreas(),loadCampaigns()]);
  }catch(e){token='';localStorage.removeItem('sbpf_access_token');msg(e.message,'error')}}
 function render(){ $('name').textContent=profile.full_name||'सदस्य';$('memberId').textContent=profile.member_id||'—';$('status').textContent=profile.status||profile.membership_status||'Pending';$('validity').textContent=profile.membership_end_date?'वैधता: '+profile.membership_end_date:'';branding(); if(dashboard?.profile_photo_url)$('photo').src=dashboard.profile_photo_url;const reminder=$('profileReminder');if(reminder)reminder.classList.toggle('hidden',profile.profile_completed===true); }
 function dismissProfileReminder(){$('profileReminder')?.classList.add('hidden')}
@@ -478,6 +484,36 @@ async function educationView(){const [cats,content,res]=await Promise.all([api('
 async function servicesView(){const [schemes,employment,areas]=await Promise.all([api('/rest/v1/government_schemes?published=eq.true&select=name,description,official_url&order=created_at.desc&limit=10'),api('/rest/v1/employment_opportunities?select=title,description,official_url&order=created_at.desc&limit=10'),api('/rest/v1/focus_areas?is_active=eq.true&select=name,description&order=id.asc')]);let h='<div class="panel"><div class="items">'+['शिक्षा','स्वास्थ्य','महिला सशक्तिकरण','बाल विकास','रोजगार अवसर','कौशल विकास','सरकारी योजनाएँ','सामाजिक सेवा'].map(x=>'<button>'+x+'</button>').join('')+'</div></div>';if(schemes?.length)h+='<div class="panel"><b>सरकारी योजनाएँ</b>'+schemes.map(x=>'<div class="notice"><b>'+esc(x.name)+'</b><br><small>'+esc(x.description)+'</small>'+(x.official_url?'<br><a target="_blank" href="'+esc(x.official_url)+'">Official जानकारी</a>':'')+'</div>').join('')+'</div>';if(employment?.length)h+='<div class="panel"><b>रोजगार अवसर अवसर</b>'+employment.map(x=>'<div class="notice"><b>'+esc(x.title)+'</b><br><small>'+esc(x.description)+'</small></div>').join('')+'</div>';$('viewBody').innerHTML=h}
 
 const focusAreaIcons={1:'🎓',2:'🏥',3:'💼',4:'👩',5:'🧒',6:'🏪',7:'🌱',8:'🤝',9:'♿',10:'🏛️',11:'🆘',12:'👵'};
+const campaignIcons={
+ 'swarnim-jan-jagran':'📚',
+ 'swarnim-samvad':'💬',
+ 'swarnim-prahar':'📣',
+ 'swarnim-sipahi':'🫡',
+ 'swarnim-paryavaran':'🌱',
+ 'swarnim-vyapar':'🏪',
+ 'swarnim-gurukulam':'🎓',
+ 'swarnim-seva':'🤝'
+};
+let activeCampaigns=[];
+async function loadCampaigns(){
+ const message=$('campaignsMessage'),grid=$('campaignsGrid');
+ try{
+  const rows=await api('/rest/v1/campaigns?is_active=eq.true&select=id,name,slug,description&order=id.asc');
+  activeCampaigns=Array.isArray(rows)?rows:[];
+  if(!activeCampaigns.length){message.textContent='वर्तमान में कोई सक्रिय स्वर्णिम अभियान उपलब्ध नहीं है।';grid.innerHTML='';return}
+  message.textContent='कुल सक्रिय अभियान: '+activeCampaigns.length+' • किसी अभियान को खोलकर उसकी श्रेणियाँ और उपलब्ध सामग्री देखें।';
+  grid.innerHTML=activeCampaigns.map(campaign=>{
+   const slug=typeof campaign.slug==='string'?campaign.slug:'';
+   const link=slug
+    ? '<a class="campaignLink" href="campaign.html?slug='+encodeURIComponent(slug)+'">विस्तार से देखें →</a>'
+    : '<span class="campaignLink" aria-disabled="true">विवरण उपलब्ध नहीं</span>';
+   return '<article class="focusAreaCard campaignCard"><div class="focusIcon">'+(campaignIcons[slug]||'📢')+'</div><h4>'+esc(campaign.name)+'</h4><p>'+esc(campaign.description||'इस अभियान की जानकारी और सामग्री शीघ्र उपलब्ध होगी।')+'</p>'+link+'</article>';
+  }).join('');
+ }catch(error){
+  message.innerHTML='स्वर्णिम अभियान सूची लोड नहीं हुई: '+esc(error.message)+'<br><small>नेटवर्क या Supabase की सार्वजनिक पढ़ने की अनुमति जाँचें।</small>';
+  grid.innerHTML='';
+ }
+}
 let activeFocusAreas=[];
 async function loadFocusAreas(){
  const message=$('focusAreasMessage'),grid=$('focusAreasGrid');
