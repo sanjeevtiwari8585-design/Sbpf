@@ -106,7 +106,8 @@ footer{background:#241d20;color:#f9f3ec;text-align:center;padding:28px 18px}foot
             String(index + 1).padStart(2, '0') + ' • SWARNIM ABHIYAN</div><h3>' +
             escapeSbpfHtml(item.name) + '</h3><p>' +
             escapeSbpfHtml(item.description || 'इस अभियान का विवरण शीघ्र उपलब्ध होगा।') +
-            '</p></article>'
+            '</p><p><a class="btn secondary" style="display:inline-block;padding:8px 12px;font-size:13px;margin-top:12px" href="campaign.html?slug=' +
+            encodeURIComponent(item.slug || '') + '">विस्तार से पढ़ें →</a></p></article>'
           ).join('');
         }
       }
