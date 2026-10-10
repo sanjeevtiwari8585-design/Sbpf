@@ -19,7 +19,7 @@ nav a{padding:8px 12px;text-decoration:none;border-radius:9px;font-size:14px;fon
 .actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:26px}.btn{display:inline-block;padding:12px 20px;border-radius:10px;text-decoration:none;font-weight:750;border:1px solid var(--maroon);background:var(--maroon);color:white}.btn.secondary{background:white;color:var(--maroon);border-color:#d9c9bd}
 .wrap{max-width:1120px;margin:auto;padding:48px 20px}.section-head{text-align:center;max-width:720px;margin:0 auto 28px}.section-head h2{margin:0 0 8px;color:var(--maroon);font-size:clamp(24px,3vw,34px)}.section-head p{margin:0;color:var(--muted)}
 .pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.pillar,.campaign,.info{background:white;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 5px 20px #3d1b1207}.pillar{text-align:center}.pillar span{font-size:28px}.pillar h3{margin:7px 0 2px;color:var(--maroon);font-size:17px}.pillar p{margin:0;color:var(--muted);font-size:14px}
-.campaigns{background:#f5f0e9}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.campaign .number{font-size:12px;color:#947322;font-weight:800;letter-spacing:1px}.campaign h3{margin:8px 0;color:var(--maroon);font-size:18px}.campaign p{font-size:14px;color:var(--muted);margin:0}
+.campaigns{background:#f5f0e9}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.campaign .number{font-size:12px;color:#947322;font-weight:800;letter-spacing:1px}.campaign .booster-img{display:block;width:100%;aspect-ratio:1200/630;object-fit:cover;border-radius:10px;margin:8px 0 12px}.campaign h3{margin:8px 0;color:var(--maroon);font-size:18px}.campaign p{font-size:14px;color:var(--muted);margin:0}
 .callout{border-radius:20px;background:linear-gradient(120deg,#781626,#a42a36);color:white;padding:30px;display:flex;align-items:center;justify-content:space-between;gap:20px}.callout h2{margin:0 0 7px;font-size:clamp(22px,3vw,30px)}.callout p{margin:0;color:#f6dfd5}.callout .btn{background:var(--gold);border-color:var(--gold);color:#2c2020;white-space:nowrap}
 footer{background:#241d20;color:#f9f3ec;text-align:center;padding:28px 18px}footer p{margin:5px;color:#d6c9c7;font-size:13px}
 @media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.pillars{grid-template-columns:repeat(2,1fr)}header{padding:18px 20px}.callout{align-items:flex-start;flex-direction:column}}
@@ -81,8 +81,8 @@ footer{background:#241d20;color:#f9f3ec;text-align:center;padding:28px 18px}foot
     try {
       const headers = { apikey: publishableKey };
       const [areasResponse, campaignsResponse] = await Promise.all([
-        fetch(supabaseUrl + '/rest/v1/focus_areas?is_active=eq.true&select=id,name,slug,description&order=id.asc', { headers }),
-        fetch(supabaseUrl + '/rest/v1/campaigns?id=lt.9&is_active=eq.true&select=id,name,slug,description&order=id.asc', { headers })
+        fetch(supabaseUrl + '/rest/v1/focus_areas?is_active=eq.true&select=id,name,slug,description,image_url&order=id.asc', { headers }),
+        fetch(supabaseUrl + '/rest/v1/campaigns?is_active=eq.true&select=id,name,slug,description,image_url&order=id.asc', { headers })
       ]);
       if (areasResponse.ok) {
         const areas = await areasResponse.json();
@@ -90,8 +90,9 @@ footer{background:#241d20;color:#f9f3ec;text-align:center;padding:28px 18px}foot
         if (grid && Array.isArray(areas) && areas.length) {
           grid.innerHTML = areas.map((item, index) =>
             '<article class="campaign"><div class="number">' +
-            String(index + 1).padStart(2, '0') + ' • SBPF WORK AREA</div><h3>' +
-            escapeSbpfHtml(item.name) + '</h3><p>' +
+            String(index + 1).padStart(2, '0') + ' • SBPF WORK AREA</div>' +
+            (item.image_url ? '<img class="booster-img" loading="lazy" src="' + escapeSbpfHtml(item.image_url) + '" alt="' + escapeSbpfHtml(item.name) + ' booster">' : '') +
+            '<h3>' + escapeSbpfHtml(item.name) + '</h3><p>' +
             escapeSbpfHtml(item.description || 'इस कार्यक्षेत्र की जानकारी शीघ्र उपलब्ध होगी।') +
             '</p></article>'
           ).join('');
@@ -101,14 +102,20 @@ footer{background:#241d20;color:#f9f3ec;text-align:center;padding:28px 18px}foot
         const campaigns = await campaignsResponse.json();
         const grid = document.getElementById('sbpfCampaignGrid');
         if (grid && Array.isArray(campaigns) && campaigns.length) {
-          grid.innerHTML = campaigns.map((item, index) =>
-            '<article class="campaign"><div class="number">' +
-            String(index + 1).padStart(2, '0') + ' • SWARNIM ABHIYAN</div><h3>' +
-            escapeSbpfHtml(item.name) + '</h3><p>' +
-            escapeSbpfHtml(item.description || 'इस अभियान का विवरण शीघ्र उपलब्ध होगा।') +
-            '</p><p><a class="btn secondary" style="display:inline-block;padding:8px 12px;font-size:13px;margin-top:12px" href="campaign.html?slug=' +
-            encodeURIComponent(item.slug || '') + '">विस्तार से पढ़ें →</a></p></article>'
-          ).join('') + '<article class="campaign"><div class="number">09 • SWARNIMBOOK</div><h3>स्वर्णिमबुक</h3><p>सदस्यों के लिए पोस्ट, विचार, फोटो/वीडियो और सामाजिक संवाद का डिजिटल मंच।</p><p><a class="btn secondary" style="display:inline-block;padding:8px 12px;font-size:13px;margin-top:12px" href="swarnim-book.html">SwarnimBook खोलें →</a></p></article>' + '<article class="campaign"><div class="number">10 • SWARNIM MEDIA</div><h3>स्वर्णिम मीडिया</h3><p>समाचार, लेख, वीडियो, फोटो और पत्रकार डैशबोर्ड।</p><p><a class="btn secondary" style="display:inline-block;padding:8px 12px;font-size:13px;margin-top:12px" href="swarnim-media/index.html">Swarnim Media खोलें →</a></p></article>';
+          grid.innerHTML = campaigns.map((item, index) => {
+            const target = item.slug === 'swarnim-book' ? 'swarnim-book.html' :
+              item.slug === 'swarnim-media' ? 'swarnim-media/index.html' :
+              'campaign.html?slug=' + encodeURIComponent(item.slug || '');
+            const action = item.slug === 'swarnim-book' ? 'SwarnimBook खोलें →' :
+              item.slug === 'swarnim-media' ? 'Swarnim Media खोलें →' : 'विस्तार से पढ़ें →';
+            return '<article class="campaign"><div class="number">' +
+              String(index + 1).padStart(2, '0') + ' • SWARNIM ABHIYAN</div>' +
+              (item.image_url ? '<img class="booster-img" loading="lazy" src="' + escapeSbpfHtml(item.image_url) + '" alt="' + escapeSbpfHtml(item.name) + ' booster">' : '') +
+              '<h3>' + escapeSbpfHtml(item.name) + '</h3><p>' +
+              escapeSbpfHtml(item.description || 'इस अभियान का विवरण शीघ्र उपलब्ध होगा।') +
+              '</p><p><a class="btn secondary" style="display:inline-block;padding:8px 12px;font-size:13px;margin-top:12px" href="' +
+              target + '">' + action + '</a></p></article>';
+          }).join('');
         }
       }
     } catch (error) {
