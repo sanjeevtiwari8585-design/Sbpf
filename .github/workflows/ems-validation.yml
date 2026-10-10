@@ -51,3 +51,10 @@ jobs:
           grep -q 'ems_attendance' ems.html
           grep -q 'ems_fee_records' ems.html
           grep -q 'ems_student_report_cards' ems.html
+
+          test -s hms.html
+          grep -q 'hms_patient_registrations' hms.html
+          grep -q 'hms_appointments' hms.html
+          grep -q 'hms_clinical_records' hms.html
+          grep -q 'hms_bills' hms.html
+          grep -q 'hms_staff_salary' hms.html
