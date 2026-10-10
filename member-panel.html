@@ -28,7 +28,7 @@ main{padding:14px}.hero{background:linear-gradient(135deg,#7d1020,#a71f31);color
 .family-form .member-row{border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0;background:#fff}
 .family-form .member-row h4{margin:0 0 8px;color:var(--maroon)}
 .family-form .add-member{width:100%;border:1px dashed #aa8d44;background:#fffdf5;border-radius:10px;padding:10px;font-weight:700;color:var(--maroon)}
-@media(max-width:720px){.categories{grid-template-columns:1fr}.quick{grid-template-columns:repeat(2,1fr)}main{padding:10px}.hero{padding:15px}.items{grid-template-columns:1fr 1fr}.row{grid-template-columns:1fr}}
+@media(max-width:720px){.categories{grid-template-columns:1fr}.quick{grid-template-columns:repeat(2,1fr)}main{padding:10px}.hero{padding:15px}.items{grid-template-columns:1fr 1fr}.row{grid-template-columns:1fr}.family-form .form-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -128,7 +128,10 @@ async function familyView(){
  const fields='id,family_code,family_name,mobile,address,village_or_ward,district,state,pincode,notes,annual_income,ration_card_type,housing_status,land_ownership,livelihood_type,social_category,family_needs,status,submitted_at';
  $('viewBody').innerHTML='<div class="panel">परिवार रिकॉर्ड सुरक्षित रूप से लोड हो रहा है…</div>';
  let family=null,members=[];
- const rows=await api('/rest/v1/member_pariwar_register?select='+fields+'&order=updated_at.desc&limit=1');
+ const currentUser=await api('/auth/v1/user');
+ if(!currentUser?.id)throw new Error('लॉगिन सत्र सत्यापित नहीं हुआ। कृपया दोबारा प्रवेश करें।');
+ // Always scope this read to the current account. Admin access must not expose another family's record here.
+ const rows=await api('/rest/v1/member_pariwar_register?select='+fields+'&created_by=eq.'+encodeURIComponent(currentUser.id)+'&order=updated_at.desc&limit=1');
  family=Array.isArray(rows)&&rows.length?rows[0]:null;
  if(family){
    const children=await api('/rest/v1/member_pariwar_members?family_id=eq.'+encodeURIComponent(family.id)+'&select=id,full_name,relation_to_head,dob,gender,mobile,education,occupation,is_dependent,is_student,has_disability,marital_status&order=id.asc');
@@ -183,7 +186,7 @@ async function saveFamily(event){
    const result=await rpc('register_my_pariwar',{p_family:family,p_members:people});
    const saved=Array.isArray(result)?result[0]:result;
    status.innerHTML='<div class="notice success"><b>परिवार रजिस्टर जमा हो गया।</b><br>परिवार कोड: '+esc(saved?.family_code||'रिकॉर्ड बन गया')+'<br>स्थिति: '+esc(saved?.status||'जाँच के लिए लंबित')+'<br>सदस्य संख्या: '+esc(saved?.member_count??people.length)+'<br><small>अब एडमिन समीक्षा और उपलब्ध योजना-सहायता की जाँच कर सकता है।</small></div>';
-   await familyView();
+   // Keep the confirmation visible; the saved record is loaded again when this view is reopened.
  }catch(error){
    status.innerHTML='<div class="notice error"><b>अभी जमा नहीं हो सका।</b><br>'+esc(error.message||'अनुरोध विफल हुआ')+'<br><small>आपकी जानकारी को सफलतापूर्वक जमा हुआ नहीं माना गया है। फ़ॉर्म की जाँच कर फिर कोशिश करें।</small></div>';
  }finally{
