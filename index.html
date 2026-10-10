@@ -82,7 +82,7 @@ footer{background:#241d20;color:#f9f3ec;text-align:center;padding:28px 18px}foot
       const headers = { apikey: publishableKey };
       const [areasResponse, campaignsResponse] = await Promise.all([
         fetch(supabaseUrl + '/rest/v1/focus_areas?is_active=eq.true&select=id,name,slug,description&order=id.asc', { headers }),
-        fetch(supabaseUrl + '/rest/v1/campaigns?is_active=eq.true&select=id,name,slug,description&order=id.asc', { headers })
+        fetch(supabaseUrl + '/rest/v1/campaigns?id=lt.9&is_active=eq.true&select=id,name,slug,description&order=id.asc', { headers })
       ]);
       if (areasResponse.ok) {
         const areas = await areasResponse.json();
