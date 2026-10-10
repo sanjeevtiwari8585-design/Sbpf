@@ -53,6 +53,9 @@ jobs:
           grep -q 'ems_student_report_cards' ems.html
 
           test -s swarnim-book.html
+          test -s swarnim-media/index.html
+          grep -q 'SMLive News' swarnim-media/index.html
+          grep -q 'swarnim-media/index.html' index.html
           grep -q 'swarnim_book_posts' swarnim-book.html
           grep -q 'swarnim_book_comments' swarnim-book.html
           grep -q 'swarnim_book_profiles' swarnim-book.html
