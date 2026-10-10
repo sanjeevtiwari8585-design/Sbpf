@@ -136,6 +136,10 @@ async function familyView(){
  if(family){
    const children=await api('/rest/v1/member_pariwar_members?family_id=eq.'+encodeURIComponent(family.id)+'&select=id,full_name,relation_to_head,dob,gender,mobile,education,occupation,is_dependent,is_student,has_disability,marital_status&order=id.asc');
    members=Array.isArray(children)?children:[];
+   if(!members.length){
+     $('viewBody').innerHTML='<div class="panel"><div class="notice error"><b>सुरक्षा के लिए अपडेट रोका गया।</b><br>परिवार का रिकॉर्ड मिला, लेकिन मौजूदा परिवार-सदस्य सूची इस लॉगिन में पढ़ी नहीं जा सकी। सेव करने से पहले सूची की पुष्टि ज़रूरी है, क्योंकि अपडेट मौजूदा सूची बदलता है। कृपया बाद में फिर खोलें या एडमिन से सुरक्षित जाँच करवाएँ।</div></div>';
+     return;
+   }
  }
  const needs=['शिक्षा सहायता','स्वास्थ्य सहायता','रोजगार / कौशल','महिला सशक्तिकरण','बाल विकास','दिव्यांग सहायता','आवास सहायता','राशन / खाद्य सहायता','सरकारी योजना मार्गदर्शन','स्वरोजगार सहायता'];
  const chosen=Array.isArray(family?.family_needs)?family.family_needs:[];
