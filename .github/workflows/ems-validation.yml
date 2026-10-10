@@ -67,3 +67,8 @@ jobs:
           grep -q 'hms_clinical_records' hms.html
           grep -q 'hms_bills' hms.html
           grep -q 'hms_staff_salary' hms.html
+
+          test -s promotion-plan.html
+          grep -q 'sbpf_referral_level_rules' promotion-plan.html
+          grep -q 'sbpf_member_referral_rewards' promotion-plan.html
+          grep -q 'promotion-plan.html' index.html
