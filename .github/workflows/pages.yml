@@ -55,6 +55,60 @@ jobs:
           print(f'Validated {checked} inline JavaScript blocks across {len(pages)} HTML pages.')
           PY
 
+      - name: Smoke-test site structure and local links
+        run: |
+          python - <<'PY'
+          import html.parser, pathlib, sys, urllib.parse
+          root = pathlib.Path('.').resolve()
+          required = ['index.html', 'member.html', 'member-panel.html']
+          missing = [p for p in required if not (root / p).is_file()]
+          if missing:
+              print('Missing required entry pages:', ', '.join(missing))
+              sys.exit(1)
+
+          class Links(html.parser.HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.links = []
+              def handle_starttag(self, tag, attrs):
+                  for key, value in attrs:
+                      if key in ('href', 'src', 'poster') and value:
+                          self.links.append((tag, key, value.strip()))
+
+          pages = sorted(root.rglob('*.html'))
+          issues = []
+          checked = 0
+          for page in pages:
+              if '.git' in page.parts or 'node_modules' in page.parts:
+                  continue
+              parser = Links()
+              parser.feed(page.read_text(encoding='utf-8'))
+              for tag, key, raw in parser.links:
+                  value = raw.strip()
+                  if not value or value.startswith(('#', '//', 'http://', 'https://', 'mailto:', 'tel:', 'data:', 'javascript:', 'blob:')):
+                      continue
+                  if '{' in value or '}' in value:
+                      continue
+                  path = urllib.parse.unquote(urllib.parse.urlsplit(value).path)
+                  if not path:
+                      continue
+                  target = (root / path.lstrip('/')) if path.startswith('/') else (page.parent / path)
+                  target = target.resolve()
+                  if target.is_dir():
+                      target = target / 'index.html'
+                  checked += 1
+                  if root not in target.parents and target != root:
+                      issues.append(f'{page.relative_to(root)}: path escapes site root: {value}')
+                  elif not target.is_file():
+                      issues.append(f'{page.relative_to(root)}: missing {key} target: {value}')
+          print(f'Checked {len(pages)} HTML pages and {checked} local links/assets.')
+          if issues:
+              print('Broken local links/assets:')
+              print('\\n'.join(issues))
+              sys.exit(1)
+          print('Site structure smoke tests passed.')
+          PY
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
