@@ -52,6 +52,12 @@ jobs:
           grep -q 'ems_fee_records' ems.html
           grep -q 'ems_student_report_cards' ems.html
 
+          test -s swarnim-book.html
+          grep -q 'swarnim_book_posts' swarnim-book.html
+          grep -q 'swarnim_book_comments' swarnim-book.html
+          grep -q 'swarnim_book_profiles' swarnim-book.html
+          grep -q 'swarnim-book.html' index.html
+
           test -s hms.html
           grep -q 'hms_patient_registrations' hms.html
           grep -q 'hms_appointments' hms.html
