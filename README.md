@@ -8,6 +8,7 @@ Swarnim Bharat Parivar Foundation — public site and member portal using GitHub
 - Member entry: https://sanjeevtiwari8585-design.github.io/Sbpf/member.html
 - Member panel: https://sanjeevtiwari8585-design.github.io/Sbpf/member-panel.html
 - Admin family review: https://sanjeevtiwari8585-design.github.io/Sbpf/admin-family.html
+- Campaign details and public content: https://sanjeevtiwari8585-design.github.io/Sbpf/campaign.html?slug=swarnim-jan-jagran (open any campaign from the home page to see its detail page)
 
 The admin family route is not protected by a hidden URL; its actual data access and review operations are guarded by Supabase RPCs that require an authenticated admin.
 
