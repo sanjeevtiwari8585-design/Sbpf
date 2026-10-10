@@ -366,7 +366,42 @@ async function saveFamily(event){
  }
 }
 function kv(a,b){return '<div class="kv"><b>'+esc(a)+'</b><span>'+esc(b)+'</span></div>'}
-function kycView(){$('viewBody').innerHTML='<div class="panel"><div class="notice">KYC Status: <b>'+esc(profile.kyc_status||'Pending')+'</b></div>'+kv('Aadhaar Document',profile.aadhaar_document_path?'Submitted':'Not submitted')+kv('PAN Document',profile.pan_document_path?'Submitted':'Not submitted')+'<p style="font-size:12px;color:#6b7280">दस्तावेज़ upload/approval workflow मौजूदा सुरक्षित backend के अनुसार रहेगा।</p></div>'}
+async function kycView(){
+ const status=String(profile.kyc_status||'pending');
+ $('viewBody').innerHTML='<div class="panel"><div class="notice">KYC स्थिति: <b>'+esc(status)+'</b> • दस्तावेज़ अपलोड होने के बाद एडमिन द्वारा सत्यापन होगा।</div>'+
+ '<div class="row">'+kv('Aadhaar दस्तावेज़',profile.aadhaar_document_path?'जमा है':'अभी जमा नहीं')+kv('PAN दस्तावेज़',profile.pan_document_path?'जमा है':'अभी जमा नहीं')+'</div>'+
+ '<form id="kycUploadForm" class="family-form" style="margin-top:14px"><fieldset><legend>पहचान दस्तावेज़ सुरक्षित रूप से अपलोड करें</legend>'+
+ '<label>दस्तावेज़ का प्रकार *</label><select name="document_type" id="kycDocumentType" required><option value="aadhaar">Aadhaar कार्ड की प्रति</option><option value="pan">PAN कार्ड की प्रति</option></select>'+
+ '<label>फ़ाइल चुनें (JPG, PNG या PDF; अधिकतम 5 MB) *</label><input id="kycFile" type="file" accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf" required>'+
+ '<p style="font-size:12px;color:var(--muted)">केवल दस्तावेज़ की प्रति अपलोड करें। यहाँ Aadhaar/PAN नंबर या OTP अलग से न लिखें। आपकी फ़ाइल Supabase के सुरक्षित KYC upload endpoint से भेजी जाएगी।</p>'+
+ '<button id="kycUploadBtn" class="primary" type="submit">दस्तावेज़ जमा करें</button><div id="kycUploadMsg" aria-live="polite"></div></fieldset></form>'+
+ '<div class="notice">स्थिति “submitted” का अर्थ दस्तावेज़ मिला है; यह सरकारी पहचान सत्यापन या SBPF एडमिन की मंज़ूरी का प्रमाण नहीं है।</div></div>';
+ $('kycUploadForm').addEventListener('submit',uploadKycDocument);
+}
+async function uploadKycDocument(event){
+ event.preventDefault();
+ const form=$('kycUploadForm'),button=$('kycUploadBtn'),message=$('kycUploadMsg');
+ if(!form||!form.reportValidity())return;
+ const file=$('kycFile').files?.[0],kind=$('kycDocumentType').value;
+ if(!file){message.innerHTML='<div class="notice error">पहले फ़ाइल चुनें।</div>';return}
+ if(file.size>5*1024*1024){message.innerHTML='<div class="notice error">फ़ाइल 5 MB से बड़ी है। छोटी फ़ाइल चुनें।</div>';return}
+ if(!['image/jpeg','image/png','application/pdf'].includes(file.type)){message.innerHTML='<div class="notice error">केवल JPG, PNG या PDF फ़ाइल स्वीकार की जाएगी।</div>';return}
+ if(!token){message.innerHTML='<div class="notice error">लॉगिन सत्र नहीं मिला। कृपया दोबारा प्रवेश करें।</div>';return}
+ const payload=new FormData();payload.append('document_type',kind);payload.append('file',file,file.name);
+ button.disabled=true;button.textContent='सुरक्षित अपलोड हो रहा है…';
+ try{
+   const response=await fetch(URL+'/functions/v1/kyc-upload',{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+token},body:payload});
+   const raw=await response.text();let result=null;try{result=JSON.parse(raw)}catch{}
+   if(!response.ok)throw new Error((typeof result==='string'?result:result?.message)||raw||('Upload failed ('+response.status+')'));
+   if(!result?.success)throw new Error('सर्वर से सफल अपलोड की पुष्टि नहीं मिली।');
+   message.innerHTML='<div class="notice success">दस्तावेज़ जमा हो गया है। अब KYC स्थिति “submitted” होगी; एडमिन सत्यापन अभी बाकी है।</div>';
+   await load();await openView('kyc');
+ }catch(error){
+   message.innerHTML='<div class="notice error">दस्तावेज़ जमा नहीं हो सका: '+esc(error.message)+'<br><small>फ़ाइल को जमा हुआ नहीं माना गया है। अनुमति/फ़ाइल प्रकार जाँचें और दोबारा प्रयास करें।</small></div>';
+ }finally{
+   if($('kycUploadBtn')){$('kycUploadBtn').disabled=false;$('kycUploadBtn').textContent='दस्तावेज़ जमा करें';}
+ }
+}
 async function idView(){const d=await rpc('get_my_member_id_card');const x=Array.isArray(d)?d[0]:d;$('viewBody').innerHTML='<div class="panel">'+kv('नाम',x?.full_name||profile.full_name)+kv('Member ID',x?.member_id||profile.member_id)+kv('Status',x?.status||profile.status)+kv('QR Verification','Secure token based verification')+'<button class="primary" onclick="window.open('+JSON.stringify(x?.verification_url||dashboard?.verification_url||'#')+',\'_blank\')">QR Verification खोलें</button></div>'}
 async function paymentView(){const d=await rpc('get_my_membership_payment');const x=Array.isArray(d)?d[0]:d;$('viewBody').innerHTML='<div class="panel">'+kv('सदस्यता Fee','₹365 / वर्ष')+kv('Payment Status',x?.status||profile.payment_status||'Pending')+kv('Order ID',x?.order_id)+kv('Payment Date',x?.paid_at)+ '<div class="notice">Payment gateway: AtoPay. Payment integration को existing backend flow से ही जोड़ा जाएगा।</div></div>'}
 async function certificateView(){const d=await rpc('get_my_certificate');const x=Array.isArray(d)?d[0]:d;$('viewBody').innerHTML=x?'<div class="panel">'+kv('Certificate No.',x.certificate_number)+kv('Type',x.certificate_type)+kv('Status',x.status)+kv('Issued',x.issued_at)+'</div>':'<div class="panel empty">अभी कोई certificate उपलब्ध नहीं है।</div>'}
