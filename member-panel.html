@@ -17,6 +17,17 @@ main{padding:14px}.hero{background:linear-gradient(135deg,#7d1020,#a71f31);color
 .categories{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:15px;box-shadow:0 3px 12px #0000000a}.cardHead{display:flex;align-items:center;gap:11px}.icon{width:44px;height:44px;border-radius:12px;background:var(--cream);display:grid;place-items:center;font-size:23px}.card h3{margin:0;color:var(--maroon);font-size:16px}.card small{color:var(--muted)}.items{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}.items button{border:1px solid #eee;background:#fafafa;border-radius:9px;padding:10px 8px;text-align:left;color:#444;font-size:12px;cursor:pointer}.items button:hover{border-color:var(--gold);background:var(--cream)}
 .view{margin-top:14px}.viewHead{display:flex;align-items:center;gap:10px;margin-bottom:10px}.viewHead h2{margin:0;color:var(--maroon);font-size:19px}.back{border:0;background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 11px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.kv{padding:9px;border-bottom:1px solid #eee}.kv b{display:block;font-size:11px;color:var(--muted);margin-bottom:3px}.kv span{font-size:14px}.notice{padding:11px;border-radius:10px;background:var(--cream);border:1px solid #ead9a1;margin-bottom:8px}.success{color:#176b35}.error{color:#a01828}
 .auth{max-width:470px;margin:8vh auto;padding:20px}.authBox{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 8px 30px #0001}.authLogo{width:100px;height:100px;display:block;margin:auto;object-fit:contain}.auth h1{text-align:center;color:var(--maroon);font-size:21px}.auth label{display:block;font-size:12px;font-weight:bold;margin:12px 0 5px}.auth input{width:100%;padding:12px;border:1px solid #ddd;border-radius:9px}.primary{width:100%;border:0;background:var(--maroon);color:#fff;border-radius:10px;padding:12px;font-weight:bold;margin-top:15px}.empty{text-align:center;color:var(--muted);padding:18px}
+.family-form label{display:block;font-size:12px;font-weight:700;margin:10px 0 5px}
+.family-form input,.family-form select,.family-form textarea{width:100%;padding:10px 11px;border:1px solid #d9d9d9;border-radius:9px;background:#fff;color:var(--ink)}
+.family-form textarea{min-height:72px;resize:vertical}
+.family-form fieldset{border:1px solid var(--line);border-radius:12px;padding:12px;margin:12px 0}
+.family-form legend{font-weight:700;color:var(--maroon);padding:0 5px}
+.family-form .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 12px}
+.family-form .consent{display:flex;align-items:flex-start;gap:9px;font-weight:500;line-height:1.45}
+.family-form .consent input{width:auto;margin-top:4px}
+.family-form .member-row{border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0;background:#fff}
+.family-form .member-row h4{margin:0 0 8px;color:var(--maroon)}
+.family-form .add-member{width:100%;border:1px dashed #aa8d44;background:#fffdf5;border-radius:10px;padding:10px;font-weight:700;color:var(--maroon)}
 @media(max-width:720px){.categories{grid-template-columns:1fr}.quick{grid-template-columns:repeat(2,1fr)}main{padding:10px}.hero{padding:15px}.items{grid-template-columns:1fr 1fr}.row{grid-template-columns:1fr}}
 </style>
 </head>
@@ -43,12 +54,13 @@ main{padding:14px}.hero{background:linear-gradient(135deg,#7d1020,#a71f31);color
    <div><h2 id="name">सदस्य</h2><p>Member ID: <b id="memberId">—</b></p><p>सदस्यता: <b id="status">—</b> &nbsp; <span id="validity"></span></p></div>
   </div>
   <div class="quick">
-   <button onclick="openView('profile')">👤 प्रोफाइल</button><button onclick="openView('id')">🪪 ID Card</button><button onclick="openView('education')">🎓 शिक्षा</button><button onclick="openView('network')">🔗 Referral</button>
+   <button onclick="openView('profile')">👤 प्रोफाइल</button><button onclick="openView('family')">👨‍👩‍👧 परिवार रजिस्टर</button><button onclick="openView('id')">🪪 ID Card</button><button onclick="openView('education')">🎓 शिक्षा</button><button onclick="openView('network')">🔗 Referral</button>
   </div>
   <div class="categories">
    <article class="card"><div class="cardHead"><div class="icon">👤</div><div><h3>मेरी जानकारी</h3><small>मेरी सभी व्यक्तिगत सुविधाएँ</small></div></div><div class="items">
     <button onclick="openView('profile')">मेरी जानकारी</button><button onclick="openView('kyc')">पहचान दस्तावेज़</button><button onclick="openView('id')">डिजिटल पहचान पत्र</button><button onclick="openView('payment')">शुल्क व रसीद</button><button onclick="openView('certificate')">प्रमाण-पत्र</button><button onclick="openView('profile')">जानकारी की स्थिति</button>
    </div></article>
+   <article class="card"><div class="cardHead"><div class="icon">👨‍👩‍👧</div><div><h3>परिवार रजिस्टर</h3><small>परिवार और पात्रता-जाँच की जानकारी</small></div></div><div class="items"><button onclick="openView('family')">परिवार की जानकारी भरें</button><button onclick="openView('family')">परिवार का रिकॉर्ड देखें</button></div></article>
    <article class="card"><div class="cardHead"><div class="icon">🎓</div><div><h3>शिक्षा</h3><small>पढ़ाई और सीखने की सुविधाएँ</small></div></div><div class="items">
     <button onclick="openView('education')">ऑनलाइन पढ़ाई</button><button onclick="openView('education')">ई-पुस्तकालय</button><button onclick="openView('education')">शिक्षक से संपर्क</button><button onclick="openView('education')">प्रश्नोत्तरी</button><button onclick="openView('education')">पाठ वीडियो</button><button onclick="openView('education')">मेरी पढ़ाई</button><button onclick="openView('education')">रोजगार अवसर मार्गदर्शन</button><button onclick="openView('education')">छात्रवृत्ति</button>
    </div></article>
@@ -88,9 +100,96 @@ async function login(){const b=$('loginBtn');b.disabled=true;b.textContent='प�
 async function load(){try{const p=await rpc('get_my_member_profile');profile=Array.isArray(p)?p[0]:p;if(!profile)throw Error('Member profile नहीं मिला');const d=await rpc('get_my_member_dashboard');dashboard=Array.isArray(d)?d[0]:d;$('auth').classList.add('hidden');$('app').classList.remove('hidden');render()}catch(e){token='';localStorage.removeItem('sbpf_access_token');msg(e.message,'error')}}
 function render(){ $('name').textContent=profile.full_name||'सदस्य';$('memberId').textContent=profile.member_id||'—';$('status').textContent=profile.status||profile.membership_status||'Pending';$('validity').textContent=profile.membership_end_date?'वैधता: '+profile.membership_end_date:'';branding(); if(dashboard?.profile_photo_url)$('photo').src=dashboard.profile_photo_url; }
 function home(){$('home').classList.remove('hidden');$('view').classList.add('hidden')}
-const titles={profile:'मेरी जानकारी',kyc:'पहचान दस्तावेज़',id:'Digital Member ID Card',payment:'सदस्यता शुल्क व रसीद',certificate:'प्रमाण-पत्र',education:'शिक्षा',services:'सेवा क्षेत्र',network:'मेरा नेटवर्क',updates:'नई जानकारी','work-education':'शिक्षा','work-health':'स्वास्थ्य','work-employment':'रोजगार अवसर एवं कौशल','work-women':'महिला सशक्तिकरण','work-child':'बाल विकास','work-public':'जनसेवा','work-samvad':'शिकायत संवाद','work-civic':'नागरिक सहायता','work-environment':'पर्यावरण व समाज सेवा','work-activities':'मेरे कार्य'};
-async function openView(k){$('home').classList.add('hidden');$('view').classList.remove('hidden');$('viewTitle').textContent=titles[k];$('viewBody').innerHTML='<div class="panel">लोड हो रहा है...</div>';try{if(k==='profile')profileView();else if(k==='kyc')kycView();else if(k==='id')await idView();else if(k==='payment')await paymentView();else if(k==='certificate')await certificateView();else if(k==='education')await educationView();else if(k==='services')await servicesView();else if(k==='network')await networkView();else if(k==='updates')await updatesView();else if(k.startsWith('work-'))workAreaView(k)}catch(e){$('viewBody').innerHTML='<div class="panel error">'+esc(e.message)+'</div>'}}
+const titles={profile:'मेरी जानकारी',family:'परिवार रजिस्टर',kyc:'पहचान दस्तावेज़',id:'Digital Member ID Card',payment:'सदस्यता शुल्क व रसीद',certificate:'प्रमाण-पत्र',education:'शिक्षा',services:'सेवा क्षेत्र',network:'मेरा नेटवर्क',updates:'नई जानकारी','work-education':'शिक्षा','work-health':'स्वास्थ्य','work-employment':'रोजगार अवसर एवं कौशल','work-women':'महिला सशक्तिकरण','work-child':'बाल विकास','work-public':'जनसेवा','work-samvad':'शिकायत संवाद','work-civic':'नागरिक सहायता','work-environment':'पर्यावरण व समाज सेवा','work-activities':'मेरे कार्य'};
+async function openView(k){$('home').classList.add('hidden');$('view').classList.remove('hidden');$('viewTitle').textContent=titles[k];$('viewBody').innerHTML='<div class="panel">लोड हो रहा है...</div>';try{if(k==='profile')profileView();else if(k==='family')await familyView();else if(k==='kyc')kycView();else if(k==='id')await idView();else if(k==='payment')await paymentView();else if(k==='certificate')await certificateView();else if(k==='education')await educationView();else if(k==='services')await servicesView();else if(k==='network')await networkView();else if(k==='updates')await updatesView();else if(k.startsWith('work-'))workAreaView(k)}catch(e){$('viewBody').innerHTML='<div class="panel error">'+esc(e.message)+'</div>'}}
 function profileView(){$('viewBody').innerHTML='<div class="panel"><div class="row">'+kv('नाम',profile.full_name)+kv('Member ID',profile.member_id)+kv('मोबाइल',profile.mobile)+kv('ईमेल',profile.email)+kv('पिता/अभिभावक',profile.father_name)+kv('जन्म तिथि',profile.dob)+kv('लिंग',profile.gender)+kv('पता',profile.address)+kv('जिला',profile.district)+kv('राज्य',profile.state)+kv('पिन कोड',profile.pincode)+kv('जानकारी की स्थिति',profile.profile_completed?'Completed':'Incomplete')+'</div></div>'}
+
+function familyMemberRow(m={},index=0){
+ const val=k=>esc(m?.[k]??'');
+ return '<div class="member-row"><h4>परिवार सदस्य <span class="member-number">'+(index+1)+'</span></h4>'+
+ '<div class="form-grid">'+
+ '<div><label>पूरा नाम *</label><input name="fm_full_name" required maxlength="120" value="'+val('full_name')+'" autocomplete="off"></div>'+
+ '<div><label>मुखिया से संबंध *</label><input name="fm_relation" required maxlength="60" placeholder="जैसे स्वयं, पति/पत्नी, पुत्र" value="'+val('relation_to_head')+'"></div>'+
+ '<div><label>जन्म तिथि *</label><input name="fm_dob" required type="date" max="'+new Date().toISOString().slice(0,10)+'" value="'+val('dob')+'"></div>'+
+ '<div><label>लिंग</label><select name="fm_gender"><option value="">चुनें</option>'+['पुरुष','महिला','अन्य'].map(g=>'<option value="'+g+'" '+(m?.gender===g?'selected':'')+'>'+g+'</option>').join('')+'</select></div>'+
+ '<div><label>मोबाइल (यदि उपलब्ध)</label><input name="fm_mobile" inputmode="tel" maxlength="15" value="'+val('mobile')+'"></div>'+
+ '<div><label>शिक्षा</label><input name="fm_education" maxlength="120" value="'+val('education')+'"></div>'+
+ '<div><label>काम / व्यवसाय</label><input name="fm_occupation" maxlength="120" value="'+val('occupation')+'"></div>'+
+ '<div><label>वैवाहिक स्थिति</label><select name="fm_marital"><option value="">चुनें</option>'+['अविवाहित','विवाहित','विधवा/विधुर','अन्य'].map(v=>'<option value="'+v+'" '+(m?.marital_status===v?'selected':'')+'>'+v+'</option>').join('')+'</select></div>'+
+ '<div><label class="consent"><input name="fm_dependent" type="checkbox" '+(m?.is_dependent?'checked':'')+'> आश्रित सदस्य</label></div>'+
+ '<div><label class="consent"><input name="fm_student" type="checkbox" '+(m?.is_student?'checked':'')+'> विद्यार्थी</label></div>'+
+ '<div><label class="consent"><input name="fm_disability" type="checkbox" '+(m?.has_disability?'checked':'')+'> दिव्यांग सहायता की आवश्यकता</label></div>'+
+ '</div><button type="button" class="back" onclick="removeFamilyMember(this)" style="margin-top:10px">यह सदस्य हटाएँ</button></div>';
+}
+function renumberFamilyMembers(){document.querySelectorAll('#familyMembers .member-row').forEach((r,i)=>{const n=r.querySelector('.member-number');if(n)n.textContent=i+1})}
+function addFamilyMember(m={}){const box=$('familyMembers');if(!box)return;box.insertAdjacentHTML('beforeend',familyMemberRow(m,box.children.length));renumberFamilyMembers()}
+function removeFamilyMember(button){const box=$('familyMembers');if(!box)return;const rows=box.querySelectorAll('.member-row');if(rows.length<=1){alert('कम-से-कम एक परिवार सदस्य रखना जरूरी है।');return;}button.closest('.member-row').remove();renumberFamilyMembers()}
+async function familyView(){
+ const fields='id,family_code,family_name,mobile,address,village_or_ward,district,state,pincode,notes,annual_income,ration_card_type,housing_status,land_ownership,livelihood_type,social_category,family_needs,status,submitted_at';
+ $('viewBody').innerHTML='<div class="panel">परिवार रिकॉर्ड सुरक्षित रूप से लोड हो रहा है…</div>';
+ let family=null,members=[];
+ const rows=await api('/rest/v1/member_pariwar_register?select='+fields+'&order=updated_at.desc&limit=1');
+ family=Array.isArray(rows)&&rows.length?rows[0]:null;
+ if(family){
+   const children=await api('/rest/v1/member_pariwar_members?family_id=eq.'+encodeURIComponent(family.id)+'&select=id,full_name,relation_to_head,dob,gender,mobile,education,occupation,is_dependent,is_student,has_disability,marital_status&order=id.asc');
+   members=Array.isArray(children)?children:[];
+ }
+ const needs=['शिक्षा सहायता','स्वास्थ्य सहायता','रोजगार / कौशल','महिला सशक्तिकरण','बाल विकास','दिव्यांग सहायता','आवास सहायता','राशन / खाद्य सहायता','सरकारी योजना मार्गदर्शन','स्वरोजगार सहायता'];
+ const chosen=Array.isArray(family?.family_needs)?family.family_needs:[];
+ const fv=k=>esc(family?.[k]??'');
+ const needHtml=needs.map(n=>'<label class="consent"><input type="checkbox" name="family_need" value="'+esc(n)+'" '+(chosen.includes(n)?'checked':'')+'> '+esc(n)+'</label>').join('');
+ $('viewBody').innerHTML='<div class="panel"><div class="notice"><b>महत्वपूर्ण:</b> परिवार की जानकारी केवल सदस्य लॉगिन के बाद निजी रूप से भरी जाती है। सही जानकारी दें। सरकारी योजनाओं की पात्रता संबंधित सरकारी नियमों पर निर्भर है; यह फ़ॉर्म लाभ की गारंटी नहीं देता।</div>'+
+ (family?'<div class="notice">मौजूदा रिकॉर्ड: <b>'+fv('family_code')+'</b> • स्थिति: <b>'+fv('status')+'</b> • अंतिम जमा: '+fv('submitted_at')+'</div>':'<div class="notice">अभी आपका परिवार रजिस्टर नहीं मिला। नीचे पहली बार जानकारी भरें।</div>')+
+ '<form id="familyForm" class="family-form"><fieldset><legend>चरण 1 — परिवार और पता</legend><div class="form-grid">'+
+ '<div><label>परिवार का नाम *</label><input name="family_name" required maxlength="160" value="'+fv('family_name')+'"></div>'+
+ '<div><label>परिवार का मोबाइल</label><input name="mobile" inputmode="tel" maxlength="15" value="'+fv('mobile')+'"></div>'+
+ '<div><label>मकान / पूरा पता *</label><input name="address" required maxlength="250" value="'+fv('address')+'"></div>'+
+ '<div><label>गाँव / शहर / वार्ड *</label><input name="village_or_ward" required maxlength="140" value="'+fv('village_or_ward')+'"></div>'+
+ '<div><label>जिला *</label><input name="district" required maxlength="100" value="'+fv('district')+'"></div>'+
+ '<div><label>राज्य *</label><input name="state" required maxlength="100" value="'+(fv('state')||'Uttar Pradesh')+'"></div>'+
+ '<div><label>PIN Code (6 अंक) *</label><input name="pincode" required inputmode="numeric" pattern="[0-9]{6}" minlength="6" maxlength="6" value="'+fv('pincode')+'"></div>'+
+ '<div><label>अनुमानित वार्षिक पारिवारिक आय (₹) *</label><input name="annual_income" type="number" min="0" step="1" required value="'+fv('annual_income')+'"></div>'+
+ '<div><label>राशन कार्ड का प्रकार</label><input name="ration_card_type" maxlength="80" value="'+fv('ration_card_type')+'" placeholder="जैसे अंत्योदय / पात्र गृहस्थी / लागू नहीं"></div>'+
+ '<div><label>आवास की स्थिति</label><input name="housing_status" maxlength="100" value="'+fv('housing_status')+'" placeholder="स्वयं का / किराया / अन्य"></div>'+
+ '<div><label>भूमि स्वामित्व</label><input name="land_ownership" maxlength="100" value="'+fv('land_ownership')+'"></div>'+
+ '<div><label>आजीविका / मुख्य काम</label><input name="livelihood_type" maxlength="120" value="'+fv('livelihood_type')+'"></div>'+
+ '<div><label>सामाजिक श्रेणी (वैकल्पिक)</label><input name="social_category" maxlength="80" value="'+fv('social_category')+'"></div>'+
+ '</div><label>अतिरिक्त जानकारी (वैकल्पिक)</label><textarea name="notes" maxlength="1200">'+fv('notes')+'</textarea></fieldset>'+
+ '<fieldset><legend>चरण 2 — परिवार के सदस्य</legend><div id="familyMembers">'+(members.length?members.map((m,i)=>familyMemberRow(m,i)).join(''):familyMemberRow({full_name:profile?.full_name||'',relation_to_head:'स्वयं',mobile:profile?.mobile||'',dob:profile?.dob||'',gender:profile?.gender||''},0))+'</div>'+
+ '<button type="button" class="add-member" onclick="addFamilyMember()">＋ परिवार का एक और सदस्य जोड़ें</button></fieldset>'+
+ '<fieldset><legend>चरण 3 — सहायता की ज़रूरत</legend><p style="font-size:12px;color:var(--muted);margin-bottom:8px">वे क्षेत्र चुनें जिनमें परिवार मार्गदर्शन या सहायता चाहता है।</p>'+needHtml+'</fieldset>'+
+ '<fieldset><legend>चरण 4 — सहमति और पुष्टि</legend>'+
+ '<label class="consent"><input name="schemeConsent" type="checkbox" required> मैं सहमति देता/देती हूँ कि इस फ़ॉर्म में दी गई जानकारी का उपयोग SBPF द्वारा संभावित सरकारी योजनाओं की पात्रता से जुड़े मार्गदर्शन के लिए किया जा सकता है।</label>'+
+ '<label class="consent"><input name="accuracyConfirmed" type="checkbox" required> मैंने जानकारी जाँच ली है और इसे सही मानता/मानती हूँ। गलत जानकारी होने पर मैं उसे संशोधित करूँगा/करूँगी।</label>'+
+ '<p style="font-size:12px;color:var(--muted);margin-top:8px">इस फ़ॉर्म में आधार नंबर, बैंक पासवर्ड या OTP दर्ज न करें। स्वास्थ्य/शिक्षा के विस्तृत संवेदनशील रिकॉर्ड अलग सहमति और सुरक्षित प्रक्रिया से ही लिए जाएँगे।</p></fieldset>'+
+ '<button id="saveFamilyBtn" class="primary" type="submit">'+(family?'परिवार की जानकारी अपडेट करें':'परिवार रजिस्टर जमा करें')+'</button><div id="familySaveMsg" aria-live="polite"></div></form></div>';
+ $('familyForm').addEventListener('submit',saveFamily);
+}
+async function saveFamily(event){
+ event.preventDefault();
+ const form=$('familyForm'),button=$('saveFamilyBtn'),status=$('familySaveMsg');
+ if(!form||!form.reportValidity())return;
+ const value=name=>form.elements[name]?.value?.trim()||'';
+ const personRows=Array.from($('familyMembers').querySelectorAll('.member-row'));
+ if(!personRows.length){status.innerHTML='<div class="notice error">कम-से-कम एक परिवार सदस्य दर्ज करें।</div>';return}
+ const people=personRows.map(row=>{
+   const get=name=>row.querySelector('[name="'+name+'"]');
+   return {full_name:get('fm_full_name')?.value.trim()||'',relation_to_head:get('fm_relation')?.value.trim()||'',dob:get('fm_dob')?.value||'',gender:get('fm_gender')?.value||null,mobile:get('fm_mobile')?.value.trim()||null,education:get('fm_education')?.value.trim()||null,occupation:get('fm_occupation')?.value.trim()||null,marital_status:get('fm_marital')?.value||null,is_dependent:!!get('fm_dependent')?.checked,is_student:!!get('fm_student')?.checked,has_disability:!!get('fm_disability')?.checked}
+ });
+ if(people.some(p=>!p.full_name||!p.relation_to_head||!p.dob)){status.innerHTML='<div class="notice error">हर परिवार सदस्य का नाम, संबंध और जन्म तिथि भरें।</div>';return}
+ const family={family_name:value('family_name'),mobile:value('mobile'),address:value('address'),village_or_ward:value('village_or_ward'),district:value('district'),state:value('state')||'Uttar Pradesh',pincode:value('pincode'),annual_income:value('annual_income'),ration_card_type:value('ration_card_type'),housing_status:value('housing_status'),land_ownership:value('land_ownership'),livelihood_type:value('livelihood_type'),social_category:value('social_category'),notes:value('notes'),family_needs:Array.from(form.querySelectorAll('[name="family_need"]:checked')).map(n=>n.value),scheme_assistance_consent:!!form.elements.schemeConsent.checked,accuracy_confirmed:!!form.elements.accuracyConfirmed.checked};
+ button.disabled=true;button.textContent='सुरक्षित रूप से जमा हो रहा है…';status.innerHTML='<div class="notice">सुपाबेस में सुरक्षित रूप से जमा किया जा रहा है…</div>';
+ try{
+   const result=await rpc('register_my_pariwar',{p_family:family,p_members:people});
+   const saved=Array.isArray(result)?result[0]:result;
+   status.innerHTML='<div class="notice success"><b>परिवार रजिस्टर जमा हो गया।</b><br>परिवार कोड: '+esc(saved?.family_code||'रिकॉर्ड बन गया')+'<br>स्थिति: '+esc(saved?.status||'जाँच के लिए लंबित')+'<br>सदस्य संख्या: '+esc(saved?.member_count??people.length)+'<br><small>अब एडमिन समीक्षा और उपलब्ध योजना-सहायता की जाँच कर सकता है।</small></div>';
+   await familyView();
+ }catch(error){
+   status.innerHTML='<div class="notice error"><b>अभी जमा नहीं हो सका।</b><br>'+esc(error.message||'अनुरोध विफल हुआ')+'<br><small>आपकी जानकारी को सफलतापूर्वक जमा हुआ नहीं माना गया है। फ़ॉर्म की जाँच कर फिर कोशिश करें।</small></div>';
+ }finally{
+   if($('saveFamilyBtn')){ $('saveFamilyBtn').disabled=false;$('saveFamilyBtn').textContent='परिवार की जानकारी सुरक्षित करें'; }
+ }
+}
 function kv(a,b){return '<div class="kv"><b>'+esc(a)+'</b><span>'+esc(b)+'</span></div>'}
 function kycView(){$('viewBody').innerHTML='<div class="panel"><div class="notice">KYC Status: <b>'+esc(profile.kyc_status||'Pending')+'</b></div>'+kv('Aadhaar Document',profile.aadhaar_document_path?'Submitted':'Not submitted')+kv('PAN Document',profile.pan_document_path?'Submitted':'Not submitted')+'<p style="font-size:12px;color:#6b7280">दस्तावेज़ upload/approval workflow मौजूदा सुरक्षित backend के अनुसार रहेगा।</p></div>'}
 async function idView(){const d=await rpc('get_my_member_id_card');const x=Array.isArray(d)?d[0]:d;$('viewBody').innerHTML='<div class="panel">'+kv('नाम',x?.full_name||profile.full_name)+kv('Member ID',x?.member_id||profile.member_id)+kv('Status',x?.status||profile.status)+kv('QR Verification','Secure token based verification')+'<button class="primary" onclick="window.open('+JSON.stringify(x?.verification_url||dashboard?.verification_url||'#')+',\'_blank\')">QR Verification खोलें</button></div>'}
