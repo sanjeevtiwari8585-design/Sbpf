@@ -71,6 +71,8 @@ jobs:
           grep -q 'value="follow_up"' hms.html
           grep -q 'value="emergency"' hms.html
           grep -q 'value="teleconsultation"' hms.html
+          grep -q 'value="diagnosis"' hms.html
+          grep -q 'value="discharge_summary"' hms.html
           ! grep -q 'value="diagnostic_centre"' hms.html
           ! grep -q 'value="Follow-up"' hms.html
           grep -q 'value="bonafide"' ems-academics.html
