@@ -495,7 +495,7 @@ async function loadFocusAreas(){
   activeFocusAreas=Array.isArray(rows)?rows:[];
   if(!activeFocusAreas.length){message.textContent='वर्तमान में कोई सक्रिय कार्यक्षेत्र उपलब्ध नहीं है।';grid.innerHTML='';return}
   message.textContent='कुल सक्रिय कार्यक्षेत्र: '+activeFocusAreas.length+' • किसी क्षेत्र को खोलकर विवरण या आवेदन भेजें।';
-  grid.innerHTML=activeFocusAreas.map(area=>'<article class="focusAreaCard"><div class="focusIcon">'+(focusAreaIcons[Number(area.id)]||'🧭')+'</div><h4>'+esc(area.name)+'</h4><p>'+esc(area.description||'इस कार्यक्षेत्र की जानकारी शीघ्र उपलब्ध होगी।')+'</p><button type="button" onclick="openView(\'area-'+Number(area.id)+'\\')">विवरण / आवेदन →</button></article>').join('');
+  grid.innerHTML=activeFocusAreas.map(area=>'<article class="focusAreaCard"><div class="focusIcon">'+(focusAreaIcons[Number(area.id)]||'🧭')+'</div><h4>'+esc(area.name)+'</h4><p>'+esc(area.description||'इस कार्यक्षेत्र की जानकारी शीघ्र उपलब्ध होगी।')+'</p><button type="button" onclick="openView(\'area-'+Number(area.id)+'\')">विवरण / आवेदन →</button></article>').join('');
  }catch(error){
   message.innerHTML='कार्य क्षेत्र सूची लोड नहीं हुई: '+esc(error.message)+'<br><small>पुराने कार्ड अभी उपलब्ध हैं; कृपया कुछ देर बाद फिर प्रयास करें।</small>';
   grid.innerHTML='';
