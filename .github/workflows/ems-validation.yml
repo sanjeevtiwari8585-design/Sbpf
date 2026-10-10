@@ -1,0 +1,89 @@
+name: Validate EMS workflow
+
+on:
+  pull_request:
+    branches: ["main"]
+  push:
+    branches: ["feature/**"]
+
+permissions:
+  contents: read
+
+jobs:
+  validate-html:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate inline JavaScript in HTML pages
+        run: |
+          python - <<'PY'
+          import pathlib, re, subprocess, tempfile
+          pages = sorted(pathlib.Path('.').rglob('*.html'))
+          checked = 0
+          for page in pages:
+              if '.git' in page.parts or 'node_modules' in page.parts:
+                  continue
+              source = page.read_text(encoding='utf-8')
+              scripts = re.findall(r'<script\b[^>]*>(.*?)</script\s*>', source, re.I | re.S)
+              for index, script in enumerate(scripts, 1):
+                  if not script.strip():
+                      continue
+                  with tempfile.NamedTemporaryFile('w', suffix='.js', encoding='utf-8', delete=False) as handle:
+                      handle.write(script)
+                      temp_path = handle.name
+                  try:
+                      subprocess.run(['node', '--check', temp_path], check=True)
+                  finally:
+                      pathlib.Path(temp_path).unlink(missing_ok=True)
+                  checked += 1
+                  print(f'Validated inline script {index}: {page}')
+          print(f'Validated {checked} inline JavaScript blocks across {len(pages)} HTML pages.')
+          PY
+      - name: Verify EMS page and links exist
+        run: |
+          test -s ems.html
+          grep -q 'ems_admin_link_member' ems.html
+          grep -q 'ems_attendance' ems.html
+          grep -q 'ems_fee_records' ems.html
+          grep -q 'ems_student_report_cards' ems.html
+
+          test -s swarnim-book.html
+          grep -q 'value="link"' swarnim-book.html
+          grep -q "type==='link'" swarnim-book.html
+          test -s swarnim-media/index.html
+          grep -q 'SMLive News' swarnim-media/index.html
+          grep -q 'swarnim-media/index.html' index.html
+          grep -q 'swarnim_book_posts' swarnim-book.html
+          grep -q 'swarnim_book_comments' swarnim-book.html
+          grep -q 'swarnim_book_profiles' swarnim-book.html
+          grep -q 'swarnim-book.html' index.html
+
+          test -s hms.html
+          grep -q 'hms_patient_registrations' hms.html
+          grep -q 'hms_appointments' hms.html
+          grep -q 'hms_clinical_records' hms.html
+          grep -q 'hms_bills' hms.html
+          grep -q 'hms_staff_salary' hms.html
+          grep -q 'hms_create_diagnostic_order' hms.html
+          test -s supabase/migrations/20261010130000_hms_secure_diagnostic_order_workflow.sql
+          grep -q 'hms_create_diagnostic_order' supabase/migrations/20261010130000_hms_secure_diagnostic_order_workflow.sql
+          grep -q 'value="diagnostic_center"' hms.html
+          grep -q 'value="follow_up"' hms.html
+          grep -q 'value="emergency"' hms.html
+          grep -q 'value="teleconsultation"' hms.html
+          grep -q 'value="diagnosis"' hms.html
+          grep -q 'value="discharge_summary"' hms.html
+          ! grep -q 'value="diagnostic_centre"' hms.html
+          ! grep -q 'value="Follow-up"' hms.html
+          grep -q 'value="bonafide"' ems-academics.html
+          grep -q 'value="achievement"' ems-academics.html
+
+          test -s promotion-plan.html
+          grep -q 'sbpf_get_my_referral_dashboard' promotion-plan.html
+          grep -q 'renderLevels(fallbackLevels' promotion-plan.html
+          grep -q 'promotion-plan.html' index.html
