@@ -28,6 +28,17 @@ main{padding:14px}.hero{background:linear-gradient(135deg,#7d1020,#a71f31);color
 .family-form .member-row{border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0;background:#fff}
 .family-form .member-row h4{margin:0 0 8px;color:var(--maroon)}
 .family-form .add-member{width:100%;border:1px dashed #aa8d44;background:#fffdf5;border-radius:10px;padding:10px;font-weight:700;color:var(--maroon)}
+.focusGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:12px}
+.focusAreaCard{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;display:flex;flex-direction:column;align-items:flex-start;gap:7px;min-width:0}
+.focusAreaCard .focusIcon{width:38px;height:38px;border-radius:10px;background:var(--cream);display:grid;place-items:center;font-size:21px}
+.focusAreaCard h4{margin:0;font-size:14px;color:var(--maroon)}
+.focusAreaCard p{margin:0;font-size:12px;color:var(--muted);line-height:1.5;flex:1}
+.focusAreaCard button{border:1px solid var(--line);background:var(--cream);color:var(--maroon);border-radius:9px;padding:8px 10px;font-weight:700;font-size:12px;width:100%}
+.areaRequestForm label{display:block;font-size:12px;font-weight:700;margin:10px 0 5px}
+.areaRequestForm input,.areaRequestForm select,.areaRequestForm textarea{width:100%;padding:10px;border:1px solid #d9d9d9;border-radius:9px}
+.areaRequestForm textarea{min-height:100px;resize:vertical}
+@media(max-width:720px){.focusGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:420px){.focusGrid{grid-template-columns:1fr}}
 .modalBackdrop{position:fixed;inset:0;z-index:1000;background:#15192399;display:grid;place-items:center;padding:18px}
 .modalCard{width:min(100%,520px);background:#fff;border:1px solid var(--line);border-top:5px solid var(--gold);border-radius:18px;padding:22px;box-shadow:0 18px 50px #0003}
 .modalCard h2{margin:0 0 8px;color:var(--maroon);font-size:22px}
@@ -77,6 +88,11 @@ main{padding:14px}.hero{background:linear-gradient(135deg,#7d1020,#a71f31);color
   <div class="quick">
    <button onclick="openView('profile')">👤 प्रोफाइल</button><button onclick="openView('family')">👨‍👩‍👧 परिवार रजिस्टर</button><button onclick="openView('id')">🪪 ID Card</button><button onclick="openView('education')">🎓 शिक्षा</button><button onclick="openView('network')">🔗 Referral</button>
   </div>
+  <section class="panel" id="focusAreasPanel" style="margin:14px 0">
+   <div class="cardHead"><div class="icon">🧭</div><div><h3>सभी सक्रिय कार्यक्षेत्र</h3><small>सूची Supabase से अपने-आप अपडेट होगी</small></div></div>
+   <div id="focusAreasMessage" class="notice" style="margin-top:12px">कार्य क्षेत्र लोड हो रहे हैं…</div>
+   <div id="focusAreasGrid" class="focusGrid"></div>
+  </section>
   <div class="categories">
    <article class="card"><div class="cardHead"><div class="icon">👤</div><div><h3>मेरी जानकारी</h3><small>मेरी सभी व्यक्तिगत सुविधाएँ</small></div></div><div class="items">
     <button onclick="openView('profile')">मेरी जानकारी</button><button onclick="openView('kyc')">पहचान दस्तावेज़</button><button onclick="openView('id')">डिजिटल पहचान पत्र</button><button onclick="openView('payment')">शुल्क व रसीद</button><button onclick="openView('certificate')">प्रमाण-पत्र</button><button onclick="openView('profile')">जानकारी की स्थिति</button>
@@ -173,13 +189,14 @@ async function load(){try{
  if(Array.isArray(extra)&&extra[0]&&extra[0].user_id===currentUser.id)profile={...profile,...extra[0]};
  const d=await rpc('get_my_member_dashboard');dashboard=Array.isArray(d)?d[0]:d;
  $('auth').classList.add('hidden');$('app').classList.remove('hidden');render();
+ await loadFocusAreas();
  }catch(e){token='';localStorage.removeItem('sbpf_access_token');msg(e.message,'error')}}
 function render(){ $('name').textContent=profile.full_name||'सदस्य';$('memberId').textContent=profile.member_id||'—';$('status').textContent=profile.status||profile.membership_status||'Pending';$('validity').textContent=profile.membership_end_date?'वैधता: '+profile.membership_end_date:'';branding(); if(dashboard?.profile_photo_url)$('photo').src=dashboard.profile_photo_url;const reminder=$('profileReminder');if(reminder)reminder.classList.toggle('hidden',profile.profile_completed===true); }
 function dismissProfileReminder(){$('profileReminder')?.classList.add('hidden')}
 function completeProfileNow(){dismissProfileReminder();openView('profile-edit')}
 function home(){$('home').classList.remove('hidden');$('view').classList.add('hidden')}
 const titles={profile:'मेरी जानकारी','profile-edit':'प्रोफ़ाइल संपादित करें',family:'परिवार रजिस्टर',kyc:'पहचान दस्तावेज़',id:'Digital Member ID Card',payment:'सदस्यता शुल्क व रसीद',certificate:'प्रमाण-पत्र',education:'शिक्षा',services:'सेवा क्षेत्र',network:'मेरा नेटवर्क',updates:'नई जानकारी','work-education':'शिक्षा','work-health':'स्वास्थ्य','work-employment':'रोजगार अवसर एवं कौशल','work-women':'महिला सशक्तिकरण','work-child':'बाल विकास','work-public':'जनसेवा','work-samvad':'शिकायत संवाद','work-civic':'नागरिक सहायता','work-environment':'पर्यावरण व समाज सेवा','work-activities':'मेरे कार्य'};
-async function openView(k){$('home').classList.add('hidden');$('view').classList.remove('hidden');$('viewTitle').textContent=titles[k];$('viewBody').innerHTML='<div class="panel">लोड हो रहा है...</div>';try{if(k==='profile')profileView();else if(k==='profile-edit')await profileEditView();else if(k==='family')await familyView();else if(k==='kyc')kycView();else if(k==='id')await idView();else if(k==='payment')await paymentView();else if(k==='certificate')await certificateView();else if(k==='education')await educationView();else if(k==='services')await servicesView();else if(k==='network')await networkView();else if(k==='updates')await updatesView();else if(k.startsWith('work-'))workAreaView(k)}catch(e){$('viewBody').innerHTML='<div class="panel error">'+esc(e.message)+'</div>'}}
+async function openView(k){$('home').classList.add('hidden');$('view').classList.remove('hidden');$('viewTitle').textContent=titles[k];$('viewBody').innerHTML='<div class="panel">लोड हो रहा है...</div>';try{if(k==='profile')profileView();else if(k==='profile-edit')await profileEditView();else if(k==='family')await familyView();else if(k==='kyc')kycView();else if(k==='id')await idView();else if(k==='payment')await paymentView();else if(k==='certificate')await certificateView();else if(k==='education')await educationView();else if(k==='services')await servicesView();else if(k==='network')await networkView();else if(k==='updates')await updatesView();else if(k.startsWith('area-'))await dynamicWorkAreaView(k);else if(k.startsWith('work-'))workAreaView(k)}catch(e){$('viewBody').innerHTML='<div class="panel error">'+esc(e.message)+'</div>'}}
 function profileView(){$('viewBody').innerHTML='<div class="panel"><div class="notice">'+(profile.profile_completed?'प्रोफ़ाइल पूरी होने की स्थिति: Completed':'प्रोफ़ाइल अधूरी है। कृपया अपनी सही जानकारी पूरी करें।')+'</div><div class="row">'+kv('नाम',profile.full_name)+kv('Member ID',profile.member_id)+kv('मोबाइल',profile.mobile)+kv('ईमेल',profile.email)+kv('पिता/अभिभावक',profile.father_name)+kv('जन्म तिथि',profile.dob)+kv('लिंग',profile.gender)+kv('पता',profile.address)+kv('जिला',profile.district)+kv('राज्य',profile.state)+kv('पिन कोड',profile.pincode)+kv('देश',profile.country)+kv('पद',profile.designation)+kv('कार्यक्षेत्र',profile.work_area_name||profile.work_area_id)+kv('जानकारी की स्थिति',profile.profile_completed?'Completed':'Incomplete')+'</div><button class="primary" onclick="openView(\'profile-edit\')">प्रोफ़ाइल संपादित / पूरी करें</button></div>'}
 
 
@@ -468,6 +485,64 @@ async function certificateView(){
 }
 async function educationView(){const [cats,content,res]=await Promise.all([api('/rest/v1/education_categories?is_active=eq.true&select=id,name,sort_order&order=sort_order.asc'),api('/rest/v1/education_content?is_active=eq.true&select=title,subtitle,description,link_url,link_label&order=sort_order.asc'),api('/rest/v1/education_resources?status=eq.approved&select=title,description,resource_type,youtube_url,resource_url&order=published_at.desc&limit=20')]);let h='<div class="panel"><b>शिक्षा सुविधाएँ</b><div class="items">'+['ऑनलाइन पढ़ाई','ई-पुस्तकालय','शिक्षक से संपर्क','प्रश्नोत्तरी','पाठ वीडियो','My Courses','My Progress','रोजगार अवसर मार्गदर्शन','छात्रवृत्ति'].map(x=>'<button>'+x+'</button>').join('')+'</div></div>';if(cats?.length)h+='<div class="panel"><b>विषय / परीक्षाएँ</b><div class="items">'+cats.slice(0,24).map(x=>'<button>'+esc(x.name)+'</button>').join('')+'</div></div>';if(res?.length)h+='<div class="panel"><b>उपलब्ध Learning Resources</b>'+res.map(x=>'<div class="notice"><b>'+esc(x.title)+'</b><br><small>'+esc(x.resource_type)+' — '+esc(x.description)+'</small>'+(x.youtube_url?'<br><a href="'+esc(x.youtube_url)+'" target="_blank">वीडियो खोलें</a>':'')+'</div>').join('')+'</div>';$('viewBody').innerHTML=h}
 async function servicesView(){const [schemes,employment,areas]=await Promise.all([api('/rest/v1/government_schemes?published=eq.true&select=name,description,official_url&order=created_at.desc&limit=10'),api('/rest/v1/employment_opportunities?select=title,description,official_url&order=created_at.desc&limit=10'),api('/rest/v1/focus_areas?is_active=eq.true&select=name,description&order=id.asc')]);let h='<div class="panel"><div class="items">'+['शिक्षा','स्वास्थ्य','महिला सशक्तिकरण','बाल विकास','रोजगार अवसर','कौशल विकास','सरकारी योजनाएँ','सामाजिक सेवा'].map(x=>'<button>'+x+'</button>').join('')+'</div></div>';if(schemes?.length)h+='<div class="panel"><b>सरकारी योजनाएँ</b>'+schemes.map(x=>'<div class="notice"><b>'+esc(x.name)+'</b><br><small>'+esc(x.description)+'</small>'+(x.official_url?'<br><a target="_blank" href="'+esc(x.official_url)+'">Official जानकारी</a>':'')+'</div>').join('')+'</div>';if(employment?.length)h+='<div class="panel"><b>रोजगार अवसर अवसर</b>'+employment.map(x=>'<div class="notice"><b>'+esc(x.title)+'</b><br><small>'+esc(x.description)+'</small></div>').join('')+'</div>';$('viewBody').innerHTML=h}
+
+const focusAreaIcons={1:'🎓',2:'🏥',3:'💼',4:'👩',5:'🧒',6:'🏪',7:'🌱',8:'🤝',9:'♿',10:'🏛️',11:'🆘',12:'👵'};
+let activeFocusAreas=[];
+async function loadFocusAreas(){
+ const message=$('focusAreasMessage'),grid=$('focusAreasGrid');
+ try{
+  const rows=await api('/rest/v1/focus_areas?is_active=eq.true&select=id,name,slug,description&order=id.asc');
+  activeFocusAreas=Array.isArray(rows)?rows:[];
+  if(!activeFocusAreas.length){message.textContent='वर्तमान में कोई सक्रिय कार्यक्षेत्र उपलब्ध नहीं है।';grid.innerHTML='';return}
+  message.textContent='कुल सक्रिय कार्यक्षेत्र: '+activeFocusAreas.length+' • किसी क्षेत्र को खोलकर विवरण या आवेदन भेजें।';
+  grid.innerHTML=activeFocusAreas.map(area=>'<article class="focusAreaCard"><div class="focusIcon">'+(focusAreaIcons[Number(area.id)]||'🧭')+'</div><h4>'+esc(area.name)+'</h4><p>'+esc(area.description||'इस कार्यक्षेत्र की जानकारी शीघ्र उपलब्ध होगी।')+'</p><button type="button" onclick="openView(\\'area-'+Number(area.id)+'\\')">विवरण / आवेदन →</button></article>').join('');
+ }catch(error){
+  message.innerHTML='कार्य क्षेत्र सूची लोड नहीं हुई: '+esc(error.message)+'<br><small>पुराने कार्ड अभी उपलब्ध हैं; कृपया कुछ देर बाद फिर प्रयास करें।</small>';
+  grid.innerHTML='';
+ }
+}
+async function dynamicWorkAreaView(key){
+ const match=String(key).match(/^area-(\d+)$/);
+ if(!match)throw new Error('कार्य क्षेत्र की पहचान सही नहीं है।');
+ const areaId=Number(match[1]);
+ let area=activeFocusAreas.find(x=>Number(x.id)===areaId);
+ if(!area){
+  const rows=await api('/rest/v1/focus_areas?id=eq.'+areaId+'&is_active=eq.true&select=id,name,slug,description&limit=1');
+  area=Array.isArray(rows)?rows[0]:null;
+ }
+ if(!area)throw new Error('यह कार्यक्षेत्र अब सक्रिय नहीं है।');
+ $('viewTitle').textContent=area.name;
+ const selected=Number(profile.work_area_id||0)===areaId;
+ $('viewBody').innerHTML='<div class="panel"><div class="cardHead"><div class="icon">'+(focusAreaIcons[areaId]||'🧭')+'</div><div><h3>'+esc(area.name)+'</h3><small>SBPF सक्रिय कार्यक्षेत्र</small></div></div><p style="line-height:1.65;margin:12px 0">'+esc(area.description||'इस कार्यक्षेत्र की जानकारी शीघ्र उपलब्ध होगी।')+'</p>'+
+ '<div class="notice">'+(selected?'यह कार्यक्षेत्र आपकी प्रोफ़ाइल में चुना हुआ है।':'यदि आप इस क्षेत्र से औपचारिक रूप से जुड़ना चाहते हैं, तो अपनी प्रोफ़ाइल में इसे चुनें।')+'</div>'+
+ (selected?'':'<button type="button" class="primary" onclick="openView(\\'profile-edit\\')">मेरी प्रोफ़ाइल में यह कार्यक्षेत्र चुनें</button>')+
+ '<form id="areaRequestForm" class="areaRequestForm"><fieldset><legend>इस कार्यक्षेत्र से आवेदन / सहायता अनुरोध</legend>'+
+ '<label>अनुरोध का प्रकार *</label><select name="request_type" required><option value="member_request">सामान्य अनुरोध</option><option value="assistance">सहायता चाहिए</option><option value="volunteer">स्वयंसेवा से जुड़ना</option><option value="information">जानकारी / मार्गदर्शन</option><option value="issue">समस्या बतानी है</option></select>'+
+ '<label>विषय *</label><input name="subject" required minlength="3" maxlength="160" placeholder="संक्षेप में विषय लिखें">'+
+ '<label>विवरण *</label><textarea name="description" required minlength="10" maxlength="2500" placeholder="अपनी आवश्यकता या आवेदन का विवरण लिखें"></textarea>'+
+ '<button id="submitAreaRequestBtn" class="primary" type="submit">सुरक्षित आवेदन भेजें</button><div id="areaRequestMsg" aria-live="polite"></div></fieldset></form>'+
+ '<div class="notice">आवेदन भेजने पर Supabase में संदर्भ रिकॉर्ड बनेगा। आगे की कार्रवाई/स्वीकृति संबंधित SBPF टीम की समीक्षा पर निर्भर है।</div></div>';
+ $('areaRequestForm').addEventListener('submit',e=>submitDynamicWorkAreaRequest(e,area));
+}
+async function submitDynamicWorkAreaRequest(event,area){
+ event.preventDefault();
+ const form=$('areaRequestForm'),button=$('submitAreaRequestBtn'),message=$('areaRequestMsg');
+ if(!form||!form.reportValidity())return;
+ const subject=form.elements.subject.value.trim(),description=form.elements.description.value.trim(),type=form.elements.request_type.value;
+ if(subject.length<3||description.length<10){message.innerHTML='<div class="notice error">विषय कम-से-कम 3 और विवरण कम-से-कम 10 अक्षर का लिखें।</div>';return}
+ button.disabled=true;button.textContent='आवेदन सुरक्षित रूप से भेजा जा रहा है…';
+ try{
+  const id=await rpc('submit_work_area_request',{p_work_area:area.name,p_request_type:type,p_subject:subject,p_description:description,p_state:profile.state||null,p_district:profile.district||null});
+  if(!id)throw new Error('संदर्भ संख्या की पुष्टि नहीं मिली।');
+  message.innerHTML='<div class="notice success"><b>आपका आवेदन जमा हो गया।</b><br>संदर्भ संख्या: '+esc(id)+'<br>कार्य क्षेत्र: '+esc(area.name)+'<br>आवेदन स्थिति की समीक्षा SBPF टीम करेगी।</div>';
+  form.reset();
+ }catch(error){
+  message.innerHTML='<div class="notice error">आवेदन जमा नहीं हो सका: '+esc(error.message)+'<br><small>जब तक पुष्टि न मिले, इसे जमा हुआ न मानें।</small></div>';
+ }finally{
+  if($('submitAreaRequestBtn')){$('submitAreaRequestBtn').disabled=false;$('submitAreaRequestBtn').textContent='सुरक्षित आवेदन भेजें';}
+ }
+}
+
 function workAreaView(k){const map={'work-education':'शिक्षा','work-health':'स्वास्थ्य','work-employment':'रोजगार अवसर एवं कौशल','work-women':'महिला सशक्तिकरण','work-child':'बाल विकास','work-public':'जनसेवा','work-samvad':'शिकायत संवाद','work-civic':'कानूनी / नागरिक सहायता','work-environment':'पर्यावरण एवं सामाजिक सेवा','work-activities':'कार्य / सेवा गतिविधियाँ'};const area=map[k];$('viewBody').innerHTML='<div class="panel"><div class="notice"><b>'+esc(area)+'</b><br><small>इस कार्य-क्षेत्र की सदस्य सेवाएँ और आवेदन यहाँ अलग tab में उपलब्ध होंगे।</small></div><div class="items"><button onclick="workRequest('+JSON.stringify(area)+')">➕ नया आवेदन भेजें</button><button onclick="showActivitiesNotice()">📋 मेरी गतिविधियाँ</button></div></div>'}
 function showActivitiesNotice(){alert('इस कार्य-क्षेत्र की गतिविधि/इतिहास स्क्रीन अगले चरण में जोड़ी जाएगी।')}
 async function workRequest(area){const subject=prompt(area+' — विषय लिखें:');if(!subject)return;const description=prompt('अपनी आवश्यकता / विवरण लिखें:');if(!description)return;try{await rpc('submit_work_area_request',{p_work_area:area,p_request_type:'member_request',p_subject:subject,p_description:description,p_state:profile.state||null,p_district:profile.district||null});alert('आवेदन सफलतापूर्वक भेज दिया गया।');}catch(e){alert('आवेदन नहीं भेजा जा सका: '+e.message)}}async function networkView(){const d=await rpc('get_my_referral_dashboard');const x=Array.isArray(d)?d[0]:d;const tree=await rpc('get_my_referral_tree');const refs=await rpc('get_my_referred_members');const link=x?.referral_link||profile.referral_link||'';$('viewBody').innerHTML='<div class="panel">'+kv('Referral Code',x?.referral_code||profile.referral_code)+kv('मेरे जुड़े सदस्य',x?.total_referrals||refs?.length||0)+'<div class="notice"><b>मेरा Referral Link</b><input style="width:100%;margin-top:7px;padding:10px;border:1px solid #ddd;border-radius:8px" readonly value="'+esc(link)+'"><button class="primary" onclick="navigator.clipboard.writeText('+JSON.stringify(link)+')">Copy Referral Link</button></div></div><div class="panel"><b>मेरा नेटवर्क</b><div class="empty">Network tree data सुरक्षित backend से उपलब्ध है। कुल records: '+(Array.isArray(tree)?tree.length:'—')+'</div></div>'}
