@@ -28,6 +28,11 @@ main{padding:14px}.hero{background:linear-gradient(135deg,#7d1020,#a71f31);color
 .family-form .member-row{border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0;background:#fff}
 .family-form .member-row h4{margin:0 0 8px;color:var(--maroon)}
 .family-form .add-member{width:100%;border:1px dashed #aa8d44;background:#fffdf5;border-radius:10px;padding:10px;font-weight:700;color:var(--maroon)}
+.modalBackdrop{position:fixed;inset:0;z-index:1000;background:#15192399;display:grid;place-items:center;padding:18px}
+.modalCard{width:min(100%,520px);background:#fff;border:1px solid var(--line);border-top:5px solid var(--gold);border-radius:18px;padding:22px;box-shadow:0 18px 50px #0003}
+.modalCard h2{margin:0 0 8px;color:var(--maroon);font-size:22px}
+.modalCard p{color:var(--muted);font-size:14px;line-height:1.55}
+.modalActions{display:flex;gap:10px;flex-wrap:wrap}.modalActions button{flex:1;min-width:150px}
 @media(max-width:720px){.categories{grid-template-columns:1fr}.quick{grid-template-columns:repeat(2,1fr)}main{padding:10px}.hero{padding:15px}.items{grid-template-columns:1fr 1fr}.row{grid-template-columns:1fr}.family-form .form-grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -102,6 +107,16 @@ main{padding:14px}.hero{background:linear-gradient(135deg,#7d1020,#a71f31);color
  <section id="view" class="view hidden"><div class="viewHead"><button class="back" onclick="home()">← वापस</button><h2 id="viewTitle"></h2></div><div id="viewBody"></div></section>
 </main>
 </div>
+<div id="profileReminder" class="modalBackdrop hidden" role="dialog" aria-modal="true" aria-labelledby="profileReminderTitle">
+ <div class="modalCard">
+  <h2 id="profileReminderTitle">अपनी सदस्य प्रोफ़ाइल पूरी करें</h2>
+  <p>आपकी Member ID बन चुकी है। सरकारी योजनाओं की सही जानकारी, परिवार रजिस्टर और SBPF सेवाओं के लिए पता, 6 अंकों का PIN Code और कार्यक्षेत्र भरें। आप “बाद में” चुनकर अभी पैनल का उपयोग जारी रख सकते हैं।</p>
+  <div class="modalActions">
+   <button type="button" onclick="completeProfileNow()">प्रोफ़ाइल पूरी करें</button>
+   <button type="button" class="back" onclick="dismissProfileReminder()">बाद में</button>
+  </div>
+ </div>
+</div>
 <script>
 const URL='https://dxowhzghrdghfzoggorx.supabase.co';
 const KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
@@ -159,7 +174,9 @@ async function load(){try{
  const d=await rpc('get_my_member_dashboard');dashboard=Array.isArray(d)?d[0]:d;
  $('auth').classList.add('hidden');$('app').classList.remove('hidden');render();
  }catch(e){token='';localStorage.removeItem('sbpf_access_token');msg(e.message,'error')}}
-function render(){ $('name').textContent=profile.full_name||'सदस्य';$('memberId').textContent=profile.member_id||'—';$('status').textContent=profile.status||profile.membership_status||'Pending';$('validity').textContent=profile.membership_end_date?'वैधता: '+profile.membership_end_date:'';branding(); if(dashboard?.profile_photo_url)$('photo').src=dashboard.profile_photo_url; }
+function render(){ $('name').textContent=profile.full_name||'सदस्य';$('memberId').textContent=profile.member_id||'—';$('status').textContent=profile.status||profile.membership_status||'Pending';$('validity').textContent=profile.membership_end_date?'वैधता: '+profile.membership_end_date:'';branding(); if(dashboard?.profile_photo_url)$('photo').src=dashboard.profile_photo_url;const reminder=$('profileReminder');if(reminder)reminder.classList.toggle('hidden',profile.profile_completed===true); }
+function dismissProfileReminder(){$('profileReminder')?.classList.add('hidden')}
+function completeProfileNow(){dismissProfileReminder();openView('profile-edit')}
 function home(){$('home').classList.remove('hidden');$('view').classList.add('hidden')}
 const titles={profile:'मेरी जानकारी','profile-edit':'प्रोफ़ाइल संपादित करें',family:'परिवार रजिस्टर',kyc:'पहचान दस्तावेज़',id:'Digital Member ID Card',payment:'सदस्यता शुल्क व रसीद',certificate:'प्रमाण-पत्र',education:'शिक्षा',services:'सेवा क्षेत्र',network:'मेरा नेटवर्क',updates:'नई जानकारी','work-education':'शिक्षा','work-health':'स्वास्थ्य','work-employment':'रोजगार अवसर एवं कौशल','work-women':'महिला सशक्तिकरण','work-child':'बाल विकास','work-public':'जनसेवा','work-samvad':'शिकायत संवाद','work-civic':'नागरिक सहायता','work-environment':'पर्यावरण व समाज सेवा','work-activities':'मेरे कार्य'};
 async function openView(k){$('home').classList.add('hidden');$('view').classList.remove('hidden');$('viewTitle').textContent=titles[k];$('viewBody').innerHTML='<div class="panel">लोड हो रहा है...</div>';try{if(k==='profile')profileView();else if(k==='profile-edit')await profileEditView();else if(k==='family')await familyView();else if(k==='kyc')kycView();else if(k==='id')await idView();else if(k==='payment')await paymentView();else if(k==='certificate')await certificateView();else if(k==='education')await educationView();else if(k==='services')await servicesView();else if(k==='network')await networkView();else if(k==='updates')await updatesView();else if(k.startsWith('work-'))workAreaView(k)}catch(e){$('viewBody').innerHTML='<div class="panel error">'+esc(e.message)+'</div>'}}
@@ -201,9 +218,21 @@ async function saveProfileEdit(event){
    p_designation:value('designation')||null,p_work_area_id:value('work_area_id')?Number(value('work_area_id')):null
   });
   if(ok!==true)throw new Error('प्रोफ़ाइल अपडेट की पुष्टि नहीं मिली।');
-  message.innerHTML='<div class="notice success">आपकी प्रोफ़ाइल सफलतापूर्वक अपडेट हुई।</div>';
+  let profileComplete=false,completionError='';
+  try{
+   const completed=await rpc('complete_my_member_profile');
+   profileComplete=completed===true;
+   if(!profileComplete)completionError='प्रोफ़ाइल पूरी होने की पुष्टि नहीं मिली।';
+  }catch(e){completionError=e.message||'कुछ आवश्यक जानकारी बाकी है।'}
   await load();
-  await openView('profile');
+  if(profileComplete){
+   await openView('profile');
+  }else{
+   dismissProfileReminder();
+   await openView('profile-edit');
+   const statusBox=$('profileEditMsg');
+   if(statusBox)statusBox.innerHTML='<div class="notice error"><b>आपकी जानकारी सेव हो गई है, लेकिन प्रोफ़ाइल अभी अधूरी है।</b><br>'+esc(completionError)+'<br>ऊपर की जानकारी पूरी करके फिर सुरक्षित करें।</div>';
+  }
  }catch(error){
   message.innerHTML='<div class="notice error">प्रोफ़ाइल अपडेट नहीं हुई: '+esc(error.message)+'</div>';
  }finally{
