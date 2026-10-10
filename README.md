@@ -11,20 +11,22 @@ Swarnim Bharat Parivar Foundation — public site and member portal using GitHub
 - Campaign details and public content: https://sanjeevtiwari8585-design.github.io/Sbpf/campaign.html?slug=swarnim-jan-jagran (open any campaign from the home page to see its detail page)
 - Campaign 09 — SwarnimBook: https://sanjeevtiwari8585-design.github.io/Sbpf/swarnim-book.html (social posts, media links, profiles, likes, comments, follows using existing `swarnim_book_*` tables and RLS).
 - Campaign 10 — Swarnim Media / SMLive News: https://sanjeevtiwari8585-design.github.io/Sbpf/swarnim-media/ (existing news, articles, videos, photos and journalist dashboard module).
+- Five-level promotion matrix: https://sanjeevtiwari8585-design.github.io/Sbpf/promotion-plan.html (uses the existing server-side `sbpf_get_my_referral_dashboard` RPC for authenticated member eligibility, network counts, and digital reward records).
 
 The admin family route is not protected by a hidden URL; its actual data access and review operations are guarded by Supabase RPCs that require an authenticated admin.
 
 ## Current integrated workflows
 
 - Public home page loads active work areas from `public.focus_areas` and active Swarnim campaigns from `public.campaigns`, with static fallback content if the public API cannot load.
-- Member account creation starts through Supabase Auth signup and uses existing `register_my_member` RPC metadata after the user authenticates. Member login uses email and password.
+- Member login uses Supabase Auth email and password. **Production blocker:** the current member panel still exposes self-signup and `register_my_member` can be executed by authenticated users; this conflicts with the previously requested admin-only member creation model. Enforce that rule server-side before production; hiding the signup form alone is insufficient.
 - Member profile editing uses `update_my_member_profile_v2`; additional member fields are read only for the authenticated owner under the existing `members_select_own` RLS policy.
 - Family register uses the existing `register_my_pariwar` RPC and the existing family tables. Family records are owner-scoped. Existing family records remain read-only in the current UI until a safe edit path preserves related education, income, health, and document rows.
 - Potential government-scheme matching uses `get_my_family_scheme_candidates` only after explicit scheme, income-use, and accuracy consent. Matching is indicative only; it is not a government eligibility decision.
 - KYC uploads use the existing `kyc-upload` Edge Function. Accepted files are JPG/PNG/PDF up to 5 MB; submission is not the same as verification.
 - Digital ID and issued certificate pages use existing authenticated Supabase Edge Functions.
 - Admin family review uses `admin_list_member_pariwar` and `admin_review_member_pariwar`, which enforce the server-side `is_admin()` check.
-- Referral links use the current GitHub Pages member route. After the domain is configured and verified, update the referral base URL to the final custom domain.
+- Referral links are generated on the member's current site path so they continue to work under the GitHub Pages `/Sbpf/` subpath; after the custom domain is configured and verified, test and update the final base URL.
+- The promotion matrix uses the existing secure RPC rather than enumerating `members` in the browser, because the existing member RLS policy only permits reading one's own member row.
 
 ## Deployment and checks
 
@@ -57,4 +59,4 @@ The EMS interface is being built against the existing Supabase EMS tables and RL
 
 ### Verification status
 
-GitHub Actions syntax validation passed for the EMS pages on the feature branch. This validates inline JavaScript syntax and expected files only; it does not prove a successful authenticated workflow against Supabase. Test school-admin and SBPF-admin permissions with authorized accounts before merging. No change has been deployed from this feature branch.
+GitHub Actions validates inline JavaScript syntax, required pages, promotion RPC wiring, and selected Supabase enum values. These checks do not prove authenticated reads/writes against Supabase. Test school-admin, hospital-admin, journalist, member and SBPF-admin workflows with authorized accounts before merging. Netlify's PR deploy preview is not production; `main` and GitHub Pages production remain unchanged until the PR is reviewed and merged.
