@@ -67,6 +67,9 @@ jobs:
           grep -q 'hms_clinical_records' hms.html
           grep -q 'hms_bills' hms.html
           grep -q 'hms_staff_salary' hms.html
+          grep -q 'hms_create_diagnostic_order' hms.html
+          test -s supabase/migrations/20261010130000_hms_secure_diagnostic_order_workflow.sql
+          grep -q 'hms_create_diagnostic_order' supabase/migrations/20261010130000_hms_secure_diagnostic_order_workflow.sql
           grep -q 'value="diagnostic_center"' hms.html
           grep -q 'value="follow_up"' hms.html
           grep -q 'value="emergency"' hms.html
