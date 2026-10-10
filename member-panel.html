@@ -495,7 +495,7 @@ async function loadFocusAreas(){
   activeFocusAreas=Array.isArray(rows)?rows:[];
   if(!activeFocusAreas.length){message.textContent='वर्तमान में कोई सक्रिय कार्यक्षेत्र उपलब्ध नहीं है।';grid.innerHTML='';return}
   message.textContent='कुल सक्रिय कार्यक्षेत्र: '+activeFocusAreas.length+' • किसी क्षेत्र को खोलकर विवरण या आवेदन भेजें।';
-  grid.innerHTML=activeFocusAreas.map(area=>'<article class="focusAreaCard"><div class="focusIcon">'+(focusAreaIcons[Number(area.id)]||'🧭')+'</div><h4>'+esc(area.name)+'</h4><p>'+esc(area.description||'इस कार्यक्षेत्र की जानकारी शीघ्र उपलब्ध होगी।')+'</p><button type="button" onclick="openView(\\'area-'+Number(area.id)+'\\')">विवरण / आवेदन →</button></article>').join('');
+  grid.innerHTML=activeFocusAreas.map(area=>'<article class="focusAreaCard"><div class="focusIcon">'+(focusAreaIcons[Number(area.id)]||'🧭')+'</div><h4>'+esc(area.name)+'</h4><p>'+esc(area.description||'इस कार्यक्षेत्र की जानकारी शीघ्र उपलब्ध होगी।')+'</p><button type="button" onclick="openView(\'area-'+Number(area.id)+'\\')">विवरण / आवेदन →</button></article>').join('');
  }catch(error){
   message.innerHTML='कार्य क्षेत्र सूची लोड नहीं हुई: '+esc(error.message)+'<br><small>पुराने कार्ड अभी उपलब्ध हैं; कृपया कुछ देर बाद फिर प्रयास करें।</small>';
   grid.innerHTML='';
@@ -515,7 +515,7 @@ async function dynamicWorkAreaView(key){
  const selected=Number(profile.work_area_id||0)===areaId;
  $('viewBody').innerHTML='<div class="panel"><div class="cardHead"><div class="icon">'+(focusAreaIcons[areaId]||'🧭')+'</div><div><h3>'+esc(area.name)+'</h3><small>SBPF सक्रिय कार्यक्षेत्र</small></div></div><p style="line-height:1.65;margin:12px 0">'+esc(area.description||'इस कार्यक्षेत्र की जानकारी शीघ्र उपलब्ध होगी।')+'</p>'+
  '<div class="notice">'+(selected?'यह कार्यक्षेत्र आपकी प्रोफ़ाइल में चुना हुआ है।':'यदि आप इस क्षेत्र से औपचारिक रूप से जुड़ना चाहते हैं, तो अपनी प्रोफ़ाइल में इसे चुनें।')+'</div>'+
- (selected?'':'<button type="button" class="primary" onclick="openView(\\'profile-edit\\')">मेरी प्रोफ़ाइल में यह कार्यक्षेत्र चुनें</button>')+
+ (selected?'':'<button type="button" class="primary" onclick="openView(\'profile-edit\')">मेरी प्रोफ़ाइल में यह कार्यक्षेत्र चुनें</button>')+
  '<form id="areaRequestForm" class="areaRequestForm"><fieldset><legend>इस कार्यक्षेत्र से आवेदन / सहायता अनुरोध</legend>'+
  '<label>अनुरोध का प्रकार *</label><select name="request_type" required><option value="member_request">सामान्य अनुरोध</option><option value="assistance">सहायता चाहिए</option><option value="volunteer">स्वयंसेवा से जुड़ना</option><option value="information">जानकारी / मार्गदर्शन</option><option value="issue">समस्या बतानी है</option></select>'+
  '<label>विषय *</label><input name="subject" required minlength="3" maxlength="160" placeholder="संक्षेप में विषय लिखें">'+
