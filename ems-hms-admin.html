@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#12345b">
+<title>SBPF Seva | EMS–HMS Admin</title>
+<style>
+:root{--navy:#12345b;--teal:#176d68;--gold:#d4a72c;--paper:#f5f7fa;--ink:#1c2430;--muted:#5e6878;--line:#dce3eb;--red:#a21f2d}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+header{background:linear-gradient(120deg,var(--navy),var(--teal));color:white;padding:20px max(18px,calc((100% - 1160px)/2));display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:4px solid var(--gold)}
+h1{font-size:clamp(20px,3vw,29px);margin:0}header p{margin:3px 0 0;color:#e3f2ee;font-size:13px}
+button,input{font:inherit}button{cursor:pointer;border:0;border-radius:9px;padding:10px 14px;font-weight:750;background:var(--navy);color:white}button:disabled{opacity:.55;cursor:not-allowed}.light{background:white;color:var(--navy);border:1px solid var(--line)}
+.wrap{max-width:1160px;margin:auto;padding:22px 16px 50px}.hidden{display:none!important}.box{background:white;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 4px 18px #12243b09}
+.login{max-width:480px;margin:7vh auto}.muted,.small{color:var(--muted);font-size:13px}label{display:block;font-size:13px;font-weight:700;margin:12px 0 5px}input{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:9px}
+.msg{border-radius:10px;padding:11px;margin-top:12px;background:#fff5d8;white-space:pre-wrap;overflow-wrap:anywhere}.err{background:#fff0f0;border:1px solid #ffd0d0;color:#842029}.ok{background:#eaf8ef;border:1px solid #b8e2c4;color:#175c2b}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.stat{font-size:30px;font-weight:850;color:var(--navy)}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.institution{border:1px solid var(--line);border-radius:12px;padding:14px;min-width:0}.institution h3{margin:0 0 6px;color:var(--navy);font-size:17px}.pill{display:inline-block;border-radius:30px;padding:3px 9px;font-size:12px;font-weight:800;background:#fff4d7;color:#725300}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}.section-title{margin:0 0 10px;color:var(--navy)}.empty{padding:20px;text-align:center;color:var(--muted)}
+@media(max-width:700px){header{align-items:flex-start;flex-direction:column}.grid,.cards{grid-template-columns:1fr}.wrap{padding:14px 10px 35px}}
+</style>
+</head>
+<body>
+<header><div><h1>SBPF Seva — EMS / HMS</h1><p>अधिकृत प्रशासन • शिक्षा एवं स्वास्थ्य प्रबंधन</p></div><button id="logoutBtn" class="light hidden" type="button">लॉगआउट</button></header>
+<main class="wrap">
+<section id="loginPanel" class="box login">
+<h2>अधिकृत SBPF Admin प्रवेश</h2>
+<p class="muted">यह पैनल केवल प्रमाणित लॉगिन और सर्वर की अनुमति के बाद उपलब्ध होगा। स्कूल/अस्पताल का डेटा उसकी लागू Supabase RLS नीतियों के अनुसार ही दिखेगा।</p>
+<form id="loginForm"><label for="email">एडमिन ईमेल</label><input id="email" type="email" autocomplete="username" required><label for="password">पासवर्ड</label><input id="password" type="password" autocomplete="current-password" required><button id="loginBtn" type="submit" style="width:100%;margin-top:14px">सुरक्षित प्रवेश करें</button></form>
+<div id="loginMsg" class="msg hidden" role="status"></div>
+</section>
+<section id="adminPanel" class="hidden">
+<div class="box"><div class="row"><div><h2 class="section-title">EMS–HMS नियंत्रण केंद्र</h2><div id="who" class="muted">सत्र सत्यापित हो रहा है…</div></div><button id="refreshBtn" type="button">फिर से जाँचें</button></div><div id="statusMsg" class="msg">सुरक्षित रूप से डेटा जाँचा जा रहा है…</div></div>
+<div class="grid">
+<article class="box"><h2 class="section-title">EMS · शिक्षा</h2><div class="stat" id="schoolCount">—</div><div class="muted">आपके अधिकारों से दिखाई देने वाले स्कूल</div><div id="schoolMsg" class="small">लोड हो रहा है…</div></article>
+<article class="box"><h2 class="section-title">HMS · स्वास्थ्य</h2><div class="stat" id="hospitalCount">—</div><div class="muted">आपके अधिकारों से दिखाई देने वाले अस्पताल</div><div id="hospitalMsg" class="small">लोड हो रहा है…</div></article>
+</div>
+<div class="box"><h2 class="section-title">स्कूल सूची</h2><div id="schoolList" class="cards"><div class="empty">लोड हो रहा है…</div></div></div>
+<div class="box"><h2 class="section-title">अस्पताल सूची</h2><div id="hospitalList" class="cards"><div class="empty">लोड हो रहा है…</div></div></div>
+<div class="box"><b>सुरक्षा नोट:</b><p class="muted">यह पहला read-only एकीकरण चरण है। इस स्क्रीन से अभी कोई स्कूल, अस्पताल, मरीज, विद्यार्थी, फीस या स्वास्थ्य रिकॉर्ड बदला नहीं जा सकता। आगे के बदलाव केवल मौजूदा server-side अनुमति जाँच और परीक्षण के बाद जोड़े जाएँगे।</p><p><a href="member-panel.html">सदस्य पैनल</a> · <a href="admin-family.html">परिवार रजिस्टर समीक्षा</a></p></div>
+</section>
+</main>
+<script>
+const API='https://dxowhzghrdghfzoggorx.supabase.co';
+const KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
+const $=id=>document.getElementById(id);
+let token=localStorage.getItem('sbpf_access_token')||'';
+const esc=v=>String(v??'—').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function api(path,options={}){
+ const headers={apikey:KEY,...(options.headers||{})};if(token)headers.Authorization='Bearer '+token;
+ const res=await fetch(API+path,{...options,headers});let data=null;try{data=await res.json()}catch{}
+ if(!res.ok)throw new Error(data?.message||data?.msg||data?.error_description||'अनुरोध विफल ('+res.status+')');return data;
+}
+async function rpc(name,args={}){return api('/rest/v1/rpc/'+name,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(args)});}
+function message(el,text,kind=''){el.className='msg'+(kind?' '+kind:'');el.textContent=text;el.classList.remove('hidden');}
+function renderList(target,items,type){
+ const empty=type==='school'?'अभी कोई स्कूल उपलब्ध नहीं है या आपके खाते को सूची देखने की अनुमति नहीं है।':'अभी कोई अस्पताल उपलब्ध नहीं है या आपके खाते को सूची देखने की अनुमति नहीं है।';
+ if(!items.length){$(target).innerHTML='<div class="empty">'+empty+'</div>';return;}
+ $(target).innerHTML=items.map(x=>'<article class="institution"><h3>'+esc(type==='school'?x.school_name:x.hospital_name)+'</h3><div class="small">कोड: '+esc(type==='school'?x.school_code:x.hospital_code)+'</div><p class="small">'+esc(x.district||'')+(x.state?' • '+esc(x.state):'')+'</p><span class="pill">'+esc(x.status||'स्थिति उपलब्ध नहीं')+'</span></article>').join('');
+}
+async function loadDashboard(){
+ message($('statusMsg'),'सर्वर से अनुमति और संस्थान सूची की जाँच हो रही है…');
+ try{
+  const user=await api('/auth/v1/user');if(!user?.id)throw new Error('लॉगिन सत्र मान्य नहीं है।');
+  $('who').textContent='लॉगिन सत्यापित: '+(user.email||'अधिकृत उपयोगकर्ता');
+  // This server-side check is mandatory; client-side UI alone is not authorization.
+  let admin=false;try{admin=await rpc('is_admin');}catch(e){throw new Error('SBPF Admin अनुमति सत्यापित नहीं हुई। सामान्य सदस्य खाते को यह पैनल नहीं मिलेगा। विवरण: '+e.message);}
+  if(admin!==true && !(admin&&admin.is_admin===true))throw new Error('यह खाता SBPF Admin के रूप में अधिकृत नहीं है।');
+  const [schoolsResult,hospitalsResult]=await Promise.allSettled([
+   api('/rest/v1/ems_schools?select=id,school_code,school_name,district,state,status&order=created_at.desc&limit=100'),
+   api('/rest/v1/hms_hospitals?select=id,hospital_code,hospital_name,district,state,status&order=created_at.desc&limit=100')
+  ]);
+  const schools=schoolsResult.status==='fulfilled'&&Array.isArray(schoolsResult.value)?schoolsResult.value:[];
+  const hospitals=hospitalsResult.status==='fulfilled'&&Array.isArray(hospitalsResult.value)?hospitalsResult.value:[];
+  $('schoolCount').textContent=schoolsResult.status==='fulfilled'?schools.length:'—';
+  $('hospitalCount').textContent=hospitalsResult.status==='fulfilled'?hospitals.length:'—';
+  $('schoolMsg').textContent=schoolsResult.status==='rejected'?'स्कूल सूची सर्वर से उपलब्ध नहीं हुई।':'सूची Supabase RLS के अनुसार फ़िल्टर है।';
+  $('hospitalMsg').textContent=hospitalsResult.status==='rejected'?'अस्पताल सूची सर्वर से उपलब्ध नहीं हुई।':'सूची Supabase RLS के अनुसार फ़िल्टर है।';
+  renderList('schoolList',schools,'school');renderList('hospitalList',hospitals,'hospital');
+  const problems=[];if(schoolsResult.status==='rejected')problems.push('EMS: '+schoolsResult.reason.message);if(hospitalsResult.status==='rejected')problems.push('HMS: '+hospitalsResult.reason.message);
+  message($('statusMsg'),problems.length?'Admin अनुमति मिली, लेकिन कुछ सूचियाँ उपलब्ध नहीं हुईं।\n'+problems.join('\n'):'Admin अनुमति और दोनों सूचियों की जाँच पूरी हुई। कोई डेटा बदला नहीं गया।',problems.length?'err':'ok');
+ }catch(e){message($('statusMsg'),e.message,'err');throw e;}
+}
+async function enter(){await api('/auth/v1/user');$('loginPanel').classList.add('hidden');$('adminPanel').classList.remove('hidden');$('logoutBtn').classList.remove('hidden');await loadDashboard();}
+async function login(e){e.preventDefault();$('loginBtn').disabled=true;message($('loginMsg'),'लॉगिन सत्यापित हो रहा है…');try{const d=await api('/auth/v1/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:$('email').value.trim(),password:$('password').value})});if(!d?.access_token)throw new Error('लॉगिन टोकन नहीं मिला।');token=d.access_token;localStorage.setItem('sbpf_access_token',token);await enter();}catch(err){message($('loginMsg'),err.message,'err');}finally{$('loginBtn').disabled=false;}}
+function logout(){token='';localStorage.removeItem('sbpf_access_token');$('adminPanel').classList.add('hidden');$('logoutBtn').classList.add('hidden');$('loginPanel').classList.remove('hidden');$('password').value='';message($('loginMsg'),'लॉगआउट हो गया।');}
+$('loginForm').addEventListener('submit',login);$('logoutBtn').addEventListener('click',logout);$('refreshBtn').addEventListener('click',()=>loadDashboard().catch(()=>{}));
+if(token)enter().catch(e=>{token='';localStorage.removeItem('sbpf_access_token');$('adminPanel').classList.add('hidden');$('loginPanel').classList.remove('hidden');message($('loginMsg'),'सत्र जाँच नहीं हो सकी: '+e.message,'err');});
+</script>
+</body></html>
