@@ -18,7 +18,7 @@ The admin family route is not protected by a hidden URL; its actual data access 
 ## Current integrated workflows
 
 - Public home page loads active work areas from `public.focus_areas` and active Swarnim campaigns from `public.campaigns`, with static fallback content if the public API cannot load.
-- Member login uses Supabase Auth email and password. **Production blocker:** the current member panel still exposes self-signup and `register_my_member` can be executed by authenticated users; this conflicts with the previously requested admin-only member creation model. Enforce that rule server-side before production; hiding the signup form alone is insufficient.
+- Member registration follows the existing Step 1 flow: a user authenticates through Supabase Auth, then `register_my_member` validates the required profile fields and creates a pending member record. Do not revoke this RPC or disable signup without changing the approved member onboarding model. OTP/email delivery and real-account signup still require end-to-end verification.
 - Member profile editing uses `update_my_member_profile_v2`; additional member fields are read only for the authenticated owner under the existing `members_select_own` RLS policy.
 - Family register uses the existing `register_my_pariwar` RPC and the existing family tables. Family records are owner-scoped. Existing family records remain read-only in the current UI until a safe edit path preserves related education, income, health, and document rows.
 - Potential government-scheme matching uses `get_my_family_scheme_candidates` only after explicit scheme, income-use, and accuracy consent. Matching is indicative only; it is not a government eligibility decision.
@@ -60,3 +60,6 @@ The EMS interface is being built against the existing Supabase EMS tables and RL
 ### Verification status
 
 GitHub Actions validates inline JavaScript syntax, required pages, promotion RPC wiring, and selected Supabase enum values. These checks do not prove authenticated reads/writes against Supabase. Test school-admin, hospital-admin, journalist, member and SBPF-admin workflows with authorized accounts before merging. Netlify's PR deploy preview is not production; `main` and GitHub Pages production remain unchanged until the PR is reviewed and merged.
+
+
+- HMS diagnostic creation uses `hms_create_diagnostic_order`, an atomic server-side RPC that validates hospital role and patient scope, creates the required encounter, then creates the diagnostic order and test item together. Migration: `supabase/migrations/20261010130000_hms_secure_diagnostic_order_workflow.sql`.
