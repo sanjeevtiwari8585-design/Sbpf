@@ -529,7 +529,7 @@ async function loadFocusAreas(){
  }
 }
 async function dynamicWorkAreaView(key){
- const match=String(key).match(/^area-(\d+)$/);
+ const match=String(key).match(/^area-(\\d+)$/);
  if(!match)throw new Error('कार्य क्षेत्र की पहचान सही नहीं है।');
  const areaId=Number(match[1]);
  let area=activeFocusAreas.find(x=>Number(x.id)===areaId);
@@ -540,36 +540,23 @@ async function dynamicWorkAreaView(key){
  if(!area)throw new Error('यह कार्यक्षेत्र अब सक्रिय नहीं है।');
  $('viewTitle').textContent=area.name;
  const selected=Number(profile.work_area_id||0)===areaId;
+ let contentRows=[],requestRows=[];
+ try{contentRows=await api('/rest/v1/work_area_content?work_area=eq.'+encodeURIComponent(area.name)+'&is_active=eq.true&select=id,title,description,image_url,link_url,link_label,content,sort_order&order=sort_order.asc,created_at.desc&limit=50')||[]}catch(e){console.warn('Work-area content could not be loaded',e)}
+ try{requestRows=await api('/rest/v1/work_area_requests?user_id=eq.'+encodeURIComponent(currentUser.id)+'&work_area=eq.'+encodeURIComponent(area.name)+'&select=id,request_type,subject,status,admin_note,created_at,updated_at&order=created_at.desc&limit=20')||[]}catch(e){console.warn('Work-area request history could not be loaded',e)}
+ const contentHtml=contentRows.length?'<section class="panel"><h3>इस कार्यक्षेत्र की जानकारी और संसाधन</h3>'+contentRows.map(item=>'<article class="notice">'+(item.image_url?'<img src="'+esc(item.image_url)+'" alt="" loading="lazy" style="max-width:100%;max-height:220px;object-fit:contain;border-radius:8px">':'')+'<b>'+esc(item.title)+'</b>'+(item.description?'<p>'+esc(item.description)+'</p>':'')+(item.link_url?'<p><a href="'+esc(item.link_url)+'" target="_blank" rel="noopener noreferrer">'+esc(item.link_label||'संसाधन खोलें')+'</a></p>':'')+'</article>').join('')+'</section>':'<div class="panel empty">इस कार्यक्षेत्र के लिए अभी कोई प्रकाशित सामग्री उपलब्ध नहीं है।</div>';
+ const requestHtml='<section class="panel"><h3>मेरे आवेदन की स्थिति</h3>'+(requestRows.length?requestRows.map(item=>'<article class="notice"><b>संदर्भ #'+Number(item.id)+' — '+esc(item.subject)+'</b><br><small>प्रकार: '+esc(item.request_type)+' • स्थिति: '+esc(item.status)+' • दिनांक: '+esc(item.created_at?new Date(item.created_at).toLocaleDateString('hi-IN'):'—')+'</small>'+(item.admin_note?'<p>एडमिन टिप्पणी: '+esc(item.admin_note)+'</p>':'')+'</article>').join(''):'<p class="empty">इस कार्यक्षेत्र में आपका कोई आवेदन रिकॉर्ड नहीं मिला।</p>')+'</section>';
  $('viewBody').innerHTML='<div class="panel"><div class="cardHead"><div class="icon">'+(focusAreaIcons[areaId]||'🧭')+'</div><div><h3>'+esc(area.name)+'</h3><small>SBPF सक्रिय कार्यक्षेत्र</small></div></div><p style="line-height:1.65;margin:12px 0">'+esc(area.description||'इस कार्यक्षेत्र की जानकारी शीघ्र उपलब्ध होगी।')+'</p>'+
  '<div class="notice">'+(selected?'यह कार्यक्षेत्र आपकी प्रोफ़ाइल में चुना हुआ है।':'यदि आप इस क्षेत्र से औपचारिक रूप से जुड़ना चाहते हैं, तो अपनी प्रोफ़ाइल में इसे चुनें।')+'</div>'+
- (selected?'':'<button type="button" class="primary" onclick="openView(\'profile-edit\')">मेरी प्रोफ़ाइल में यह कार्यक्षेत्र चुनें</button>')+
- '<form id="areaRequestForm" class="areaRequestForm"><fieldset><legend>इस कार्यक्षेत्र से आवेदन / सहायता अनुरोध</legend>'+
+ (selected?'':'<button type="button" class="primary" onclick="openView(\\'profile-edit\\')">मेरी प्रोफ़ाइल में यह कार्यक्षेत्र चुनें</button>')+
+ '</div>'+contentHtml+
+ '<div class="panel"><form id="areaRequestForm" class="areaRequestForm"><fieldset><legend>इस कार्यक्षेत्र से आवेदन / सहायता अनुरोध</legend>'+
  '<label>अनुरोध का प्रकार *</label><select name="request_type" required><option value="member_request">सामान्य अनुरोध</option><option value="assistance">सहायता चाहिए</option><option value="volunteer">स्वयंसेवा से जुड़ना</option><option value="information">जानकारी / मार्गदर्शन</option><option value="issue">समस्या बतानी है</option></select>'+
  '<label>विषय *</label><input name="subject" required minlength="3" maxlength="160" placeholder="संक्षेप में विषय लिखें">'+
  '<label>विवरण *</label><textarea name="description" required minlength="10" maxlength="2500" placeholder="अपनी आवश्यकता या आवेदन का विवरण लिखें"></textarea>'+
  '<button id="submitAreaRequestBtn" class="primary" type="submit">सुरक्षित आवेदन भेजें</button><div id="areaRequestMsg" aria-live="polite"></div></fieldset></form>'+
- '<div class="notice">आवेदन भेजने पर Supabase में संदर्भ रिकॉर्ड बनेगा। आगे की कार्रवाई/स्वीकृति संबंधित SBPF टीम की समीक्षा पर निर्भर है।</div></div>';
+ '<div class="notice">आवेदन Supabase में सुरक्षित रिकॉर्ड होगा। आगे की कार्रवाई/स्वीकृति संबंधित SBPF टीम की समीक्षा पर निर्भर है।</div></div>'+requestHtml;
  $('areaRequestForm').addEventListener('submit',e=>submitDynamicWorkAreaRequest(e,area));
 }
-async function submitDynamicWorkAreaRequest(event,area){
- event.preventDefault();
- const form=$('areaRequestForm'),button=$('submitAreaRequestBtn'),message=$('areaRequestMsg');
- if(!form||!form.reportValidity())return;
- const subject=form.elements.subject.value.trim(),description=form.elements.description.value.trim(),type=form.elements.request_type.value;
- if(subject.length<3||description.length<10){message.innerHTML='<div class="notice error">विषय कम-से-कम 3 और विवरण कम-से-कम 10 अक्षर का लिखें।</div>';return}
- button.disabled=true;button.textContent='आवेदन सुरक्षित रूप से भेजा जा रहा है…';
- try{
-  const id=await rpc('submit_work_area_request',{p_work_area:area.name,p_request_type:type,p_subject:subject,p_description:description,p_state:profile.state||null,p_district:profile.district||null});
-  if(!id)throw new Error('संदर्भ संख्या की पुष्टि नहीं मिली।');
-  message.innerHTML='<div class="notice success"><b>आपका आवेदन जमा हो गया।</b><br>संदर्भ संख्या: '+esc(id)+'<br>कार्य क्षेत्र: '+esc(area.name)+'<br>आवेदन स्थिति की समीक्षा SBPF टीम करेगी।</div>';
-  form.reset();
- }catch(error){
-  message.innerHTML='<div class="notice error">आवेदन जमा नहीं हो सका: '+esc(error.message)+'<br><small>जब तक पुष्टि न मिले, इसे जमा हुआ न मानें।</small></div>';
- }finally{
-  if($('submitAreaRequestBtn')){$('submitAreaRequestBtn').disabled=false;$('submitAreaRequestBtn').textContent='सुरक्षित आवेदन भेजें';}
- }
-}
-
 function workAreaView(k){const map={'work-education':'शिक्षा','work-health':'स्वास्थ्य','work-employment':'रोजगार अवसर एवं कौशल','work-women':'महिला सशक्तिकरण','work-child':'बाल विकास','work-public':'जनसेवा','work-samvad':'शिकायत संवाद','work-civic':'कानूनी / नागरिक सहायता','work-environment':'पर्यावरण एवं सामाजिक सेवा','work-activities':'कार्य / सेवा गतिविधियाँ'};const area=map[k];$('viewBody').innerHTML='<div class="panel"><div class="notice"><b>'+esc(area)+'</b><br><small>इस कार्य-क्षेत्र की सदस्य सेवाएँ और आवेदन यहाँ अलग tab में उपलब्ध होंगे।</small></div><div class="items"><button onclick="workRequest('+JSON.stringify(area)+')">➕ नया आवेदन भेजें</button><button onclick="showActivitiesNotice()">📋 मेरी गतिविधियाँ</button></div></div>'}
 function showActivitiesNotice(){alert('इस कार्य-क्षेत्र की गतिविधि/इतिहास स्क्रीन अगले चरण में जोड़ी जाएगी।')}
 async function workRequest(area){const subject=prompt(area+' — विषय लिखें:');if(!subject)return;const description=prompt('अपनी आवश्यकता / विवरण लिखें:');if(!description)return;try{await rpc('submit_work_area_request',{p_work_area:area,p_request_type:'member_request',p_subject:subject,p_description:description,p_state:profile.state||null,p_district:profile.district||null});alert('आवेदन सफलतापूर्वक भेज दिया गया।');}catch(e){alert('आवेदन नहीं भेजा जा सका: '+e.message)}}async function networkView(){const d=await rpc('get_my_referral_dashboard');const x=Array.isArray(d)?d[0]:d;const tree=await rpc('get_my_referral_tree');const refs=await rpc('get_my_referred_members');const link=x?.referral_link||profile.referral_link||'';$('viewBody').innerHTML='<div class="panel">'+kv('Referral Code',x?.referral_code||profile.referral_code)+kv('मेरे जुड़े सदस्य',x?.total_referrals||refs?.length||0)+'<div class="notice"><b>मेरा Referral Link</b><input style="width:100%;margin-top:7px;padding:10px;border:1px solid #ddd;border-radius:8px" readonly value="'+esc(link)+'"><button class="primary" onclick="navigator.clipboard.writeText('+JSON.stringify(link)+')">Copy Referral Link</button></div></div><div class="panel"><b>मेरा नेटवर्क</b><div class="empty">Network tree data सुरक्षित backend से उपलब्ध है। कुल records: '+(Array.isArray(tree)?tree.length:'—')+'</div></div>'}
