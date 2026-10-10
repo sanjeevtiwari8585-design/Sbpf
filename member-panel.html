@@ -152,6 +152,7 @@ async function load(){try{
  }
  const p=await rpc('get_my_member_profile');profile=Array.isArray(p)?p[0]:p;
  if(!profile)throw Error('इस लॉगिन से जुड़ा सदस्य रिकॉर्ड नहीं मिला। यदि यह नया खाता है, तो पंजीकरण फिर जाँचें या एडमिन से सहायता लें।');
+ const v2=await rpc('get_my_member_profile_v2');const v2row=Array.isArray(v2)?v2[0]:v2;if(v2row)profile={...profile,...v2row};
  // Read only the signed-in member's own extra profile fields; members_select_own RLS policy applies.
  const extra=await api('/rest/v1/members?select=father_name,dob,gender,pincode,kyc_status,aadhaar_document_path,pan_document_path,profile_photo_path,profile_completed,profile_completed_at,user_id&user_id=eq.'+encodeURIComponent(currentUser.id)+'&limit=1');
  if(Array.isArray(extra)&&extra[0]&&extra[0].user_id===currentUser.id)profile={...profile,...extra[0]};
@@ -160,9 +161,55 @@ async function load(){try{
  }catch(e){token='';localStorage.removeItem('sbpf_access_token');msg(e.message,'error')}}
 function render(){ $('name').textContent=profile.full_name||'सदस्य';$('memberId').textContent=profile.member_id||'—';$('status').textContent=profile.status||profile.membership_status||'Pending';$('validity').textContent=profile.membership_end_date?'वैधता: '+profile.membership_end_date:'';branding(); if(dashboard?.profile_photo_url)$('photo').src=dashboard.profile_photo_url; }
 function home(){$('home').classList.remove('hidden');$('view').classList.add('hidden')}
-const titles={profile:'मेरी जानकारी',family:'परिवार रजिस्टर',kyc:'पहचान दस्तावेज़',id:'Digital Member ID Card',payment:'सदस्यता शुल्क व रसीद',certificate:'प्रमाण-पत्र',education:'शिक्षा',services:'सेवा क्षेत्र',network:'मेरा नेटवर्क',updates:'नई जानकारी','work-education':'शिक्षा','work-health':'स्वास्थ्य','work-employment':'रोजगार अवसर एवं कौशल','work-women':'महिला सशक्तिकरण','work-child':'बाल विकास','work-public':'जनसेवा','work-samvad':'शिकायत संवाद','work-civic':'नागरिक सहायता','work-environment':'पर्यावरण व समाज सेवा','work-activities':'मेरे कार्य'};
-async function openView(k){$('home').classList.add('hidden');$('view').classList.remove('hidden');$('viewTitle').textContent=titles[k];$('viewBody').innerHTML='<div class="panel">लोड हो रहा है...</div>';try{if(k==='profile')profileView();else if(k==='family')await familyView();else if(k==='kyc')kycView();else if(k==='id')await idView();else if(k==='payment')await paymentView();else if(k==='certificate')await certificateView();else if(k==='education')await educationView();else if(k==='services')await servicesView();else if(k==='network')await networkView();else if(k==='updates')await updatesView();else if(k.startsWith('work-'))workAreaView(k)}catch(e){$('viewBody').innerHTML='<div class="panel error">'+esc(e.message)+'</div>'}}
-function profileView(){$('viewBody').innerHTML='<div class="panel"><div class="row">'+kv('नाम',profile.full_name)+kv('Member ID',profile.member_id)+kv('मोबाइल',profile.mobile)+kv('ईमेल',profile.email)+kv('पिता/अभिभावक',profile.father_name)+kv('जन्म तिथि',profile.dob)+kv('लिंग',profile.gender)+kv('पता',profile.address)+kv('जिला',profile.district)+kv('राज्य',profile.state)+kv('पिन कोड',profile.pincode)+kv('जानकारी की स्थिति',profile.profile_completed?'Completed':'Incomplete')+'</div></div>'}
+const titles={profile:'मेरी जानकारी','profile-edit':'प्रोफ़ाइल संपादित करें',family:'परिवार रजिस्टर',kyc:'पहचान दस्तावेज़',id:'Digital Member ID Card',payment:'सदस्यता शुल्क व रसीद',certificate:'प्रमाण-पत्र',education:'शिक्षा',services:'सेवा क्षेत्र',network:'मेरा नेटवर्क',updates:'नई जानकारी','work-education':'शिक्षा','work-health':'स्वास्थ्य','work-employment':'रोजगार अवसर एवं कौशल','work-women':'महिला सशक्तिकरण','work-child':'बाल विकास','work-public':'जनसेवा','work-samvad':'शिकायत संवाद','work-civic':'नागरिक सहायता','work-environment':'पर्यावरण व समाज सेवा','work-activities':'मेरे कार्य'};
+async function openView(k){$('home').classList.add('hidden');$('view').classList.remove('hidden');$('viewTitle').textContent=titles[k];$('viewBody').innerHTML='<div class="panel">लोड हो रहा है...</div>';try{if(k==='profile')profileView();else if(k==='profile-edit')await profileEditView();else if(k==='family')await familyView();else if(k==='kyc')kycView();else if(k==='id')await idView();else if(k==='payment')await paymentView();else if(k==='certificate')await certificateView();else if(k==='education')await educationView();else if(k==='services')await servicesView();else if(k==='network')await networkView();else if(k==='updates')await updatesView();else if(k.startsWith('work-'))workAreaView(k)}catch(e){$('viewBody').innerHTML='<div class="panel error">'+esc(e.message)+'</div>'}}
+function profileView(){$('viewBody').innerHTML='<div class="panel"><div class="notice">'+(profile.profile_completed?'प्रोफ़ाइल पूरी होने की स्थिति: Completed':'प्रोफ़ाइल अधूरी है। कृपया अपनी सही जानकारी पूरी करें।')+'</div><div class="row">'+kv('नाम',profile.full_name)+kv('Member ID',profile.member_id)+kv('मोबाइल',profile.mobile)+kv('ईमेल',profile.email)+kv('पिता/अभिभावक',profile.father_name)+kv('जन्म तिथि',profile.dob)+kv('लिंग',profile.gender)+kv('पता',profile.address)+kv('जिला',profile.district)+kv('राज्य',profile.state)+kv('पिन कोड',profile.pincode)+kv('देश',profile.country)+kv('पद',profile.designation)+kv('कार्यक्षेत्र',profile.work_area_name||profile.work_area_id)+kv('जानकारी की स्थिति',profile.profile_completed?'Completed':'Incomplete')+'</div><button class="primary" onclick="openView(\'profile-edit\')">प्रोफ़ाइल संपादित / पूरी करें</button></div>'}
+
+
+async function profileEditView(){
+ const areas=await api('/rest/v1/focus_areas?is_active=eq.true&select=id,name&order=name.asc');
+ const rows=Array.isArray(areas)?areas:[];
+ const options='<option value="">कार्यक्षेत्र चुनें</option>'+rows.map(a=>'<option value="'+esc(a.id)+'" '+(String(profile.work_area_id||'')===String(a.id)?'selected':'')+'>'+esc(a.name)+'</option>').join('');
+ const val=k=>esc(profile?.[k]??'');
+ $('viewBody').innerHTML='<div class="panel"><div class="notice">अपना नाम, संपर्क, पता और कार्यक्षेत्र सही रखें। सदस्यता स्थिति और भुगतान इस फ़ॉर्म से नहीं बदले जा सकते।</div>'+
+ '<form id="profileEditForm" class="family-form"><fieldset><legend>मूल जानकारी</legend><div class="form-grid">'+
+ '<div><label>पूरा नाम *</label><input name="full_name" required minlength="2" maxlength="120" value="'+val('full_name')+'"></div>'+
+ '<div><label>मोबाइल नंबर</label><input name="mobile" inputmode="tel" maxlength="15" value="'+val('mobile')+'"></div>'+
+ '<div><label>पूरा पता</label><input name="address" maxlength="250" value="'+val('address')+'"></div>'+
+ '<div><label>देश</label><input name="country" maxlength="80" value="'+(val('country')||'India')+'"></div>'+
+ '<div><label>राज्य</label><input name="state" maxlength="100" value="'+(val('state')||'Uttar Pradesh')+'"></div>'+
+ '<div><label>जिला</label><input name="district" maxlength="100" value="'+val('district')+'"></div>'+
+ '<div><label>पिनकोड</label><input name="pincode" maxlength="12" value="'+val('pincode')+'"></div>'+
+ '<div><label>पद / भूमिका</label><input name="designation" maxlength="100" value="'+val('designation')+'"></div>'+
+ '<div><label>कार्यक्षेत्र</label><select name="work_area_id">'+options+'</select></div>'+
+ '</div></fieldset><button id="profileSaveBtn" class="primary" type="submit">प्रोफ़ाइल सुरक्षित करें</button><div id="profileEditMsg" aria-live="polite"></div></form></div>';
+ $('profileEditForm').addEventListener('submit',saveProfileEdit);
+}
+async function saveProfileEdit(event){
+ event.preventDefault();
+ const form=$('profileEditForm'),button=$('profileSaveBtn'),message=$('profileEditMsg');
+ if(!form||!form.reportValidity())return;
+ const value=n=>form.elements[n]?.value?.trim()||'';
+ const mobile=value('mobile');
+ if(mobile&&mobile.replace(/\D/g,'').length<10){message.innerHTML='<div class="notice error">मोबाइल नंबर 10 से 15 अंकों का होना चाहिए।</div>';return}
+ button.disabled=true;button.textContent='सुपाबेस में सहेजा जा रहा है…';
+ try{
+  const ok=await rpc('update_my_member_profile_v2',{
+   p_full_name:value('full_name'),p_mobile:mobile||null,p_address:value('address')||null,
+   p_country:value('country')||'India',p_state:value('state')||'Uttar Pradesh',
+   p_district:value('district')||null,p_pincode:value('pincode')||null,
+   p_designation:value('designation')||null,p_work_area_id:value('work_area_id')?Number(value('work_area_id')):null
+  });
+  if(ok!==true)throw new Error('प्रोफ़ाइल अपडेट की पुष्टि नहीं मिली।');
+  message.innerHTML='<div class="notice success">आपकी प्रोफ़ाइल सफलतापूर्वक अपडेट हुई।</div>';
+  await load();
+  await openView('profile');
+ }catch(error){
+  message.innerHTML='<div class="notice error">प्रोफ़ाइल अपडेट नहीं हुई: '+esc(error.message)+'</div>';
+ }finally{
+  if($('profileSaveBtn')){ $('profileSaveBtn').disabled=false;$('profileSaveBtn').textContent='प्रोफ़ाइल सुरक्षित करें';}
+ }
+}
 
 function familyMemberRow(m={},index=0){
  const val=k=>esc(m?.[k]??'');
