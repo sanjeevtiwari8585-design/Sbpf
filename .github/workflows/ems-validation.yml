@@ -69,6 +69,6 @@ jobs:
           grep -q 'hms_staff_salary' hms.html
 
           test -s promotion-plan.html
-          grep -q 'sbpf_referral_level_rules' promotion-plan.html
-          grep -q 'sbpf_member_referral_rewards' promotion-plan.html
+          grep -q 'sbpf_get_my_referral_dashboard' promotion-plan.html
+          grep -q 'renderLevels(fallbackLevels' promotion-plan.html
           grep -q 'promotion-plan.html' index.html
