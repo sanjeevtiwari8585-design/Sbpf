@@ -125,7 +125,7 @@ function renumberFamilyMembers(){document.querySelectorAll('#familyMembers .memb
 function addFamilyMember(m={}){const box=$('familyMembers');if(!box)return;box.insertAdjacentHTML('beforeend',familyMemberRow(m,box.children.length));renumberFamilyMembers()}
 function removeFamilyMember(button){const box=$('familyMembers');if(!box)return;const rows=box.querySelectorAll('.member-row');if(rows.length<=1){alert('कम-से-कम एक परिवार सदस्य रखना जरूरी है।');return;}button.closest('.member-row').remove();renumberFamilyMembers()}
 async function familyView(){
- const fields='id,family_code,family_name,mobile,address,village_or_ward,district,state,pincode,notes,annual_income,ration_card_type,housing_status,land_ownership,livelihood_type,social_category,family_needs,status,submitted_at';
+ const fields='id,family_code,family_name,mobile,address,village_or_ward,district,state,pincode,notes,annual_income,ration_card_type,housing_status,land_ownership,livelihood_type,social_category,family_needs,status,submitted_at,scheme_assistance_consent,consent_scheme_matching,consent_income_data,accuracy_confirmed';
  $('viewBody').innerHTML='<div class="panel">परिवार रिकॉर्ड सुरक्षित रूप से लोड हो रहा है…</div>';
  let family=null,members=[];
  const currentUser=await api('/auth/v1/user');
@@ -146,10 +146,28 @@ async function familyView(){
  if(family){
    const shownMembers=members.map((m,i)=>'<div class="notice"><b>'+(i+1)+'. '+esc(m.full_name)+'</b><br>संबंध: '+esc(m.relation_to_head)+' • जन्म तिथि: '+esc(m.dob)+'<br>शिक्षा: '+esc(m.education)+' • काम: '+esc(m.occupation)+'<br>मोबाइल: '+esc(m.mobile||'दर्ज नहीं')+'</div>').join('');
    const needsList=Array.isArray(family.family_needs)&&family.family_needs.length?family.family_needs.map(esc).join('、'):'अभी कोई सहायता क्षेत्र नहीं चुना गया';
+   let schemeHtml='';
+   if(family.scheme_assistance_consent&&family.consent_scheme_matching&&family.consent_income_data&&family.accuracy_confirmed){
+     try{
+       const matches=await rpc('get_my_family_scheme_candidates',{p_family_id:family.id});
+       const items=Array.isArray(matches)?matches:[];
+       schemeHtml='<section class="panel"><h3 style="color:var(--maroon);margin-bottom:8px">संभावित सरकारी योजना मिलान</h3><div class="notice">ये केवल संभावित मेल हैं। अंतिम पात्रता और लाभ संबंधित सरकारी विभाग के नियम, दस्तावेज़ और सत्यापन से तय होंगे।</div>'+
+       (items.length?items.map(x=>{
+         const url=typeof x.official_url==='string'&&(x.official_url.indexOf('https://')===0||x.official_url.indexOf('http://')===0)?'<br><a target="_blank" rel="noopener noreferrer" href="'+esc(x.official_url)+'">आधिकारिक योजना विवरण खोलें ↗</a>':'';
+         return '<article class="notice"><b>'+esc(x.scheme_name)+'</b><br><small>'+esc(x.category||'योजना')+' • '+esc(x.scope||'')+'</small><p>'+esc(x.description||'विवरण उपलब्ध नहीं है।')+'</p><p><b>मिलान का कारण:</b> '+esc(x.match_reason||'आधिकारिक पात्रता जाँच आवश्यक')+'</p><small>संभावित मेल • आधिकारिक पात्रता जाँच आवश्यक</small>'+url+'</article>';
+       }).join(''):'<div class="notice">अभी दर्ज विवरण से कोई प्रकाशित योजना-मेल नहीं मिला। इसका अर्थ यह नहीं है कि परिवार अपात्र है; योजना सूची की समीक्षा की जा सकती है।</div>')+'</section>';
+     }catch(err){
+       schemeHtml='<section class="panel"><h3 style="color:var(--maroon)">संभावित सरकारी योजना मिलान</h3><div class="notice error">योजना सूची अभी नहीं खुल सकी: '+esc(err.message)+'<br>परिवार का रिकॉर्ड सुरक्षित है; बाद में पुनः प्रयास करें।</div></section>';
+     }
+   }else{
+     schemeHtml='<section class="panel"><h3 style="color:var(--maroon)">सरकारी योजना मिलान की सहमति</h3><p style="font-size:13px;color:var(--muted)">योजना मिलान शुरू करने से पहले अलग सहमति दें और मौजूदा परिवार जानकारी सही होने की पुष्टि करें।</p><form id="familyConsentForm" class="family-form"><label class="consent"><input name="matchConsent" type="checkbox" required> मैं सहमत हूँ कि परिवार की जानकारी, घोषित वार्षिक आय और चुनी गई सहायता-ज़रूरतों का उपयोग SBPF द्वारा संभावित सरकारी योजनाओं की खोज और मार्गदर्शन के लिए किया जा सकता है।</label><label class="consent"><input name="confirmAccuracy" type="checkbox" required> मैं पुष्टि करता/करती हूँ कि अभी दिखाई गई परिवार जानकारी सही और अद्यतन है।</label><button class="primary" id="familyConsentBtn" type="submit">सहमति सहेजें और संभावित योजनाएँ देखें</button><div id="familyConsentMsg" aria-live="polite"></div></form></section>';
+   }
    $('viewBody').innerHTML='<div class="panel"><div class="notice"><b>आपका परिवार रजिस्टर मौजूद है।</b><br>सुरक्षा के लिए इस स्क्रीन पर अभी केवल रिकॉर्ड दिखाया जा रहा है। संपादन तब चालू होगा जब वह परिवार के जुड़े दस्तावेज़/शिक्षा/आय रिकॉर्ड को सुरक्षित रखते हुए हो सकेगा।</div>'+
    '<div class="row">'+kv('परिवार कोड',family.family_code)+kv('स्थिति',family.status)+kv('परिवार का नाम',family.family_name)+kv('मुखिया का मोबाइल',family.mobile)+kv('पता',family.address)+kv('गाँव/शहर/वार्ड',family.village_or_ward)+kv('जिला',family.district)+kv('राज्य',family.state)+kv('PIN Code',family.pincode)+kv('वार्षिक आय (₹)',family.annual_income)+kv('राशन कार्ड',family.ration_card_type)+kv('आवास',family.housing_status)+kv('भूमि',family.land_ownership)+kv('आजीविका',family.livelihood_type)+kv('सामाजिक श्रेणी',family.social_category)+kv('सहायता क्षेत्र',needsList)+'</div>'+
-   '<h3 style="margin:16px 0 8px;color:var(--maroon)">परिवार सदस्य ('+members.length+')</h3>'+shownMembers+
+   '<h3 style="margin:16px 0 8px;color:var(--maroon)">परिवार सदस्य ('+members.length+')</h3>'+shownMembers+schemeHtml+
    '<div class="notice">सरकारी योजना की पात्रता संबंधित विभाग के आधिकारिक नियम और सत्यापन पर निर्भर करती है। इस रिकॉर्ड से अपने-आप सरकारी लाभ स्वीकृत नहीं होता।</div></div>';
+   const consentForm=$('familyConsentForm');
+   if(consentForm)consentForm.addEventListener('submit',e=>saveFamilySchemeConsent(e,family.id));
    return;
  }
  const needs=['शिक्षा सहायता','स्वास्थ्य सहायता','रोजगार / कौशल','महिला सशक्तिकरण','बाल विकास','दिव्यांग सहायता','आवास सहायता','राशन / खाद्य सहायता','सरकारी योजना मार्गदर्शन','स्वरोजगार सहायता'];
@@ -182,6 +200,26 @@ async function familyView(){
  '<p style="font-size:12px;color:var(--muted);margin-top:8px">इस फ़ॉर्म में आधार नंबर, बैंक पासवर्ड या OTP दर्ज न करें। स्वास्थ्य/शिक्षा के विस्तृत संवेदनशील रिकॉर्ड अलग सहमति और सुरक्षित प्रक्रिया से ही लिए जाएँगे।</p></fieldset>'+
  '<button id="saveFamilyBtn" class="primary" type="submit">'+(family?'परिवार की जानकारी अपडेट करें':'परिवार रजिस्टर जमा करें')+'</button><div id="familySaveMsg" aria-live="polite"></div></form></div>';
  $('familyForm').addEventListener('submit',saveFamily);
+}
+async function saveFamilySchemeConsent(event,familyId){
+ event.preventDefault();
+ const form=$('familyConsentForm'),btn=$('familyConsentBtn'),msg=$('familyConsentMsg');
+ if(!form||!form.reportValidity())return;
+ const currentUser=await api('/auth/v1/user');
+ if(!currentUser?.id){msg.innerHTML='<div class="notice error">लॉगिन सत्यापित नहीं हुआ। दोबारा प्रवेश करें।</div>';return}
+ btn.disabled=true;btn.textContent='सहमति सहेजी जा रही है…';
+ try{
+   const saved=await api('/rest/v1/member_pariwar_register?id=eq.'+encodeURIComponent(familyId)+'&created_by=eq.'+encodeURIComponent(currentUser.id),{
+     method:'PATCH',
+     headers:{'Content-Type':'application/json','Prefer':'return=representation'},
+     body:JSON.stringify({scheme_assistance_consent:true,consent_scheme_matching:true,consent_income_data:true,accuracy_confirmed:true})
+   });
+   if(!Array.isArray(saved)||!saved.length)throw new Error('सहमति सहेजी नहीं गई; रिकॉर्ड की अनुमति की जाँच आवश्यक है।');
+   await familyView();
+ }catch(err){
+   msg.innerHTML='<div class="notice error">सहमति सहेजी नहीं जा सकी: '+esc(err.message)+'</div>';
+   btn.disabled=false;btn.textContent='सहमति सहेजें और संभावित योजनाएँ देखें';
+ }
 }
 async function saveFamily(event){
  event.preventDefault();
