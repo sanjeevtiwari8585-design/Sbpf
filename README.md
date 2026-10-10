@@ -10,6 +10,7 @@ Swarnim Bharat Parivar Foundation — public site and member portal using GitHub
 - Admin family review: https://sanjeevtiwari8585-design.github.io/Sbpf/admin-family.html
 - Campaign details and public content: https://sanjeevtiwari8585-design.github.io/Sbpf/campaign.html?slug=swarnim-jan-jagran (open any campaign from the home page to see its detail page)
 - Campaign 09 — SwarnimBook: https://sanjeevtiwari8585-design.github.io/Sbpf/swarnim-book.html (social posts, media links, profiles, likes, comments, follows using existing `swarnim_book_*` tables and RLS).
+- Campaign 10 — Swarnim Media / SMLive News: https://sanjeevtiwari8585-design.github.io/Sbpf/swarnim-media/ (existing news, articles, videos, photos and journalist dashboard module).
 
 The admin family route is not protected by a hidden URL; its actual data access and review operations are guarded by Supabase RPCs that require an authenticated admin.
 
