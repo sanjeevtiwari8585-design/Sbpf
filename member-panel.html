@@ -452,7 +452,13 @@ async function openMemberDocument(endpoint,label){
   const target=popup.document.getElementById('err');if(target)target.textContent=error.message||'कृपया पुनः प्रयास करें।';
  }
 }
-async function paymentView(){const d=await rpc('get_my_membership_payment');const x=Array.isArray(d)?d[0]:d;$('viewBody').innerHTML='<div class="panel">'+kv('सदस्यता Fee','₹365 / वर्ष')+kv('Payment Status',x?.status||profile.payment_status||'Pending')+kv('Order ID',x?.order_id)+kv('Payment Date',x?.paid_at)+ '<div class="notice">Payment gateway: AtoPay. Payment integration को existing backend flow से ही जोड़ा जाएगा।</div></div>'}
+async function paymentView(){
+ const d=await rpc('get_my_membership_payment');const x=Array.isArray(d)?d[0]:d;
+ $('viewBody').innerHTML='<div class="panel"><h3 style="color:var(--maroon);margin-top:0">वार्षिक सदस्यता भुगतान</h3>'+
+ kv('सदस्यता शुल्क','₹365 / वर्ष')+kv('Payment Status',x?.status||profile.payment_status||'Pending')+kv('Order ID',x?.order_id||'अभी नहीं बना')+kv('Payment Date',x?.paid_at||'—')+kv('Gateway',x?.gateway||'AtoPay')+
+ '<div class="notice">महत्वपूर्ण: मौजूदा Supabase में भुगतान ऑर्डर/स्थिति का रिकॉर्ड है, लेकिन इस GitHub संस्करण में AtoPay का वास्तविक checkout URL और server-verified payment callback अभी जुड़ा नहीं है। इसलिए इस स्क्रीन से अभी पैसा जमा नहीं होता। केवल “paid” status को भुगतान की पुष्टि न मानें जब तक AtoPay transaction को सुरक्षित रूप से verify न किया जाए।</div>'+
+ (x?.status==='paid'?'<div class="notice success">रिकॉर्ड में भुगतान “paid” दिख रहा है। रसीद/बैंक लेनदेन का मिलान एडमिन से कराएँ।</div>':'<div class="notice">अगला तकनीकी काम: AtoPay merchant credentials, checkout/order API और server-to-server verification/webhook जोड़ना। उसके बाद ही सुरक्षित भुगतान बटन चालू होगा।</div>')+'</div>';
+}
 async function certificateView(){
  const d=await rpc('get_my_certificate');const x=Array.isArray(d)?d[0]:d;
  if(!x){$('viewBody').innerHTML='<div class="panel empty">अभी कोई प्रमाणपत्र जारी नहीं हुआ है।</div>';return}
