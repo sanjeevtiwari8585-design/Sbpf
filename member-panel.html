@@ -246,20 +246,24 @@ async function saveFamily(event){
  if(people.some(p=>!p.full_name||!p.relation_to_head||!p.dob)){status.innerHTML='<div class="notice error">हर परिवार सदस्य का नाम, संबंध और जन्म तिथि भरें।</div>';return}
  const family={family_name:value('family_name'),mobile:value('mobile'),address:value('address'),village_or_ward:value('village_or_ward'),district:value('district'),state:value('state')||'Uttar Pradesh',pincode:value('pincode'),annual_income:value('annual_income'),ration_card_type:value('ration_card_type'),housing_status:value('housing_status'),land_ownership:value('land_ownership'),livelihood_type:value('livelihood_type'),social_category:value('social_category'),notes:value('notes'),family_needs:Array.from(form.querySelectorAll('[name="family_need"]:checked')).map(n=>n.value),scheme_assistance_consent:!!form.elements.schemeConsent.checked,accuracy_confirmed:!!form.elements.accuracyConfirmed.checked};
  button.disabled=true;button.textContent='सुरक्षित रूप से जमा हो रहा है…';status.innerHTML='<div class="notice">सुपाबेस में सुरक्षित रूप से जमा किया जा रहा है…</div>';
+ let familyCreated=false;
  try{
    const result=await rpc('register_my_pariwar',{p_family:family,p_members:people});
    const saved=Array.isArray(result)?result[0]:result;
+   familyCreated=!!saved?.id;
    const currentUser=await api('/auth/v1/user');
    if(!currentUser?.id||!saved?.id)throw new Error('परिवार रिकॉर्ड बना, पर लॉगिन/रिकॉर्ड पुष्टि नहीं मिली।');
    const consentSaved=await api('/rest/v1/member_pariwar_register?id=eq.'+encodeURIComponent(saved.id)+'&created_by=eq.'+encodeURIComponent(currentUser.id),{
      method:'PATCH',headers:{'Content-Type':'application/json','Prefer':'return=representation'},
-     body:JSON.stringify({scheme_assistance_consent:!!form.elements.schemeConsent.checked,consent_scheme_matching:!!form.elements.schemeConsent.checked,consent_income_data:!!form.elements.incomeConsent.checked,accuracy_confirmed:!!form.elements.accuracyConfirmed.checked})
+     body:JSON.stringify({scheme_assistance_consent:!!form.elements.schemeConsent.checked,consent_scheme_matching:!!form.elements.schemeConsent.checked,consent_income_data:!!form.elements.incomeConsent.checked,accuracy_confirmed:!!form.elements.accuracyConfirmed.checked,education_support_needed:family.family_needs.some(n=>/शिक्षा|छात्रवृत्ति/i.test(n)),medical_support_needed:family.family_needs.some(n=>/स्वास्थ्य/i.test(n)),livelihood_support_needed:family.family_needs.some(n=>/रोजगार|कौशल|स्वरोजगार/i.test(n))})
    });
    if(!Array.isArray(consentSaved)||!consentSaved.length)throw new Error('परिवार रिकॉर्ड बना, लेकिन योजना-सहमति सहेजी नहीं जा सकी। परिवार रजिस्टर दोबारा खोलकर सहमति दें।');
    status.innerHTML='<div class="notice success"><b>परिवार रजिस्टर सुरक्षित रूप से जमा हो गया।</b><br>परिवार कोड: '+esc(saved?.family_code||'रिकॉर्ड बन गया')+'<br>स्थिति: '+esc(saved?.status||'जाँच के लिए लंबित')+'<br>सदस्य संख्या: '+esc(saved?.member_count??people.length)+'</div>';
    await familyView();
  }catch(error){
-   status.innerHTML='<div class="notice error"><b>अभी जमा नहीं हो सका।</b><br>'+esc(error.message||'अनुरोध विफल हुआ')+'<br><small>आपकी जानकारी को सफलतापूर्वक जमा हुआ नहीं माना गया है। फ़ॉर्म की जाँच कर फिर कोशिश करें।</small></div>';
+   status.innerHTML=familyCreated
+     ?'<div class="notice error"><b>परिवार रजिस्टर बन गया है, लेकिन एक अतिरिक्त चरण पूरा नहीं हुआ।</b><br>'+esc(error.message||'अनुरोध विफल हुआ')+'<br><small>दोबारा फ़ॉर्म जमा न करें। परिवार पेज फिर खोलें; अलग सहमति या योजना मिलान वहीं से पूरा किया जा सकता है।</small></div>'
+     :'<div class="notice error"><b>परिवार रजिस्टर जमा नहीं हो सका।</b><br>'+esc(error.message||'अनुरोध विफल हुआ')+'<br><small>रिकॉर्ड बनने की पुष्टि नहीं हुई है। फ़ॉर्म की जाँच कर फिर कोशिश करें।</small></div>';
  }finally{
    if($('saveFamilyBtn')){ $('saveFamilyBtn').disabled=false;$('saveFamilyBtn').textContent='परिवार की जानकारी सुरक्षित करें'; }
  }
