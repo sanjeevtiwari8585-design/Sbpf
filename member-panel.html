@@ -160,7 +160,7 @@ async function familyView(){
        schemeHtml='<section class="panel"><h3 style="color:var(--maroon)">संभावित सरकारी योजना मिलान</h3><div class="notice error">योजना सूची अभी नहीं खुल सकी: '+esc(err.message)+'<br>परिवार का रिकॉर्ड सुरक्षित है; बाद में पुनः प्रयास करें।</div></section>';
      }
    }else{
-     schemeHtml='<section class="panel"><h3 style="color:var(--maroon)">सरकारी योजना मिलान की सहमति</h3><p style="font-size:13px;color:var(--muted)">योजना मिलान शुरू करने से पहले अलग सहमति दें और मौजूदा परिवार जानकारी सही होने की पुष्टि करें।</p><form id="familyConsentForm" class="family-form"><label class="consent"><input name="matchConsent" type="checkbox" required> मैं सहमत हूँ कि परिवार की जानकारी, घोषित वार्षिक आय और चुनी गई सहायता-ज़रूरतों का उपयोग SBPF द्वारा संभावित सरकारी योजनाओं की खोज और मार्गदर्शन के लिए किया जा सकता है।</label><label class="consent"><input name="confirmAccuracy" type="checkbox" required> मैं पुष्टि करता/करती हूँ कि अभी दिखाई गई परिवार जानकारी सही और अद्यतन है।</label><button class="primary" id="familyConsentBtn" type="submit">सहमति सहेजें और संभावित योजनाएँ देखें</button><div id="familyConsentMsg" aria-live="polite"></div></form></section>';
+     schemeHtml='<section class="panel"><h3 style="color:var(--maroon)">सरकारी योजना मिलान की सहमति</h3><p style="font-size:13px;color:var(--muted)">योजना मिलान शुरू करने से पहले अलग सहमति दें और मौजूदा परिवार जानकारी सही होने की पुष्टि करें।</p><form id="familyConsentForm" class="family-form"><label class="consent"><input name="matchConsent" type="checkbox" required> मैं सहमत हूँ कि परिवार की जानकारी, घोषित वार्षिक आय और चुनी गई सहायता-ज़रूरतों का उपयोग SBPF द्वारा संभावित सरकारी योजनाओं की खोज और मार्गदर्शन के लिए किया जा सकता है।</label><label class="consent"><input name="incomeConsent" type="checkbox" required> मैं घोषित पारिवारिक वार्षिक आय को संभावित योजना-मिलान के लिए उपयोग करने की स्पष्ट सहमति देता/देती हूँ।</label><label class="consent"><input name="confirmAccuracy" type="checkbox" required> मैं पुष्टि करता/करती हूँ कि अभी दिखाई गई परिवार जानकारी सही और अद्यतन है।</label><button class="primary" id="familyConsentBtn" type="submit">सहमति सहेजें और संभावित योजनाएँ देखें</button><div id="familyConsentMsg" aria-live="polite"></div></form></section>';
    }
    $('viewBody').innerHTML='<div class="panel"><div class="notice"><b>आपका परिवार रजिस्टर मौजूद है।</b><br>सुरक्षा के लिए इस स्क्रीन पर अभी केवल रिकॉर्ड दिखाया जा रहा है। संपादन तब चालू होगा जब वह परिवार के जुड़े दस्तावेज़/शिक्षा/आय रिकॉर्ड को सुरक्षित रखते हुए हो सकेगा।</div>'+
    '<div class="row">'+kv('परिवार कोड',family.family_code)+kv('स्थिति',family.status)+kv('परिवार का नाम',family.family_name)+kv('मुखिया का मोबाइल',family.mobile)+kv('पता',family.address)+kv('गाँव/शहर/वार्ड',family.village_or_ward)+kv('जिला',family.district)+kv('राज्य',family.state)+kv('PIN Code',family.pincode)+kv('वार्षिक आय (₹)',family.annual_income)+kv('राशन कार्ड',family.ration_card_type)+kv('आवास',family.housing_status)+kv('भूमि',family.land_ownership)+kv('आजीविका',family.livelihood_type)+kv('सामाजिक श्रेणी',family.social_category)+kv('सहायता क्षेत्र',needsList)+'</div>'+
@@ -195,7 +195,8 @@ async function familyView(){
  '<button type="button" class="add-member" onclick="addFamilyMember()">＋ परिवार का एक और सदस्य जोड़ें</button></fieldset>'+
  '<fieldset><legend>चरण 3 — सहायता की ज़रूरत</legend><p style="font-size:12px;color:var(--muted);margin-bottom:8px">वे क्षेत्र चुनें जिनमें परिवार मार्गदर्शन या सहायता चाहता है।</p>'+needHtml+'</fieldset>'+
  '<fieldset><legend>चरण 4 — सहमति और पुष्टि</legend>'+
- '<label class="consent"><input name="schemeConsent" type="checkbox" required> मैं सहमति देता/देती हूँ कि इस फ़ॉर्म में दी गई जानकारी का उपयोग SBPF द्वारा संभावित सरकारी योजनाओं की पात्रता से जुड़े मार्गदर्शन के लिए किया जा सकता है।</label>'+
+ '<label class="consent"><input name="schemeConsent" type="checkbox" required> मैं सहमति देता/देती हूँ कि इस फ़ॉर्म में दी गई जानकारी और सहायता-ज़रूरतों का उपयोग SBPF द्वारा संभावित सरकारी योजनाओं की खोज/मार्गदर्शन के लिए किया जा सकता है।</label>'+
+ '<label class="consent"><input name="incomeConsent" type="checkbox" required> मैं घोषित पारिवारिक वार्षिक आय को संभावित योजना-मिलान के लिए उपयोग करने की स्पष्ट सहमति देता/देती हूँ।</label>'+
  '<label class="consent"><input name="accuracyConfirmed" type="checkbox" required> मैंने जानकारी जाँच ली है और इसे सही मानता/मानती हूँ। गलत जानकारी होने पर मैं उसे संशोधित करूँगा/करूँगी।</label>'+
  '<p style="font-size:12px;color:var(--muted);margin-top:8px">इस फ़ॉर्म में आधार नंबर, बैंक पासवर्ड या OTP दर्ज न करें। स्वास्थ्य/शिक्षा के विस्तृत संवेदनशील रिकॉर्ड अलग सहमति और सुरक्षित प्रक्रिया से ही लिए जाएँगे।</p></fieldset>'+
  '<button id="saveFamilyBtn" class="primary" type="submit">'+(family?'परिवार की जानकारी अपडेट करें':'परिवार रजिस्टर जमा करें')+'</button><div id="familySaveMsg" aria-live="polite"></div></form></div>';
@@ -212,7 +213,7 @@ async function saveFamilySchemeConsent(event,familyId){
    const saved=await api('/rest/v1/member_pariwar_register?id=eq.'+encodeURIComponent(familyId)+'&created_by=eq.'+encodeURIComponent(currentUser.id),{
      method:'PATCH',
      headers:{'Content-Type':'application/json','Prefer':'return=representation'},
-     body:JSON.stringify({scheme_assistance_consent:true,consent_scheme_matching:true,consent_income_data:true,accuracy_confirmed:true})
+     body:JSON.stringify({scheme_assistance_consent:true,consent_scheme_matching:!!form.elements.matchConsent.checked,consent_income_data:!!form.elements.incomeConsent.checked,accuracy_confirmed:!!form.elements.confirmAccuracy.checked})
    });
    if(!Array.isArray(saved)||!saved.length)throw new Error('सहमति सहेजी नहीं गई; रिकॉर्ड की अनुमति की जाँच आवश्यक है।');
    await familyView();
@@ -238,8 +239,15 @@ async function saveFamily(event){
  try{
    const result=await rpc('register_my_pariwar',{p_family:family,p_members:people});
    const saved=Array.isArray(result)?result[0]:result;
-   status.innerHTML='<div class="notice success"><b>परिवार रजिस्टर जमा हो गया।</b><br>परिवार कोड: '+esc(saved?.family_code||'रिकॉर्ड बन गया')+'<br>स्थिति: '+esc(saved?.status||'जाँच के लिए लंबित')+'<br>सदस्य संख्या: '+esc(saved?.member_count??people.length)+'<br><small>अब एडमिन समीक्षा और उपलब्ध योजना-सहायता की जाँच कर सकता है।</small></div>';
-   // Keep the confirmation visible; the saved record is loaded again when this view is reopened.
+   const currentUser=await api('/auth/v1/user');
+   if(!currentUser?.id||!saved?.id)throw new Error('परिवार रिकॉर्ड बना, पर लॉगिन/रिकॉर्ड पुष्टि नहीं मिली।');
+   const consentSaved=await api('/rest/v1/member_pariwar_register?id=eq.'+encodeURIComponent(saved.id)+'&created_by=eq.'+encodeURIComponent(currentUser.id),{
+     method:'PATCH',headers:{'Content-Type':'application/json','Prefer':'return=representation'},
+     body:JSON.stringify({scheme_assistance_consent:!!form.elements.schemeConsent.checked,consent_scheme_matching:!!form.elements.schemeConsent.checked,consent_income_data:!!form.elements.incomeConsent.checked,accuracy_confirmed:!!form.elements.accuracyConfirmed.checked})
+   });
+   if(!Array.isArray(consentSaved)||!consentSaved.length)throw new Error('परिवार रिकॉर्ड बना, लेकिन योजना-सहमति सहेजी नहीं जा सकी। परिवार रजिस्टर दोबारा खोलकर सहमति दें।');
+   status.innerHTML='<div class="notice success"><b>परिवार रजिस्टर सुरक्षित रूप से जमा हो गया।</b><br>परिवार कोड: '+esc(saved?.family_code||'रिकॉर्ड बन गया')+'<br>स्थिति: '+esc(saved?.status||'जाँच के लिए लंबित')+'<br>सदस्य संख्या: '+esc(saved?.member_count??people.length)+'</div>';
+   await familyView();
  }catch(error){
    status.innerHTML='<div class="notice error"><b>अभी जमा नहीं हो सका।</b><br>'+esc(error.message||'अनुरोध विफल हुआ')+'<br><small>आपकी जानकारी को सफलतापूर्वक जमा हुआ नहीं माना गया है। फ़ॉर्म की जाँच कर फिर कोशिश करें।</small></div>';
  }finally{
