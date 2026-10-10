@@ -53,6 +53,8 @@ jobs:
           grep -q 'ems_student_report_cards' ems.html
 
           test -s swarnim-book.html
+          grep -q 'value="link"' swarnim-book.html
+          grep -q "type==='link'" swarnim-book.html
           test -s swarnim-media/index.html
           grep -q 'SMLive News' swarnim-media/index.html
           grep -q 'swarnim-media/index.html' index.html
