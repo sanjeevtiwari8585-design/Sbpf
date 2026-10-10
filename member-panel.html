@@ -122,7 +122,7 @@ async function registerAccount(event){
  const email=$('signupEmail').value.trim(),password=$('signupPassword').value;
  if(password!==$('signupPassword2').value){msg('दोनों पासवर्ड एक जैसे होने चाहिए।','error');return}
  if(fullName.length<2){msg('पूरा नाम सही लिखें।','error');return}
- if(mobile.replace(/\\D/g,'').length<10){msg('सही मोबाइल नंबर लिखें।','error');return}
+ if(mobile.replace(/\D/g,'').length<10){msg('सही मोबाइल नंबर लिखें।','error');return}
  button.disabled=true;button.textContent='Supabase में खाता बनाया जा रहा है…';
  try{
   const created=await api('/auth/v1/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
