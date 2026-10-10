@@ -141,6 +141,17 @@ async function familyView(){
      return;
    }
  }
+ // Existing household records are read-only here because the current RPC replaces child rows on update.
+ // Do not expose an update action that could orphan linked education, health, income, or document rows.
+ if(family){
+   const shownMembers=members.map((m,i)=>'<div class="notice"><b>'+(i+1)+'. '+esc(m.full_name)+'</b><br>संबंध: '+esc(m.relation_to_head)+' • जन्म तिथि: '+esc(m.dob)+'<br>शिक्षा: '+esc(m.education)+' • काम: '+esc(m.occupation)+'<br>मोबाइल: '+esc(m.mobile||'दर्ज नहीं')+'</div>').join('');
+   const needsList=Array.isArray(family.family_needs)&&family.family_needs.length?family.family_needs.map(esc).join('、'):'अभी कोई सहायता क्षेत्र नहीं चुना गया';
+   $('viewBody').innerHTML='<div class="panel"><div class="notice"><b>आपका परिवार रजिस्टर मौजूद है।</b><br>सुरक्षा के लिए इस स्क्रीन पर अभी केवल रिकॉर्ड दिखाया जा रहा है। संपादन तब चालू होगा जब वह परिवार के जुड़े दस्तावेज़/शिक्षा/आय रिकॉर्ड को सुरक्षित रखते हुए हो सकेगा।</div>'+
+   '<div class="row">'+kv('परिवार कोड',family.family_code)+kv('स्थिति',family.status)+kv('परिवार का नाम',family.family_name)+kv('मुखिया का मोबाइल',family.mobile)+kv('पता',family.address)+kv('गाँव/शहर/वार्ड',family.village_or_ward)+kv('जिला',family.district)+kv('राज्य',family.state)+kv('PIN Code',family.pincode)+kv('वार्षिक आय (₹)',family.annual_income)+kv('राशन कार्ड',family.ration_card_type)+kv('आवास',family.housing_status)+kv('भूमि',family.land_ownership)+kv('आजीविका',family.livelihood_type)+kv('सामाजिक श्रेणी',family.social_category)+kv('सहायता क्षेत्र',needsList)+'</div>'+
+   '<h3 style="margin:16px 0 8px;color:var(--maroon)">परिवार सदस्य ('+members.length+')</h3>'+shownMembers+
+   '<div class="notice">सरकारी योजना की पात्रता संबंधित विभाग के आधिकारिक नियम और सत्यापन पर निर्भर करती है। इस रिकॉर्ड से अपने-आप सरकारी लाभ स्वीकृत नहीं होता।</div></div>';
+   return;
+ }
  const needs=['शिक्षा सहायता','स्वास्थ्य सहायता','रोजगार / कौशल','महिला सशक्तिकरण','बाल विकास','दिव्यांग सहायता','आवास सहायता','राशन / खाद्य सहायता','सरकारी योजना मार्गदर्शन','स्वरोजगार सहायता'];
  const chosen=Array.isArray(family?.family_needs)?family.family_needs:[];
  const fv=k=>esc(family?.[k]??'');
