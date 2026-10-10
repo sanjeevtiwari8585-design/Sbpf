@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#781626">
+<meta name="description" content="स्वर्णिम भारत परिवार फाउंडेशन के अभियानों की जानकारी और उपयोगी सामग्री।">
+<title>स्वर्णिम अभियान | SBPF Seva</title>
+<style>
+:root{--maroon:#781626;--gold:#d7b34b;--cream:#fff9ed;--ink:#242126;--muted:#67616a;--line:#eee2d1;--paper:#fbfaf8}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);line-height:1.6}
+a{color:var(--maroon)}button,input,select{font:inherit}
+.topline{background:var(--maroon);color:#fff;text-align:center;padding:7px 12px;font-size:13px}
+header{background:linear-gradient(120deg,#711222,#9b2634 62%,#c59b36);color:#fff;padding:18px max(18px,calc((100% - 1100px)/2));display:flex;align-items:center;gap:14px}
+.logo{width:68px;height:68px;background:#fff;border-radius:50%;padding:4px;object-fit:contain;flex-shrink:0}
+header h1{font-size:clamp(20px,3vw,30px);line-height:1.2;margin:0 0 5px}header p{margin:0;color:#ffedc4;font-size:13px}
+nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;background:white;border-bottom:1px solid var(--line);padding:10px 12px}
+nav a{padding:7px 11px;text-decoration:none;border-radius:9px;font-size:13px;font-weight:700}nav a:hover{background:var(--cream)}
+.wrap{max-width:1100px;margin:auto;padding:28px 18px 55px}
+.crumb{font-size:13px;color:var(--muted);margin-bottom:10px}.crumb a{text-decoration:none}
+.hero{background:radial-gradient(circle at 90% 15%,#f8e9bd 0,transparent 28%),linear-gradient(130deg,#fffaf0,#fff);padding:32px;border:1px solid var(--line);border-radius:18px}
+.eyebrow{font-size:12px;letter-spacing:1.1px;font-weight:800;color:var(--maroon)}h2{color:var(--maroon);line-height:1.25}.hero h2{font-size:clamp(26px,4vw,40px);margin:8px 0}.hero p{color:#5c5355;max-width:780px;margin:8px 0}
+.stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:17px}.chip{display:inline-block;background:#fff7df;border:1px solid #f0e2b6;border-radius:30px;padding:5px 10px;font-size:12px;color:#765817}
+.tools{display:grid;grid-template-columns:1.4fr 1fr;gap:10px;margin:20px 0 14px}
+input,select{width:100%;padding:11px 12px;border:1px solid #ddd2c4;border-radius:10px;background:#fff;color:var(--ink)}
+.catalog{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.article{background:white;border:1px solid var(--line);border-radius:15px;padding:17px;box-shadow:0 5px 20px #3d1b1207;min-width:0}
+.article h3{color:var(--maroon);margin:0 0 8px;font-size:18px}.article p{margin:8px 0;color:#514c4e;white-space:pre-wrap;overflow-wrap:anywhere}
+.article .meta{font-size:12px;color:var(--muted);margin-bottom:6px}.article .links{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}.article .links a{font-size:13px;font-weight:750;text-decoration:none}.article .links a:hover{text-decoration:underline}
+.empty,.notice{padding:18px;border:1px solid var(--line);border-radius:12px;background:white;color:var(--muted)}
+footer{background:#241d20;color:#f9f3ec;text-align:center;padding:25px 16px}footer p{color:#d6c9c7;font-size:13px;margin:4px}
+@media(max-width:720px){header{padding:16px 14px}.logo{width:55px;height:55px}.wrap{padding:22px 12px 40px}.hero{padding:21px}.catalog{grid-template-columns:1fr}.tools{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="topline">राष्ट्रहित में 24×7 तत्पर • सेवा | सहयोग | स्वावलंबन | सशक्तिकरण</div>
+<header>
+ <img id="campaignLogo" class="logo" alt="SBPF Logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='47' fill='%23d7b34b'/%3E%3Ctext x='50' y='59' text-anchor='middle' font-size='24' font-weight='bold' fill='%23781626'%3ESBPF%3C/text%3E%3C/svg%3E">
+ <div><h1>स्वर्णिम भारत परिवार फाउंडेशन</h1><p>SBPF Seva — अभियान और जन-जागरूकता सामग्री</p></div>
+</header>
+<nav><a href="index.html">मुख्य पेज</a><a href="member.html">सदस्य पैनल</a><a href="admin-family.html">एडमिन प्रवेश</a></nav>
+<main class="wrap">
+ <div class="crumb"><a href="index.html">होम</a> / <span id="breadcrumbCampaign">स्वर्णिम अभियान</span></div>
+ <section class="hero">
+  <div class="eyebrow">SWARNIM BHARAT PARIVAR FOUNDATION</div>
+  <h2 id="campaignName">अभियान लोड हो रहा है…</h2>
+  <p id="campaignDescription">Supabase से अभियान की जानकारी लोड हो रही है।</p>
+  <div class="stats"><span id="categoryCount" class="chip">श्रेणियाँ…</span><span id="contentCount" class="chip">सामग्री…</span></div>
+ </section>
+ <div class="tools">
+  <input id="search" type="search" placeholder="शीर्षक या सामग्री खोजें…" aria-label="अभियान सामग्री खोजें">
+  <select id="categoryFilter" aria-label="श्रेणी चुनें"><option value="">सभी श्रेणियाँ</option></select>
+ </div>
+ <div id="status" class="notice" style="margin-bottom:13px">सामग्री लोड हो रही है…</div>
+ <section id="catalog" class="catalog"></section>
+</main>
+<footer><strong>स्वर्णिम भारत परिवार फाउंडेशन</strong><p>सेवा • सहयोग • स्वावलंबन • सशक्तिकरण</p><p>योजना/नागरिक जानकारी के लिए संबंधित आधिकारिक स्रोत की पुष्टि करें।</p></footer>
+<script>
+const SBPF_URL='https://dxowhzghrdghfzoggorx.supabase.co';
+const SBPF_KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
+const $=id=>document.getElementById(id);
+const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let categories=[],items=[];
+async function getRows(path){
+ const res=await fetch(SBPF_URL+path,{headers:{apikey:SBPF_KEY}});
+ let body=null;try{body=await res.json()}catch{}
+ if(!res.ok)throw new Error(body?.message||body?.details||('अनुरोध विफल हुआ ('+res.status+')'));
+ return body;
+}
+function safeLink(url,label){
+ if(typeof url!=='string'||!(url.startsWith('https://')||url.startsWith('http://')))return '';
+ return '<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+label+' ↗</a>';
+}
+function renderItems(){
+ const category=$('categoryFilter').value;
+ const query=$('search').value.trim().toLocaleLowerCase('hi');
+ const shown=items.filter(item=>(!category||String(item.category_id||'')===category)&&(!query||[item.title,item.summary,item.content].some(v=>String(v||'').toLocaleLowerCase('hi').includes(query))));
+ if(!shown.length){$('catalog').innerHTML='<div class="empty">इस खोज/श्रेणी में सामग्री नहीं मिली।</div>';return}
+ $('catalog').innerHTML=shown.map(item=>{
+  const category=categories.find(c=>String(c.id)===String(item.category_id));
+  const text=item.content||item.summary||'इस विषय का विवरण शीघ्र उपलब्ध होगा।';
+  return '<article class="article"><div class="meta">'+esc(category?.name||'अभियान सामग्री')+'</div><h3>'+esc(item.title)+'</h3>'+
+   (item.summary&&item.content?'<p><b>'+esc(item.summary)+'</b></p>':'')+
+   '<p>'+esc(text)+'</p><div class="links">'+safeLink(item.source_url,'आधिकारिक स्रोत')+safeLink(item.video_url,'वीडियो देखें')+'</div></article>';
+ }).join('');
+}
+async function init(){
+ const slug=new URLSearchParams(location.search).get('slug');
+ if(!slug||slug.length>100){
+  $('campaignName').textContent='अभियान चुनें';
+  $('campaignDescription').textContent='मुख्य पेज से कोई स्वर्णिम अभियान खोलें।';
+  $('status').textContent='URL में अभियान का slug नहीं मिला।';
+  $('catalog').innerHTML='<div class="empty"><a href="index.html">मुख्य पेज पर वापस जाएँ</a></div>';
+  return;
+ }
+ try{
+  const encoded=encodeURIComponent(slug);
+  const rows=await getRows('/rest/v1/campaigns?slug=eq.'+encoded+'&is_active=eq.true&select=id,name,slug,description&limit=1');
+  const campaign=Array.isArray(rows)?rows[0]:null;
+  if(!campaign){
+   $('campaignName').textContent='अभियान नहीं मिला';
+   $('campaignDescription').textContent='यह अभियान उपलब्ध नहीं है या निष्क्रिय है।';
+   $('status').textContent='कोई सक्रिय अभियान नहीं मिला।';
+   $('catalog').innerHTML='<div class="empty"><a href="index.html">सभी अभियान देखें</a></div>';
+   return;
+  }
+  document.title=campaign.name+' | SBPF Seva';
+  $('campaignName').textContent=campaign.name;
+  $('campaignDescription').textContent=campaign.description||'स्वर्णिम भारत परिवार फाउंडेशन का अभियान।';
+  $('breadcrumbCampaign').textContent=campaign.name;
+  const [catRows,contentRows]=await Promise.all([
+   getRows('/rest/v1/campaign_categories?campaign_id=eq.'+encodeURIComponent(campaign.id)+'&is_active=eq.true&select=id,name,slug,description,sort_order&order=sort_order.asc'),
+   getRows('/rest/v1/campaign_content?campaign_id=eq.'+encodeURIComponent(campaign.id)+'&is_active=eq.true&select=id,title,slug,summary,content,source_url,video_url,category_id,sort_order&order=sort_order.asc')
+  ]);
+  categories=Array.isArray(catRows)?catRows:[];
+  items=Array.isArray(contentRows)?contentRows:[];
+  $('categoryFilter').innerHTML='<option value="">सभी श्रेणियाँ</option>'+categories.map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+'</option>').join('');
+  $('categoryCount').textContent='श्रेणियाँ: '+categories.length;
+  $('contentCount').textContent='सक्रिय सामग्री: '+items.length;
+  $('status').textContent=items.length?'Supabase से सक्रिय सामग्री दिखाई जा रही है। लिंक नए टैब में खुलते हैं।':'इस अभियान में अभी सक्रिय सामग्री उपलब्ध नहीं है।';
+  renderItems();
+ }catch(error){
+  $('campaignName').textContent='जानकारी अभी लोड नहीं हुई';
+  $('campaignDescription').textContent='नेटवर्क या Supabase अनुमति की समस्या हो सकती है।';
+  $('status').textContent='त्रुटि: '+error.message;
+  $('catalog').innerHTML='<div class="empty">कृपया कुछ देर बाद फिर प्रयास करें। <a href="index.html">मुख्य पेज</a></div>';
+ }
+}
+$('search').addEventListener('input',renderItems);
+$('categoryFilter').addEventListener('change',renderItems);
+fetch(SBPF_URL+'/rest/v1/branding_assets?asset_key=eq.sbpf-logo&is_active=eq.true&select=asset_content&limit=1',{headers:{apikey:SBPF_KEY}})
+ .then(r=>r.ok?r.json():[]).then(rows=>{const svg=rows?.[0]?.asset_content;if(svg&&svg.startsWith('<svg'))$('campaignLogo').src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)})
+ .catch(()=>{});
+init();
+</script>
+</body>
+</html>
