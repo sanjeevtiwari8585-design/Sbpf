@@ -9,7 +9,7 @@
 @media(max-width:1000px){.layout{grid-template-columns:1fr;padding:14px}.side{display:grid;grid-template-columns:repeat(3,1fr)}.sidehint{display:none}.grid{grid-template-columns:1fr}.top{padding:13px 15px}.ideas{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.top{align-items:flex-start}.brand{font-size:16px}.brand small{font-size:10px}.topright .pill{display:none}.layout{padding:10px;gap:12px}.side{grid-template-columns:repeat(2,1fr);gap:5px}.nav{padding:9px;font-size:12px}.hero{display:block}.hero h1{font-size:27px}.row,.row2{grid-template-columns:1fr}.panel{padding:13px}.ideas{grid-template-columns:repeat(2,minmax(0,1fr))}.actions button{flex:1}.preview{min-height:0}}
 </style>
-</head>
+<style>body{visibility:hidden}</style></head>
 <body><div class="app">
 <header class="top"><div class="brand"><div class="logo">✦</div><div>Swarnim AI Studio<small>कल्पना से वीडियो तक • Hindi-first creator studio</small></div></div><div class="topright"><a class="pill" style="text-decoration:none;color:#f4f7ff" href="swarnim-creator.html">⬇ Swarnim Creator</a><span class="pill">● Prototype</span><span class="pill">हिंदी / English</span></div></header>
 <div class="layout">
@@ -67,4 +67,22 @@ $('#speak').addEventListener('click',speak);$('#previewPlay').addEventListener('
 $('#downloadScript').addEventListener('click',()=>{const blob=new Blob([$('#script').value],{type:'text/plain;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='swarnim-video-script.txt';a.click();URL.revokeObjectURL(a.href)});
 $('#copyScript').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('#script').value);$('#status').textContent='स्क्रिप्ट कॉपी हो गई।'}catch(e){$('#script').select();$('#status').textContent='स्क्रिप्ट चुन ली गई है; Copy दबाएँ।'}});
 if('speechSynthesis'in window){getVoices();speechSynthesis.onvoiceschanged=getVoices}else $('#voicesInfo').textContent='यह ब्राउज़र speech synthesis सपोर्ट नहीं करता।';
+</script><script>
+(async()=>{
+ const token=localStorage.getItem('sbpf_access_token');
+ const base='https://dxowhzghrdghfzoggorx.supabase.co';
+ const key='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
+ const login='member-panel.html?return_to=swarnim-ai-studio.html';
+ if(!token){location.replace(login);return;}
+ try{
+  const headers={apikey:key,Authorization:'Bearer '+token,'Content-Type':'application/json'};
+  const userRes=await fetch(base+'/auth/v1/user',{headers});
+  if(!userRes.ok)throw Error('session');
+  const profileRes=await fetch(base+'/rest/v1/rpc/get_my_member_profile',{method:'POST',headers,body:'{}'});
+  if(!profileRes.ok)throw Error('member');
+  const profile=await profileRes.json();
+  if(!profile || (Array.isArray(profile)&&!profile.length))throw Error('profile');
+  document.body.style.visibility='visible';
+ }catch(e){localStorage.removeItem('sbpf_access_token');localStorage.removeItem('sbpf_refresh_token');location.replace(login);}
+})();
 </script></body></html>
