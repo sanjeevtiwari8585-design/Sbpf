@@ -58,22 +58,7 @@ main{padding:14px}.hero{background:linear-gradient(135deg,#7d1020,#a71f31);color
   <label>ईमेल</label><input id="email" type="email" autocomplete="email">
   <label>पासवर्ड</label><input id="password" type="password" autocomplete="current-password">
   <button id="loginBtn" class="primary" type="button">प्रवेश करें</button>
-  <button id="showSignupBtn" class="primary" type="button" style="background:#fff;color:var(--maroon);border:1px solid var(--line);margin-top:8px">नया सदस्य पंजीकरण</button>
-  <form id="signupForm" class="hidden" style="margin-top:18px;border-top:1px solid var(--line);padding-top:14px">
-   <h2 style="color:var(--maroon);font-size:18px;margin:0 0 8px">नया सदस्य खाता</h2>
-   <p style="font-size:12px;color:var(--muted)">पहले चरण में मूल जानकारी दें। सदस्य ID तभी बनेगी जब Supabase खाते का लॉगिन/पुष्टि सफल हो।</p>
-   <label for="signupName">पूरा नाम *</label><input id="signupName" maxlength="120" autocomplete="name" required>
-   <label for="signupMobile">मोबाइल नंबर *</label><input id="signupMobile" inputmode="tel" maxlength="15" autocomplete="tel" required>
-   <label for="signupAddress">पूरा पता</label><input id="signupAddress" maxlength="250" autocomplete="street-address">
-   <label for="signupDistrict">जिला</label><input id="signupDistrict" maxlength="100">
-   <label for="signupState">राज्य</label><input id="signupState" value="Uttar Pradesh" maxlength="100">
-   <label for="signupReferral">Referral Code (यदि है)</label><input id="signupReferral" maxlength="40" autocomplete="off">
-   <label for="signupEmail">ईमेल *</label><input id="signupEmail" type="email" autocomplete="email" required>
-   <label for="signupPassword">पासवर्ड (कम-से-कम 8 अक्षर) *</label><input id="signupPassword" type="password" autocomplete="new-password" minlength="8" required>
-   <label for="signupPassword2">पासवर्ड दोबारा लिखें *</label><input id="signupPassword2" type="password" autocomplete="new-password" minlength="8" required>
-   <button id="signupBtn" class="primary" type="submit">खाता बनाएं और Member ID तैयार करें</button>
-   <button id="cancelSignupBtn" class="primary" type="button" style="background:#fff;color:var(--maroon);border:1px solid var(--line);margin-top:8px">वापस लॉगिन पर जाएँ</button>
-  </form>
+  <div class="notice" style="margin-top:12px">नए सदस्य का खाता केवल अधिकृत SBPF एडमिन बनाएगा। खाता मिलने के बाद यहाँ ईमेल और पासवर्ड से प्रवेश करें। यदि आपके पास लॉगिन नहीं है, तो अपने अधिकृत एडमिन से संपर्क करें।</div>
  </div>
 </div>
 <div id="app" class="app hidden">
@@ -141,32 +126,6 @@ async function rpc(name,body={}){return api('/rest/v1/rpc/'+name,{method:'POST',
 async function branding(){try{const r=await api('/rest/v1/branding_assets?asset_key=eq.sbpf-logo&is_active=eq.true&select=asset_content&limit=1');const svg=r?.[0]?.asset_content;if(svg){const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);$('logo').src=src;$('authLogo').src=src}}catch{}}
 function msg(t,c=''){ $('authMsg').innerHTML='<div class="notice '+c+'">'+esc(t)+'</div>'}
 async function login(){const b=$('loginBtn');b.disabled=true;b.textContent='प्रवेश हो रहा है...';try{const j=await api('/auth/v1/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:$('email').value.trim(),password:$('password').value})});token=j.access_token;localStorage.setItem('sbpf_access_token',token);await load()}catch(e){msg('Login में समस्या: '+e.message,'error')}finally{b.disabled=false;b.textContent='प्रवेश करें'}}
-function toggleSignup(show){$('signupForm').classList.toggle('hidden',!show);$('showSignupBtn').classList.toggle('hidden',show);if(show){$('authMsg').innerHTML='';$('signupName').focus()}else{$('signupForm').reset();$('signupState').value='Uttar Pradesh'}}
-async function registerAccount(event){
- event.preventDefault();
- const form=$('signupForm'),button=$('signupBtn');
- if(!form.reportValidity())return;
- const fullName=$('signupName').value.trim(),mobile=$('signupMobile').value.trim();
- const email=$('signupEmail').value.trim(),password=$('signupPassword').value;
- if(password!==$('signupPassword2').value){msg('दोनों पासवर्ड एक जैसे होने चाहिए।','error');return}
- if(fullName.length<2){msg('पूरा नाम सही लिखें।','error');return}
- if(mobile.replace(/\D/g,'').length<10){msg('सही मोबाइल नंबर लिखें।','error');return}
- button.disabled=true;button.textContent='Supabase में खाता बनाया जा रहा है…';
- try{
-  const created=await api('/auth/v1/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
-   email,password,data:{full_name:fullName,mobile,address:$('signupAddress').value.trim(),district:$('signupDistrict').value.trim(),state:$('signupState').value.trim()||'Uttar Pradesh',referral_code:$('signupReferral').value.trim()||null}
-  })});
-  if(created?.access_token){
-   token=created.access_token;localStorage.setItem('sbpf_access_token',token);
-   await load();
-   return;
-  }
-  msg('खाता बनाने का अनुरोध सफल हुआ। अब ईमेल में आया confirmation link खोलें, फिर इसी ईमेल और पासवर्ड से लॉगिन करें। लॉगिन के समय मूल जानकारी से Member ID बनाने की कोशिश होगी। यदि ईमेल न आए, तो Supabase/Resend का verified sender domain जाँचना होगा।','success');
-  toggleSignup(false);
- }catch(error){
-  msg('नया खाता नहीं बन सका: '+error.message,'error');
- }finally{button.disabled=false;button.textContent='खाता बनाएं और Member ID तैयार करें'}
-}
 async function load(){try{
  const currentUser=await api('/auth/v1/user');
  if(!currentUser?.id)throw Error('लॉगिन सत्यापित नहीं हुआ। कृपया दोबारा प्रवेश करें।');
@@ -563,13 +522,8 @@ async function workRequest(area){const subject=prompt(area+' — विषय �
 async function updatesView(){const [news,videos]=await Promise.all([api('/rest/v1/news?published=eq.true&select=title,content,created_at&order=created_at.desc&limit=10'),api('/rest/v1/videos?published=eq.true&select=title,video_url,description,created_at&order=created_at.desc&limit=10')]);let h='';(news||[]).forEach(x=>h+='<div class="panel"><b>'+esc(x.title)+'</b><p style="font-size:13px">'+esc(x.content)+'</p></div>');(videos||[]).forEach(x=>h+='<div class="panel"><b>🎥 '+esc(x.title)+'</b><p style="font-size:12px">'+esc(x.description)+'</p><a target="_blank" href="'+esc(x.video_url)+'">वीडियो देखें</a></div>');$('viewBody').innerHTML=h||'<div class="panel empty">अभी कोई update उपलब्ध नहीं है।</div>'}
 function logout(){token='';localStorage.removeItem('sbpf_access_token');location.reload()}
 $('loginBtn').onclick=login;
-$('showSignupBtn').onclick=()=>toggleSignup(true);
-$('cancelSignupBtn').onclick=()=>toggleSignup(false);
-$('signupForm').addEventListener('submit',registerAccount);
 $('password').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
 branding();
-const referralParam=new URLSearchParams(window.location.search).get('ref');
-if(referralParam&&referralParam.length<=40){toggleSignup(true);$('signupReferral').value=referralParam}
 if(token)load();
 </script>
 </body>
