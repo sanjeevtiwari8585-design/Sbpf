@@ -121,7 +121,7 @@ const KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
 let token=localStorage.getItem('sbpf_access_token')||'', profile=null, dashboard=null;
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'—').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-async function api(path,opts={}){const h={apikey:KEY,...(opts.headers||{})};if(token)h.Authorization='Bearer '+token;const r=await fetch(URL+path,{...opts,headers:h});let j=null;try{j=await r.json()}catch{}if(!r.ok)throw Error(j?.msg||j?.message||j?.error_description||'Request failed');return j}
+async function api(path,opts={}){const h={apikey:KEY,...(opts.headers||{})};if(token)h.Authorization='Bearer '+token;const r=await fetch(URL+path,{...opts,headers:h});let j=null;try{j=await r.json()}catch{}if(!r.ok)throw Error(j?.error||j?.msg||j?.message||j?.error_description||'Request failed');return j}
 async function rpc(name,body={}){return api('/rest/v1/rpc/'+name,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})}
 async function branding(){try{const r=await api('/rest/v1/branding_assets?asset_key=eq.sbpf-logo&is_active=eq.true&select=asset_content&limit=1');const svg=r?.[0]?.asset_content;if(svg){const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);$('logo').src=src;$('authLogo').src=src}}catch{}}
 function msg(t,c=''){ $('authMsg').innerHTML='<div class="notice '+c+'">'+esc(t)+'</div>'}
