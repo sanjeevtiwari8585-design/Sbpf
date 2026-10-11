@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#781626">
+<title>स्वर्णिम Creator | SBPF</title>
+<meta name="description" content="स्वर्णिम Creator — अपने अधिकृत वीडियो लिंक खोलें और सीधे मीडिया फ़ाइल डाउनलोड करें।">
+<style>
+:root{--maroon:#781626;--gold:#d7b34b;--cream:#fff9ed;--ink:#28232a;--muted:#6d6268;--line:#eadfd3}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:linear-gradient(135deg,#fffaf1,#f7f1eb);line-height:1.6}
+header{background:linear-gradient(120deg,#711222,#a52c39 65%,#c59b36);color:white;padding:22px max(18px,calc((100% - 980px)/2));display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+header h1{font-size:clamp(22px,4vw,32px);margin:0}header p{margin:3px 0 0;color:#ffedc4;font-size:14px}header a{color:white;text-decoration:none;font-weight:700}
+main{max-width:900px;margin:34px auto;padding:0 16px 44px}.hero,.panel{background:white;border:1px solid var(--line);border-radius:18px;padding:clamp(20px,4vw,34px);box-shadow:0 10px 32px #3d1b1208;margin-bottom:18px}
+.kicker{color:var(--maroon);font-weight:800;letter-spacing:1px;font-size:12px}.hero h2{color:var(--maroon);font-size:clamp(28px,5vw,42px);line-height:1.15;margin:10px 0}.hero p,.muted{color:var(--muted)}
+label{display:block;font-weight:750;margin:16px 0 7px}input,select{width:100%;padding:14px;border:1px solid #d9c9bd;border-radius:10px;font:inherit;background:#fff}input:focus,select:focus{outline:3px solid #d7b34b55;border-color:var(--maroon)}
+button,.btn{display:inline-block;border:0;border-radius:10px;padding:12px 17px;font:inherit;font-weight:750;text-decoration:none;cursor:pointer;background:var(--maroon);color:white}button.secondary,.btn.secondary{background:#fff;color:var(--maroon);border:1px solid #d9c9bd}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.note{border-left:4px solid var(--gold);background:var(--cream);padding:13px 15px;border-radius:8px;font-size:14px}.status{margin-top:14px;padding:12px;border-radius:10px;background:#f6f1ed;white-space:pre-wrap;overflow-wrap:anywhere}.status.error{background:#fff0f0;color:#8c1e2a}.status.good{background:#edf8ef;color:#1d6634}.features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.feature{border:1px solid var(--line);border-radius:12px;padding:14px}.feature strong{display:block;color:var(--maroon)}small{color:var(--muted)}footer{text-align:center;color:var(--muted);font-size:13px;padding:20px}@media(max-width:620px){.features{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div><h1>स्वर्णिम Creator</h1><p>SBPF • अधिकृत मीडिया टूल</p></div><a href="index.html">← मुख्य वेबसाइट</a></header>
+<main>
+<section class="hero">
+<div class="kicker">SWARNIM CREATOR</div>
+<h2>वीडियो लिंक से मीडिया तक</h2>
+<p>किसी सीधे MP4, WebM, MP3 या अन्य मीडिया फ़ाइल का लिंक पेस्ट करें। समर्थित सीधे फ़ाइल लिंक को खोलें या अपने डिवाइस में सेव करें।</p>
+<div class="note">केवल अपनी बनाई हुई या डाउनलोड करने की अनुमति वाली सामग्री इस्तेमाल करें। YouTube, Instagram, Facebook, TikTok और X जैसे प्लेटफ़ॉर्म के लिंक को यह पेज बायपास करके डाउनलोड नहीं करता। इनके लिए अधिकृत API/प्रोसेसर का कनेक्शन अभी बाकी है।</div>
+<label for="mediaUrl">मीडिया URL पेस्ट करें</label>
+<input id="mediaUrl" type="url" placeholder="https://example.com/video.mp4" autocomplete="url" inputmode="url">
+<label for="mediaAction">क्या करना है?</label>
+<select id="mediaAction"><option value="download">डिवाइस में डाउनलोड करें</option><option value="open">ब्राउज़र में खोलें / चलाएँ</option></select>
+<div class="actions"><button id="go">लिंक जाँचें और आगे बढ़ें</button><button class="secondary" id="clear" type="button">साफ़ करें</button></div>
+<div id="status" class="status" role="status" aria-live="polite">यहाँ परिणाम दिखाई देगा।</div>
+</section>
+<section class="panel">
+<h2 style="margin-top:0;color:var(--maroon)">इस संस्करण में उपलब्ध</h2>
+<div class="features"><div class="feature"><strong>सीधे मीडिया लिंक</strong><small>URL validation और open/download action</small></div><div class="feature"><strong>मोबाइल और कंप्यूटर</strong><small>Responsive interface; सेव करने का व्यवहार ब्राउज़र पर निर्भर</small></div><div class="feature"><strong>सुरक्षित उपयोग</strong><small>प्लेटफ़ॉर्म सुरक्षा या DRM को बायपास नहीं करता</small></div></div>
+<p class="muted">नोट: कुछ सर्वर डाउनलोड रोक सकते हैं या CORS/लॉगिन की माँग कर सकते हैं। ऐसे मामलों में लिंक ब्राउज़र में खोलें। सीधे लिंक के लिए भी ब्राउज़र द्वारा डाउनलोड की गारंटी नहीं दी जा सकती।</p>
+</section>
+</main>
+<footer>स्वर्णिम भारत परिवार फाउंडेशन • स्वर्णिम Creator</footer>
+<script>
+(()=> {
+ const input=document.getElementById('mediaUrl'), action=document.getElementById('mediaAction'), status=document.getElementById('status');
+ const setStatus=(msg,type='')=>{status.textContent=msg;status.className='status '+type};
+ document.getElementById('go').addEventListener('click',()=>{
+  const raw=input.value.trim();
+  if(!raw){setStatus('कृपया पहले URL पेस्ट करें।','error');input.focus();return}
+  let url;
+  try{url=new URL(raw)}catch{setStatus('यह सही URL नहीं है। https:// से शुरू होने वाला पूरा लिंक डालें।','error');return}
+  if(!['https:','http:'].includes(url.protocol)){setStatus('सुरक्षा के लिए केवल HTTP/HTTPS लिंक स्वीकार हैं।','error');return}
+  const host=url.hostname.toLowerCase();
+  const social=/(^|\.)(youtube\.com|youtu\.be|instagram\.com|facebook\.com|fb\.watch|tiktok\.com|x\.com|twitter\.com)$/.test(host);
+  if(social){setStatus('यह सोशल-मीडिया लिंक है। इस संस्करण में इस प्लेटफ़ॉर्म से डाउनलोड प्रोसेसर/API जुड़ा नहीं है। आधिकारिक Download/Export सुविधा इस्तेमाल करें; सुरक्षा या DRM को बायपास नहीं किया जाएगा।','error');return}
+  setStatus('लिंक तैयार है। यदि सर्वर सीधे मीडिया फ़ाइल देता है और डाउनलोड की अनुमति है, तो ब्राउज़र इसे खोल सकता है या सेव कर सकता है.','good');
+  if(action.value==='open'){window.open(url.href,'_blank','noopener,noreferrer');return}
+  const a=document.createElement('a');a.href=url.href;a.download='';a.rel='noopener';document.body.appendChild(a);a.click();a.remove();
+ });
+ document.getElementById('clear').addEventListener('click',()=>{input.value='';setStatus('यहाँ परिणाम दिखाई देगा।');input.focus()});
+})();
+</script>
+</body></html>
