@@ -57,7 +57,19 @@ let campaigns=[];
 let schemes=[];
 async function fetchPublic(table,select,filters=""){const url=SBPF_URL+"/rest/v1/"+table+"?select="+encodeURIComponent(select)+(filters?"&"+filters:"");const res=await fetch(url,{headers:{apikey:SBPF_KEY,Authorization:"Bearer "+SBPF_KEY}});if(!res.ok)throw new Error(table+" HTTP "+res.status);return res.json()}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function drawCampaigns(){const q=document.querySelector("#campaignSearch").value.toLowerCase().trim();const rows=campaigns.filter(x=>(x.name+" "+(x.description||"")).toLowerCase().includes(q));document.querySelector("#campaignGrid").innerHTML=rows.map((x,i)=>'<article class="card"><div class="icon">'+["📚","🗣️","🛡️","🤝","🌱","🏪","🎓","❤️"][i%8]+'</div><h3>'+esc(x.name)+'</h3><p>'+esc(x.description||"अभियान का विवरण उपलब्ध होने पर यहाँ दिखेगा।")+'</p><a href="member.html">अधिक जानकारी / प्रवेश →</a></article>').join("")||'<p class="empty">कोई मिलान नहीं मिला।</p>';document.querySelector("#campaignNote").textContent=campaigns.length?"दिखाए गए अभियान: "+rows.length:"डेटा अभी उपलब्ध नहीं; मॉडल में मूल 8 अभियान दिखाए जा रहे हैं।'}
+function drawCampaigns(){
+  const q=document.querySelector("#campaignSearch").value.toLowerCase().trim();
+  const rows=campaigns.filter(x=>(x.name+" "+(x.description||"")).toLowerCase().includes(q));
+  const icons=["📚","🗣️","🛡️","🤝","🌱","🏪","🎓","❤️"];
+  document.querySelector("#campaignGrid").innerHTML=rows.map((x,i)=>`
+    <article class="card">
+      <div class="icon">${icons[i%icons.length]}</div>
+      <h3>${esc(x.name)}</h3>
+      <p>${esc(x.description||"अभियान का विवरण उपलब्ध होने पर यहाँ दिखेगा।")}</p>
+      <a href="member.html">अधिक जानकारी / प्रवेश →</a>
+    </article>`).join("")||'<p class="empty">कोई मिलान नहीं मिला।</p>';
+  document.querySelector("#campaignNote").textContent=campaigns.length?"दिखाए गए अभियान: "+rows.length:"डेटा अभी उपलब्ध नहीं; मॉडल में मूल 8 अभियान दिखाए जा रहे हैं।";
+}
 function drawSchemes(){const q=document.querySelector("#schemeSearch").value.toLowerCase().trim();const rows=schemes.filter(x=>(x.name+" "+(x.description||"")+" "+(x.category||"")).toLowerCase().includes(q)).slice(0,12);document.querySelector("#schemeList").innerHTML=rows.length?rows.map(x=>'<div class="item"><b>'+esc(x.name)+'</b><small>'+esc(x.category||"सरकारी योजना")+' · '+esc((x.description||"विवरण उपलब्ध नहीं।").slice(0,180))+'</small>'+(x.official_url?'<div><a href="'+esc(x.official_url)+'" target="_blank" rel="noopener noreferrer">आधिकारिक लिंक ↗</a></div>':"")+'</div>').join(""):'<p class="empty">कोई प्रकाशित सार्वजनिक योजना नहीं मिली या पढ़ने की अनुमति उपलब्ध नहीं है।</p>';document.querySelector("#schemeNote").textContent="सार्वजनिक सूची में दिखने वाली योजनाएँ: "+rows.length+" (अधिकतम 12)";}
 document.querySelector("#campaignSearch").addEventListener("input",drawCampaigns);
 document.querySelector("#schemeSearch").addEventListener("input",drawSchemes);
