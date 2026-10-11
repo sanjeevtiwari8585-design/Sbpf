@@ -21,18 +21,29 @@ button,.btn{display:inline-block;border:0;border-radius:10px;padding:12px 17px;f
 <main>
 <section class="hero">
 <div class="kicker">SWARNIM CREATOR</div>
-<h2>वीडियो लिंक से मीडिया तक</h2>
-<p>Swarnim AI Studio में बने वीडियो की अधिकृत फ़ाइल/सीधा MP4 लिंक यहाँ खोलें या सेव करें। किसी सीधे MP4, WebM, MP3 या अन्य मीडिया फ़ाइल का लिंक पेस्ट करें।</p><div class="actions"><a class="btn" href="swarnim-ai-studio.html">✦ Swarnim AI Studio में वीडियो बनाएँ</a></div>
+<h2>आपका वीडियो क्रिएशन सेंटर</h2>
+<p>एक ही जगह से वीडियो बनाएँ, अधिकृत मीडिया डाउनलोड करें और वीडियो एडिटिंग टूल खोलें। सभी मॉड्यूल SBPF Member Login से जुड़े हैं।</p>
+<div class="features" style="margin-top:22px">
+<a class="feature" href="swarnim-ai-studio.html" style="text-decoration:none;color:inherit"><strong>✦ Swarnim AI Video Generator</strong><small>स्टोरी/स्क्रिप्ट से वीडियो बनाने के वर्कफ़्लो पर जाएँ।</small><span class="btn" style="margin-top:12px">Generator खोलें</span></a>
+<a class="feature" href="#download" style="text-decoration:none;color:inherit"><strong>⬇ Swarnim Video Download</strong><small>अपने अधिकृत सीधे मीडिया URL को खोलें या सेव करें।</small><span class="btn" style="margin-top:12px">Download खोलें</span></a>
+<a class="feature" href="#editing" style="text-decoration:none;color:inherit"><strong>✂ Swarnim Video Editing</strong><small>वीडियो प्रीव्यू करें और एडिटिंग वर्कस्पेस में फ़ाइल चुनें।</small><span class="btn" style="margin-top:12px">Editing खोलें</span></a>
+</div>
 <div class="note">केवल अपनी बनाई हुई या डाउनलोड करने की अनुमति वाली सामग्री इस्तेमाल करें। YouTube, Instagram, Facebook, TikTok और X जैसे प्लेटफ़ॉर्म के लिंक को यह पेज बायपास करके डाउनलोड नहीं करता। इनके लिए अधिकृत API/प्रोसेसर का कनेक्शन अभी बाकी है।</div>
-<label for="mediaUrl">मीडिया URL पेस्ट करें</label>
+<div id="download"></div><h2 style="color:var(--maroon)">⬇ Swarnim Video Download</h2><p class="muted">सीधे मीडिया फ़ाइल के लिए अधिकृत लिंक इस्तेमाल करें।</p><label for="mediaUrl">मीडिया URL पेस्ट करें</label>
 <input id="mediaUrl" type="url" placeholder="https://example.com/video.mp4" autocomplete="url" inputmode="url">
 <label for="mediaAction">क्या करना है?</label>
 <select id="mediaAction"><option value="download">डिवाइस में डाउनलोड करें</option><option value="open">ब्राउज़र में खोलें / चलाएँ</option></select>
 <div class="actions"><button id="go">लिंक जाँचें और आगे बढ़ें</button><button class="secondary" id="clear" type="button">साफ़ करें</button></div>
 <div id="status" class="status" role="status" aria-live="polite">यहाँ परिणाम दिखाई देगा।</div>
 </section>
-<section class="panel">
-<h2 style="margin-top:0;color:var(--maroon)">इस संस्करण में उपलब्ध</h2>
+<section class="panel" id="editing">
+<h2 style="margin-top:0;color:var(--maroon)">✂ Swarnim Video Editing</h2>
+<p class="muted">यह शुरुआती ब्राउज़र-आधारित एडिटिंग वर्कस्पेस है। फ़ाइल चुनकर प्रीव्यू करें और टाइमलाइन के लिए इन/आउट समय तय करें। अभी यह फ़ाइल को काटकर नया MP4 एक्सपोर्ट नहीं करता; उसके लिए वास्तविक rendering/export backend जोड़ना बाकी है।</p>
+<label for="editFile">वीडियो फ़ाइल चुनें</label><input id="editFile" type="file" accept="video/*">
+<video id="editPreview" controls playsinline style="display:none;width:100%;max-height:420px;background:#171717;border-radius:12px;margin-top:14px"></video>
+<div class="features" style="margin-top:12px"><div><label for="trimStart">शुरुआत (सेकंड)</label><input id="trimStart" type="number" min="0" step="0.1" value="0"></div><div><label for="trimEnd">समाप्ति (सेकंड)</label><input id="trimEnd" type="number" min="0" step="0.1" placeholder="वीडियो की अवधि"></div><div><label for="editNote">एडिट नोट</label><input id="editNote" type="text" placeholder="जैसे: intro हटाएँ"></div></div>
+<div class="actions"><button id="previewTrim" type="button">चुने हुए समय से प्रीव्यू</button><button class="secondary" id="resetEdit" type="button">रीसेट</button></div><div id="editStatus" class="status" role="status" aria-live="polite">वीडियो फ़ाइल चुनें।</div>
+<h3 style="color:var(--maroon)">अन्य उपलब्ध डाउनलोड टूल</h3>
 <div class="features"><div class="feature"><strong>सीधे मीडिया लिंक</strong><small>URL validation और open/download action</small></div><div class="feature"><strong>मोबाइल और कंप्यूटर</strong><small>Responsive interface; सेव करने का व्यवहार ब्राउज़र पर निर्भर</small></div><div class="feature"><strong>सुरक्षित उपयोग</strong><small>प्लेटफ़ॉर्म सुरक्षा या DRM को बायपास नहीं करता</small></div></div>
 <p class="muted">नोट: कुछ सर्वर डाउनलोड रोक सकते हैं या CORS/लॉगिन की माँग कर सकते हैं। ऐसे मामलों में लिंक ब्राउज़र में खोलें। सीधे लिंक के लिए भी ब्राउज़र द्वारा डाउनलोड की गारंटी नहीं दी जा सकती।</p>
 </section>
@@ -56,6 +67,10 @@ button,.btn{display:inline-block;border:0;border-radius:10px;padding:12px 17px;f
   const a=document.createElement('a');a.href=url.href;a.download='';a.rel='noopener';document.body.appendChild(a);a.click();a.remove();
  });
  document.getElementById('clear').addEventListener('click',()=>{input.value='';setStatus('यहाँ परिणाम दिखाई देगा।');input.focus()});
+ const editFile=document.getElementById('editFile'), preview=document.getElementById('editPreview'), editStatus=document.getElementById('editStatus'); let objectUrl='';
+ editFile.addEventListener('change',()=>{if(objectUrl)URL.revokeObjectURL(objectUrl);const f=editFile.files&&editFile.files[0];if(!f){preview.style.display='none';editStatus.textContent='वीडियो फ़ाइल चुनें।';return;}objectUrl=URL.createObjectURL(f);preview.src=objectUrl;preview.style.display='block';preview.onloadedmetadata=()=>{document.getElementById('trimEnd').value=preview.duration.toFixed(1);editStatus.textContent='वीडियो लोड हुआ। अवधि: '+preview.duration.toFixed(1)+' सेकंड। अभी यह प्रीव्यू है, एक्सपोर्ट नहीं।';};});
+ document.getElementById('previewTrim').addEventListener('click',()=>{const s=Number(document.getElementById('trimStart').value),e=Number(document.getElementById('trimEnd').value);if(!preview.src||!Number.isFinite(preview.duration)){editStatus.textContent='पहले वीडियो फ़ाइल चुनें।';return;}if(s<0||e<=s||e>preview.duration){editStatus.textContent='समय जाँचें: समाप्ति शुरुआत से अधिक और वीडियो अवधि के भीतर होनी चाहिए।';return;}preview.currentTime=s;preview.play();const stop=()=>{if(preview.currentTime>=e){preview.pause();preview.removeEventListener('timeupdate',stop);}};preview.addEventListener('timeupdate',stop);editStatus.textContent='प्रीव्यू '+s+'s से '+e+'s तक चलेगा। नया वीडियो फ़ाइल अभी एक्सपोर्ट नहीं होगा।';});
+ document.getElementById('resetEdit').addEventListener('click',()=>{preview.pause();preview.currentTime=0;document.getElementById('trimStart').value=0;document.getElementById('trimEnd').value=preview.duration?preview.duration.toFixed(1):'';document.getElementById('editNote').value='';editStatus.textContent='एडिट प्रीव्यू रीसेट हो गया।';});
 })();
 </script>
 <script>
