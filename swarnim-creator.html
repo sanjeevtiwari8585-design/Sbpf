@@ -15,7 +15,7 @@ main{max-width:900px;margin:34px auto;padding:0 16px 44px}.hero,.panel{backgroun
 label{display:block;font-weight:750;margin:16px 0 7px}input,select{width:100%;padding:14px;border:1px solid #d9c9bd;border-radius:10px;font:inherit;background:#fff}input:focus,select:focus{outline:3px solid #d7b34b55;border-color:var(--maroon)}
 button,.btn{display:inline-block;border:0;border-radius:10px;padding:12px 17px;font:inherit;font-weight:750;text-decoration:none;cursor:pointer;background:var(--maroon);color:white}button.secondary,.btn.secondary{background:#fff;color:var(--maroon);border:1px solid #d9c9bd}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.note{border-left:4px solid var(--gold);background:var(--cream);padding:13px 15px;border-radius:8px;font-size:14px}.status{margin-top:14px;padding:12px;border-radius:10px;background:#f6f1ed;white-space:pre-wrap;overflow-wrap:anywhere}.status.error{background:#fff0f0;color:#8c1e2a}.status.good{background:#edf8ef;color:#1d6634}.features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.feature{border:1px solid var(--line);border-radius:12px;padding:14px}.feature strong{display:block;color:var(--maroon)}small{color:var(--muted)}footer{text-align:center;color:var(--muted);font-size:13px;padding:20px}@media(max-width:620px){.features{grid-template-columns:1fr}}
 </style>
-</head>
+<style>body{visibility:hidden}</style></head>
 <body>
 <header><div><h1>स्वर्णिम Creator</h1><p>SBPF • अधिकृत मीडिया टूल</p></div><nav style="display:flex;gap:14px;flex-wrap:wrap"><a href="swarnim-ai-studio.html">✦ Swarnim AI Studio</a><a href="index.html">← मुख्य वेबसाइट</a></nav></header>
 <main>
@@ -58,4 +58,22 @@ button,.btn{display:inline-block;border:0;border-radius:10px;padding:12px 17px;f
  document.getElementById('clear').addEventListener('click',()=>{input.value='';setStatus('यहाँ परिणाम दिखाई देगा।');input.focus()});
 })();
 </script>
-</body></html>
+<script>
+(async()=>{
+ const token=localStorage.getItem('sbpf_access_token');
+ const base='https://dxowhzghrdghfzoggorx.supabase.co';
+ const key='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
+ const login='member-panel.html?return_to=swarnim-creator.html';
+ if(!token){location.replace(login);return;}
+ try{
+  const headers={apikey:key,Authorization:'Bearer '+token,'Content-Type':'application/json'};
+  const userRes=await fetch(base+'/auth/v1/user',{headers});
+  if(!userRes.ok)throw Error('session');
+  const profileRes=await fetch(base+'/rest/v1/rpc/get_my_member_profile',{method:'POST',headers,body:'{}'});
+  if(!profileRes.ok)throw Error('member');
+  const profile=await profileRes.json();
+  if(!profile || (Array.isArray(profile)&&!profile.length))throw Error('profile');
+  document.body.style.visibility='visible';
+ }catch(e){localStorage.removeItem('sbpf_access_token');localStorage.removeItem('sbpf_refresh_token');location.replace(login);}
+})();
+</script></body></html>
