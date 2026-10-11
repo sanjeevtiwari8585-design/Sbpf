@@ -4,7 +4,7 @@
 - **Supabase workflow map:** [Data/workflow architecture](docs/SUPABASE-WORKFLOW-MODEL.md)
 - **Safe schema inventory:** [Schema metadata JSON](docs/supabase-schema-inventory.json)
 
-The app model requests only active campaigns and published government schemes from the public Supabase API. It is a model, not proof that every backend workflow has been end-to-end tested. Private database rows and secrets are not copied into this public repository. The public website must not display membership fees, and the existing member entry remains admin-created/login-based (no public self-signup).
+The app model requests active campaigns and published government schemes from the public Supabase API. It is not proof that every backend workflow has been end-to-end tested. Private database rows and secrets are not copied into this public repository. The public website must not display membership fees. The member entry provides public email/password registration through the existing Supabase Edge Function and Member ID/password login through the existing member panel; end-to-end account creation still requires a real account test.
 
 ---
 
