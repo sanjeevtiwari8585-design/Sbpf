@@ -29,12 +29,20 @@ button,.btn{display:inline-block;border:0;border-radius:10px;padding:12px 17px;f
 <a class="feature" href="swarnim-video-editor.html" style="text-decoration:none;color:inherit"><strong>✂ Swarnim Video Editing</strong><small>मुफ़्त एडिटर: वीडियो trim, compress, filters और MP4/WebM/MP3 export.</small><span class="btn" style="margin-top:12px">Free Editor खोलें</span></a>
 </div>
 <div class="note">केवल अपनी बनाई हुई या डाउनलोड करने की अनुमति वाली सामग्री इस्तेमाल करें। YouTube, Instagram, Facebook, TikTok और X जैसे प्लेटफ़ॉर्म के लिंक को यह पेज बायपास करके डाउनलोड नहीं करता। इनके लिए अधिकृत API/प्रोसेसर का कनेक्शन अभी बाकी है।</div>
-<div id="download"></div><h2 style="color:var(--maroon)">⬇ Swarnim Video Download</h2><p class="muted">सीधे मीडिया फ़ाइल के लिए अधिकृत लिंक इस्तेमाल करें।</p><label for="mediaUrl">मीडिया URL पेस्ट करें</label>
+<div id="download"></div><h2 style="color:var(--maroon)">⬇ Swarnim Video Download</h2><p class="muted">सीधे मीडिया फ़ाइल को अपने डिवाइस में सेव करें या अपने अधिकार वाले मीडिया के लिए Supabase में प्रोसेसिंग अनुरोध दर्ज करें।</p><label for="mediaUrl">मीडिया URL पेस्ट करें</label>
 <input id="mediaUrl" type="url" placeholder="https://example.com/video.mp4" autocomplete="url" inputmode="url">
-<label for="mediaAction">क्या करना है?</label>
+<label for="mediaAction">सीधा लिंक</label>
 <select id="mediaAction"><option value="download">डिवाइस में डाउनलोड करें</option><option value="open">ब्राउज़र में खोलें / चलाएँ</option></select>
-<div class="actions"><button id="go">लिंक जाँचें और आगे बढ़ें</button><button class="secondary" id="clear" type="button">साफ़ करें</button></div>
-<div id="status" class="status" role="status" aria-live="polite">यहाँ परिणाम दिखाई देगा।</div>
+<div class="actions"><button id="go" type="button">सीधा लिंक खोलें / सेव करें</button><button class="secondary" id="clear" type="button">साफ़ करें</button></div>
+<div id="status" class="status" role="status" aria-live="polite">सीधे लिंक का परिणाम यहाँ दिखेगा।</div>
+<hr style="border:0;border-top:1px solid var(--line);margin:22px 0">
+<h3 style="color:var(--maroon)">Supabase डाउनलोड अनुरोध</h3>
+<p class="muted">अपनी सामग्री या डाउनलोड की स्पष्ट अनुमति वाली सामग्री के लिए अनुरोध सेव करें। सोशल प्लेटफ़ॉर्म का ऑटो-डाउनलोड तभी चलेगा जब अधिकृत provider/API जोड़ा जाएगा।</p>
+<label for="requestMediaType">मीडिया प्रकार</label><select id="requestMediaType"><option value="both">वीडियो और ऑडियो</option><option value="video">केवल वीडियो</option><option value="audio">केवल ऑडियो</option></select>
+<label for="requestQuality">गुणवत्ता</label><select id="requestQuality"><option value="best_available">उपलब्ध सर्वोत्तम</option><option value="1080p">1080p</option><option value="720p">720p</option><option value="480p">480p</option><option value="audio_high">उच्च गुणवत्ता ऑडियो</option></select>
+<label style="display:flex;align-items:flex-start;gap:10px;font-weight:500;margin-top:14px"><input id="rightsConfirmed" type="checkbox" style="width:auto;margin-top:6px"> मैं पुष्टि करता/करती हूँ कि यह मेरी सामग्री है या मेरे पास इसे डाउनलोड करने की अनुमति है।</label>
+<div class="actions"><button id="requestMedia" type="button">Supabase में अनुरोध सेव करें</button></div>
+<div id="requestStatus" class="status" role="status" aria-live="polite">इस अनुरोध के लिए Member ID लॉगिन आवश्यक है।</div>
 </section>
 <section class="panel" id="editing">
 <h2 style="margin-top:0;color:var(--maroon)">✂ Swarnim Video Editing</h2>
@@ -66,7 +74,30 @@ button,.btn{display:inline-block;border:0;border-radius:10px;padding:12px 17px;f
   if(action.value==='open'){window.open(url.href,'_blank','noopener,noreferrer');return}
   const a=document.createElement('a');a.href=url.href;a.download='';a.rel='noopener';document.body.appendChild(a);a.click();a.remove();
  });
- document.getElementById('clear').addEventListener('click',()=>{input.value='';setStatus('यहाँ परिणाम दिखाई देगा।');input.focus()});
+ document.getElementById('clear').addEventListener('click',()=>{input.value='';setStatus('सीधे लिंक का परिणाम यहाँ दिखेगा।');input.focus()});
+ const requestStatus=document.getElementById('requestStatus');
+ const setRequestStatus=(m,type='')=>{requestStatus.textContent=m;requestStatus.className='status '+type;};
+ document.getElementById('requestMedia').addEventListener('click',async()=>{
+  const raw=input.value.trim(), token=localStorage.getItem('sbpf_access_token');
+  if(!raw){setRequestStatus('पहले मीडिया URL पेस्ट करें।','error');input.focus();return;}
+  if(!token){setRequestStatus('पहले SBPF Member ID और पासवर्ड से लॉगिन करें।','error');location.href='member-panel.html?return_to=swarnim-creator.html';return;}
+  if(!document.getElementById('rightsConfirmed').checked){setRequestStatus('आगे बढ़ने से पहले सामग्री के अधिकार/अनुमति की पुष्टि करें।','error');return;}
+  const btn=document.getElementById('requestMedia');btn.disabled=true;setRequestStatus('Supabase में अनुरोध सेव हो रहा है…');
+  try{
+   const response=await fetch('https://dxowhzghrdghfzoggorx.supabase.co/functions/v1/media-download-request',{
+    method:'POST',
+    headers:{apikey:'sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo',Authorization:'Bearer '+token,'Content-Type':'application/json'},
+    body:JSON.stringify({source_url:raw,media_type:document.getElementById('requestMediaType').value,quality:document.getElementById('requestQuality').value,rights_confirmed:true})
+   });
+   let result={};try{result=await response.json()}catch{}
+   if(!response.ok){setRequestStatus('अनुरोध सेव नहीं हुआ ('+response.status+'): '+(result.error||result.message||'कृपया लॉगिन और URL जाँचें।'),'error');return;}
+   const job=result.job||{};
+   const id=job.id?' Job ID: '+job.id+'.':'';
+   const message=result.message||'अनुरोध दर्ज हुआ।';
+   setRequestStatus(message+id+(job.status==='unsupported'?' सोशल प्लेटफ़ॉर्म का ऑटो-डाउनलोड अभी समर्थित नहीं है।':job.status==='queued'?' अनुरोध सेव है; डाउनलोड प्रोसेसर जुड़ने के बाद फ़ाइल उपलब्ध होगी.':''),'good');
+  }catch(e){setRequestStatus('Supabase से संपर्क नहीं हुआ। इंटरनेट जाँचें और फिर प्रयास करें।','error');}
+  finally{btn.disabled=false;}
+ });
  const editFile=document.getElementById('editFile'), preview=document.getElementById('editPreview'), editStatus=document.getElementById('editStatus'); let objectUrl='';
  editFile.addEventListener('change',()=>{if(objectUrl)URL.revokeObjectURL(objectUrl);const f=editFile.files&&editFile.files[0];if(!f){preview.style.display='none';editStatus.textContent='वीडियो फ़ाइल चुनें।';return;}objectUrl=URL.createObjectURL(f);preview.src=objectUrl;preview.style.display='block';preview.onloadedmetadata=()=>{document.getElementById('trimEnd').value=preview.duration.toFixed(1);editStatus.textContent='वीडियो लोड हुआ। अवधि: '+preview.duration.toFixed(1)+' सेकंड। अभी यह प्रीव्यू है, एक्सपोर्ट नहीं।';};});
  document.getElementById('previewTrim').addEventListener('click',()=>{const s=Number(document.getElementById('trimStart').value),e=Number(document.getElementById('trimEnd').value);if(!preview.src||!Number.isFinite(preview.duration)){editStatus.textContent='पहले वीडियो फ़ाइल चुनें।';return;}if(s<0||e<=s||e>preview.duration){editStatus.textContent='समय जाँचें: समाप्ति शुरुआत से अधिक और वीडियो अवधि के भीतर होनी चाहिए।';return;}preview.currentTime=s;preview.play();const stop=()=>{if(preview.currentTime>=e){preview.pause();preview.removeEventListener('timeupdate',stop);}};preview.addEventListener('timeupdate',stop);editStatus.textContent='प्रीव्यू '+s+'s से '+e+'s तक चलेगा। नया वीडियो फ़ाइल अभी एक्सपोर्ट नहीं होगा।';});
