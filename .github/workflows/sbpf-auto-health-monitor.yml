@@ -30,16 +30,16 @@ jobs:
           python - <<'PY'
           import json, os, urllib.error, urllib.request
           checks = [
-              ("SBPF Seva live site", "https://sbpfseva.floot.app/"),
-              ("SBPF GitHub Pages home", "https://sanjeevtiwari8585-design.github.io/Sbpf/"),
-              ("Member registration page", "https://sanjeevtiwari8585-design.github.io/Sbpf/member.html"),
-              ("Swarnim AI Studio page", "https://sanjeevtiwari8585-design.github.io/Sbpf/swarnim-ai-studio.html"),
-              ("Swarnim Creator page", "https://sanjeevtiwari8585-design.github.io/Sbpf/swarnim-creator.html"),
-              ("Swarnim Video Editor page", "https://sanjeevtiwari8585-design.github.io/Sbpf/swarnim-video-editor.html"),
-              ("Supabase Auth health", "https://dxowhzghrdghfzoggorx.supabase.co/auth/v1/health"),
+              ("SBPF Seva live site", "https://sbpfseva.floot.app/", "web"),
+              ("SBPF GitHub Pages home", "https://sanjeevtiwari8585-design.github.io/Sbpf/", "web"),
+              ("Member registration page", "https://sanjeevtiwari8585-design.github.io/Sbpf/member.html", "web"),
+              ("Swarnim AI Studio page", "https://sanjeevtiwari8585-design.github.io/Sbpf/swarnim-ai-studio.html", "web"),
+              ("Swarnim Creator page", "https://sanjeevtiwari8585-design.github.io/Sbpf/swarnim-creator.html", "web"),
+              ("Swarnim Video Editor page", "https://sanjeevtiwari8585-design.github.io/Sbpf/swarnim-video-editor.html", "web"),
+              ("Supabase Auth health", "https://dxowhzghrdghfzoggorx.supabase.co/auth/v1/health", "supabase"),
           ]
           results = []
-          for name, url in checks:
+          for name, url, kind in checks:
               try:
                   req = urllib.request.Request(url, headers={"User-Agent": "SBPF-Seva-HealthMonitor/1.0"})
                   with urllib.request.urlopen(req, timeout=15) as response:
@@ -47,11 +47,12 @@ jobs:
                   ok = 200 <= code < 400
                   results.append({"name": name, "url": url, "status": code, "ok": ok})
               except urllib.error.HTTPError as e:
-                  code = e.code
-                  # Auth health is expected to be publicly readable; other endpoints must be successful.
-                  results.append({"name": name, "url": url, "status": code, "ok": False, "error": "HTTP error"})
+                  # Supabase may require an API key even on health endpoints; an HTTP response proves reachability.
+                  ok = kind == "supabase" and e.code in (401, 403)
+                  results.append({"name": name, "url": url, "status": e.code, "ok": ok, "note": "reachable but access-restricted" if ok else "HTTP error"})
               except Exception as e:
-                  results.append({"name": name, "url": url, "status": "NETWORK_ERROR", "ok": False, "error": type(e).__name__})
+                  reason = getattr(e, "reason", None)
+                  results.append({"name": name, "url": url, "status": "NETWORK_ERROR", "ok": False, "error": (str(reason) if reason else type(e).__name__)[:180]})
           failed = [r for r in results if not r["ok"]]
           with open(os.environ["GITHUB_OUTPUT"], "a") as out:
               out.write("failed=" + ("true" if failed else "false") + "\n")
@@ -72,25 +73,12 @@ jobs:
         shell: bash
         run: |
           title="[SBPF Health] Production check failed"
-          body="## SBPF Seva health-monitor alert
-
-          One or more read-only availability checks failed. This monitor does not modify production systems or attempt risky repairs.
-
-          **Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
-          **Report (UTC):**
-          ```json
-          $REPORT
-          ```
-
-          **Next step:** inspect the failing endpoint and logs. No database, RLS, DNS, payment, secret, or member-data changes were made."
-          existing=$(gh issue list --repo "$GH_REPO" --state open --label "sbpf-health-alert" --limit 1 --json number --jq '.[0].number // empty')
+          body=$(printf '## SBPF Seva health-monitor alert\n\nOne or more read-only availability checks failed. This monitor does not modify production systems or attempt risky repairs.\n\nRun: %s/actions/runs/%s\n\nReport (UTC):\n%s\n\nNext step: inspect the failing endpoint and logs. No database, RLS, DNS, payment, secret, or member-data changes were made.\n' "${{ github.server_url }}/${{ github.repository }}" "${{ github.run_id }}" "$REPORT")
+          existing=$(gh issue list --repo "$GH_REPO" --state open --search 'SBPF Health Production check failed in:title' --limit 1 --json number --jq '.[0].number // empty')
           if [ -n "$existing" ]; then
             gh issue comment "$existing" --repo "$GH_REPO" --body "$body"
           else
-            gh issue create --repo "$GH_REPO" --title "$title" --label "sbpf-health-alert" --body "$body" || {
-              gh issue create --repo "$GH_REPO" --title "$title" --body "$body"
-            }
+            gh issue create --repo "$GH_REPO" --title "$title" --body "$body"
           fi
 
       - name: Record successful health check
