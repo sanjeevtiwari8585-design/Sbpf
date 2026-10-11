@@ -34,7 +34,7 @@
 <div class="field"><label for="pace">बोलने की गति</label><select id="pace"><option value="0.85">धीमी</option><option value="1" selected>सामान्य</option><option value="1.15">तेज़</option></select></div>
 </div>
 <div class="row2"><label class="checkline"><input type="checkbox" id="captions" checked> हिंदी सबटाइटल</label><label class="checkline"><input type="checkbox" id="music" checked> बैकग्राउंड म्यूज़िक (आगे जोड़ा जाएगा)</label></div>
-<div class="actions"><button id="generate">✨ स्क्रिप्ट और प्रीव्यू तैयार करें</button><button class="secondary" id="makeScript">AI स्क्रिप्ट ड्राफ्ट</button></div>
+<div class="actions"><button id="generate">✨ स्टोरी + हिंदी वॉइसओवर सेव करें</button><button class="secondary" id="makeScript">AI स्क्रिप्ट ड्राफ्ट</button></div>
 <div id="status" class="status" style="margin-top:13px" role="status">तैयार। विषय चुनकर “स्क्रिप्ट और प्रीव्यू तैयार करें” दबाएँ।</div>
 <p class="notice">ध्यान दें: अभी यह UI प्रोटोटाइप है। 300 सेकंड विकल्प स्क्रिप्ट/वर्कफ़्लो अवधि सेट करता है; वास्तविक 5-मिनट वीडियो रेंडर और MP4 डाउनलोड के लिए वीडियो मॉडल API तथा सुरक्षित backend job pipeline अभी जोड़ना और टेस्ट करना बाकी है।</p>
 </section>
@@ -47,7 +47,7 @@
 <button class="idea" data-prompt="एक छोटे भारतीय व्यवसाय की सफलता पर 60 सेकंड का प्रेरक वीडियो बनाओ।"><span>💼</span><b>बिजनेस आइडिया</b><span>उद्यमिता</span></button>
 </div></section>
 <section class="panel bottom"><h2>🗂️ मेरी हाल की रचनाएँ</h2><div id="history" class="status">अभी कोई प्रोजेक्ट नहीं। प्रीव्यू तैयार करने पर यह सूची अपडेट होगी।</div></section>
-</main></div><footer class="footer">Swarnim AI Studio • Prototype v0.1 • हिंदी-प्रथम • अभी वास्तविक AI वीडियो API से कनेक्ट नहीं है</footer></div>
+</main></div><footer class="footer">Swarnim AI Studio • Hindi-first • Storyboard/voiceover backend connected; final video rendering pending</footer></div>
 <script>
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 let mode='text',uploadedImage=null,history=[];
@@ -57,7 +57,33 @@ $$('[data-mode]').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mo
 function headline(text){const clean=text.replace(/[।!?].*/s,'').trim();return clean.length>48?clean.slice(0,48)+'…':clean||'आपका अगला वीडियो'}
 function formatTime(n){return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')}
 function draft(){let p=$('#prompt').value.trim();if(!p){$('#status').textContent='पहले वीडियो का विषय लिखें।';return}let h=headline(p);$('#sceneHeadline').textContent=h;$('#previewType').textContent=$('#style').value+' • '+$('#ratio').value;$('#previewDuration').textContent=formatTime(+$ ('#duration').value);let seconds=+$ ('#duration').value;let script='नमस्कार! '+p.replace(/[।!?]+$/,'')+'। आइए, इस विचार को समझें और इसे अपने जीवन में अपनाने की कोशिश करें। ज्ञान, मेहनत और सहयोग से हम बेहतर भविष्य बना सकते हैं। धन्यवाद!';if(seconds>=60)script+=' याद रखें, छोटे-छोटे कदम भी बड़े बदलाव की शुरुआत बन सकते हैं।';$('#script').value=script;$('#status').textContent='स्क्रिप्ट और स्टोरीबोर्ड प्रीव्यू तैयार है। वास्तविक वीडियो रेंडर API जुड़ने के बाद उपलब्ध होगा।';history.unshift({title:h,time:new Date().toLocaleTimeString('hi-IN',{hour:'2-digit',minute:'2-digit'}),mode});history=history.slice(0,5);$('#history').innerHTML=history.map(x=>'• '+x.title+' <span style="color:#91a5c0">— '+x.time+'</span>').join('<br>');}
-$('#generate').addEventListener('click',draft);$('#makeScript').addEventListener('click',()=>{draft();$('#status').textContent='स्क्रिप्ट ड्राफ्ट तैयार है। इसे दाईं ओर संपादित कर सकते हैं और हिंदी में सुन सकते हैं।'});
+$('#generate').addEventListener('click',generateAndSave);$('#makeScript').addEventListener('click',()=>{draft();$('#status').textContent='स्क्रिप्ट ड्राफ्ट तैयार है। इसे दाईं ओर संपादित कर सकते हैं और हिंदी में सुन सकते हैं।'});
+async function generateAndSave(){
+ draft();
+ const token=localStorage.getItem('sbpf_access_token');
+ if(!token){$('#status').textContent='पहले SBPF Member ID और पासवर्ड से लॉगिन करें।';location.replace('member-panel.html?return_to=swarnim-ai-studio.html');return;}
+ const btn=$('#generate');btn.disabled=true;btn.textContent='⏳ स्टोरी और वॉइसओवर सेव हो रहे हैं…';
+ $('#status').textContent='Supabase backend से storyboard और Hindi voiceover जोड़ा जा रहा है…';
+ const base='https://dxowhzghrdghfzoggorx.supabase.co';
+ const key='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
+ const speaker=$('#voice').value==='male'?'Rohit':$('#voice').value==='female'?'Anjali':'Divya';
+ try{
+  const response=await fetch(base+'/functions/v1/swarnim-ai-create-story',{method:'POST',headers:{apikey:key,Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({title:headline($('#prompt').value),story_text:$('#script').value.trim(),aspect_ratio:$('#ratio').value,captions:$('#captions').checked,generate_voiceover:true,speaker})});
+  let result={};try{result=await response.json()}catch{}
+  if(result.job_id){
+   const voiceError=result.voiceover_error||result.error;
+   const detail=voiceError?.message||voiceError?.details||result.message||'';
+   if(!response.ok||result.success===false){
+    $('#status').textContent='Storyboard Supabase में सेव हुआ। Job ID: '+result.job_id+'. वॉइसओवर पूरा नहीं हुआ: '+(detail||'provider/backend error')+(voiceError?.error==='voice_provider_not_configured'?' — Supabase Edge Function Secrets में TTSFREE_API_KEY जोड़ना आवश्यक है.':'')+' Final MP4 अभी render नहीं हुआ है.';
+   }else{
+    let link='';if(result.voiceover?.signed_url){const a=document.createElement('a');a.href=result.voiceover.signed_url;a.target='_blank';a.rel='noopener';a.textContent='सेव किया गया हिंदी ऑडियो खोलें';a.style.cssText='display:inline-block;margin-top:8px;color:#7dd3fc;font-weight:700';$('#status').replaceChildren(document.createTextNode('Storyboard और voiceover सेव हो गए। Job ID: '+result.job_id+'. Final MP4 अभी render नहीं हुआ है. '),a);}else $('#status').textContent='Storyboard और voiceover सेव हो गए। Job ID: '+result.job_id+'. Final MP4 rendering अभी backend में उपलब्ध नहीं है.';
+   }
+  }else{
+   $('#status').textContent='Backend अनुरोध पूरा नहीं हुआ ('+response.status+'): '+(result.message||result.error||'कृपया पुनः प्रयास करें।');
+  }
+ }catch(e){$('#status').textContent='Backend से कनेक्शन नहीं हो पाया। इंटरनेट जाँचें और फिर प्रयास करें।'}
+ finally{btn.disabled=false;btn.textContent='✨ स्टोरी + हिंदी वॉइसओवर सेव करें'}
+}
 $$('[data-prompt]').forEach(b=>b.addEventListener('click',()=>{$('#prompt').value=b.dataset.prompt;draft();window.scrollTo({top:0,behavior:'smooth'})}));
 $('#duration').addEventListener('change',()=>$('#previewDuration').textContent=formatTime(+$ ('#duration').value));$('#ratio').addEventListener('change',()=>{let r=$('#ratio').value;$('#screen').style.aspectRatio=r.replace(':',' / ');$('#previewType').textContent=$('#style').value+' • '+r});$('#style').addEventListener('change',()=>$('#previewType').textContent=$('#style').value+' • '+$('#ratio').value);
 $('#imageFile').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;if(!f.type.startsWith('image/'))return;const reader=new FileReader();reader.onload=()=>{uploadedImage=reader.result;$('#screen').style.backgroundImage='linear-gradient(0deg,#07111fcc,transparent 70%),url('+JSON.stringify(uploadedImage)+')';$('#screen').style.backgroundSize='cover';$('#screen').style.backgroundPosition='center';$('#status').textContent='तस्वीर प्रीव्यू में लोड हुई। अभी AI motion generation कनेक्ट नहीं है।'};reader.readAsDataURL(f)});
