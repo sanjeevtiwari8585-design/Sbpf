@@ -1,0 +1,715 @@
+{
+  "generated_on": "2026-10-11",
+  "supabase_project_ref": "dxowhzghrdghfzoggorx",
+  "public_schema_table_count": 183,
+  "listed_table_count": 141,
+  "excluded_internal_or_sensitive_tables": 42,
+  "warning": "This is schema metadata only, not a backup. Row counts are approximate snapshots. No table contents, personal data, secrets, KYC, patient records, payment data, or service-role keys are included.",
+  "tables": [
+    {
+      "table": "profiles",
+      "approx_rows": 2,
+      "rls_enabled": true
+    },
+    {
+      "table": "campaigns",
+      "approx_rows": 10,
+      "rls_enabled": true
+    },
+    {
+      "table": "focus_areas",
+      "approx_rows": 12,
+      "rls_enabled": true
+    },
+    {
+      "table": "news",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "videos",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "government_schemes",
+      "approx_rows": 29,
+      "rls_enabled": true
+    },
+    {
+      "table": "government_links",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "memberships",
+      "approx_rows": 1,
+      "rls_enabled": true
+    },
+    {
+      "table": "complaints",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "volunteers",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "donations",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "notifications",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "Members",
+      "approx_rows": 1,
+      "rls_enabled": true
+    },
+    {
+      "table": "members",
+      "approx_rows": 2,
+      "rls_enabled": true
+    },
+    {
+      "table": "admin_users",
+      "approx_rows": 1,
+      "rls_enabled": true
+    },
+    {
+      "table": "member_certificates",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "education_content",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "education_categories",
+      "approx_rows": 31,
+      "rls_enabled": true
+    },
+    {
+      "table": "education_teachers",
+      "approx_rows": 1,
+      "rls_enabled": true
+    },
+    {
+      "table": "education_resources",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "education_enrollments",
+      "approx_rows": 1,
+      "rls_enabled": true
+    },
+    {
+      "table": "education_resource_access",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "work_area_content",
+      "approx_rows": 53,
+      "rls_enabled": true
+    },
+    {
+      "table": "work_area_requests",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "employment_opportunities",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "campaign_categories",
+      "approx_rows": 23,
+      "rls_enabled": true
+    },
+    {
+      "table": "campaign_content",
+      "approx_rows": 123,
+      "rls_enabled": true
+    },
+    {
+      "table": "campaign_member_access",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "samvad_regions",
+      "approx_rows": 24,
+      "rls_enabled": true
+    },
+    {
+      "table": "samvad_officers",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "samvad_complaints",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "samvad_actions",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "samvad_transfer_history",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "samvad_pincodes",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "branding_assets",
+      "approx_rows": 29,
+      "rls_enabled": true
+    },
+    {
+      "table": "media_categories",
+      "approx_rows": 5,
+      "rls_enabled": true
+    },
+    {
+      "table": "media_posts",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "media_journalists",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "seva_categories",
+      "approx_rows": 14,
+      "rls_enabled": true
+    },
+    {
+      "table": "seva_requests",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "seva_assignments",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "seva_request_updates",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "seva_feedback",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "seva_rulebook",
+      "approx_rows": 1,
+      "rls_enabled": true
+    },
+    {
+      "table": "education_colleges",
+      "approx_rows": 1,
+      "rls_enabled": true
+    },
+    {
+      "table": "education_scholarships",
+      "approx_rows": 1,
+      "rls_enabled": true
+    },
+    {
+      "table": "scholarship_applications",
+      "approx_rows": 1,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_modules",
+      "approx_rows": 12,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_app_registry",
+      "approx_rows": 1,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_feature_flags",
+      "approx_rows": 5,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_events",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_integrations",
+      "approx_rows": 5,
+      "rls_enabled": true
+    },
+    {
+      "table": "automation_rules",
+      "approx_rows": 3,
+      "rls_enabled": true
+    },
+    {
+      "table": "automation_runs",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "member_public_links",
+      "approx_rows": 1,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_social_posts",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_social_comments",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_social_reactions",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_social_follows",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_social_notifications",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_government_regions",
+      "approx_rows": 37,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_scheme_categories",
+      "approx_rows": 12,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_scheme_focus_areas",
+      "approx_rows": 43,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_scheme_sources",
+      "approx_rows": 7,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_government_districts",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_scheme_districts",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_datagov_resources",
+      "approx_rows": 3,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_poster_catalog",
+      "approx_rows": 19,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_regional_posters",
+      "approx_rows": 2,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_languages",
+      "approx_rows": 22,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_button_settings",
+      "approx_rows": 9,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_policies",
+      "approx_rows": 1,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_organization_units",
+      "approx_rows": 1,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_committee_members",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "swarnim_book_profiles",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "swarnim_book_posts",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "swarnim_book_comments",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "swarnim_book_likes",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "swarnim_book_follows",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "swarnim_book_channels",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "swarnim_book_monetization_rules",
+      "approx_rows": 3,
+      "rls_enabled": true
+    },
+    {
+      "table": "swarnim_book_creator_earnings",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "swarnim_book_creator_wallet",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_social_profiles",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_social_saves",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_social_views",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_social_stories",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_social_story_views",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_social_reports",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_social_blocks",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_social_message_threads",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_social_message_members",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_social_messages",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_social_hashtags",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_social_post_hashtags",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_social_notification_preferences",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_teams",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_team_members",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_referral_level_rules",
+      "approx_rows": 5,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_member_referral_rewards",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_team_admin_audit",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_brand_settings",
+      "approx_rows": 1,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_work_area_branding",
+      "approx_rows": 12,
+      "rls_enabled": true
+    },
+    {
+      "table": "ems_schools",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "ems_school_users",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "ems_students",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "ems_teachers",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "ems_attendance",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "ems_events",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "ems_school_domains",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "member_pariwar_register",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "member_pariwar_members",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "hms_hospitals",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "hms_hospital_users",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "hms_medical_items",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "hms_beds",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "hms_opd_visits",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "hms_discharge_summaries",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "hms_queue_tokens",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "hms_medication_administrations",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "hms_teleconsultations",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "hms_teleconsultation_messages",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "member_family_education",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "member_family_medical",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "member_family_income_work",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "ems_student_id_cards",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "ems_student_report_cards",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "ems_student_report_card_subjects",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "ems_student_certificates",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "hms_hospital_domains",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "ems_school_facilities",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "hms_hospital_facilities",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "ems_school_portal_settings",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "hms_hospital_portal_settings",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "membership_plans",
+      "approx_rows": 4,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_team_member_activities",
+      "approx_rows": 0,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_footer_config",
+      "approx_rows": 1,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_government_officials",
+      "approx_rows": 29,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_government_directory_sources",
+      "approx_rows": 39,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_government_directory_settings",
+      "approx_rows": 4,
+      "rls_enabled": true
+    },
+    {
+      "table": "sbpf_ai_knowledge",
+      "approx_rows": 12,
+      "rls_enabled": true
+    }
+  ]
+}
