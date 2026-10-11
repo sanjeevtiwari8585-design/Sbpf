@@ -8,9 +8,59 @@
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 55% -10%,#1a3150 0,transparent 45%),var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Noto Sans Devanagari",sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;color:white;font-weight:650;border-radius:11px;padding:11px 15px;background:linear-gradient(110deg,var(--violet),var(--blue))}button:disabled{opacity:.5;cursor:wait}.app{min-height:100vh}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 24px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#07111fee;backdrop-filter:blur(12px);z-index:3}.brand{display:flex;align-items:center;gap:12px;font-size:20px;font-weight:850}.logo{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#f7c45e,#8558ff);color:#07111f;font-size:24px}.brand small{display:block;font-size:11px;color:var(--muted);font-weight:500}.topright{display:flex;gap:10px;align-items:center}.pill{border:1px solid var(--line);border-radius:999px;padding:7px 11px;color:var(--muted);font-size:12px}.layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:22px;padding:22px;max-width:1600px;margin:auto}.side{display:flex;flex-direction:column;gap:6px}.nav{background:transparent;text-align:left;color:#bdcbe0;font-weight:550}.nav.active,.nav:hover{background:#173557;color:white}.sidehint{margin-top:20px;padding:15px;border:1px solid var(--line);border-radius:16px;color:var(--muted);font-size:13px}.main{min-width:0}.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:4px 0 20px}.hero h1{margin:0;font-size:clamp(25px,3vw,38px);letter-spacing:-1px}.gradient{background:linear-gradient(90deg,#f7c65d,#df75ff,#48d8f5);color:transparent;background-clip:text}.hero p{margin:6px 0 0;color:var(--muted)}.grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,.8fr);gap:18px}.panel{background:linear-gradient(145deg,#111f33,#0d192a);border:1px solid var(--line);border-radius:18px;padding:19px;box-shadow:0 12px 40px #0002}.panel h2{font-size:17px;margin:0 0 14px}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:15px}.tab{background:#17273c;border:1px solid #2a3d56;color:#b6c6dd;padding:9px 12px;font-size:13px}.tab.active{background:#183c64;border-color:#3987ff;color:#fff}.field{display:flex;flex-direction:column;gap:7px;margin:12px 0}.field label{font-size:13px;color:#c2cee0;font-weight:650}.field textarea,.field input,.field select{width:100%;color:#f4f7ff;background:#091525;border:1px solid #2b405b;border-radius:11px;padding:12px;outline:none}.field textarea{min-height:130px;resize:vertical}.field textarea:focus,.field input:focus,.field select:focus{border-color:#538eff}.row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}.secondary{background:#1a2a40;border:1px solid #334a67}.outline{background:transparent;border:1px solid #344b67;color:#d8e4f6}.preview{min-height:300px;display:flex;flex-direction:column;gap:12px}.screen{position:relative;overflow:hidden;border:1px solid #344d69;border-radius:14px;aspect-ratio:16/9;background:linear-gradient(140deg,#18375b,#15223b 50%,#6c4d7e);display:flex;align-items:center;justify-content:center;text-align:center;padding:20px}.screen:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 72% 25%,#f4bb7a88,transparent 25%),linear-gradient(0deg,#07111fcc,transparent 65%)}.sceneText{z-index:1;text-shadow:0 3px 14px #000;font-weight:850;font-size:clamp(22px,3vw,36px)}.sceneText small{display:block;font-size:12px;letter-spacing:3px;color:#ffe2a1;margin-bottom:12px}.play{position:absolute;z-index:2;right:13px;bottom:13px;border-radius:50%;width:42px;height:42px;padding:0;background:#ffffff26;border:1px solid #ffffff70}.previewMeta{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}.status{border-radius:10px;padding:10px 12px;background:#0a1728;color:#a9bdd8;border:1px solid var(--line);font-size:13px}.voicebox{border:1px solid var(--line);background:#0a1728;border-radius:13px;padding:13px;margin-top:10px}.checkline{display:flex;align-items:center;gap:9px;color:#d4dfef;font-size:13px;margin:10px 0}.checkline input{accent-color:#7c5cff;width:16px;height:16px}.ideas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.idea{background:#122239;border:1px solid #293e59;text-align:left;padding:13px;border-radius:13px}.idea b{display:block;margin:7px 0 2px}.idea span{font-size:12px;color:var(--muted)}.bottom{margin-top:18px}.notice{font-size:12px;color:var(--muted);margin-top:12px}.upload{display:block;border:1px dashed #3b5574;border-radius:12px;padding:12px;text-align:center;color:#b5c8e2;background:#0a1728}.upload input{max-width:100%;margin-top:8px}.footer{text-align:center;color:#6f849f;font-size:12px;padding:24px}
 @media(max-width:1000px){.layout{grid-template-columns:1fr;padding:14px}.side{display:grid;grid-template-columns:repeat(3,1fr)}.sidehint{display:none}.grid{grid-template-columns:1fr}.top{padding:13px 15px}.ideas{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.top{align-items:flex-start}.brand{font-size:16px}.brand small{font-size:10px}.topright .pill{display:none}.layout{padding:10px;gap:12px}.side{grid-template-columns:repeat(2,1fr);gap:5px}.nav{padding:9px;font-size:12px}.hero{display:block}.hero h1{font-size:27px}.row,.row2{grid-template-columns:1fr}.panel{padding:13px}.ideas{grid-template-columns:repeat(2,minmax(0,1fr))}.actions button{flex:1}.preview{min-height:0}}
+
+.hidden{display:none!important}
+.app.hidden{display:none!important}
+.auth-gate{min-height:100vh;display:grid;place-items:center;padding:20px;background:radial-gradient(ellipse at 50% -10%,#1a3150 0,transparent 48%),#07111f}
+.auth-card{width:min(100%,440px);padding:26px;background:linear-gradient(145deg,#111f33,#0d192a);border:1px solid #263a55;border-radius:22px;box-shadow:0 22px 70px #0005}
+.auth-brand{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px}
+.auth-mark{display:grid;place-items:center;width:48px;height:48px;border-radius:15px;background:linear-gradient(135deg,#f7c45e,#8558ff);color:#07111f;font-size:27px;font-weight:900}
+.auth-brand-name{font-size:23px;font-weight:850;letter-spacing:-.5px}
+.auth-subtitle{text-align:center;color:#9eafc7;font-size:13px;margin:8px 0 22px}
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.auth-tabs button{background:#17273c;border:1px solid #2a3d56;color:#b6c6dd}
+.auth-tabs button.active{background:#183c64;border-color:#3987ff;color:#fff}
+.auth-form label{display:block;margin:12px 0 6px;color:#c2cee0;font-size:13px;font-weight:650}
+.auth-form input{width:100%;color:#f4f7ff;background:#091525;border:1px solid #2b405b;border-radius:11px;padding:12px;outline:none}
+.auth-form input:focus{border-color:#538eff}
+.auth-form button{width:100%;margin-top:18px}
+.auth-message{margin-top:12px;padding:11px 12px;border:1px solid #263a55;border-radius:11px;background:#0a1728;color:#b8c9df;font-size:13px;overflow-wrap:anywhere}
+.auth-message.error{border-color:#8a3945;color:#ffd3d8}
+.auth-foot{text-align:center;color:#7186a1;font-size:11px;margin-top:16px}
+body:not(.is-authenticated) .app{display:none!important}
+body.is-authenticated .auth-gate{display:none!important}
+body.is-authenticated .app{display:block}
+@media(max-width:480px){.auth-card{padding:20px}.auth-brand-name{font-size:21px}}
+
 </style>
 </head>
-<body><div class="app">
+<body>
+<div id="auth" class="auth-gate">
+  <section class="auth-card" aria-labelledby="authHeading">
+    <div class="auth-brand"><div class="auth-mark" aria-hidden="true">✦</div><div class="auth-brand-name">SwarnimAI</div></div>
+    <p class="auth-subtitle" id="authHeading">SBPF Seva का हिस्सा · सुरक्षित सदस्य प्रवेश</p>
+    <div class="auth-tabs" role="tablist" aria-label="अकाउंट विकल्प">
+      <button type="button" id="showSignup" class="active" role="tab" aria-selected="true">अकाउंट बनाएँ</button>
+      <button type="button" id="showLogin" role="tab" aria-selected="false">लॉगिन करें</button>
+    </div>
+    <form id="signupForm" class="auth-form">
+      <label for="signupName">पूरा नाम</label><input id="signupName" name="name" autocomplete="name" required maxlength="120">
+      <label for="signupMobile">मोबाइल नंबर</label><input id="signupMobile" name="mobile" type="tel" inputmode="tel" autocomplete="tel" required maxlength="20" placeholder="मोबाइल नंबर">
+      <label for="signupEmail">ईमेल</label><input id="signupEmail" name="email" type="email" autocomplete="email" required maxlength="254">
+      <label for="signupPassword">पासवर्ड</label><input id="signupPassword" name="password" type="password" autocomplete="new-password" required minlength="6">
+      <label for="signupConfirm">पासवर्ड की पुष्टि</label><input id="signupConfirm" name="confirmPassword" type="password" autocomplete="new-password" required minlength="6">
+      <button id="signupSubmit" type="submit">अकाउंट बनाएँ</button>
+    </form>
+    <form id="loginForm" class="auth-form hidden">
+      <label for="loginEmail">ईमेल</label><input id="loginEmail" name="email" type="email" autocomplete="email" required maxlength="254">
+      <label for="loginPassword">पासवर्ड</label><input id="loginPassword" name="password" type="password" autocomplete="current-password" required>
+      <button id="loginSubmit" type="submit">लॉगिन करें</button>
+    </form>
+    <div id="authMessage" class="auth-message" role="status" aria-live="polite">पहले अकाउंट बनाएँ या अपने मौजूदा SBPF अकाउंट से लॉगिन करें।</div>
+    <p class="auth-foot">आपका अकाउंट मौजूदा SBPF Seva Supabase Auth के साथ उपयोग होगा।</p>
+  </section>
+</div>
+<div id="app" class="app hidden">
 <header class="top"><div class="brand"><div class="logo">✦</div><div>Swarnim AI Studio<small>कल्पना से वीडियो तक • Hindi-first creator studio</small></div></div><div class="topright"><span class="pill">● Prototype</span><span class="pill">हिंदी / English</span></div></header>
 <div class="layout">
 <aside class="side" aria-label="मुख्य मेन्यू">
@@ -49,7 +99,20 @@
 <section class="panel bottom"><h2>🗂️ मेरी हाल की रचनाएँ</h2><div id="history" class="status">अभी कोई प्रोजेक्ट नहीं। प्रीव्यू तैयार करने पर यह सूची अपडेट होगी।</div></section>
 </main></div><footer class="footer">Swarnim AI Studio • Prototype v0.1 • हिंदी-प्रथम • अभी वास्तविक AI वीडियो API से कनेक्ट नहीं है</footer></div>
 <script>
-const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
+const $=s=>document.querySelector(s);const $=s=>[...document.querySelectorAll(s)];
+
+const SBPF_SUPABASE_URL='https://dxowhzghrdghfzoggorx.supabase.co';
+const SBPF_PUBLISHABLE_KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
+let sbpfToken=localStorage.getItem('sbpf_access_token')||'';
+function authMessage(message,isError=false){const el=$('#authMessage');el.textContent=message;el.classList.toggle('error',isError)}
+function authTab(tab){const signup=tab==='signup';$('#signupForm').classList.toggle('hidden',!signup);$('#loginForm').classList.toggle('hidden',signup);$('#showSignup').classList.toggle('active',signup);$('#showLogin').classList.toggle('active',!signup);$('#showSignup').setAttribute('aria-selected',String(signup));$('#showLogin').setAttribute('aria-selected',String(!signup));authMessage(signup?'अपना नाम, मोबाइल, ईमेल और पासवर्ड भरें।':'अपने मौजूदा SBPF ईमेल और पासवर्ड से लॉगिन करें।')}
+async function authApi(path,options={},accessToken=''){const headers={apikey:SBPF_PUBLISHABLE_KEY,'Content-Type':'application/json',...(options.headers||{})};if(accessToken)headers.Authorization='Bearer '+accessToken;const response=await fetch(SBPF_SUPABASE_URL+path,{...options,headers});let data=null;try{data=await response.json()}catch{}if(!response.ok)throw Error(data?.msg||data?.message||data?.error_description||data?.error||'अनुरोध पूरा नहीं हुआ।');return data}
+async function enterStudio(accessToken,user=null){sbpfToken=accessToken;localStorage.setItem('sbpf_access_token',accessToken);try{const current=user||await authApi('/auth/v1/user',{},accessToken);if(!current?.id)throw Error('अकाउंट सत्यापित नहीं हो पाया।');let members=await authApi('/rest/v1/members?select=id,member_id,user_id&user_id=eq.'+encodeURIComponent(current.id)+'&limit=1',{},accessToken);if(!Array.isArray(members)||!members.length){const meta=current.user_metadata||{};if(!meta.full_name||!meta.mobile)throw Error('इस लॉगिन से SBPF सदस्य रिकॉर्ड नहीं मिला। कृपया सही SBPF अकाउंट से लॉगिन करें।');await authApi('/rest/v1/rpc/register_my_member',{method:'POST',body:JSON.stringify({p_full_name:meta.full_name,p_mobile:meta.mobile,p_address:'',p_district:'',p_state:'Uttar Pradesh',p_referral_code:null})},accessToken);members=await authApi('/rest/v1/members?select=id,member_id,user_id&user_id=eq.'+encodeURIComponent(current.id)+'&limit=1',{},accessToken);if(!Array.isArray(members)||!members.length)throw Error('अकाउंट बन गया है, लेकिन SBPF सदस्य रिकॉर्ड अभी तैयार नहीं हुआ। कृपया लॉगिन दोबारा करें या SBPF एडमिन से संपर्क करें।')}$('#auth').classList.add('hidden');$('#app').classList.remove('hidden');document.body.classList.add('is-authenticated');authMessage('लॉगिन सफल।');if(typeof branding==='function')branding();}catch(error){localStorage.removeItem('sbpf_access_token');sbpfToken='';authMessage(error.message||'लॉगिन पूरा नहीं हुआ।',true);throw error}}
+$('#showSignup').addEventListener('click',()=>authTab('signup'));$('#showLogin').addEventListener('click',()=>authTab('login'));
+$('#signupForm').addEventListener('submit',async event=>{event.preventDefault();const name=$('#signupName').value.trim(),mobile=$('#signupMobile').value.trim(),email=$('#signupEmail').value.trim(),password=$('#signupPassword').value,confirm=$('#signupConfirm').value; if(password!==confirm){authMessage('दोनों पासवर्ड एक जैसे होने चाहिए।',true);return}if(password.length<6){authMessage('पासवर्ड कम-से-कम 6 अक्षर का रखें।',true);return}const button=$('#signupSubmit');button.disabled=true;button.textContent='अकाउंट बनाया जा रहा है…';try{const result=await authApi('/auth/v1/signup',{method:'POST',body:JSON.stringify({email,password,data:{full_name:name,mobile}})});if(result?.session?.access_token){await enterStudio(result.session.access_token,result.user);return}authMessage('अकाउंट बनाने का अनुरोध सफल हुआ। यदि ईमेल पुष्टि माँगी जाए, तो अपने ईमेल में पुष्टि करें और फिर लॉगिन करें।');authTab('login');$('#loginEmail').value=email;}catch(error){authMessage(error.message||'अकाउंट नहीं बन पाया। ईमेल और पासवर्ड जाँचें।',true)}finally{button.disabled=false;button.textContent='अकाउंट बनाएँ'}});
+$('#loginForm').addEventListener('submit',async event=>{event.preventDefault();const button=$('#loginSubmit');button.disabled=true;button.textContent='लॉगिन हो रहा है…';try{const result=await authApi('/auth/v1/token?grant_type=password',{method:'POST',body:JSON.stringify({email:$('#loginEmail').value.trim(),password:$('#loginPassword').value})});await enterStudio(result.access_token,result.user)}catch(error){authMessage(error.message||'लॉगिन नहीं हुआ। ईमेल और पासवर्ड जाँचें।',true)}finally{button.disabled=false;button.textContent='लॉगिन करें'}});
+if(sbpfToken){enterStudio(sbpfToken).catch(()=>{});}
+
 let mode='text',uploadedImage=null,history=[];
 const titles={text:'🎬 अपना वीडियो बनाएं',image:'🖼️ तस्वीर से वीडियो वर्कफ़्लो',avatar:'🧑‍💼 AI अवतार वीडियो वर्कफ़्लो',animation:'✨ एनिमेशन वीडियो वर्कफ़्लो',templates:'▦ वीडियो टेम्पलेट चुनें',library:'📁 मेरी रचनाएँ'};
 function setMode(m){mode=m;$$('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));$('#modeTitle').textContent=titles[m]||titles.text;$('#uploadWrap').hidden=m!=='image';if(m==='avatar')$('#prompt').placeholder='AI प्रस्तुतकर्ता क्या बोले?';else if(m==='image')$('#prompt').placeholder='अपलोड की गई तस्वीर में क्या गति/मूड हो?';else $('#prompt').placeholder='वीडियो का विषय हिंदी में लिखें…';if(m==='templates')$('#status').textContent='नीचे दिए गए आइडिया से एक टेम्पलेट चुनें।';if(m==='library')$('#status').textContent='आपके इस ब्राउज़र सत्र में बने प्रोजेक्ट नीचे दिखेंगे।'}
