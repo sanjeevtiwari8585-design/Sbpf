@@ -76,9 +76,21 @@ jobs:
           body=$(printf '## SBPF Seva health-monitor alert\n\nOne or more read-only availability checks failed. This monitor does not modify production systems or attempt risky repairs.\n\nRun: %s/actions/runs/%s\n\nReport (UTC):\n%s\n\nNext step: inspect the failing endpoint and logs. No database, RLS, DNS, payment, secret, or member-data changes were made.\n' "${{ github.server_url }}/${{ github.repository }}" "${{ github.run_id }}" "$REPORT")
           existing=$(gh issue list --repo "$GH_REPO" --state open --search 'SBPF Health Production check failed in:title' --limit 1 --json number --jq '.[0].number // empty')
           if [ -n "$existing" ]; then
-            gh issue comment "$existing" --repo "$GH_REPO" --body "$body"
+            echo "Health alert #$existing is already open; leaving it open without hourly comment spam."
           else
             gh issue create --repo "$GH_REPO" --title "$title" --body "$body"
+          fi
+
+      - name: Close resolved health alert
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          existing=$(gh issue list --repo "$GH_REPO" --state open --search 'SBPF Health Production check failed in:title' --limit 1 --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            gh issue close "$existing" --repo "$GH_REPO" --reason completed --comment "All configured health checks passed on this run. The alert was automatically closed; if the problem returns, a new alert will be opened."
           fi
 
       - name: Record successful health check
