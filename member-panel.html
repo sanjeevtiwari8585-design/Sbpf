@@ -55,10 +55,10 @@ main{padding:14px}.hero{background:linear-gradient(135deg,#7d1020,#a71f31);color
   <h1>सदस्य प्रवेश</h1>
   <p style="text-align:center;color:#6b7280;font-size:13px">स्वर्णिम भारत परिवार फाउंडेशन</p>
   <div id="authMsg"></div>
-  <label>ईमेल</label><input id="email" type="email" autocomplete="email">
+  <label>Member ID</label><input id="email" type="text" autocomplete="username" placeholder="अपनी SBPF Member ID डालें" autocapitalize="characters">
   <label>पासवर्ड</label><input id="password" type="password" autocomplete="current-password">
   <button id="loginBtn" class="primary" type="button">प्रवेश करें</button>
-  <div class="notice" style="margin-top:12px">नए सदस्य का खाता केवल अधिकृत SBPF एडमिन बनाएगा। खाता मिलने के बाद यहाँ ईमेल और पासवर्ड से प्रवेश करें। यदि आपके पास लॉगिन नहीं है, तो अपने अधिकृत एडमिन से संपर्क करें।</div>
+  <div class="notice" style="margin-top:12px">खाता मिलने के बाद अपनी SBPF Member ID और वही पासवर्ड इस्तेमाल करें। नया सदस्य खाता अधिकृत SBPF एडमिन बनाता है। यदि आपके पास लॉगिन नहीं है, तो अपने अधिकृत एडमिन से संपर्क करें।</div>
  </div>
 </div>
 <div id="app" class="app hidden">
@@ -125,7 +125,7 @@ async function api(path,opts={}){const h={apikey:KEY,...(opts.headers||{})};if(t
 async function rpc(name,body={}){return api('/rest/v1/rpc/'+name,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})}
 async function branding(){try{const r=await api('/rest/v1/branding_assets?asset_key=eq.sbpf-logo&is_active=eq.true&select=asset_content&limit=1');const svg=r?.[0]?.asset_content;if(svg){const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);$('logo').src=src;$('authLogo').src=src}}catch{}}
 function msg(t,c=''){ $('authMsg').innerHTML='<div class="notice '+c+'">'+esc(t)+'</div>'}
-async function login(){const b=$('loginBtn');b.disabled=true;b.textContent='प्रवेश हो रहा है...';try{const j=await api('/auth/v1/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:$('email').value.trim(),password:$('password').value})});token=j.access_token;localStorage.setItem('sbpf_access_token',token);await load()}catch(e){msg('Login में समस्या: '+e.message,'error')}finally{b.disabled=false;b.textContent='प्रवेश करें'}}
+async function login(){const b=$('loginBtn');b.disabled=true;b.textContent='प्रवेश हो रहा है...';try{const member_id=$('email').value.trim().toUpperCase(),password=$('password').value;if(!member_id||!password)throw Error('Member ID और पासवर्ड दोनों भरें।');const j=await api('/functions/v1/member-id-login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({member_id,password})});if(!j.access_token)throw Error(j.error||'Member ID या पासवर्ड सही नहीं है।');token=j.access_token;localStorage.setItem('sbpf_access_token',token);if(j.refresh_token)localStorage.setItem('sbpf_refresh_token',j.refresh_token);await load()}catch(e){msg('Login में समस्या: '+e.message,'error')}finally{b.disabled=false;b.textContent='प्रवेश करें'}}
 async function load(){try{
  const currentUser=await api('/auth/v1/user');
  if(!currentUser?.id)throw Error('लॉगिन सत्यापित नहीं हुआ। कृपया दोबारा प्रवेश करें।');
@@ -146,6 +146,7 @@ async function load(){try{
  const d=await rpc('get_my_member_dashboard');dashboard=Array.isArray(d)?d[0]:d;
  $('auth').classList.add('hidden');$('app').classList.remove('hidden');render();
  await Promise.all([loadFocusAreas(),loadCampaigns()]);
+ const returnTo=new URLSearchParams(location.search).get('return_to');if(['swarnim-ai-studio.html','swarnim-creator.html'].includes(returnTo)){location.replace(returnTo);return;}
  }catch(e){token='';localStorage.removeItem('sbpf_access_token');msg(e.message,'error')}}
 function render(){ $('name').textContent=profile.full_name||'सदस्य';$('memberId').textContent=profile.member_id||'—';$('status').textContent=profile.status||profile.membership_status||'Pending';$('validity').textContent=profile.membership_end_date?'वैधता: '+profile.membership_end_date:'';branding(); if(dashboard?.profile_photo_url)$('photo').src=dashboard.profile_photo_url;const reminder=$('profileReminder');if(reminder)reminder.classList.toggle('hidden',profile.profile_completed===true); }
 function dismissProfileReminder(){$('profileReminder')?.classList.add('hidden')}
