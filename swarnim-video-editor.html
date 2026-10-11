@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#781626">
+<title>Swarnim Video Editor | SBPF</title>
+<meta name="description" content="Swarnim Video Editor — मुफ़्त browser-based video editing, trimming, compression, filters और export.">
+<style>
+:root{--wine:#781626;--wine2:#a52c39;--gold:#d7b34b;--bg:#f6f1eb;--ink:#261f24;--muted:#766970;--line:#e6d9cf;--card:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+header{background:linear-gradient(115deg,#64101f,#9b2436 65%,#c49a35);color:#fff;padding:18px max(16px,calc((100% - 1200px)/2));display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+h1{font-size:clamp(22px,4vw,30px);margin:0}header p{margin:2px 0 0;color:#ffebc1;font-size:13px}a{color:inherit}header nav{display:flex;gap:14px;flex-wrap:wrap}header nav a{font-weight:700;text-decoration:none}
+main{max-width:1200px;margin:24px auto;padding:0 14px 40px}.hero,.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 8px 28px #4b172008}
+.hero h2{color:var(--wine);margin:0 0 6px}.muted{color:var(--muted);font-size:14px}.layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);gap:16px}
+.preview{width:100%;max-height:470px;background:#171717;border-radius:12px;display:block;aspect-ratio:16/9;object-fit:contain}
+.drop{border:2px dashed #d7b8ae;border-radius:14px;padding:22px;text-align:center;background:#fffaf5}.drop input{max-width:100%}
+.controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{min-width:0}label{display:block;font-weight:750;font-size:13px;margin:0 0 6px}input,select{width:100%;padding:11px;border:1px solid #d9c9bd;border-radius:9px;background:white;font:inherit;min-width:0}input[type=range]{padding:0;accent-color:var(--wine)}input[type=checkbox]{width:auto;transform:scale(1.1)}
+.btn{border:0;background:var(--wine);color:#fff;padding:11px 15px;border-radius:10px;font:inherit;font-weight:750;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:7px}.btn.secondary{background:#fff;color:var(--wine);border:1px solid #d9c9bd}.btn:disabled{opacity:.5;cursor:not-allowed}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.badge{display:inline-block;background:#f8edda;color:#74460b;padding:4px 9px;border-radius:99px;font-size:12px;font-weight:800}.status{background:#f7f2ed;border-radius:10px;padding:12px;margin-top:12px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px}.status.good{background:#edf8ef;color:#1e6634}.status.error{background:#fff0f0;color:#8c1e2a}
+.progress{height:8px;background:#eee3dc;border-radius:99px;overflow:hidden;margin-top:10px}.progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--wine),var(--gold));transition:width .2s}
+hr{border:0;border-top:1px solid var(--line);margin:18px 0}.saved{display:grid;gap:8px}.saved button{text-align:left;justify-content:flex-start}.small{font-size:12px;color:var(--muted)}.tool-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.tool{padding:12px;border:1px solid var(--line);border-radius:12px;background:#fffaf6}.tool strong{display:block;color:var(--wine)}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:18px}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.tool-grid{grid-template-columns:1fr}.controls{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:420px){.controls{grid-template-columns:1fr}.hero,.panel{padding:15px}}
+</style>
+<style>body{visibility:hidden}</style>
+</head>
+<body>
+<header><div><h1>✂ Swarnim Video Editor</h1><p>SBPF • मुफ़्त एडिटिंग वर्कस्पेस</p></div><nav><a href="swarnim-creator.html">← Swarnim Creator</a><a href="swarnim-ai-studio.html">AI Studio</a><a href="member-panel.html">Member Panel</a></nav></header>
+<main>
+<section class="hero">
+<span class="badge">FREE • BROWSER-BASED</span>
+<h2>अपना वीडियो एडिट करें — बिना पेड सॉफ़्टवेयर के</h2>
+<p class="muted">वीडियो आपके डिवाइस पर प्रोसेस होता है। Supabase में केवल प्रोजेक्ट की सेटिंग/नाम सेव होते हैं; आपकी मूल वीडियो फ़ाइल अपने-आप अपलोड नहीं होती। पहली बार एडिटर इंजन लोड करने के लिए इंटरनेट चाहिए।</p>
+<div class="tool-grid">
+<div class="tool"><strong>✂ Trim / Cut</strong><span class="small">शुरुआत और अंत सेट करें</span></div>
+<div class="tool"><strong>⚡ Compress / Resize</strong><span class="small">720p, 1080p और क्वालिटी</span></div>
+<div class="tool"><strong>🎨 Filters / Audio</strong><span class="small">ब्राइटनेस, कॉन्ट्रास्ट, सैचुरेशन, म्यूट</span></div>
+</div>
+</section>
+<div class="layout">
+<div>
+<section class="panel">
+<div class="drop"><label for="sourceFile">वीडियो फ़ाइल चुनें</label><input id="sourceFile" type="file" accept="video/*,audio/*"><p class="small">MP4, MOV, WebM आदि। बड़े वीडियो पर मोबाइल में अधिक RAM/समय लग सकता है।</p></div>
+<video id="preview" class="preview" controls playsinline style="margin-top:14px;display:none"></video>
+<div id="sourceMeta" class="muted" style="margin-top:8px">अभी कोई वीडियो नहीं चुना गया।</div>
+<div class="actions"><button id="loadEngine" class="btn" type="button">⚙ एडिटर इंजन लोड करें</button><button id="clearFile" class="btn secondary" type="button">फ़ाइल हटाएँ</button></div>
+<div class="progress"><div id="progressBar"></div></div>
+<div id="status" class="status" role="status" aria-live="polite">पहले वीडियो चुनें, फिर इंजन लोड करें।</div>
+</section>
+<section class="panel">
+<h2 style="margin-top:0;color:var(--wine)">Export Settings</h2>
+<div class="controls">
+<div class="field"><label for="projectName">प्रोजेक्ट नाम</label><input id="projectName" maxlength="100" value="My Swarnim Video"></div>
+<div class="field"><label for="format">आउटपुट फ़ॉर्मेट</label><select id="format"><option value="mp4">MP4 (H.264)</option><option value="webm">WebM (VP9)</option><option value="mp3">केवल ऑडियो MP3</option></select></div>
+<div class="field"><label for="start">शुरुआत (सेकंड)</label><input id="start" type="number" min="0" step="0.1" value="0"></div>
+<div class="field"><label for="end">अंत (सेकंड)</label><input id="end" type="number" min="0" step="0.1" placeholder="पूरी अवधि"></div>
+<div class="field"><label for="resolution">वीडियो आकार</label><select id="resolution"><option value="original">Original</option><option value="1080">1080p</option><option value="720" selected>720p (हल्का)</option><option value="480">480p (छोटी फ़ाइल)</option><option value="360">360p</option></select></div>
+<div class="field"><label for="quality">क्वालिटी / फ़ाइल साइज़</label><select id="quality"><option value="high">High quality</option><option value="balanced" selected>Balanced</option><option value="small">Small file</option></select></div>
+<div class="field"><label for="brightness">Brightness <span id="brightValue">0</span></label><input id="brightness" type="range" min="-0.3" max="0.3" step="0.05" value="0"></div>
+<div class="field"><label for="contrast">Contrast <span id="contrastValue">1</span></label><input id="contrast" type="range" min="0.7" max="1.5" step="0.1" value="1"></div>
+<div class="field"><label for="saturation">Saturation <span id="satValue">1</span></label><input id="saturation" type="range" min="0" max="2" step="0.1" value="1"></div>
+<div class="field"><label for="speed">Playback speed</label><select id="speed"><option value="0.5">0.5× slow</option><option value="0.75">0.75×</option><option value="1" selected>1× normal</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2× fast</option></select></div>
+<div class="field"><label><input id="mute" type="checkbox"> ऑडियो म्यूट करें</label><label><input id="normalize" type="checkbox"> ऑडियो normalize करें</label></div>
+<div class="field"><label for="volume">Volume</label><input id="volume" type="range" min="0" max="2" step="0.1" value="1"></div>
+</div>
+<div class="actions"><button id="export" class="btn" type="button" disabled>▶ वीडियो प्रोसेस और डाउनलोड</button><button id="saveProject" class="btn secondary" type="button">☁ Supabase में प्रोजेक्ट सेव</button><button id="resetSettings" class="btn secondary" type="button">सेटिंग रीसेट</button></div>
+<p class="small">MP4 export में H.264/AAC encoding होगी। फ़ाइल के आकार और मोबाइल की क्षमता के अनुसार प्रोसेसिंग धीमी हो सकती है। पेज खुला रखें और फ़ोन लॉक न होने दें।</p>
+</section>
+</div>
+<aside>
+<section class="panel">
+<h2 style="margin-top:0;color:var(--wine)">My Projects</h2>
+<p class="muted">आपके Supabase अकाउंट में सेव किए गए प्रोजेक्ट सेटिंग्स। वीडियो फ़ाइलें निजी रूप से डिवाइस पर रहती हैं, जब तक आप अलग से अपलोड न करें।</p>
+<div class="actions"><button id="refreshProjects" class="btn secondary" type="button">सेव प्रोजेक्ट देखें</button></div>
+<div id="projects" class="saved" style="margin-top:12px"><span class="small">प्रोजेक्ट सूची लोड नहीं हुई।</span></div>
+<hr>
+<h3 style="color:var(--wine)">क्या-क्या कर सकते हैं?</h3>
+<ul class="muted" style="padding-left:20px">
+<li>वीडियो काटना (trim)</li><li>MP4 / WebM / MP3 में export</li><li>Resolution और quality बदलना</li><li>Brightness, contrast, saturation</li><li>Speed बदलना और audio mute/volume</li><li>अकाउंट के साथ project settings सेव</li>
+</ul>
+<div class="status">सीमा: यह पहला मुफ़्त संस्करण है। Multi-track timeline, transitions, captions, stickers, AI auto-subtitles और cloud rendering बाद के चरणों में जोड़े जा सकते हैं।</div>
+</section>
+</aside>
+</div>
+</main>
+<footer>Swarnim Bharat Parivar Foundation • Swarnim Video Editor</footer>
+<script type="module">
+const BASE='https://dxowhzghrdghfzoggorx.supabase.co';
+const KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
+const $=id=>document.getElementById(id);
+let token=localStorage.getItem('sbpf_access_token'), user=null, ffmpeg=null, engineReady=false, inputFile=null, previewUrl=null, outputUrl=null;
+const login='member-panel.html?return_to=swarnim-video-editor.html';
+const headers=()=>({'apikey':KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'});
+const setStatus=(m,type='')=>{$('status').textContent=m;$('status').className='status '+type;};
+const setProgress=n=>{$('progressBar').style.width=Math.max(0,Math.min(100,n))+'%';};
+async function authCheck(){
+ if(!token){location.replace(login);return;}
+ try{const r=await fetch(BASE+'/auth/v1/user',{headers:headers()});if(!r.ok)throw Error();user=await r.json();document.body.style.visibility='visible';await refreshProjects();}
+ catch{localStorage.removeItem('sbpf_access_token');localStorage.removeItem('sbpf_refresh_token');location.replace(login);}
+}
+function settings(){return {format:$('format').value,start:Number($('start').value||0),end:$('end').value===''?null:Number($('end').value),resolution:$('resolution').value,quality:$('quality').value,brightness:Number($('brightness').value),contrast:Number($('contrast').value),saturation:Number($('saturation').value),speed:Number($('speed').value),mute:$('mute').checked,normalize:$('normalize').checked,volume:Number($('volume').value)};}
+async function refreshProjects(){
+ const box=$('projects');box.textContent='लोड हो रहा है…';
+ try{const r=await fetch(BASE+'/rest/v1/swarnim_video_editor_projects?select=id,project_name,settings,source_file_name,updated_at&order=updated_at.desc&limit=20',{headers:headers()});if(!r.ok)throw Error('प्रोजेक्ट सूची लोड नहीं हुई ('+r.status+')');const rows=await r.json();box.replaceChildren();if(!rows.length){box.textContent='अभी कोई सेव प्रोजेक्ट नहीं है।';return;}for(const p of rows){const b=document.createElement('button');b.className='btn secondary';b.type='button';b.textContent=p.project_name+' · '+new Date(p.updated_at).toLocaleDateString('hi-IN');b.addEventListener('click',()=>{ $('projectName').value=p.project_name;const s=p.settings||{};for(const k of ['format','start','end','resolution','quality','brightness','contrast','saturation','speed','volume'])if(s[k]!==undefined&&s[k]!==null)$(k).value=s[k];for(const k of ['mute','normalize'])if(s[k]!==undefined)$(k).checked=s[k];updateRanges();setStatus('प्रोजेक्ट सेटिंग्स लोड हो गईं। मूल वीडियो फ़ाइल फिर से चुनें।','good');});box.appendChild(b);}}
+ catch(e){box.textContent=e.message;}
+}
+function updateRanges(){$('brightValue').textContent=$('brightness').value;$('contrastValue').textContent=$('contrast').value;$('satValue').textContent=$('saturation').value;}
+for(const id of ['brightness','contrast','saturation'])$(id).addEventListener('input',updateRanges);
+$('sourceFile').addEventListener('change',()=>{const f=$('sourceFile').files?.[0];if(!f)return;inputFile=f;if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=URL.createObjectURL(f);$('preview').src=previewUrl;$('preview').style.display='block';$('sourceMeta').textContent=f.name+' · '+(f.size/1024/1024).toFixed(1)+' MB';$('start').value=0;$('end').value='';$('export').disabled=!engineReady;setStatus('फ़ाइल चुनी गई। एडिटर इंजन लोड करें या export करें।');});
+$('clearFile').addEventListener('click',()=>{inputFile=null;$('sourceFile').value='';$('preview').removeAttribute('src');$('preview').style.display='none';$('sourceMeta').textContent='अभी कोई वीडियो नहीं चुना गया।';$('export').disabled=true;setStatus('फ़ाइल हटाई गई।');});
+$('loadEngine').addEventListener('click',async()=>{if(engineReady){setStatus('एडिटर इंजन पहले से तैयार है।','good');return;}const btn=$('loadEngine');btn.disabled=true;setStatus('FFmpeg इंजन डाउनलोड/लोड हो रहा है। पहली बार इसमें समय लग सकता है…');try{
+ const [{FFmpeg},{fetchFile,toBlobURL}]=await Promise.all([import('https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/esm/index.js'),import('https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/esm/index.js')]);
+ ffmpeg=new FFmpeg();ffmpeg.on('log',({message})=>{if(message&&/frame=|time=|Error/i.test(message))setStatus('प्रोसेसिंग: '+message.slice(-220));});ffmpeg.on('progress',({progress})=>setProgress(progress*100));
+ const core='https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/esm';
+ await ffmpeg.load({coreURL:await toBlobURL(core+'/ffmpeg-core.js','text/javascript'),wasmURL:await toBlobURL(core+'/ffmpeg-core.wasm','application/wasm')});
+ window.__swarnimFetchFile=fetchFile;engineReady=true;btn.textContent='✓ इंजन तैयार';$('export').disabled=!inputFile;setStatus('एडिटर इंजन तैयार है। अब सेटिंग चुनकर export करें।','good');
+ }catch(e){setStatus('इंजन लोड नहीं हुआ: '+(e?.message||e)+ '\nइंटरनेट जाँचें और फिर कोशिश करें।','error');btn.disabled=false;}});
+$('export').addEventListener('click',async()=>{if(!engineReady||!inputFile){setStatus('पहले वीडियो चुनें और एडिटर इंजन लोड करें।','error');return;}const s=settings(),duration=$('preview').duration;const start=Math.max(0,s.start||0),end=s.end===null?duration:s.end;if(!Number.isFinite(duration)||start>=end||end>duration+0.1){setStatus('Trim समय सही नहीं है। अंत, शुरुआत से अधिक और वीडियो की अवधि के भीतर होना चाहिए।','error');return;}const btn=$('export');btn.disabled=true;setProgress(0);try{
+ const ext=(inputFile.name.split('.').pop()||'mp4').replace(/[^a-z0-9]/gi,'').toLowerCase()||'mp4';const inName='input.'+ext;const outName='swarnim_output.'+s.format;await ffmpeg.writeFile(inName,await window.__swarnimFetchFile(inputFile));
+ const args=['-ss',String(start),'-i',inName,'-t',String(end-start)];
+ if(s.format==='mp3'){args.push('-vn','-codec:a','libmp3lame','-q:a',s.quality==='high'?'2':s.quality==='small'?'7':'4');}
+ else{
+  const filters=[];if(s.resolution!=='original'){const h=Number(s.resolution);filters.push('scale=-2:'+h+':flags=lanczos');}
+  if(s.brightness!==0||s.contrast!==1||s.saturation!==1)filters.push('eq=brightness='+s.brightness+':contrast='+s.contrast+':saturation='+s.saturation);
+  if(s.speed!==1)filters.push('setpts='+String(1/s.speed)+'*PTS');
+  if(filters.length)args.push('-vf',filters.join(','));
+  if(s.mute)args.push('-an');else{if(s.volume!==1)args.push('-af','volume='+s.volume);if(s.normalize)args.push('-af','loudnorm');if(s.speed!==1)args.push('-filter:a','atempo='+s.speed);}
+  if(s.format==='mp4'){args.push('-c:v','libx264','-preset','ultrafast','-pix_fmt','yuv420p','-crf',s.quality==='high'?'20':s.quality==='small'?'30':'25');if(!s.mute)args.push('-c:a','aac','-b:a',s.quality==='high'?'192k':'128k','-movflags','+faststart');}
+  else{args.push('-c:v','libvpx-vp9','-crf',s.quality==='high'?'30':s.quality==='small'?'42':'36','-b:v','0');if(!s.mute)args.push('-c:a','libopus','-b:a','128k');}
+ }
+ args.push(outName);setStatus('वीडियो प्रोसेस हो रहा है… इस दौरान टैब बंद न करें।');await ffmpeg.exec(args);const data=await ffmpeg.readFile(outName);const mime=s.format==='mp4'?'video/mp4':s.format==='webm'?'video/webm':'audio/mpeg';const blob=new Blob([data],{type:mime});if(outputUrl)URL.revokeObjectURL(outputUrl);outputUrl=URL.createObjectURL(blob);const a=document.createElement('a');a.href=outputUrl;a.download=(($('projectName').value.trim()||'swarnim-video').replace(/[^\w\-]+/g,'_'))+'.'+s.format;document.body.appendChild(a);a.click();a.remove();setProgress(100);setStatus('Export पूरा! डाउनलोड शुरू हो गया। आउटपुट आकार: '+(blob.size/1024/1024).toFixed(1)+' MB.','good');try{await ffmpeg.deleteFile(inName);await ffmpeg.deleteFile(outName);}catch{}
+ }catch(e){setStatus('Export असफल: '+(e?.message||e)+'\nछोटी फ़ाइल या 720p/480p सेटिंग आज़माएँ।','error');}finally{btn.disabled=false;}});
+$('saveProject').addEventListener('click',async()=>{if(!user){setStatus('लॉगिन सत्र नहीं मिला। दोबारा लॉगिन करें।','error');return;}const body={user_id:user.id,project_name:$('projectName').value.trim()||'Untitled Video Project',settings:settings(),source_file_name:inputFile?.name||null,updated_at:new Date().toISOString()};try{const r=await fetch(BASE+'/rest/v1/swarnim_video_editor_projects',{method:'POST',headers:{...headers(),'Prefer':'return=representation'},body:JSON.stringify(body)});if(!r.ok)throw Error(await r.text());setStatus('प्रोजेक्ट सेटिंग्स Supabase में सुरक्षित हो गईं। वीडियो फ़ाइल खुद अपलोड नहीं हुई।','good');await refreshProjects();}catch(e){setStatus('प्रोजेक्ट सेव नहीं हुआ: '+(e.message||e),'error');}});
+$('refreshProjects').addEventListener('click',refreshProjects);
+$('resetSettings').addEventListener('click',()=>{$('format').value='mp4';$('start').value=0;$('end').value='';$('resolution').value='720';$('quality').value='balanced';$('brightness').value=0;$('contrast').value=1;$('saturation').value=1;$('speed').value=1;$('mute').checked=false;$('normalize').checked=false;$('volume').value=1;updateRanges();setStatus('सेटिंग रीसेट हो गईं।');});
+updateRanges();authCheck();
+</script>
+</body></html>
