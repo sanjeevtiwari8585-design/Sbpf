@@ -1,3 +1,13 @@
+## Website app model and Supabase workflow map
+
+- **App model:** [Open the responsive app model](https://sanjeevtiwari8585-design.github.io/Sbpf/app-model.html)
+- **Supabase workflow map:** [Data/workflow architecture](docs/SUPABASE-WORKFLOW-MODEL.md)
+- **Safe schema inventory:** [Schema metadata JSON](docs/supabase-schema-inventory.json)
+
+The app model requests only active campaigns and published government schemes from the public Supabase API. It is a model, not proof that every backend workflow has been end-to-end tested. Private database rows and secrets are not copied into this public repository. The public website must not display membership fees, and the existing member entry remains admin-created/login-based (no public self-signup).
+
+---
+
 # SBPF Seva
 
 Swarnim Bharat Parivar Foundation — public site and member portal using GitHub Pages for static web delivery and the existing Supabase project for authentication, data, RLS policies, RPCs, Storage, and Edge Functions.
