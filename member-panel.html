@@ -146,7 +146,7 @@ async function load(){try{
  const d=await rpc('get_my_member_dashboard');dashboard=Array.isArray(d)?d[0]:d;
  $('auth').classList.add('hidden');$('app').classList.remove('hidden');render();
  await Promise.all([loadFocusAreas(),loadCampaigns()]);
- const returnTo=new URLSearchParams(location.search).get('return_to');if(['swarnim-ai-studio.html','swarnim-creator.html'].includes(returnTo)){location.replace(returnTo);return;}
+ const returnTo=new URLSearchParams(location.search).get('return_to');if(['swarnim-ai-studio.html','swarnim-creator.html','swarnim-video-editor.html'].includes(returnTo)){location.replace(returnTo);return;}
  }catch(e){token='';localStorage.removeItem('sbpf_access_token');msg(e.message,'error')}}
 function render(){ $('name').textContent=profile.full_name||'सदस्य';$('memberId').textContent=profile.member_id||'—';$('status').textContent=profile.status||profile.membership_status||'Pending';$('validity').textContent=profile.membership_end_date?'वैधता: '+profile.membership_end_date:'';branding(); if(dashboard?.profile_photo_url)$('photo').src=dashboard.profile_photo_url;const reminder=$('profileReminder');if(reminder)reminder.classList.toggle('hidden',profile.profile_completed===true); }
 function dismissProfileReminder(){$('profileReminder')?.classList.add('hidden')}
