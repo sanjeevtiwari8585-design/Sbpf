@@ -48,6 +48,20 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:18px}
 <div class="progress"><div id="progressBar"></div></div>
 <div id="status" class="status" role="status" aria-live="polite">पहले वीडियो चुनें, फिर इंजन लोड करें।</div>
 </section>
+<section class="panel" id="bgRemovalPanel">
+<h2 style="margin-top:0;color:var(--wine)">🪄 AI Background Removal</h2>
+<p class="muted">MediaPipe AI से व्यक्ति को पहचानकर बैकग्राउंड हटाएँ, blur करें या नया रंग/तस्वीर लगाएँ। प्रोसेसिंग इसी डिवाइस पर होती है; वीडियो सर्वर पर अपलोड नहीं होता। यह टूल मुख्यतः व्यक्ति/portrait वीडियो के लिए है।</p>
+<div class="controls">
+<div class="field"><label for="bgMode">Background विकल्प</label><select id="bgMode"><option value="transparent">Transparent (WebM)</option><option value="blur">Original background blur</option><option value="color">Solid color</option><option value="image">अपनी तस्वीर लगाएँ</option></select></div>
+<div class="field"><label for="bgColor">Background रंग</label><input id="bgColor" type="color" value="#18a558"></div>
+<div class="field"><label for="bgImage">Background तस्वीर (वैकल्पिक)</label><input id="bgImage" type="file" accept="image/png,image/jpeg,image/webp"></div>
+<div class="field"><label for="bgQuality">Processing quality</label><select id="bgQuality"><option value="480">480p — मोबाइल के लिए बेहतर</option><option value="720" selected>720p — संतुलित</option><option value="1080">1080p — अधिक संसाधन</option></select></div>
+</div>
+<div class="actions"><button id="loadBgModel" class="btn secondary" type="button">🤖 AI मॉडल लोड करें</button><button id="startBgRemoval" class="btn" type="button" disabled>✂ बैकग्राउंड हटाएँ और डाउनलोड</button></div>
+<canvas id="bgCanvas" class="preview" style="margin-top:12px;display:none"></canvas>
+<div id="bgStatus" class="status" role="status" aria-live="polite">पहले ऊपर वीडियो चुनें। फिर AI मॉडल लोड करें।</div>
+<p class="small">ध्यान दें: transparent output WebM में मिलेगा; हर player/editor transparency नहीं दिखाता। MP4 में पारदर्शिता नहीं रहती। लंबे वीडियो रियल-टाइम में प्रोसेस होते हैं, इसलिए समय लग सकता है।</p>
+</section>
 <section class="panel">
 <h2 style="margin-top:0;color:var(--wine)">Export Settings</h2>
 <div class="controls">
@@ -134,6 +148,45 @@ $('export').addEventListener('click',async()=>{if(!engineReady||!inputFile){setS
 $('saveProject').addEventListener('click',async()=>{if(!user){setStatus('लॉगिन सत्र नहीं मिला। दोबारा लॉगिन करें।','error');return;}const body={user_id:user.id,project_name:$('projectName').value.trim()||'Untitled Video Project',settings:settings(),source_file_name:inputFile?.name||null,updated_at:new Date().toISOString()};try{const r=await fetch(BASE+'/rest/v1/swarnim_video_editor_projects',{method:'POST',headers:{...headers(),'Prefer':'return=representation'},body:JSON.stringify(body)});if(!r.ok)throw Error(await r.text());setStatus('प्रोजेक्ट सेटिंग्स Supabase में सुरक्षित हो गईं। वीडियो फ़ाइल खुद अपलोड नहीं हुई।','good');await refreshProjects();}catch(e){setStatus('प्रोजेक्ट सेव नहीं हुआ: '+(e.message||e),'error');}});
 $('refreshProjects').addEventListener('click',refreshProjects);
 $('resetSettings').addEventListener('click',()=>{$('format').value='mp4';$('start').value=0;$('end').value='';$('resolution').value='720';$('quality').value='balanced';$('brightness').value=0;$('contrast').value=1;$('saturation').value=1;$('speed').value=1;$('mute').checked=false;$('normalize').checked=false;$('volume').value=1;updateRanges();setStatus('सेटिंग रीसेट हो गईं।');});
+
+let bgModel=null,bgBusy=false,bgImageBitmap=null;
+const bgSet=(msg,type='')=>{$('bgStatus').textContent=msg;$('bgStatus').className='status '+type;};
+$('bgImage').addEventListener('change',async()=>{const f=$('bgImage').files?.[0];if(!f){bgImageBitmap=null;return;}try{bgImageBitmap=await createImageBitmap(f);bgSet('Background तस्वीर तैयार है।','good');}catch(e){bgSet('तस्वीर नहीं खुली: '+e.message,'error');}});
+$('loadBgModel').addEventListener('click',async()=>{const b=$('loadBgModel');b.disabled=true;bgSet('MediaPipe AI मॉडल लोड हो रहा है… पहली बार इंटरनेट चाहिए।');try{
+ if(!window.SelfieSegmentation){await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js';s.crossOrigin='anonymous';s.onload=resolve;s.onerror=()=>reject(Error('MediaPipe CDN लोड नहीं हुआ'));document.head.appendChild(s);});}
+ bgModel=new window.SelfieSegmentation({locateFile:(f)=>'https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/'+f});
+ bgModel.setOptions({modelSelection:1});
+ bgSet('AI मॉडल तैयार। अब वीडियो चुनकर बैकग्राउंड हटाएँ।','good');$('startBgRemoval').disabled=!inputFile;
+ }catch(e){bgSet('AI मॉडल लोड नहीं हुआ: '+(e.message||e)+' इंटरनेट जाँचें।','error');b.disabled=false;}});
+$('startBgRemoval').addEventListener('click',async()=>{if(!inputFile||!bgModel){bgSet('वीडियो चुनें और AI मॉडल लोड करें।','error');return;}if(bgBusy)return;
+ const video=$('preview'),canvas=$('bgCanvas'),ctx=canvas.getContext('2d',{alpha:true}),mode=$('bgMode').value;
+ if(!video.videoWidth){bgSet('वीडियो preview तैयार नहीं है। वीडियो को एक बार play करें या फिर चुनें।','error');return;}
+ bgBusy=true;$('startBgRemoval').disabled=true;$('loadBgModel').disabled=true;
+ const maxH=Number($('bgQuality').value),scale=Math.min(1,maxH/video.videoHeight);canvas.width=Math.max(2,Math.round(video.videoWidth*scale));canvas.height=Math.max(2,Math.round(video.videoHeight*scale));canvas.style.display='block';
+ const maskCanvas=document.createElement('canvas');maskCanvas.width=canvas.width;maskCanvas.height=canvas.height;const mctx=maskCanvas.getContext('2d');
+ let finished=false,recorder=null,chunks=[],raf=0,frameBusy=false,oldTime=video.currentTime,wasPaused=video.paused;
+ const finish=(err)=>{if(finished)return;finished=true;cancelAnimationFrame(raf);try{video.pause();}catch{}if(recorder&&recorder.state!=='inactive')recorder.stop();bgBusy=false;$('startBgRemoval').disabled=!inputFile;$('loadBgModel').disabled=false;if(err)bgSet('प्रोसेसिंग असफल: '+err+' छोटी वीडियो या 480p आज़माएँ।','error');};
+ bgModel.onResults(res=>{if(finished)return;try{
+ ctx.save();ctx.clearRect(0,0,canvas.width,canvas.height);
+ if(mode==='blur'){ctx.filter='blur(14px)';ctx.drawImage(res.image,0,0,canvas.width,canvas.height);ctx.filter='none';}
+ else if(mode==='color'){ctx.fillStyle=$('bgColor').value;ctx.fillRect(0,0,canvas.width,canvas.height);}
+ else if(mode==='image'&&bgImageBitmap){ctx.drawImage(bgImageBitmap,0,0,canvas.width,canvas.height);}
+ ctx.globalCompositeOperation='destination-out';ctx.drawImage(res.segmentationMask,0,0,canvas.width,canvas.height);ctx.globalCompositeOperation='source-over';ctx.drawImage(res.image,0,0,canvas.width,canvas.height);ctx.restore();
+ bgSet('AI प्रोसेसिंग चल रही है… '+Math.round(video.currentTime/Math.max(video.duration||1,1)*100)+'%');
+ }catch(e){finish(e.message||String(e));}});
+ try{
+ const stream=canvas.captureStream(24);const mime=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].find(t=>MediaRecorder.isTypeSupported(t))||'';
+ if(!mime)throw Error('इस browser में WebM recording उपलब्ध नहीं है। Chrome आज़माएँ।');
+ recorder=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:Math.max(1000000,canvas.width*canvas.height*3)});
+ recorder.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};
+ recorder.onerror=e=>finish(e.error?.message||'Recorder error');
+ recorder.onstop=()=>{stream.getTracks().forEach(t=>t.stop());if(chunks.length){const blob=new Blob(chunks,{type:mime});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='swarnim-bg-removed.webm';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);bgSet('बैकग्राउंड हटाने का काम पूरा! WebM डाउनलोड शुरू हुआ। फ़ाइल आकार '+(blob.size/1024/1024).toFixed(1)+' MB','good');}else if(!finished)bgSet('आउटपुट नहीं बना। वीडियो दोबारा चुनें।','error');};
+ recorder.start(1000);
+ const render=async()=>{if(finished)return;if(video.ended){finish();return;}if(!frameBusy&&video.readyState>=2){frameBusy=true;try{await bgModel.send({image:video});}catch(e){finish(e.message||String(e));}finally{frameBusy=false;}}if(!finished)raf=requestAnimationFrame(render);};
+ video.currentTime=0;await video.play();render();
+ }catch(e){finish(e.message||String(e));}
+});
+
 updateRanges();authCheck();
 </script>
 </body></html>
