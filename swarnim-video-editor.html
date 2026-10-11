@@ -79,6 +79,8 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:18px}
 <div class="field"><label for="volume">Volume</label><input id="volume" type="range" min="0" max="2" step="0.1" value="1"></div>
 </div>
 <div class="actions"><button id="export" class="btn" type="button" disabled>▶ वीडियो प्रोसेस और डाउनलोड</button><button id="saveProject" class="btn secondary" type="button">☁ Supabase में प्रोजेक्ट सेव</button><button id="resetSettings" class="btn secondary" type="button">सेटिंग रीसेट</button></div>
+<label style="display:flex;align-items:flex-start;gap:10px;font-weight:600;margin-top:12px"><input id="saveCloud" type="checkbox" style="width:auto;margin-top:6px"> निजी Supabase Storage में भी कॉपी सेव करें (अधिकतम 50 MB)</label>
+<div id="cloudSaveStatus" class="status" role="status" aria-live="polite">Cloud copy वैकल्पिक है; आपकी डिवाइस डाउनलोड हमेशा पहले होगी।</div>
 <p class="small">MP4 export में H.264/AAC encoding होगी। फ़ाइल के आकार और मोबाइल की क्षमता के अनुसार प्रोसेसिंग धीमी हो सकती है। पेज खुला रखें और फ़ोन लॉक न होने दें।</p>
 </section>
 </div>
@@ -114,9 +116,22 @@ async function authCheck(){
  catch{localStorage.removeItem('sbpf_access_token');localStorage.removeItem('sbpf_refresh_token');location.replace(login);}
 }
 function settings(){return {format:$('format').value,start:Number($('start').value||0),end:$('end').value===''?null:Number($('end').value),resolution:$('resolution').value,quality:$('quality').value,brightness:Number($('brightness').value),contrast:Number($('contrast').value),saturation:Number($('saturation').value),speed:Number($('speed').value),mute:$('mute').checked,normalize:$('normalize').checked,volume:Number($('volume').value)};}
+async function createSignedExportUrl(path){
+ const safePath=path.split('/').map(encodeURIComponent).join('/');
+ const response=await fetch(BASE+'/storage/v1/object/sign/swarnim-video-exports/'+safePath,{method:'POST',headers:headers(),body:JSON.stringify({expiresIn:3600})});
+ const data=await response.json().catch(()=>({}));
+ if(!response.ok)throw Error(data.message||data.error||'Private export लिंक नहीं बन पाया।');
+ const signed=data.signedURL||data.signedUrl;
+ if(!signed)throw Error('Signed URL उपलब्ध नहीं है।');
+ return signed.startsWith('http')?signed:BASE+'/storage/v1'+(signed.startsWith('/')?'':'/')+signed;
+}
+async function downloadSavedExport(path){
+ try{const url=await createSignedExportUrl(path);const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener';a.download='';document.body.appendChild(a);a.click();a.remove();setStatus('निजी export का 1 घंटे वाला लिंक खोल दिया गया।','good');}
+ catch(err){setStatus(err.message||'फ़ाइल डाउनलोड नहीं हुई।','error');}
+}
 async function refreshProjects(){
  const box=$('projects');box.textContent='लोड हो रहा है…';
- try{const r=await fetch(BASE+'/rest/v1/swarnim_video_editor_projects?select=id,project_name,settings,source_file_name,updated_at&order=updated_at.desc&limit=20',{headers:headers()});if(!r.ok)throw Error('प्रोजेक्ट सूची लोड नहीं हुई ('+r.status+')');const rows=await r.json();box.replaceChildren();if(!rows.length){box.textContent='अभी कोई सेव प्रोजेक्ट नहीं है।';return;}for(const p of rows){const b=document.createElement('button');b.className='btn secondary';b.type='button';b.textContent=p.project_name+' · '+new Date(p.updated_at).toLocaleDateString('hi-IN');b.addEventListener('click',()=>{ $('projectName').value=p.project_name;const s=p.settings||{};for(const k of ['format','start','end','resolution','quality','brightness','contrast','saturation','speed','volume'])if(s[k]!==undefined&&s[k]!==null)$(k).value=s[k];for(const k of ['mute','normalize'])if(s[k]!==undefined)$(k).checked=s[k];updateRanges();setStatus('प्रोजेक्ट सेटिंग्स लोड हो गईं। मूल वीडियो फ़ाइल फिर से चुनें।','good');});box.appendChild(b);}}
+ try{const r=await fetch(BASE+'/rest/v1/swarnim_video_editor_projects?select=id,project_name,settings,source_file_name,output_file_name,updated_at&order=updated_at.desc&limit=20',{headers:headers()});if(!r.ok)throw Error('प्रोजेक्ट सूची लोड नहीं हुई ('+r.status+')');const rows=await r.json();box.replaceChildren();if(!rows.length){box.textContent='अभी कोई सेव प्रोजेक्ट नहीं है।';return;}for(const p of rows){const wrap=document.createElement('div');wrap.style.cssText='display:flex;gap:8px;flex-wrap:wrap;align-items:center';const b=document.createElement('button');b.className='btn secondary';b.type='button';b.textContent=p.project_name+' · '+new Date(p.updated_at).toLocaleDateString('hi-IN');b.addEventListener('click',()=>{ $('projectName').value=p.project_name;const s=p.settings||{};for(const k of ['format','start','end','resolution','quality','brightness','contrast','saturation','speed','volume'])if(s[k]!==undefined&&s[k]!==null)$(k).value=s[k];for(const k of ['mute','normalize'])if(s[k]!==undefined)$(k).checked=s[k];updateRanges();setStatus('प्रोजेक्ट सेटिंग्स लोड हो गईं। मूल वीडियो फ़ाइल फिर से चुनें।','good');});wrap.appendChild(b);if(typeof p.output_file_name==='string'&&p.output_file_name.startsWith('storage://swarnim-video-exports/')){const path=p.output_file_name.slice('storage://swarnim-video-exports/'.length);const dl=document.createElement('button');dl.className='btn';dl.type='button';dl.textContent='☁ डाउनलोड';dl.addEventListener('click',()=>downloadSavedExport(path));wrap.appendChild(dl);}box.appendChild(wrap);}}
  catch(e){box.textContent=e.message;}
 }
 function updateRanges(){$('brightValue').textContent=$('brightness').value;$('contrastValue').textContent=$('contrast').value;$('satValue').textContent=$('saturation').value;}
@@ -149,7 +164,22 @@ $('export').addEventListener('click',async()=>{if(!engineReady||!inputFile){setS
   if(s.format==='mp4'){args.push('-c:v','libx264','-preset','ultrafast','-pix_fmt','yuv420p','-crf',s.quality==='high'?'20':s.quality==='small'?'30':'25');if(!s.mute)args.push('-c:a','aac','-b:a',s.quality==='high'?'192k':'128k','-movflags','+faststart');}
   else{args.push('-c:v','libvpx-vp9','-crf',s.quality==='high'?'30':s.quality==='small'?'42':'36','-b:v','0');if(!s.mute)args.push('-c:a','libopus','-b:a','128k');}
  }
- args.push(outName);setStatus('वीडियो प्रोसेस हो रहा है… इस दौरान टैब बंद न करें।');await ffmpeg.exec(args);const data=await ffmpeg.readFile(outName);const mime=s.format==='mp4'?'video/mp4':s.format==='webm'?'video/webm':'audio/mpeg';const blob=new Blob([data],{type:mime});if(outputUrl)URL.revokeObjectURL(outputUrl);outputUrl=URL.createObjectURL(blob);const a=document.createElement('a');a.href=outputUrl;a.download=(($('projectName').value.trim()||'swarnim-video').replace(/[^\w\-]+/g,'_'))+'.'+s.format;document.body.appendChild(a);a.click();a.remove();setProgress(100);setStatus('Export पूरा! डाउनलोड शुरू हो गया। आउटपुट आकार: '+(blob.size/1024/1024).toFixed(1)+' MB.','good');try{await ffmpeg.deleteFile(inName);await ffmpeg.deleteFile(outName);}catch{}
+ args.push(outName);setStatus('वीडियो प्रोसेस हो रहा है… इस दौरान टैब बंद न करें।');await ffmpeg.exec(args);const data=await ffmpeg.readFile(outName);const mime=s.format==='mp4'?'video/mp4':s.format==='webm'?'video/webm':'audio/mpeg';const blob=new Blob([data],{type:mime});if(outputUrl)URL.revokeObjectURL(outputUrl);outputUrl=URL.createObjectURL(blob);const fileName=(($('projectName').value.trim()||'swarnim-video').replace(/[^\\w\\-]+/g,'_'))+'.'+s.format;const a=document.createElement('a');a.href=outputUrl;a.download=fileName;document.body.appendChild(a);a.click();a.remove();setProgress(100);setStatus('Export पूरा! डिवाइस डाउनलोड शुरू हो गया। आउटपुट आकार: '+(blob.size/1024/1024).toFixed(1)+' MB.','good');
+ if($('saveCloud').checked){
+  const cloud=$('cloudSaveStatus');cloud.textContent='निजी Supabase Storage में अपलोड हो रहा है…';cloud.className='status';
+  try{
+   if(blob.size>52428800)throw Error('फ़ाइल 50 MB से बड़ी है। डिवाइस डाउनलोड उपलब्ध है, लेकिन Cloud copy की सीमा 50 MB है।');
+   if(!user?.id||!token)throw Error('कृपया पहले दोबारा लॉगिन करें।');
+   const objectPath=user.id+'/'+crypto.randomUUID()+'-'+fileName;
+   const upload=await fetch(BASE+'/storage/v1/object/swarnim-video-exports/'+objectPath.split('/').map(encodeURIComponent).join('/'),{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+token,'Content-Type':mime,'x-upsert':'false'},body:blob});
+   if(!upload.ok){const detail=await upload.text();throw Error('Storage upload असफल ('+upload.status+'): '+detail.slice(0,220));}
+   const saved=await fetch(BASE+'/rest/v1/swarnim_video_editor_projects',{method:'POST',headers:{...headers(),'Prefer':'return=representation'},body:JSON.stringify({user_id:user.id,project_name:$('projectName').value.trim()||'Swarnim Video Export',settings:s,source_file_name:inputFile?.name||null,output_file_name:'storage://swarnim-video-exports/'+objectPath,updated_at:new Date().toISOString()})});
+   if(!saved.ok)throw Error('फ़ाइल अपलोड हो गई, लेकिन प्रोजेक्ट सूची में सेव नहीं हुआ: '+(await saved.text()).slice(0,180));
+   cloud.replaceChildren(document.createTextNode('निजी Cloud copy सेव हो गई। 1 घंटे का सुरक्षित डाउनलोड लिंक: '));
+   const signed=await createSignedExportUrl(objectPath);const link=document.createElement('a');link.href=signed;link.target='_blank';link.rel='noopener';link.textContent='डाउनलोड लिंक खोलें';link.style.cssText='color:#0b5;font-weight:800';cloud.appendChild(link);cloud.className='status good';await refreshProjects();
+  }catch(err){cloud.textContent='डिवाइस डाउनलोड सफल; Cloud copy सेव नहीं हुई: '+(err.message||err);cloud.className='status error';}
+ }else $('cloudSaveStatus').textContent='केवल डिवाइस में सेव किया गया। Cloud copy नहीं चुनी गई।';
+ try{await ffmpeg.deleteFile(inName);await ffmpeg.deleteFile(outName);}catch{}
  }catch(e){setStatus('Export असफल: '+(e?.message||e)+'\nछोटी फ़ाइल या 720p/480p सेटिंग आज़माएँ।','error');}finally{btn.disabled=false;}});
 $('saveProject').addEventListener('click',async()=>{if(!user){setStatus('लॉगिन सत्र नहीं मिला। दोबारा लॉगिन करें।','error');return;}const body={user_id:user.id,project_name:$('projectName').value.trim()||'Untitled Video Project',settings:settings(),source_file_name:inputFile?.name||null,updated_at:new Date().toISOString()};try{const r=await fetch(BASE+'/rest/v1/swarnim_video_editor_projects',{method:'POST',headers:{...headers(),'Prefer':'return=representation'},body:JSON.stringify(body)});if(!r.ok)throw Error(await r.text());setStatus('प्रोजेक्ट सेटिंग्स Supabase में सुरक्षित हो गईं। वीडियो फ़ाइल खुद अपलोड नहीं हुई।','good');await refreshProjects();}catch(e){setStatus('प्रोजेक्ट सेव नहीं हुआ: '+(e.message||e),'error');}});
 $('refreshProjects').addEventListener('click',refreshProjects);
