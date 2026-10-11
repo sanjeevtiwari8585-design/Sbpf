@@ -164,6 +164,7 @@ $('startBgRemoval').addEventListener('click',async()=>{if(!inputFile||!bgModel){
  bgBusy=true;$('startBgRemoval').disabled=true;$('loadBgModel').disabled=true;
  const maxH=Number($('bgQuality').value),scale=Math.min(1,maxH/video.videoHeight);canvas.width=Math.max(2,Math.round(video.videoWidth*scale));canvas.height=Math.max(2,Math.round(video.videoHeight*scale));canvas.style.display='block';
  const maskCanvas=document.createElement('canvas');maskCanvas.width=canvas.width;maskCanvas.height=canvas.height;const mctx=maskCanvas.getContext('2d');
+ const fgCanvas=document.createElement('canvas');fgCanvas.width=canvas.width;fgCanvas.height=canvas.height;const fgctx=fgCanvas.getContext('2d');
  let finished=false,recorder=null,chunks=[],raf=0,frameBusy=false,oldTime=video.currentTime,wasPaused=video.paused;
  const finish=(err)=>{if(finished)return;finished=true;cancelAnimationFrame(raf);try{video.pause();}catch{}if(recorder&&recorder.state!=='inactive')recorder.stop();bgBusy=false;$('startBgRemoval').disabled=!inputFile;$('loadBgModel').disabled=false;if(err)bgSet('प्रोसेसिंग असफल: '+err+' छोटी वीडियो या 480p आज़माएँ।','error');};
  bgModel.onResults(res=>{if(finished)return;try{
@@ -171,7 +172,9 @@ $('startBgRemoval').addEventListener('click',async()=>{if(!inputFile||!bgModel){
  if(mode==='blur'){ctx.filter='blur(14px)';ctx.drawImage(res.image,0,0,canvas.width,canvas.height);ctx.filter='none';}
  else if(mode==='color'){ctx.fillStyle=$('bgColor').value;ctx.fillRect(0,0,canvas.width,canvas.height);}
  else if(mode==='image'&&bgImageBitmap){ctx.drawImage(bgImageBitmap,0,0,canvas.width,canvas.height);}
- ctx.globalCompositeOperation='destination-out';ctx.drawImage(res.segmentationMask,0,0,canvas.width,canvas.height);ctx.globalCompositeOperation='source-over';ctx.drawImage(res.image,0,0,canvas.width,canvas.height);ctx.restore();
+ fgctx.clearRect(0,0,canvas.width,canvas.height);fgctx.globalCompositeOperation='source-over';fgctx.drawImage(res.image,0,0,canvas.width,canvas.height);fgctx.globalCompositeOperation='destination-in';fgctx.drawImage(res.segmentationMask,0,0,canvas.width,canvas.height);fgctx.globalCompositeOperation='source-over';
+ if(mode==='transparent')ctx.clearRect(0,0,canvas.width,canvas.height);
+ ctx.drawImage(fgCanvas,0,0);ctx.restore();
  bgSet('AI प्रोसेसिंग चल रही है… '+Math.round(video.currentTime/Math.max(video.duration||1,1)*100)+'%');
  }catch(e){finish(e.message||String(e));}});
  try{
