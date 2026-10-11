@@ -96,7 +96,7 @@ const setStatus=(m,type='')=>{$('status').textContent=m;$('status').className='s
 const setProgress=n=>{$('progressBar').style.width=Math.max(0,Math.min(100,n))+'%';};
 async function authCheck(){
  if(!token){location.replace(login);return;}
- try{const r=await fetch(BASE+'/auth/v1/user',{headers:headers()});if(!r.ok)throw Error();user=await r.json();document.body.style.visibility='visible';await refreshProjects();}
+ try{const r=await fetch(BASE+'/auth/v1/user',{headers:headers()});if(!r.ok)throw Error();user=await r.json();const p=await fetch(BASE+'/rest/v1/rpc/get_my_member_profile',{method:'POST',headers:headers(),body:'{}'});if(!p.ok)throw Error();const profile=await p.json();if(!profile||(Array.isArray(profile)&&!profile.length))throw Error();document.body.style.visibility='visible';await refreshProjects();}
  catch{localStorage.removeItem('sbpf_access_token');localStorage.removeItem('sbpf_refresh_token');location.replace(login);}
 }
 function settings(){return {format:$('format').value,start:Number($('start').value||0),end:$('end').value===''?null:Number($('end').value),resolution:$('resolution').value,quality:$('quality').value,brightness:Number($('brightness').value),contrast:Number($('contrast').value),saturation:Number($('saturation').value),speed:Number($('speed').value),mute:$('mute').checked,normalize:$('normalize').checked,volume:Number($('volume').value)};}
