@@ -132,7 +132,7 @@
       audioSource.connect(audioDestination); audioSource.connect(audioContext.destination);
       const canvasStream = canvas.captureStream(30);
       const combined = new MediaStream([...canvasStream.getVideoTracks(), ...audioDestination.stream.getAudioTracks()]);
-      const mimeType = ['video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'].find(type => MediaRecorder.isTypeSupported(type));
+      const mimeType = ['video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'].find(type => MediaRecorder.isTypeSupported(type));
       if (!mimeType) throw new Error('इस ब्राउज़र में WebM वीडियो रिकॉर्डिंग समर्थित नहीं है।');
       const chunks = [];
       recorder = new MediaRecorder(combined, { mimeType: mimeType, videoBitsPerSecond: 2500000, audioBitsPerSecond: 128000 });
@@ -156,13 +156,15 @@
       await stopped;
       combined.getTracks().forEach(track => track.stop());
       await audioContext.close(); audioContext = null;
-      const videoBlob = new Blob(chunks, { type: 'video/webm' });
+      const outputMime = mimeType.split(';')[0];
+      const extension = outputMime === 'video/mp4' ? 'mp4' : 'webm';
+      const videoBlob = new Blob(chunks, { type: outputMime });
       if (!videoBlob.size) throw new Error('वीडियो फ़ाइल खाली बनी। कृपया फिर प्रयास करें।');
       outputUrl = URL.createObjectURL(videoBlob);
       say('3/4 वीडियो तैयार है (' + (videoBlob.size / 1024 / 1024).toFixed(1) + ' MB)। डाउनलोड शुरू हो रहा है…');
       const link = document.createElement('a');
       link.href = outputUrl;
-      link.download = (source.title || 'swarnim-ai-video').replace(/[^\p{L}\p{N}-]+/gu, '-').slice(0, 60) + '.webm';
+      link.download = (source.title || 'swarnim-ai-video').replace(/[^\p{L}\p{N}-]+/gu, '-').slice(0, 60) + '.' + extension;
       document.body.appendChild(link); link.click(); link.remove();
       window.swarnimLastRenderedUrl = outputUrl;
       let cloudNote = 'वीडियो आपके डिवाइस में WebM फ़ाइल के रूप में डाउनलोड हुआ।';
@@ -172,10 +174,10 @@
           const userResponse = await fetch(BASE + '/auth/v1/user', { headers: authHeaders(token) });
           if (!userResponse.ok) throw new Error('सदस्य लॉगिन की पुष्टि नहीं हुई।');
           const user = await userResponse.json();
-          const path = user.id + '/' + source.jobId + '.webm';
+          const path = user.id + '/' + source.jobId + '.' + extension;
           const upload = await fetch(BASE + '/storage/v1/object/swarnim-video-exports/' + path.split('/').map(encodeURIComponent).join('/'), {
             method: 'POST',
-            headers: { apikey: KEY, Authorization: 'Bearer ' + token, 'Content-Type': 'video/webm', 'x-upsert': 'true' },
+            headers: { apikey: KEY, Authorization: 'Bearer ' + token, 'Content-Type': outputMime, 'x-upsert': 'true' },
             body: videoBlob
           });
           if (!upload.ok) throw new Error('Storage upload विफल (' + upload.status + '): ' + (await upload.text()).slice(0, 180));
