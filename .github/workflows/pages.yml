@@ -55,6 +55,9 @@ jobs:
           print(f'Validated {checked} inline JavaScript blocks across {len(pages)} HTML pages.')
           PY
 
+      - name: Validate browser video renderer JavaScript
+        run: node --check swarnim-ai-renderer.js
+
       - name: Smoke-test site structure and local links
         run: |
           python - <<'PY'
