@@ -9,21 +9,22 @@
 1. Open Swarnim AI Studio and enter the story/topic.
 2. Select style, aspect ratio, Hindi voice settings, captions and duration (30–300 seconds).
 3. Review/edit the script and test device Hindi speech synthesis.
-4. Current limitation: this static prototype generates a script/storyboard preview only. It does not render a real video file yet.
-5. Once a real video-render backend returns a completed, authorized MP4/WebM URL, open Swarnim Creator and paste that direct media URL to open/download it.
+4. Select “स्टोरी + हिंदी वॉइसओवर सेव करें” and wait for the signed audio URL. The TTS provider secret must already be configured server-side.
+5. Select “वीडियो रेंडर + डाउनलोड” to render an animated branded WebM locally in the browser, with the saved Hindi audio and optional captions. Small exports (up to 50 MB) are also attempted in the user's private Supabase Storage folder and linked to the video job.
+6. This is a motion-graphics renderer, not a photorealistic AI video model. MP4 export and generated moving footage are not included in this local renderer. If cloud saving fails, the downloaded WebM remains available.
 6. Do not bypass YouTube/social platform restrictions or DRM; use the creator's own export or an authorized API.
 
-## Backend integration required for true end-to-end generation
+## Current rendering boundary and next improvements
 - Authenticate through the existing Supabase Auth project; never put service-role/provider secrets in browser code.
-- Add a server-side Edge Function or trusted backend endpoint that validates the signed-in user, validates prompt/settings, creates a video job, and stores job status.
-- Persist project/job metadata in a dedicated table with owner-scoped RLS; do not repurpose or weaken existing SBPF/member policies.
-- The backend calls a selected video provider and a Hindi TTS provider, polls job status, stitches segments when provider limits require it, and stores the final MP4 in a private Supabase Storage bucket.
-- Return a short-lived signed download URL only to the owning authenticated user. Creator should receive that URL only after the job is completed.
+- The current browser renderer uses the existing authenticated story/voiceover workflow, draws animated branded scenes on a canvas, and records the canvas plus Hindi audio as WebM. It does not call an external AI video provider.
+- The video job table and private `swarnim-video-exports` bucket are used for ownership-scoped records and optional cloud copies. The browser upload is limited to 50 MB; the app falls back to the local download if cloud saving fails.
+- Next-stage improvements: server-side rendering for larger jobs, true generated scene footage, MP4/H.264 export, retry/resume, quotas and cleanup/retention.
+- Never put service-role/provider secrets in browser code; provider credentials remain in Supabase Edge Function Secrets.
 - Add quotas, size/time limits, cleanup/retention, failure states, and clear provider cost disclosures.
 - Test signup/login, authorization, 30/60/180/300-second jobs, Hindi voiceover, captions, download on Android/desktop, and failure/retry before declaring production-ready.
 
 ## Deployment and safety
 - Both HTML pages are in the existing main branch of the public Sbpf repository. GitHub Pages is the current static delivery path.
 - Floot code editing was unavailable at the last fresh check because the daily build-action limit was reached. This GitHub commit does not edit or publish the separate Floot project.
-- A 300-second setting in the UI is not proof the chosen AI video provider supports a single five-minute render. Actual render/download remains pending backend/provider integration and end-to-end testing.
+- The browser WebM renderer has been added to the repository, but end-to-end generation, cloud upload and Android/device compatibility still require a real authenticated test. A 300-second selection does not guarantee every phone can render a five-minute file without memory or performance issues.
 - Never commit API keys, Supabase service-role keys, SMTP credentials, or payment secrets.
