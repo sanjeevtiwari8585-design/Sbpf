@@ -15,7 +15,7 @@
 <div class="layout">
 <aside class="side" aria-label="मुख्य मेन्यू">
 <button class="nav active" data-mode="text">✍️ Text to Video</button><button class="nav" data-mode="image">🖼️ Image to Video</button><button class="nav" data-mode="avatar">🧑‍💼 AI Avatar</button><button class="nav" data-mode="animation">✨ Animation</button><button class="nav" data-mode="templates">▦ Templates</button><button class="nav" data-mode="library">📁 My Creations</button>
-<div class="sidehint"><b>पहला प्रोटोटाइप</b><p>यहाँ स्क्रिप्ट, हिंदी बोलकर सुनना और प्रीव्यू काम करते हैं। असली AI वीडियो रेंडर के लिए अलग मॉडल/API जोड़ना बाकी है।</p></div>
+<div class="sidehint"><b>ब्राउज़र वीडियो रेंडर</b><p>सेव किए गए हिंदी वॉइसओवर से एनिमेटेड 16:9/9:16 दृश्य और कैप्शन वाला WebM वीडियो अपने डिवाइस पर बनाएं।</p></div>
 </aside>
 <main class="main">
 <div class="hero"><div><h1><span class="gradient">AI Video Generator</span></h1><p>एक आइडिया लिखें। स्क्रिप्ट, हिंदी वॉइसओवर और वीडियो वर्कफ़्लो तैयार करें।</p></div><span class="pill">Mobile + Laptop</span></div>
@@ -34,9 +34,9 @@
 <div class="field"><label for="pace">बोलने की गति</label><select id="pace"><option value="0.85">धीमी</option><option value="1" selected>सामान्य</option><option value="1.15">तेज़</option></select></div>
 </div>
 <div class="row2"><label class="checkline"><input type="checkbox" id="captions" checked> हिंदी सबटाइटल</label><label class="checkline"><input type="checkbox" id="music" checked> बैकग्राउंड म्यूज़िक (आगे जोड़ा जाएगा)</label></div>
-<div class="actions"><button id="generate">✨ स्टोरी + हिंदी वॉइसओवर सेव करें</button><button class="secondary" id="makeScript">AI स्क्रिप्ट ड्राफ्ट</button></div>
+<div class="actions"><button id="generate">✨ स्टोरी + हिंदी वॉइसओवर सेव करें</button><button class="secondary" id="renderVideo" disabled>🎬 वीडियो रेंडर + डाउनलोड</button><button class="secondary" id="makeScript">AI स्क्रिप्ट ड्राफ्ट</button></div>
 <div id="status" class="status" style="margin-top:13px" role="status">तैयार। विषय चुनकर “स्क्रिप्ट और प्रीव्यू तैयार करें” दबाएँ।</div>
-<p class="notice">ध्यान दें: अभी यह UI प्रोटोटाइप है। 300 सेकंड विकल्प स्क्रिप्ट/वर्कफ़्लो अवधि सेट करता है; वास्तविक 5-मिनट वीडियो रेंडर और MP4 डाउनलोड के लिए वीडियो मॉडल API तथा सुरक्षित backend job pipeline अभी जोड़ना और टेस्ट करना बाकी है।</p>
+<p class="notice">ध्यान दें: हिंदी वॉइसओवर बनने के बाद ब्राउज़र में एनिमेटेड दृश्यों और कैप्शन वाला WebM वीडियो रेंडर हो सकता है। यह वास्तविक कैमरा फुटेज/AI-generated moving clips नहीं है। लंबे वीडियो मोबाइल पर अधिक RAM और समय ले सकते हैं।</p>
 </section>
 <aside class="panel"><h2>🎞️ वीडियो प्रीव्यू</h2><div class="preview"><div class="screen" id="screen"><div class="sceneText"><small>SWARNIM AI STUDIO</small><span id="sceneHeadline">शिक्षा से उज्ज्वल भविष्य</span></div><button class="play" id="previewPlay" title="स्क्रिप्ट सुनें">▶</button></div><div class="previewMeta"><span id="previewType">Cinematic • 16:9</span><span id="previewDuration">01:00</span></div><div class="voicebox"><b>🔊 ऑटो हिंदी वॉइसओवर</b><p style="font-size:12px;color:var(--muted);margin:4px 0 10px">अपने डिवाइस में उपलब्ध हिंदी टेक्स्ट-टू-स्पीच आवाज़ से स्क्रिप्ट सुनें। आवाज़ों की उपलब्धता ब्राउज़र/डिवाइस पर निर्भर है।</p><div class="actions"><button id="speak">▶ हिंदी में सुनें</button><button class="secondary" id="stopSpeak">■ रोकें</button></div></div><div class="field"><label for="script">वीडियो स्क्रिप्ट (संपादन योग्य)</label><textarea id="script" style="min-height:155px">नमस्कार! भारत का भविष्य हमारे युवाओं और शिक्षा में छिपा है। सीखने का हर अवसर एक नई संभावना खोलता है। आइए, ज्ञान, मेहनत और सहयोग से एक उज्ज्वल भारत बनाएं।</textarea></div><div class="actions"><button class="secondary" id="downloadScript">⬇ स्क्रिप्ट डाउनलोड करें</button><button class="outline" id="copyScript">कॉपी करें</button><a class="pill" style="text-decoration:none;color:#d8e4f6;display:inline-flex;align-items:center" href="swarnim-creator.html">Swarnim Creator खोलें →</a></div><div id="voicesInfo" class="notice">हिंदी आवाज़ की उपलब्धता जाँची जा रही है…</div></div></aside>
 </div>
@@ -47,7 +47,7 @@
 <button class="idea" data-prompt="एक छोटे भारतीय व्यवसाय की सफलता पर 60 सेकंड का प्रेरक वीडियो बनाओ।"><span>💼</span><b>बिजनेस आइडिया</b><span>उद्यमिता</span></button>
 </div></section>
 <section class="panel bottom"><h2>🗂️ मेरी हाल की रचनाएँ</h2><div id="history" class="status">आपकी Supabase में सेव की गई AI रचनाएँ यहाँ दिखाई देंगी।</div></section>
-</main></div><footer class="footer">Swarnim AI Studio • Hindi-first • Storyboard/voiceover backend connected; final video rendering pending</footer></div>
+</main></div><footer class="footer">Swarnim AI Studio • Hindi-first • Browser-based animated WebM renderer; external AI motion generation is not connected</footer></div>
 <script>
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 let mode='text',uploadedImage=null,history=[];
@@ -76,6 +76,8 @@ async function generateAndSave(){
    if(!response.ok||result.success===false){
     $('#status').textContent='Storyboard Supabase में सेव हुआ। Job ID: '+result.job_id+'. वॉइसओवर पूरा नहीं हुआ: '+(detail||'provider/backend error')+(voiceError?.error==='voice_provider_not_configured'?' — Supabase Edge Function Secrets में TTSFREE_API_KEY जोड़ना आवश्यक है.':'')+' Final MP4 अभी render नहीं हुआ है.';
    }else if(result.voiceover?.signed_url){
+    window.swarnimRenderSource={jobId:result.job_id,audioUrl:result.voiceover.signed_url,title:headline($('#prompt').value),script:$('#script').value.trim(),ratio:$('#ratio').value,captions:$('#captions').checked};
+    const renderButton=document.getElementById('renderVideo');if(renderButton)renderButton.disabled=false;
     const a=document.createElement('a');a.href=result.voiceover.signed_url;a.target='_blank';a.rel='noopener';a.textContent='सेव किया गया हिंदी ऑडियो खोलें';a.style.cssText='display:inline-block;margin-top:8px;color:#7dd3fc;font-weight:700';
     $('#status').replaceChildren(document.createTextNode('Storyboard और voiceover सेव हो गए। Job ID: '+result.job_id+'. Final MP4 अभी render नहीं हुआ है. '),a);
    }else $('#status').textContent='Storyboard और voiceover सेव हो गए। Job ID: '+result.job_id+'. Final MP4 rendering अभी backend में उपलब्ध नहीं है.';
@@ -143,4 +145,5 @@ if('speechSynthesis'in window){getVoices();speechSynthesis.onvoiceschanged=getVo
   await refreshSavedJobs();
  }catch(e){localStorage.removeItem('sbpf_access_token');localStorage.removeItem('sbpf_refresh_token');location.replace(login);}
 })();
-</script></body></html>
+</script><script src="swarnim-ai-renderer.js"></script>
+</body></html>
