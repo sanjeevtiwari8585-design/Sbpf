@@ -182,6 +182,7 @@ if('speechSynthesis'in window){getVoices();speechSynthesis.onvoiceschanged=getVo
    }
   }catch(err){box.textContent=err.message||'Saved AI jobs नहीं लोड हुए।';}
  }
+ window.swarnimRefreshSavedJobs=refreshSavedJobs;
  if(!token){location.replace(login);return;}
  try{
   const headers={apikey:key,Authorization:'Bearer '+token,'Content-Type':'application/json'};
