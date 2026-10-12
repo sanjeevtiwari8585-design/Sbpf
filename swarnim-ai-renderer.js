@@ -45,7 +45,7 @@
     btn.disabled = true;
     const oldLabel = btn.textContent;
     btn.textContent = '⏳ वीडियो बन रहा है…';
-    let audioUrl = null, outputUrl = null, audioContext = null, recorder = null, rafId = null;
+    let audioUrl = null, outputUrl = null, audioContext = null, recorder = null, rafId = null, musicOscillators = [];
     try {
       say('1/4 हिंदी ऑडियो लोड हो रहा है…');
       const audioResponse = await fetch(source.audioUrl);
@@ -130,6 +130,21 @@
       const audioSource = audioContext.createMediaElementSource(audio);
       const audioDestination = audioContext.createMediaStreamDestination();
       audioSource.connect(audioDestination); audioSource.connect(audioContext.destination);
+      if (source.music) {
+        const musicGain = audioContext.createGain();
+        musicGain.gain.setValueAtTime(0.0001, audioContext.currentTime);
+        musicGain.gain.linearRampToValueAtTime(0.018, audioContext.currentTime + 1.5);
+        musicGain.connect(audioDestination);
+        [110, 164.81, 220].forEach((frequency, index) => {
+          const oscillator = audioContext.createOscillator();
+          const voiceGain = audioContext.createGain();
+          oscillator.type = index === 1 ? 'triangle' : 'sine';
+          oscillator.frequency.value = frequency;
+          voiceGain.gain.value = index === 0 ? 0.5 : 0.22;
+          oscillator.connect(voiceGain); voiceGain.connect(musicGain);
+          oscillator.start(); musicOscillators.push(oscillator);
+        });
+      }
       const canvasStream = canvas.captureStream(30);
       const combined = new MediaStream([...canvasStream.getVideoTracks(), ...audioDestination.stream.getAudioTracks()]);
       const mimeType = ['video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'].find(type => MediaRecorder.isTypeSupported(type));
@@ -196,7 +211,7 @@
       say('वीडियो रेंडर नहीं हो पाया: ' + (error.message || error) + '। ऑडियो उपलब्ध हो तो दोबारा प्रयास करें।', true);
     } finally {
       if (rafId) cancelAnimationFrame(rafId);
-      if (audioContext && audioContext.state !== 'closed') { try { await audioContext.close(); } catch {} }
+      if (audioContext && audioContext.state !== 'closed') { try { musicOscillators.forEach(oscillator => { try { oscillator.stop(); } catch {} }); await audioContext.close(); } catch {} }
       if (audioUrl) URL.revokeObjectURL(audioUrl);
       btn.disabled = false; btn.textContent = oldLabel;
     }
