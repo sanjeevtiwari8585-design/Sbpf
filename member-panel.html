@@ -415,7 +415,8 @@ async function idView(){
 async function openMemberDocument(endpoint,label){
  const popup=window.open('about:blank','_blank');
  if(!popup){alert('कार्ड खोलने के लिए browser pop-up को अनुमति दें।');return}
- popup.document.open();popup.document.write('<!doctype html><html lang="hi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+esc(label)+'</title><body style="font-family:Arial;padding:25px">सुरक्षित '+esc(label)+' लोड हो रहा है…</body></html>');popup.document.close();
+ popup.document.open();popup.document.write('<!doctype html><html lang="hi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+esc(label)+'</title><body style="font-family:Arial;padding:25px">सुरक्षित '+esc(label)+' लोड हो रहा है…<script src="assets/sbpf-translator.js" defer></script>
+</body></html>');popup.document.close();
  try{
   const response=await fetch(URL+'/functions/v1/'+endpoint,{headers:{apikey:KEY,Authorization:'Bearer '+token}});
   const body=await response.text();
