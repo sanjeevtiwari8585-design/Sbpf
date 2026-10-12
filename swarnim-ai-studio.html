@@ -61,7 +61,7 @@ $('#generate').addEventListener('click',generateAndSave);$('#makeScript').addEve
 async function generateAndSave(){
  draft();
  const token=localStorage.getItem('sbpf_access_token');
- if(!token){$('#status').textContent='पहले SBPF Member ID और पासवर्ड से लॉगिन करें।';location.replace('member-panel.html?return_to=swarnim-ai-studio.html');return;}
+ if(!token){$('#status').textContent='पहले SBPF Member ID और पासवर्ड से लॉगिन करें।';location.replace('member.html?return_to=swarnim-ai-studio.html');return;}
  const btn=$('#generate');btn.disabled=true;btn.textContent='⏳ स्टोरी और वॉइसओवर सेव हो रहे हैं…';
  $('#status').textContent='Supabase backend से storyboard और Hindi voiceover जोड़ा जा रहा है…';
  const base='https://dxowhzghrdghfzoggorx.supabase.co';
@@ -98,7 +98,7 @@ if('speechSynthesis'in window){getVoices();speechSynthesis.onvoiceschanged=getVo
  const token=localStorage.getItem('sbpf_access_token');
  const base='https://dxowhzghrdghfzoggorx.supabase.co';
  const key='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
- const login='member-panel.html?return_to=swarnim-ai-studio.html';
+ const login='member.html?return_to=swarnim-ai-studio.html';
  async function savedVoiceUrl(storageUri){
   const prefix='storage://swarnim-voiceovers/';
   const path=storageUri.startsWith(prefix)?storageUri.slice(prefix.length):storageUri;
