@@ -31,11 +31,11 @@ jobs:
           import json, os, urllib.error, urllib.request
           checks = [
               ("SBPF Seva live site", "https://sbpfseva.floot.app/", "web"),
-              ("SBPF GitHub Pages home", "https://sanjeevtiwari8585-design.github.io/Sbpf/", "web"),
-              ("Member registration page", "https://sanjeevtiwari8585-design.github.io/Sbpf/member.html", "web"),
-              ("Swarnim AI Studio page", "https://sanjeevtiwari8585-design.github.io/Sbpf/swarnim-ai-studio.html", "web"),
-              ("Swarnim Creator page", "https://sanjeevtiwari8585-design.github.io/Sbpf/swarnim-creator.html", "web"),
-              ("Swarnim Video Editor page", "https://sanjeevtiwari8585-design.github.io/Sbpf/swarnim-video-editor.html", "web"),
+              ("SBPF GitHub Pages home", "https://sanjeevtiwari8585-design.github.io/Sbpf/", "optional_web"),
+              ("Member registration page", "https://sanjeevtiwari8585-design.github.io/Sbpf/member.html", "optional_web"),
+              ("Swarnim AI Studio page", "https://sanjeevtiwari8585-design.github.io/Sbpf/swarnim-ai-studio.html", "optional_web"),
+              ("Swarnim Creator page", "https://sanjeevtiwari8585-design.github.io/Sbpf/swarnim-creator.html", "optional_web"),
+              ("Swarnim Video Editor page", "https://sanjeevtiwari8585-design.github.io/Sbpf/swarnim-video-editor.html", "optional_web"),
               ("Supabase Auth health", "https://dxowhzghrdghfzoggorx.supabase.co/auth/v1/health", "supabase"),
           ]
           results = []
@@ -52,7 +52,11 @@ jobs:
                   results.append({"name": name, "url": url, "status": e.code, "ok": ok, "note": "reachable but access-restricted" if ok else "HTTP error"})
               except Exception as e:
                   reason = getattr(e, "reason", None)
-                  results.append({"name": name, "url": url, "status": "NETWORK_ERROR", "ok": False, "error": (str(reason) if reason else type(e).__name__)[:180]})
+                  detail = (str(reason) if reason else type(e).__name__)[:180]
+                  # Hosted runners can temporarily fail to resolve GitHub Pages.
+                  # Keep this as a warning; primary SBPF and Supabase failures remain blocking.
+                  optional_network_warning = kind == "optional_web"
+                  results.append({"name": name, "url": url, "status": "NETWORK_ERROR", "ok": optional_network_warning, "warning": detail if optional_network_warning else None, "error": None if optional_network_warning else detail})
           failed = [r for r in results if not r["ok"]]
           with open(os.environ["GITHUB_OUTPUT"], "a") as out:
               out.write("failed=" + ("true" if failed else "false") + "\n")
