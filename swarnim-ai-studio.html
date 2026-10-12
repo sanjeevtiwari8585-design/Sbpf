@@ -30,11 +30,11 @@
 <div class="field"><label for="style">स्टाइल</label><select id="style"><option>Cinematic</option><option>Realistic</option><option>Animation</option><option>Documentary</option><option>News</option></select></div>
 </div>
 <div class="row2">
-<div class="field"><label for="voice">हिंदी आवाज़</label><select id="voice"><option value="auto">डिवाइस की उपलब्ध हिंदी आवाज़</option><option value="male">पुरुष-जैसी आवाज़ (यदि उपलब्ध)</option><option value="female">महिला-जैसी आवाज़ (यदि उपलब्ध)</option></select></div>
+<div class="field"><label for="voice">TTSFree हिंदी आवाज़</label><select id="voice"><option value="auto" selected>Divya — महिला हिंदी आवाज़</option><option value="male">Rohit — पुरुष हिंदी आवाज़</option><option value="female">Anjali — महिला हिंदी आवाज़</option></select></div>
 <div class="field"><label for="pace">बोलने की गति</label><select id="pace"><option value="0.85">धीमी</option><option value="1" selected>सामान्य</option><option value="1.15">तेज़</option></select></div>
 </div>
 <div class="row2"><label class="checkline"><input type="checkbox" id="captions" checked> हिंदी सबटाइटल</label><label class="checkline"><input type="checkbox" id="music" checked> हल्का बैकग्राउंड टोन</label></div>
-<div class="actions"><button id="generate">✨ स्टोरी + हिंदी वॉइसओवर सेव करें</button><button class="secondary" id="renderVideo" disabled>🎬 वीडियो रेंडर + डाउनलोड</button><button class="secondary" id="makeScript">AI स्क्रिप्ट ड्राफ्ट</button></div>
+<div class="actions"><button id="testTtsfree" class="secondary">🔊 Divya वॉइस नमूना सुनें</button><button id="generate">✨ स्टोरी + हिंदी वॉइसओवर सेव करें</button><button class="secondary" id="renderVideo" disabled>🎬 वीडियो रेंडर + डाउनलोड</button><button class="secondary" id="makeScript">AI स्क्रिप्ट ड्राफ्ट</button></div>
 <div id="status" class="status" style="margin-top:13px" role="status">तैयार। विषय चुनकर “स्क्रिप्ट और प्रीव्यू तैयार करें” दबाएँ।</div>
 <p class="notice">ध्यान दें: हिंदी वॉइसओवर बनने के बाद ब्राउज़र में एनिमेटेड दृश्यों और कैप्शन वाला WebM वीडियो रेंडर हो सकता है। यह वास्तविक कैमरा फुटेज/AI-generated moving clips नहीं है। लंबे वीडियो मोबाइल पर अधिक RAM और समय ले सकते हैं।</p>
 </section>
@@ -136,7 +136,22 @@ async function generateAndSave(){
  }catch(e){$('#status').textContent='Backend से कनेक्शन नहीं हो पाया। इंटरनेट जाँचें और फिर प्रयास करें।';await refreshSavedJobs();}
  finally{btn.disabled=false;btn.textContent='✨ स्टोरी + हिंदी वॉइसओवर सेव करें'}
 }
-$$('[data-prompt]').forEach(b=>b.addEventListener('click',()=>{$('#prompt').value=b.dataset.prompt;draft();window.scrollTo({top:0,behavior:'smooth'})}));
+async function testTtsfreeVoice(){
+ const btn=$('#testTtsfree');const token=localStorage.getItem('sbpf_access_token');
+ if(!token){$('#status').textContent='Divya का TTSFree नमूना सुनने के लिए पहले SBPF में लॉगिन करें।';location.replace('member.html?return_to=swarnim-ai-studio.html');return;}
+ btn.disabled=true;btn.textContent='⏳ Divya नमूना बन रहा है…';$('#status').textContent='TTSFree से छोटा हिंदी वॉइस नमूना बनाया जा रहा है…';
+ try{
+  const base='https://dxowhzghrdghfzoggorx.supabase.co';const key='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
+  const response=await fetch(base+'/functions/v1/swarnim-ai-voiceover',{method:'POST',headers:{apikey:key,Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({text:'नमस्कार! स्वर्णिम भारत परिवार फाउंडेशन—सेवा, सहयोग और सशक्तिकरण के लिए, राष्ट्रहित में चौबीसों घंटे तत्पर।',speaker:'Divya',emotion:'Confident',rate:1.0,save_to_storage:false})});
+  if(!response.ok){let detail='';try{const data=await response.json();detail=data.message||data.details||data.error||''}catch{}throw new Error(detail||('TTSFree अनुरोध विफल ('+response.status+')'))}
+  const blob=await response.blob();if(!blob.size)throw new Error('खाली ऑडियो मिला।');
+  if(window.swarnimTtsSampleUrl)URL.revokeObjectURL(window.swarnimTtsSampleUrl);
+  window.swarnimTtsSampleUrl=URL.createObjectURL(blob);const audio=new Audio(window.swarnimTtsSampleUrl);audio.onended=()=>{$('#status').textContent='Divya का TTSFree नमूना पूरा हुआ। उच्चारण और स्वर सुनकर जाँचें; संतुष्ट हों तो स्टोरी + हिंदी वॉइसओवर सेव करें।'};await audio.play();$('#status').textContent='Divya का TTSFree नमूना चल रहा है…';
+ }catch(e){$('#status').textContent='Divya नमूना नहीं बन पाया: '+(e.message||'कनेक्शन या TTSFree API की जाँच करें।')}
+ finally{btn.disabled=false;btn.textContent='🔊 Divya वॉइस नमूना सुनें'}
+}
+$('#testTtsfree').addEventListener('click',testTtsfreeVoice);
+$('[data-prompt]').forEach(b=>b.addEventListener('click',()=>{$('#prompt').value=b.dataset.prompt;draft();window.scrollTo({top:0,behavior:'smooth'})}));
 $('#duration').addEventListener('change',()=>$('#previewDuration').textContent=formatTime(+$ ('#duration').value));$('#ratio').addEventListener('change',()=>{let r=$('#ratio').value;$('#screen').style.aspectRatio=r.replace(':',' / ');$('#previewType').textContent=$('#style').value+' • '+r});$('#style').addEventListener('change',()=>$('#previewType').textContent=$('#style').value+' • '+$('#ratio').value);
 $('#imageFile').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;if(!f.type.startsWith('image/'))return;const reader=new FileReader();reader.onload=()=>{uploadedImage=reader.result;$('#screen').style.backgroundImage='linear-gradient(0deg,#07111fcc,transparent 70%),url('+JSON.stringify(uploadedImage)+')';$('#screen').style.backgroundSize='cover';$('#screen').style.backgroundPosition='center';$('#status').textContent='तस्वीर प्रीव्यू में लोड हुई। अभी AI motion generation कनेक्ट नहीं है।'};reader.readAsDataURL(f)});
 function getVoices(){if(!('speechSynthesis'in window)){ $('#voicesInfo').textContent='इस ब्राउज़र में speech synthesis उपलब्ध नहीं है।';return []}const vs=speechSynthesis.getVoices();const hi=vs.filter(v=>v.lang.toLowerCase().startsWith('hi'));$('#voicesInfo').textContent=hi.length?'हिंदी आवाज़ें मिलीं: '+hi.map(v=>v.name).slice(0,3).join(', '):'डिवाइस ने अलग हिंदी आवाज़ नहीं बताई। सिस्टम की उपलब्ध आवाज़ आज़माएँ।';return vs}
