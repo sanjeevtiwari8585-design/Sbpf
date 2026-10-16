@@ -3,6 +3,7 @@ import re
 import shutil
 import subprocess
 import tempfile
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -202,7 +203,7 @@ def process_job(job_id: str, x_worker_token: str | None = Header(default=None)) 
                 {"id": f"eq.{job_id}"},
                 {
                     "status": "completed",
-                    "completed_at": "now()",
+                    "completed_at": datetime.now(timezone.utc).isoformat(),
                     "output_storage_path": first["storage_path"],
                     "output_file_name": first["file_name"],
                     "output_mime_type": first["mime_type"],
