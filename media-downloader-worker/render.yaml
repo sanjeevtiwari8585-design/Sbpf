@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: sbpf-media-download-worker
+    runtime: docker
+    plan: starter
+    region: singapore
+    rootDir: media-downloader-worker
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: WORKER_TOKEN
+        generateValue: true
+      - key: SUPABASE_STORAGE_BUCKET
+        value: swarnim-video-exports
+      - key: MAX_DOWNLOAD_BYTES
+        value: "52428800"
+      - key: DOWNLOAD_TIMEOUT_SECONDS
+        value: "900"
