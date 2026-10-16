@@ -5,7 +5,7 @@ services:
     plan: starter
     region: singapore
     rootDir: media-downloader-worker
-    dockerfilePath: ./Dockerfile
+    dockerfilePath: media-downloader-worker/Dockerfile
     dockerCommand: python worker_loop.py
     autoDeploy: true
     envVars:
