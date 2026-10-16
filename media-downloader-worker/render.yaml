@@ -1,12 +1,12 @@
 services:
-  - type: web
+  - type: worker
     name: sbpf-media-download-worker
     runtime: docker
     plan: starter
     region: singapore
     rootDir: media-downloader-worker
     dockerfilePath: ./Dockerfile
-    healthCheckPath: /health
+    dockerCommand: python worker_loop.py
     autoDeploy: true
     envVars:
       - key: SUPABASE_URL
@@ -21,3 +21,5 @@ services:
         value: "52428800"
       - key: DOWNLOAD_TIMEOUT_SECONDS
         value: "900"
+      - key: QUEUE_POLL_SECONDS
+        value: "15"
