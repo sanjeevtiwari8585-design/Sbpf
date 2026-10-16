@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SBPF Central Admin — Project Hub</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{font-family:Arial,"Noto Sans Devanagari",sans-serif;color:#172033;background:#f3f7fb}
+body{margin:0}header{background:#082f56;color:white;padding:16px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px}
+main{max-width:1150px;margin:auto;padding:18px}.panel{background:white;border-radius:14px;padding:18px;margin:12px 0;box-shadow:0 4px 18px #0001}
+input{width:100%;box-sizing:border-box;padding:12px;margin:6px 0;border:1px solid #ccd7e2;border-radius:8px}
+button,.link{display:inline-block;background:#0b4d7d;color:white;padding:10px 13px;border:0;border-radius:8px;text-decoration:none;cursor:pointer;margin:4px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.tile{border:1px solid #dbe4ee;border-radius:12px;padding:14px;background:#fff}.tile h3{margin:0 0 8px}.tile p{font-size:14px;color:#526174;min-height:36px}.hidden{display:none!important}.msg{padding:10px;background:#fff4d6;border-radius:8px;white-space:pre-wrap}.small{font-size:13px;color:#5c6877}
+</style></head>
+<body>
+<header><div><b>स्वर्णिम भारत परिवार फाउंडेशन</b><br><small>Central Admin · Project Connections</small></div><button id="logout" class="hidden">Logout</button></header>
+<main>
+<div id="login" class="panel"><h2>Admin Login</h2><p class="small">केवल अधिकृत SBPF Admin के लिए।</p><input id="email" type="email" autocomplete="username" placeholder="Admin Email"><input id="password" type="password" autocomplete="current-password" placeholder="Password"><button id="loginBtn">Login</button><div id="loginMsg" class="msg"></div></div>
+<div id="app" class="hidden">
+<div class="panel"><h2>सभी SBPF Projects — एक जगह</h2><p>यह Central Hub उपलब्ध वेबसाइट मॉड्यूल खोलता है। प्रत्येक मॉड्यूल के डेटा अधिकार उसके Supabase Auth/RLS और अपने admin checks से नियंत्रित होंगे; केवल लिंक दिखना integration test का प्रमाण नहीं है।</p><div id="status" class="msg">Admin access सत्यापित हो रहा है…</div></div>
+<div class="grid">
+<section class="tile"><h3>मुख्य Admin Panel</h3><p>सदस्य, KYC, भुगतान, अभियान, शिकायतें, रेफरल और सामग्री प्रबंधन।</p><a class="link" target="_blank" rel="noopener" href="https://dxowhzghrdghfzoggorx.supabase.co/functions/v1/admin-panel">Open Admin Panel</a></section>
+<section class="tile"><h3>Member & Registration</h3><p>सदस्य पंजीकरण और सदस्य डैशबोर्ड।</p><a class="link" target="_blank" rel="noopener" href="https://sanjeevtiwari8585-design.github.io/Sbpf/member.html">Registration</a><a class="link" target="_blank" rel="noopener" href="https://sanjeevtiwari8585-design.github.io/Sbpf/member-panel.html">Member Panel</a></section>
+<section class="tile"><h3>Member Review / KYC</h3><p>परिवार समीक्षा, कार्यक्षेत्र और KYC admin routes।</p><a class="link" target="_blank" rel="noopener" href="https://sanjeevtiwari8585-design.github.io/Sbpf/admin-family.html">Family Review</a><a class="link" target="_blank" rel="noopener" href="https://sanjeevtiwari8585-design.github.io/Sbpf/admin-work-areas.html">Work Areas</a><a class="link" target="_blank" rel="noopener" href="https://dxowhzghrdghfzoggorx.supabase.co/functions/v1/admin-kyc-panel">KYC Admin</a></section>
+<section class="tile"><h3>8 मुख्य अभियान</h3><p>अभियान और सार्वजनिक सामग्री।</p><a class="link" target="_blank" rel="noopener" href="https://sanjeevtiwari8585-design.github.io/Sbpf/campaign.html?slug=swarnim-jan-jagran">Campaign Details</a></section>
+<section class="tile"><h3>Swarnim Book</h3><p>सोशल पोस्ट, मीडिया लिंक, प्रोफाइल और कम्युनिटी मॉड्यूल।</p><a class="link" target="_blank" rel="noopener" href="https://sanjeevtiwari8585-design.github.io/Sbpf/swarnim-book.html">Open Swarnim Book</a></section>
+<section class="tile"><h3>Swarnim Media / SMLive</h3><p>समाचार, लेख, वीडियो, फोटो और पत्रकार मॉड्यूल।</p><a class="link" target="_blank" rel="noopener" href="https://sanjeevtiwari8585-design.github.io/Sbpf/swarnim-media/">Open Swarnim Media</a></section>
+<section class="tile"><h3>Swarnim Gurukulam / Education</h3><p>शिक्षा, शिक्षक और सदस्य/छात्र मॉड्यूल।</p><a class="link" target="_blank" rel="noopener" href="https://dxowhzghrdghfzoggorx.supabase.co/functions/v1/admin-education">Education Admin</a><a class="link" target="_blank" rel="noopener" href="https://dxowhzghrdghfzoggorx.supabase.co/functions/v1/teacher-dashboard">Teacher Panel</a></section>
+<section class="tile"><h3>EMS — School Management</h3><p>स्कूल, छात्र, शिक्षक, फीस, उपस्थिति और अकादमिक मॉड्यूल।</p><a class="link" target="_blank" rel="noopener" href="https://sanjeevtiwari8585-design.github.io/Sbpf/ems.html">EMS</a><a class="link" target="_blank" rel="noopener" href="https://sanjeevtiwari8585-design.github.io/Sbpf/ems-academics.html">Academics</a></section>
+<section class="tile"><h3>HMS — Hospital Management</h3><p>अस्पताल प्रबंधन मॉड्यूल; स्वास्थ्य डेटा के लिए role-based access आवश्यक है।</p><a class="link" target="_blank" rel="noopener" href="https://sanjeevtiwari8585-design.github.io/Sbpf/hms.html">HMS</a></section>
+<section class="tile"><h3>EMS / HMS Admin Overview</h3><p>अलग प्रशासनिक overview।</p><a class="link" target="_blank" rel="noopener" href="https://sanjeevtiwari8585-design.github.io/Sbpf/ems-hms-admin.html">Open Overview</a></section>
+<section class="tile"><h3>Swarnim Samvad</h3><p>शिकायत, क्षेत्र और अधिकारी असाइनमेंट।</p><a class="link" target="_blank" rel="noopener" href="https://dxowhzghrdghfzoggorx.supabase.co/functions/v1/swarnim-samvad">Open Samvad</a></section>
+<section class="tile"><h3>Promotion Matrix</h3><p>रेफरल पात्रता, नेटवर्क और डिजिटल रिवॉर्ड डैशबोर्ड।</p><a class="link" target="_blank" rel="noopener" href="https://sanjeevtiwari8585-design.github.io/Sbpf/promotion-plan.html">Open Matrix</a></section>
+<section class="tile"><h3>AI Chat</h3><p>SBPF AI assistant endpoint; admin controls and usage checks remain separate.</p><a class="link" target="_blank" rel="noopener" href="https://dxowhzghrdghfzoggorx.supabase.co/functions/v1/sbpf-ai-chat">Open AI Chat endpoint</a></section>
+<section class="tile"><h3>Member / Certificate Verification</h3><p>सार्वजनिक सत्यापन endpoints।</p><a class="link" target="_blank" rel="noopener" href="https://dxowhzghrdghfzoggorx.supabase.co/functions/v1/verify-member">Verify Member</a><a class="link" target="_blank" rel="noopener" href="https://dxowhzghrdghfzoggorx.supabase.co/functions/v1/verify-certificate">Verify Certificate</a></section>
+</div>
+<div class="panel"><h3>कनेक्शन स्थिति</h3><p id="check" class="small">यह पेज Admin login को Supabase के is_admin() RPC से जाँचता है। बाकी modules को एक-एक करके live read/write, role access और error checks से verify करना बाकी है।</p></div>
+</div></main>
+<script>
+const URL="https://dxowhzghrdghfzoggorx.supabase.co";
+const KEY="sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo";
+const sb=supabase.createClient(URL,KEY);
+const login=document.getElementById("login"),app=document.getElementById("app"),loginMsg=document.getElementById("loginMsg"),status=document.getElementById("status"),logout=document.getElementById("logout");
+async function boot(){
+ const {data,error}=await sb.auth.getSession();
+ if(error||!data.session){login.classList.remove("hidden");app.classList.add("hidden");logout.classList.add("hidden");return;}
+ const a=await sb.rpc("is_admin");
+ if(a.error||a.data!==true){await sb.auth.signOut();login.classList.remove("hidden");app.classList.add("hidden");logout.classList.add("hidden");loginMsg.textContent="Admin permission सत्यापित नहीं हुआ। सही अधिकृत खाते से लॉगिन करें।";return;}
+ login.classList.add("hidden");app.classList.remove("hidden");logout.classList.remove("hidden");status.textContent="Supabase Auth session और is_admin() सत्यापित: Admin access मंजूर। प्रत्येक project का data connection अलग से test किया जाएगा।";
+}
+document.getElementById("loginBtn").onclick=async()=>{loginMsg.textContent="";const {error}=await sb.auth.signInWithPassword({email:document.getElementById("email").value.trim(),password:document.getElementById("password").value});if(error){loginMsg.textContent=error.message;return;}await boot();};
+logout.onclick=async()=>{await sb.auth.signOut();await boot();};
+sb.auth.onAuthStateChange(()=>{setTimeout(boot,0)});boot();
+</script></body></html>
