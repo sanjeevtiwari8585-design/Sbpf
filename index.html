@@ -95,6 +95,24 @@ footer{background:#241d20;color:#f9f3ec;padding:38px 20px 18px;text-align:left}f
 .campaign .campaign-banner-art .campaign-art-banner{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;border:0!important;border-radius:0!important;box-shadow:none!important}
 .campaign .campaign-banner-art:after{content:none!important;display:none!important}
 .campaign:hover .campaign-art-banner{transform:scale(1.025);transition:transform .25s ease}
+
+/* SBPF identity header: registration strip, purpose poster and accessible actions */
+.sbpf-topbar{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:9px max(16px,calc((100% - 1120px)/2));background:#0d3826;color:#fff;font-size:12px;z-index:10}
+.sbpf-reg-details,.sbpf-top-actions{display:flex;align-items:center;gap:10px 18px;flex-wrap:wrap}
+.sbpf-reg-details span{white-space:nowrap}.sbpf-reg-details strong{color:#f5d58b}
+.sbpf-top-actions a,.sbpf-language-button{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:7px 12px;border:1px solid #f2d58b;border-radius:8px;background:transparent;color:#fff;font:inherit;font-weight:750;text-decoration:none;cursor:pointer}
+.sbpf-top-actions a{background:#f2d58b;color:#173c2a;border-color:#f2d58b}
+.sbpf-top-actions a:hover,.sbpf-language-button:hover{filter:brightness(1.08)}
+.sbpf-translate-panel{width:100%;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 0 2px;color:#fff}
+.sbpf-translate-panel[hidden]{display:none}
+.sbpf-brand-header{background-image:linear-gradient(90deg,rgba(10,61,38,.96) 0%,rgba(15,91,53,.88) 52%,rgba(14,66,42,.5) 100%),url("public/assets/sbpf-purpose-poster.svg");background-size:cover;background-position:center;min-height:150px}
+.sbpf-brand-header .logo{box-shadow:0 5px 22px #001e1040}
+.sbpf-brand-copy{min-width:0}.sbpf-brand-copy h1{color:#fff;text-shadow:0 2px 10px #002b18a0}.sbpf-brand-copy p{font-weight:650}.sbpf-brand-motto{display:inline-block;margin-top:8px;color:#fff4d8;font-size:12px;font-weight:700;letter-spacing:.2px}
+#google_translate_element{min-height:30px;background:#fff;border-radius:6px;padding:4px 7px}
+#google_translate_element select{max-width:min(75vw,280px);font-size:13px}
+@media(max-width:700px){.sbpf-topbar{align-items:flex-start;padding:10px 12px}.sbpf-reg-details{gap:5px 12px}.sbpf-reg-details span{white-space:normal}.sbpf-top-actions{width:100%;gap:8px}.sbpf-top-actions a,.sbpf-language-button{min-height:36px}.sbpf-brand-header{background-position:center;background-image:linear-gradient(90deg,rgba(10,61,38,.96),rgba(15,91,53,.84)),url("public/assets/sbpf-purpose-poster.svg")}.sbpf-brand-motto{font-size:11px;line-height:1.5}}
+@media(max-width:420px){.sbpf-reg-details{display:grid;gap:3px}.sbpf-top-actions a,.sbpf-language-button{font-size:12px;padding:7px 9px}.sbpf-brand-header{align-items:center}.sbpf-brand-copy h1{overflow-wrap:anywhere}}
+
 </style>
 
 <style id="sbpf-mobile-layout-polish">
@@ -461,8 +479,12 @@ a:focus-visible,button:focus-visible{outline:3px solid #e99a32;outline-offset:3p
 
 </head>
 <body>
-<div class="topline">राष्ट्रहित में 24×7 तत्पर</div>
-<header><img id="sbpfLogo" class="logo" alt="स्वर्णिम भारत परिवार फाउंडेशन का आधिकारिक लोगो" src="public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png"><div><h1>स्वर्णिम भारत परिवार फाउंडेशन</h1><p>सेवा • सहयोग • स्वावलंबन • सशक्तिकरण</p></div></header>
+<div class="sbpf-topbar">
+  <div class="sbpf-reg-details"><span><strong>CIN:</strong> U88900UP2026NPL252071</span><span><strong>NGO दर्पण ID:</strong> UP/2026/1197725</span></div>
+  <div class="sbpf-top-actions"><button type="button" class="sbpf-language-button" id="sbpfLanguageToggle" aria-expanded="false" aria-controls="sbpfTranslatePanel">🌐 भाषा परिवर्तन</button><a class="sbpf-volunteer-login" href="member.html">स्वयंसेवक लॉगिन</a></div>
+  <div id="sbpfTranslatePanel" class="sbpf-translate-panel" hidden><span>अपनी भाषा चुनें:</span><div id="google_translate_element"></div></div>
+</div>
+<header class="sbpf-brand-header"><img id="sbpfLogo" class="logo" alt="स्वर्णिम भारत परिवार फाउंडेशन का आधिकारिक लोगो" src="public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png"><div class="sbpf-brand-copy"><h1>स्वर्णिम भारत परिवार फाउंडेशन</h1><p>सेवा • सहयोग • स्वावलंबन • सशक्तिकरण</p><span class="sbpf-brand-motto">जागरूक नागरिक • आत्मनिर्भर समाज • समृद्ध भारत</span></div></header>
 <nav><a href="#home">होम</a><a href="#about">हमारा उद्देश्य</a><a href="#work">कार्य क्षेत्र</a><a href="#campaigns">अभियान</a><a href="swarnim-csc.html">जनसुविधा केंद्र</a><a href="swarnim-creator.html">स्वर्णिम Creator</a><a href="#contact">संपर्क</a><a class="login" href="member.html">सदस्य पैनल / Login</a></nav>
 <main>
 <section class="hero" id="home"><div class="eyebrow">सेवा • सहयोग • सशक्त भारत</div><h2>सेवा से सहयोग तक,<br>हर परिवार के साथ</h2><p>शिक्षा, स्वास्थ्य, सरकारी योजनाओं और जनसेवा से जुड़ें।</p><div class="actions"><a class="btn" href="member.html">सदस्य पैनल खोलें</a><a class="btn secondary" href="#work">हमारे कार्य देखें</a></div></section>
@@ -612,4 +634,15 @@ a:focus-visible,button:focus-visible{outline:3px solid #e99a32;outline-offset:3p
 <script id="sbpf-government-jobs-auto-updater">
 (()=>{const API="https://dxowhzghrdghfzoggorx.supabase.co/rest/v1/sbpf_footer_config?config_key=eq.main_website_footer&is_active=eq.true&select=config_data,version";const KEY="sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo";const target=document.getElementById("sbpfGovJobsLinks");if(!target)return;async function refresh(){try{const r=await fetch(API,{headers:{apikey:KEY,Authorization:"Bearer "+KEY},cache:"no-store"});if(!r.ok)throw new Error("footer config "+r.status);const rows=await r.json();const cfg=rows&&rows[0]&&rows[0].config_data;const sec=(cfg?.sections||[]).find(s=>s.key==="government-jobs");if(!sec||!Array.isArray(sec.items))return;const valid=sec.items.filter(x=>typeof x.route==="string"&&/^https:\/\//i.test(x.route));if(!valid.length)return;target.innerHTML=valid.map(x=>'<li><a href="'+x.route.replace(/&/g,"&amp;").replace(/"/g,"&quot;")+'" target="_blank" rel="noopener noreferrer">'+String(x.label_hi||x.label_en||x.key).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))+'</a></li>').join("");const notice=target.parentElement.querySelector("[data-jobs-notice]");if(notice&&sec.notice_hi)notice.textContent=sec.notice_hi;target.dataset.configVersion=String(rows[0].version||"");}catch(e){console.warn("SBPF jobs auto-updater kept the last known links:",e)}}refresh();setInterval(refresh,6*60*60*1000);document.addEventListener("visibilitychange",()=>{if(!document.hidden)refresh()});})();
 </script>
+
+<script>
+(function(){
+  var button=document.getElementById('sbpfLanguageToggle');
+  var panel=document.getElementById('sbpfTranslatePanel');
+  if(button&&panel){button.addEventListener('click',function(){var opening=panel.hidden;panel.hidden=!opening;button.setAttribute('aria-expanded',String(opening));if(opening&&window.google&&google.translate&&google.translate.TranslateElement){var select=panel.querySelector('select');if(select)select.focus();}});}
+  window.googleTranslateElementInit=function(){if(window.google&&google.translate&&google.translate.TranslateElement){new google.translate.TranslateElement({pageLanguage:'hi',includedLanguages:'hi,en,bn,gu,kn,ml,mr,ne,or,pa,ta,te,ur,as,sa,sd',autoDisplay:false},'google_translate_element');}};
+  var translator=document.createElement('script');translator.src='https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';translator.async=true;translator.onerror=function(){var target=document.getElementById('google_translate_element');if(target)target.textContent='भाषा सेवा अभी उपलब्ध नहीं है।';};document.head.appendChild(translator);
+})();
+</script>
+
 </body></html>
