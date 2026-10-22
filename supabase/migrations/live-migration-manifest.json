@@ -1,0 +1,949 @@
+{
+  "generated_at": "2026-10-22",
+  "project_ref": "dxowhzghrdghfzoggorx",
+  "applied_migrations": [
+    {
+      "version": "20260928091646",
+      "name": "secure_members_user_access"
+    },
+    {
+      "version": "20260928091822",
+      "name": "add_secure_member_referrals"
+    },
+    {
+      "version": "20260928091923",
+      "name": "secure_referral_lookup"
+    },
+    {
+      "version": "20260928092031",
+      "name": "add_referral_registration_helper"
+    },
+    {
+      "version": "20260928092123",
+      "name": "add_secure_qr_verification"
+    },
+    {
+      "version": "20260928092227",
+      "name": "add_member_verification_url"
+    },
+    {
+      "version": "20260928092256",
+      "name": "secure_member_qr_payload"
+    },
+    {
+      "version": "20260928093310",
+      "name": "add_member_id_card_data"
+    },
+    {
+      "version": "20260928093539",
+      "name": "add_member_id_card_url_helper"
+    },
+    {
+      "version": "20260928094020",
+      "name": "add_member_registration_365_workflow"
+    },
+    {
+      "version": "20260928094831",
+      "name": "add_secure_admin_membership_workflow"
+    },
+    {
+      "version": "20260928094940",
+      "name": "add_admin_member_search_payment_status"
+    },
+    {
+      "version": "20260928095031",
+      "name": "add_member_payment_status_card_data_v2"
+    },
+    {
+      "version": "20260928095109",
+      "name": "add_membership_expiry_renewal_workflow"
+    },
+    {
+      "version": "20260928095414",
+      "name": "add_member_referral_dashboard"
+    },
+    {
+      "version": "20260928095538",
+      "name": "add_referral_levels_reporting"
+    },
+    {
+      "version": "20260928100142",
+      "name": "add_membership_payment_order_foundation"
+    },
+    {
+      "version": "20260928100230",
+      "name": "add_my_membership_payment_status"
+    },
+    {
+      "version": "20260928100411",
+      "name": "add_member_profile_update"
+    },
+    {
+      "version": "20260928100417",
+      "name": "add_my_member_profile_view"
+    },
+    {
+      "version": "20260928100525",
+      "name": "add_member_kyc_document_metadata"
+    },
+    {
+      "version": "20260928100603",
+      "name": "add_secure_kyc_admin_workflow"
+    },
+    {
+      "version": "20260928100743",
+      "name": "secure_private_kyc_storage"
+    },
+    {
+      "version": "20260928101116",
+      "name": "add_admin_kyc_signed_urls"
+    },
+    {
+      "version": "20260928102013",
+      "name": "add_member_certificate_system"
+    },
+    {
+      "version": "20260928102429",
+      "name": "add_admin_certificate_list"
+    },
+    {
+      "version": "20260928102825",
+      "name": "create_sbpf_assets_bucket"
+    },
+    {
+      "version": "20260928115328",
+      "name": "secure_legacy_members_rls"
+    },
+    {
+      "version": "20260928122027",
+      "name": "enable_member_portal_actions_v2"
+    },
+    {
+      "version": "20260928122419",
+      "name": "admin_content_management_policies"
+    },
+    {
+      "version": "20260928122735",
+      "name": "admin_case_workflow_controls"
+    },
+    {
+      "version": "20260928122949",
+      "name": "admin_member_360_detail"
+    },
+    {
+      "version": "20260928124158",
+      "name": "add_education_content_controls"
+    },
+    {
+      "version": "20260928125810",
+      "name": "education_learning_library_core"
+    },
+    {
+      "version": "20260928125946",
+      "name": "education_exam_categories"
+    },
+    {
+      "version": "20260928130446",
+      "name": "education_teacher_workflow"
+    },
+    {
+      "version": "20260928130533",
+      "name": "education_teacher_submission_rpc"
+    },
+    {
+      "version": "20260928130656",
+      "name": "education_teacher_submit_view"
+    },
+    {
+      "version": "20260928130947",
+      "name": "education_material_storage"
+    },
+    {
+      "version": "20260928133352",
+      "name": "add_education_auto_moderator_v1"
+    },
+    {
+      "version": "20260928133401",
+      "name": "education_auto_moderator_resource_update"
+    },
+    {
+      "version": "20260928135055",
+      "name": "create_sbpf_work_area_modules_v1"
+    },
+    {
+      "version": "20260928140826",
+      "name": "add_scheme_category_and_timestamps_v1"
+    },
+    {
+      "version": "20260928140857",
+      "name": "harden_admin_and_auto_moderator_execute_v1"
+    },
+    {
+      "version": "20260928211719",
+      "name": "enhance_member_registration_step_one"
+    },
+    {
+      "version": "20260928211725",
+      "name": "member_profile_update_policy"
+    },
+    {
+      "version": "20260928222952",
+      "name": "harden_function_search_paths"
+    },
+    {
+      "version": "20260928223149",
+      "name": "harden_membership_payment_kyc_certificate"
+    },
+    {
+      "version": "20260928223208",
+      "name": "tighten_member_teacher_storage_rls"
+    },
+    {
+      "version": "20260928223224",
+      "name": "secure_teacher_resource_path_attachment"
+    },
+    {
+      "version": "20260928223307",
+      "name": "remove_anonymous_admin_rpc_execution"
+    },
+    {
+      "version": "20260928223315",
+      "name": "lock_legacy_member_registration_rpcs"
+    },
+    {
+      "version": "20260928223334",
+      "name": "correct_public_rpc_privileges"
+    },
+    {
+      "version": "20260928223348",
+      "name": "lock_internal_trigger_and_maintenance_rpcs"
+    },
+    {
+      "version": "20260929044103",
+      "name": "add_sbpf_canonical_branding_assets"
+    },
+    {
+      "version": "20260929075649",
+      "name": "member_four_step_profile_functions"
+    },
+    {
+      "version": "20260929093357",
+      "name": "fix_auth_profile_sync"
+    },
+    {
+      "version": "20260929095947",
+      "name": "add_member_dashboard_data_rpc"
+    },
+    {
+      "version": "20260929102116",
+      "name": "add_kyc_identity_fields"
+    },
+    {
+      "version": "20260929104030",
+      "name": "add_profile_photo"
+    },
+    {
+      "version": "20260929104041",
+      "name": "profile_photo_storage_and_rpc"
+    },
+    {
+      "version": "20260929152226",
+      "name": "tighten_public_content_rls"
+    },
+    {
+      "version": "20260929213808",
+      "name": "restrict_media_journalist_registration_to_admin"
+    },
+    {
+      "version": "20260929214212",
+      "name": "add_journalist_id_to_media_role_view"
+    },
+    {
+      "version": "20260930211808",
+      "name": "create_swarnim_seva_module_v2"
+    },
+    {
+      "version": "20261001094850",
+      "name": "create_swarnim_scholarship_education_module"
+    },
+    {
+      "version": "20261001094911",
+      "name": "secure_scholarship_college_data"
+    },
+    {
+      "version": "20261001095951",
+      "name": "sbpf_unified_platform_core_v1"
+    },
+    {
+      "version": "20261001100151",
+      "name": "harden_sbpf_core_rls_v1"
+    },
+    {
+      "version": "20261001100218",
+      "name": "cleanup_sbpf_feature_flag_policy_v1"
+    },
+    {
+      "version": "20261003051013",
+      "name": "harden_public_security_definer_execute"
+    },
+    {
+      "version": "20261003052630",
+      "name": "tighten_remaining_public_rpc_permissions"
+    },
+    {
+      "version": "20261003053913",
+      "name": "optimize_rls_and_fk_indexes"
+    },
+    {
+      "version": "20261003071442",
+      "name": "add_sbpf_automation_engine"
+    },
+    {
+      "version": "20261003071513",
+      "name": "enable_sbpf_automation_scheduler"
+    },
+    {
+      "version": "20261003072000",
+      "name": "unify_member_identity_and_public_access"
+    },
+    {
+      "version": "20261003072013",
+      "name": "member_pincode_sync"
+    },
+    {
+      "version": "20261003072102",
+      "name": "fix_public_member_link_route"
+    },
+    {
+      "version": "20261003072113",
+      "name": "member_pincode_reader"
+    },
+    {
+      "version": "20261003073919",
+      "name": "harden_automation_and_member_public_link_rls"
+    },
+    {
+      "version": "20261003074254",
+      "name": "unify_member_pincode_updates_v1"
+    },
+    {
+      "version": "20261003075935",
+      "name": "enable_member_public_link_on_registration"
+    },
+    {
+      "version": "20261003105003",
+      "name": "create_sbpf_social_core"
+    },
+    {
+      "version": "20261003110402",
+      "name": "expand_public_government_data_12_areas"
+    },
+    {
+      "version": "20261003111034",
+      "name": "daily_scheme_sync_auth"
+    },
+    {
+      "version": "20261003111059",
+      "name": "enable_pg_net_for_daily_scheme_sync"
+    },
+    {
+      "version": "20261003111151",
+      "name": "fix_daily_sync_secret_storage"
+    },
+    {
+      "version": "20261003111938",
+      "name": "daily_public_data_sync_queue"
+    },
+    {
+      "version": "20261003165102",
+      "name": "allow_public_sbpf_logo_upload"
+    },
+    {
+      "version": "20261003165436",
+      "name": "restrict_sbpf_logo_upload_to_authenticated"
+    },
+    {
+      "version": "20261004170012",
+      "name": "integrate_sbpf_languages_public_read"
+    },
+    {
+      "version": "20261004170154",
+      "name": "add_sbpf_button_settings"
+    },
+    {
+      "version": "20261004170323",
+      "name": "add_sbpf_privacy_policy"
+    },
+    {
+      "version": "20261004170602",
+      "name": "add_sbpf_organization_hierarchy"
+    },
+    {
+      "version": "20261004172912",
+      "name": "create_swarnim_book_phase1"
+    },
+    {
+      "version": "20261004173315",
+      "name": "swarnim_book_monetization_channels"
+    },
+    {
+      "version": "20261005155217",
+      "name": "expand_social_media_core"
+    },
+    {
+      "version": "20261005155228",
+      "name": "harden_social_media_rls"
+    },
+    {
+      "version": "20261005155239",
+      "name": "enable_social_realtime"
+    },
+    {
+      "version": "20261005185416",
+      "name": "add_sbpf_appointment_document_qr"
+    },
+    {
+      "version": "20261005190221",
+      "name": "create_sbpf_appointment_verifications"
+    },
+    {
+      "version": "20261009180445",
+      "name": "sbpf_member_teams_and_clubs"
+    },
+    {
+      "version": "20261009180552",
+      "name": "sbpf_team_admin_approval"
+    },
+    {
+      "version": "20261009180601",
+      "name": "sbpf_admin_team_list"
+    },
+    {
+      "version": "20261009180638",
+      "name": "tighten_team_rls_visibility"
+    },
+    {
+      "version": "20261009181754",
+      "name": "sbpf_five_level_referral_rewards"
+    },
+    {
+      "version": "20261009181804",
+      "name": "sbpf_admin_five_level_referral_report"
+    },
+    {
+      "version": "20261009184036",
+      "name": "sbpf_five_member_geo_team_admin_system"
+    },
+    {
+      "version": "20261009184106",
+      "name": "sbpf_super_admin_team_controls"
+    },
+    {
+      "version": "20261009184125",
+      "name": "sbpf_super_admin_team_member_review"
+    },
+    {
+      "version": "20261009184924",
+      "name": "sbpf_member_branding_work_area_system"
+    },
+    {
+      "version": "20261009184957",
+      "name": "sbpf_member_id_card_v2_work_area_fields"
+    },
+    {
+      "version": "20261009185112",
+      "name": "sbpf_member_work_area_self_service"
+    },
+    {
+      "version": "20261009185130",
+      "name": "sbpf_public_brand_config_rpc"
+    },
+    {
+      "version": "20261009185149",
+      "name": "sbpf_member_profile_mobile_validation_fix"
+    },
+    {
+      "version": "20261010060649",
+      "name": "add_ems_school_management"
+    },
+    {
+      "version": "20261010064249",
+      "name": "ems_link_existing_sbpf_member_ids"
+    },
+    {
+      "version": "20261010064315",
+      "name": "ems_member_id_role_linking_and_panel_access"
+    },
+    {
+      "version": "20261010064328",
+      "name": "ems_enforce_member_link_and_limit_teacher_roster"
+    },
+    {
+      "version": "20261010064426",
+      "name": "ems_lock_student_and_teacher_record_writes"
+    },
+    {
+      "version": "20261010064650",
+      "name": "create_member_pariwar_register"
+    },
+    {
+      "version": "20261010064704",
+      "name": "add_member_pariwar_registration_rpc"
+    },
+    {
+      "version": "20261010065302",
+      "name": "expand_member_pariwar_scheme_eligibility"
+    },
+    {
+      "version": "20261010065354",
+      "name": "member_pariwar_upsert_and_validation"
+    },
+    {
+      "version": "20261010065434",
+      "name": "add_admin_member_pariwar_review"
+    },
+    {
+      "version": "20261010071124",
+      "name": "audit_fix_ems_attendance_rls_and_rpc_grants"
+    },
+    {
+      "version": "20261010071151",
+      "name": "harden_family_writes_and_membership_insert"
+    },
+    {
+      "version": "20261010071320",
+      "name": "harden_membership_maintenance_and_add_targeted_indexes"
+    },
+    {
+      "version": "20261010071410",
+      "name": "restrict_member_eligibility_probe_rpc"
+    },
+    {
+      "version": "20261010073150",
+      "name": "create_hms_hospital_management_foundation"
+    },
+    {
+      "version": "20261010073301",
+      "name": "tighten_hms_role_based_read_policies"
+    },
+    {
+      "version": "20261010073331",
+      "name": "restrict_hms_access_helper_to_authenticated"
+    },
+    {
+      "version": "20261010073359",
+      "name": "move_hms_rls_helper_to_private_schema"
+    },
+    {
+      "version": "20261010073536",
+      "name": "extend_hms_clinical_admissions_payments_and_member_link"
+    },
+    {
+      "version": "20261010073555",
+      "name": "hms_auto_numbers_and_api_grants"
+    },
+    {
+      "version": "20261010074004",
+      "name": "hms_opd_discharge_structured_records"
+    },
+    {
+      "version": "20261010074601",
+      "name": "hms_opd_ipd_emergency_token_prescription_workflow"
+    },
+    {
+      "version": "20261010074622",
+      "name": "hms_doctor_token_lookup_rpc"
+    },
+    {
+      "version": "20261010074749",
+      "name": "hms_validate_hospital_patient_doctor_scope"
+    },
+    {
+      "version": "20261010075047",
+      "name": "hms_hospital_portal_slugs"
+    },
+    {
+      "version": "20261010083200",
+      "name": "hms_medication_patient_portal_teleconsult"
+    },
+    {
+      "version": "20261010083712",
+      "name": "hms_patient_phone_otp_access_guard"
+    },
+    {
+      "version": "20261010083751",
+      "name": "hms_patient_records_otp_rls_scope"
+    },
+    {
+      "version": "20261010083817",
+      "name": "hms_restore_scoped_patient_write_policies"
+    },
+    {
+      "version": "20261010084230",
+      "name": "member_family_profile_education_medical_income_work"
+    },
+    {
+      "version": "20261010084242",
+      "name": "member_family_private_document_storage"
+    },
+    {
+      "version": "20261010084305",
+      "name": "member_family_member_panel_access"
+    },
+    {
+      "version": "20261010084431",
+      "name": "member_family_consent_and_document_guardrails"
+    },
+    {
+      "version": "20261010084439",
+      "name": "member_family_document_consent_guard"
+    },
+    {
+      "version": "20261010084454",
+      "name": "member_family_policy_family_link_fix"
+    },
+    {
+      "version": "20261010084740",
+      "name": "sbpf_full_audit_least_privilege_grants"
+    },
+    {
+      "version": "20261010084839",
+      "name": "sbpf_audit_team_capacity_referral_access"
+    },
+    {
+      "version": "20261010084903",
+      "name": "sbpf_member_registration_profile_completion_guard"
+    },
+    {
+      "version": "20261010084928",
+      "name": "sbpf_audit_admin_policy_completion"
+    },
+    {
+      "version": "20261010085049",
+      "name": "member_family_prevent_cross_member_link"
+    },
+    {
+      "version": "20261010085249",
+      "name": "member_family_consent_based_scheme_candidates"
+    },
+    {
+      "version": "20261010085320",
+      "name": "sbpf_reopen_incomplete_member_profile"
+    },
+    {
+      "version": "20261010090354",
+      "name": "ems_student_id_report_cards_certificates_and_school_branding"
+    },
+    {
+      "version": "20261010090408",
+      "name": "ems_auto_report_certificate_codes_and_school_logo_storage"
+    },
+    {
+      "version": "20261010090418",
+      "name": "ems_secure_public_id_card_and_certificate_verification"
+    },
+    {
+      "version": "20261010090446",
+      "name": "ems_school_code_support_hindi_school_names"
+    },
+    {
+      "version": "20261010091105",
+      "name": "ems_hms_tenant_portals_facilities_domains_and_auto_templates"
+    },
+    {
+      "version": "20261010091127",
+      "name": "ems_hms_logo_upload_branding_sync_and_public_portal_resolution"
+    },
+    {
+      "version": "20261010091434",
+      "name": "sbpf_data_driven_document_generation_and_delivery_history"
+    },
+    {
+      "version": "20261010091838",
+      "name": "remove_duplicate_ems_school_code_index"
+    },
+    {
+      "version": "20261010112526",
+      "name": "update_member_dashboard_referral_link_github_pages"
+    },
+    {
+      "version": "20261010113119",
+      "name": "add_validated_member_profile_completion_rpc"
+    },
+    {
+      "version": "20261010123738",
+      "name": "hms_secure_diagnostic_order_workflow"
+    },
+    {
+      "version": "20261010195016",
+      "name": "harden_public_security_definer_search_path"
+    },
+    {
+      "version": "20261010195131",
+      "name": "add_missing_single_column_foreign_key_indexes"
+    },
+    {
+      "version": "20261010195320",
+      "name": "harden_is_admin_search_path"
+    },
+    {
+      "version": "20261010200515",
+      "name": "restrict_profile_photo_uploads"
+    },
+    {
+      "version": "20261011061141",
+      "name": "add_sbpf_membership_billing_plans"
+    },
+    {
+      "version": "20261011163749",
+      "name": "harden_swarnim_seva_request_updates_and_grants"
+    },
+    {
+      "version": "20261011163936",
+      "name": "reconcile_sbpf_team_capacity_by_type"
+    },
+    {
+      "version": "20261011163947",
+      "name": "fix_team_member_reactivation_capacity_check"
+    },
+    {
+      "version": "20261011164014",
+      "name": "preserve_team_admin_member_upsert_behavior"
+    },
+    {
+      "version": "20261011164510",
+      "name": "seed_verified_central_and_up_schemes_by_work_area"
+    },
+    {
+      "version": "20261011164533",
+      "name": "map_verified_schemes_to_sbpf_work_areas"
+    },
+    {
+      "version": "20261011164548",
+      "name": "add_public_work_area_scheme_listing"
+    },
+    {
+      "version": "20261011170140",
+      "name": "sbpf_team_member_public_impact_activities"
+    },
+    {
+      "version": "20261011170153",
+      "name": "fix_public_team_activity_view_access"
+    },
+    {
+      "version": "20261011170437",
+      "name": "expand_sbpf_organization_types"
+    },
+    {
+      "version": "20261011172124",
+      "name": "create_sbpf_footer_configuration"
+    },
+    {
+      "version": "20261011172728",
+      "name": "create_sbpf_government_official_directory"
+    },
+    {
+      "version": "20261011172906",
+      "name": "schedule_sbpf_government_directory_maintenance"
+    },
+    {
+      "version": "20261011174225",
+      "name": "sbpf_ai_knowledge_base"
+    },
+    {
+      "version": "20261011190342",
+      "name": "create_prarthana_patra_kendra"
+    },
+    {
+      "version": "20261011192500",
+      "name": "create_authorized_media_download_jobs"
+    },
+    {
+      "version": "20261011213630",
+      "name": "secure_swarnim_ai_studio_registry"
+    },
+    {
+      "version": "20261011214444",
+      "name": "swarnim_ai_video_studio"
+    },
+    {
+      "version": "20261011220930",
+      "name": "add_private_voiceover_storage"
+    },
+    {
+      "version": "20261011230332",
+      "name": "swarnimai_signup_profile_trigger"
+    },
+    {
+      "version": "20261011230530",
+      "name": "secure_swarnimai_profile_trigger"
+    },
+    {
+      "version": "20261011232409",
+      "name": "member_id_login_rate_limit"
+    },
+    {
+      "version": "20261011232951",
+      "name": "swarnim_video_editor_projects"
+    },
+    {
+      "version": "20261011234344",
+      "name": "harden_public_team_activity_view"
+    },
+    {
+      "version": "20261011235212",
+      "name": "create_private_swarnim_video_exports_bucket"
+    },
+    {
+      "version": "20261016173602",
+      "name": "member_signup_popup_template"
+    },
+    {
+      "version": "20261016180543",
+      "name": "media_download_gallery_formats"
+    },
+    {
+      "version": "20261018065913",
+      "name": "education_career_guides_catalog"
+    },
+    {
+      "version": "20261018071514",
+      "name": "elibrary_yearwise_member_gated_papers"
+    },
+    {
+      "version": "20261018071522",
+      "name": "elibrary_private_pdf_storage"
+    },
+    {
+      "version": "20261018072122",
+      "name": "elibrary_official_archives_2016_2025"
+    },
+    {
+      "version": "20261018075603",
+      "name": "education_teacher_directory_autoupdate"
+    },
+    {
+      "version": "20261021191530",
+      "name": "education_assistance_admin_review"
+    },
+    {
+      "version": "20261021191539",
+      "name": "education_assistance_admin_storage_access"
+    },
+    {
+      "version": "20261021193828",
+      "name": "education_member_workflow_storage_admin"
+    },
+    {
+      "version": "20261021194241",
+      "name": "education_workflow_audit_hardening"
+    },
+    {
+      "version": "20261021194322",
+      "name": "education_workflow_member_admin_readiness"
+    },
+    {
+      "version": "20261021194757",
+      "name": "health_service_request_sequence"
+    },
+    {
+      "version": "20261021194824",
+      "name": "health_services_workflow"
+    },
+    {
+      "version": "20261021194831",
+      "name": "health_services_admin_catalog_permissions"
+    },
+    {
+      "version": "20261021194859",
+      "name": "health_service_workflow_fk_indexes"
+    },
+    {
+      "version": "20261021195157",
+      "name": "women_empowerment_request_sequence"
+    },
+    {
+      "version": "20261021195227",
+      "name": "women_empowerment_workflow"
+    },
+    {
+      "version": "20261021195712",
+      "name": "women_empowerment_government_scheme_directory"
+    },
+    {
+      "version": "20261021195829",
+      "name": "india_state_ut_filter_directory"
+    },
+    {
+      "version": "20261021200123",
+      "name": "women_scheme_office_logo_poster_fields"
+    },
+    {
+      "version": "20261021200421",
+      "name": "women_empowerment_scheme_sources_and_import_audit"
+    },
+    {
+      "version": "20261021200430",
+      "name": "women_empowerment_scheme_media_and_filter_rpc"
+    },
+    {
+      "version": "20261021200641",
+      "name": "women_scheme_source_mapping_and_import_status_fix"
+    },
+    {
+      "version": "20261021200900",
+      "name": "child_development_work_area4_complete_backend"
+    },
+    {
+      "version": "20261021200907",
+      "name": "sbpf_work_area_order_alignment_child_development_fourth"
+    },
+    {
+      "version": "20261021200938",
+      "name": "child_development_private_request_privileges_hardening"
+    },
+    {
+      "version": "20261021201002",
+      "name": "child_development_catalog_admin_and_cards_deduplication"
+    },
+    {
+      "version": "20261021201011",
+      "name": "child_development_rpc_auth_only"
+    },
+    {
+      "version": "20261021201212",
+      "name": "youth_empowerment_work_area5_services"
+    },
+    {
+      "version": "20261021201221",
+      "name": "youth_empowerment_requests_and_history"
+    },
+    {
+      "version": "20261021201235",
+      "name": "youth_empowerment_request_rpc_security"
+    },
+    {
+      "version": "20261021201247",
+      "name": "youth_empowerment_content_cards_and_links"
+    },
+    {
+      "version": "20261021201812",
+      "name": "employment_skill_services_catalog"
+    },
+    {
+      "version": "20261021201821",
+      "name": "employment_skill_services_seed"
+    },
+    {
+      "version": "20261021201838",
+      "name": "employment_skill_area6_content_cards"
+    }
+  ],
+  "repository_sql_files": [
+    "supabase/migrations/20261010130000_hms_secure_diagnostic_order_workflow.sql",
+    "supabase/migrations/20261012000100_swarnim_csc_catalog.sql",
+    "supabase/migrations/20261012003000_member_id_login_rate_limit.sql"
+  ],
+  "status": "INCOMPLETE_RECONCILIATION",
+  "note": "Live migration history lists 234 applied migrations; repository contains only the listed SQL files. This manifest records live state but does not recreate missing migration SQL."
+}

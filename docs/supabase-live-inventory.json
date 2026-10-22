@@ -1,0 +1,1319 @@
+{
+  "generated_at": "2026-10-22",
+  "project_ref": "dxowhzghrdghfzoggorx",
+  "schema": "public",
+  "live_table_count": 219,
+  "tables": [
+    {
+      "name": "public.profiles",
+      "rls_enabled": true,
+      "approx_rows": 5
+    },
+    {
+      "name": "public.campaigns",
+      "rls_enabled": true,
+      "approx_rows": 11
+    },
+    {
+      "name": "public.focus_areas",
+      "rls_enabled": true,
+      "approx_rows": 12
+    },
+    {
+      "name": "public.news",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.videos",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.government_schemes",
+      "rls_enabled": true,
+      "approx_rows": 29,
+      "comment": "SBPF government scheme catalog extended for Central/State/UT scope, eligibility, benefits, documents, official sources and sync metadata."
+    },
+    {
+      "name": "public.government_links",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.memberships",
+      "rls_enabled": true,
+      "approx_rows": 4
+    },
+    {
+      "name": "public.complaints",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.volunteers",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.donations",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.notifications",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.Members",
+      "rls_enabled": true,
+      "approx_rows": 1
+    },
+    {
+      "name": "public.members",
+      "rls_enabled": true,
+      "approx_rows": 5
+    },
+    {
+      "name": "public.admin_users",
+      "rls_enabled": true,
+      "approx_rows": 1
+    },
+    {
+      "name": "public.membership_payments",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.member_certificates",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.education_content",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.education_categories",
+      "rls_enabled": true,
+      "approx_rows": 41
+    },
+    {
+      "name": "public.education_teachers",
+      "rls_enabled": true,
+      "approx_rows": 1
+    },
+    {
+      "name": "public.education_resources",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.education_enrollments",
+      "rls_enabled": true,
+      "approx_rows": 1
+    },
+    {
+      "name": "public.education_resource_access",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.work_area_content",
+      "rls_enabled": true,
+      "approx_rows": 77
+    },
+    {
+      "name": "public.work_area_requests",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.employment_opportunities",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.campaign_categories",
+      "rls_enabled": true,
+      "approx_rows": 23
+    },
+    {
+      "name": "public.campaign_content",
+      "rls_enabled": true,
+      "approx_rows": 123
+    },
+    {
+      "name": "public.campaign_member_access",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.samvad_regions",
+      "rls_enabled": true,
+      "approx_rows": 24
+    },
+    {
+      "name": "public.samvad_officers",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.samvad_complaints",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.samvad_actions",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.samvad_transfer_history",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.samvad_pincodes",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.branding_assets",
+      "rls_enabled": true,
+      "approx_rows": 29
+    },
+    {
+      "name": "public.media_categories",
+      "rls_enabled": true,
+      "approx_rows": 5
+    },
+    {
+      "name": "public.media_posts",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.media_journalists",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.seva_categories",
+      "rls_enabled": true,
+      "approx_rows": 14
+    },
+    {
+      "name": "public.seva_requests",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.seva_assignments",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.seva_request_updates",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.seva_feedback",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.seva_rulebook",
+      "rls_enabled": true,
+      "approx_rows": 1
+    },
+    {
+      "name": "public.education_colleges",
+      "rls_enabled": true,
+      "approx_rows": 1
+    },
+    {
+      "name": "public.education_scholarships",
+      "rls_enabled": true,
+      "approx_rows": 1
+    },
+    {
+      "name": "public.scholarship_applications",
+      "rls_enabled": true,
+      "approx_rows": 1
+    },
+    {
+      "name": "public.scholarship_application_documents",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.scholarship_fund_payments",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_modules",
+      "rls_enabled": true,
+      "approx_rows": 12
+    },
+    {
+      "name": "public.sbpf_app_registry",
+      "rls_enabled": true,
+      "approx_rows": 1
+    },
+    {
+      "name": "public.sbpf_feature_flags",
+      "rls_enabled": true,
+      "approx_rows": 5
+    },
+    {
+      "name": "public.sbpf_events",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_audit_log",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_integrations",
+      "rls_enabled": true,
+      "approx_rows": 5
+    },
+    {
+      "name": "public.automation_rules",
+      "rls_enabled": true,
+      "approx_rows": 3
+    },
+    {
+      "name": "public.automation_runs",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.member_public_links",
+      "rls_enabled": true,
+      "approx_rows": 1
+    },
+    {
+      "name": "public.sbpf_social_posts",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_social_comments",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_social_reactions",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_social_follows",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_social_notifications",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_government_regions",
+      "rls_enabled": true,
+      "approx_rows": 37
+    },
+    {
+      "name": "public.sbpf_scheme_categories",
+      "rls_enabled": true,
+      "approx_rows": 12
+    },
+    {
+      "name": "public.sbpf_scheme_focus_areas",
+      "rls_enabled": true,
+      "approx_rows": 43
+    },
+    {
+      "name": "public.sbpf_scheme_sources",
+      "rls_enabled": true,
+      "approx_rows": 7
+    },
+    {
+      "name": "public.sbpf_scheme_sync_runs",
+      "rls_enabled": true,
+      "approx_rows": 150
+    },
+    {
+      "name": "public.sbpf_government_districts",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_scheme_districts",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_sync_secrets",
+      "rls_enabled": true,
+      "approx_rows": 1
+    },
+    {
+      "name": "public.sbpf_external_api_config",
+      "rls_enabled": true,
+      "approx_rows": 1
+    },
+    {
+      "name": "public.sbpf_datagov_resources",
+      "rls_enabled": true,
+      "approx_rows": 3
+    },
+    {
+      "name": "public.sbpf_document_templates",
+      "rls_enabled": true,
+      "approx_rows": 1
+    },
+    {
+      "name": "public.sbpf_poster_catalog",
+      "rls_enabled": true,
+      "approx_rows": 19
+    },
+    {
+      "name": "public.sbpf_regional_posters",
+      "rls_enabled": true,
+      "approx_rows": 2
+    },
+    {
+      "name": "public.sbpf_languages",
+      "rls_enabled": true,
+      "approx_rows": 22
+    },
+    {
+      "name": "public.sbpf_button_settings",
+      "rls_enabled": true,
+      "approx_rows": 9
+    },
+    {
+      "name": "public.sbpf_policies",
+      "rls_enabled": true,
+      "approx_rows": 1
+    },
+    {
+      "name": "public.sbpf_organization_units",
+      "rls_enabled": true,
+      "approx_rows": 1
+    },
+    {
+      "name": "public.sbpf_committee_members",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.swarnim_book_profiles",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.swarnim_book_posts",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.swarnim_book_comments",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.swarnim_book_likes",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.swarnim_book_follows",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.swarnim_book_channels",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.swarnim_book_monetization_rules",
+      "rls_enabled": true,
+      "approx_rows": 3
+    },
+    {
+      "name": "public.swarnim_book_creator_earnings",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.swarnim_book_creator_wallet",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_social_profiles",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_social_saves",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_social_views",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_social_stories",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_social_story_views",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_social_reports",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_social_blocks",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_social_message_threads",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_social_message_members",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_social_messages",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_social_hashtags",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_social_post_hashtags",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_social_notification_preferences",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_appointment_documents",
+      "rls_enabled": true,
+      "approx_rows": 5
+    },
+    {
+      "name": "public.sbpf_appointment_verifications",
+      "rls_enabled": true,
+      "approx_rows": 2
+    },
+    {
+      "name": "public.sbpf_teams",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_team_members",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_referral_level_rules",
+      "rls_enabled": true,
+      "approx_rows": 5
+    },
+    {
+      "name": "public.sbpf_member_referral_rewards",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_team_admin_audit",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_brand_settings",
+      "rls_enabled": true,
+      "approx_rows": 1
+    },
+    {
+      "name": "public.sbpf_work_area_branding",
+      "rls_enabled": true,
+      "approx_rows": 12
+    },
+    {
+      "name": "public.ems_schools",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.ems_school_users",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.ems_students",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.ems_teachers",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.ems_fee_records",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.ems_attendance",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.ems_salary_records",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.ems_events",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.ems_school_domains",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.member_pariwar_register",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.member_pariwar_members",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_hospitals",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_hospital_users",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_staff",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_staff_attendance",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_staff_salary",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_staff_leaves",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_staff_letters",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_medical_items",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_inventory_transactions",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_patients",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_patient_registrations",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_bills",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_bill_items",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_appointments",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_beds",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_admissions",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_clinical_records",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_payments",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_audit_log",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_opd_visits",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_discharge_summaries",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_encounters",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_queue_tokens",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_encounter_vitals",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_prescriptions",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_prescription_items",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_diagnostic_orders",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_diagnostic_order_items",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_procedure_orders",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_procedure_order_items",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_patient_users",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_medication_administrations",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_patient_medication_logs",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_teleconsultations",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_teleconsultation_messages",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.member_family_education",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.member_family_medical",
+      "rls_enabled": true,
+      "approx_rows": 0,
+      "comment": "Sensitive family health details. Collect only with explicit consent and restrict access to authorized staff/member."
+    },
+    {
+      "name": "public.member_family_income_work",
+      "rls_enabled": true,
+      "approx_rows": 0,
+      "comment": "Family income, livelihood, skills, work experience and employment support details for consent-based scheme matching."
+    },
+    {
+      "name": "public.member_family_documents",
+      "rls_enabled": true,
+      "approx_rows": 0,
+      "comment": "Metadata for documents stored in a private bucket; never store public URLs for sensitive identity, income, education or medical files."
+    },
+    {
+      "name": "public.ems_student_id_cards",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.ems_student_report_cards",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.ems_student_report_card_subjects",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.ems_student_certificates",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_hospital_domains",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.ems_school_facilities",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_hospital_facilities",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.ems_school_portal_settings",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.hms_hospital_portal_settings",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_tenant_document_templates",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_generated_documents",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_document_delivery_log",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.membership_plans",
+      "rls_enabled": true,
+      "approx_rows": 4
+    },
+    {
+      "name": "public.sbpf_team_member_activities",
+      "rls_enabled": true,
+      "approx_rows": 0,
+      "comment": "SBPF team/club member activities for NGO service, social welfare and national interest; member submissions require admin review before public display."
+    },
+    {
+      "name": "public.sbpf_footer_config",
+      "rls_enabled": true,
+      "approx_rows": 1
+    },
+    {
+      "name": "public.sbpf_government_officials",
+      "rls_enabled": true,
+      "approx_rows": 29
+    },
+    {
+      "name": "public.sbpf_government_directory_sources",
+      "rls_enabled": true,
+      "approx_rows": 39
+    },
+    {
+      "name": "public.sbpf_government_directory_sync_runs",
+      "rls_enabled": true,
+      "approx_rows": 12
+    },
+    {
+      "name": "public.sbpf_government_directory_settings",
+      "rls_enabled": true,
+      "approx_rows": 4
+    },
+    {
+      "name": "public.sbpf_ai_knowledge",
+      "rls_enabled": true,
+      "approx_rows": 12
+    },
+    {
+      "name": "public.swarnim_csc_portals",
+      "rls_enabled": true,
+      "approx_rows": 14
+    },
+    {
+      "name": "public.swarnim_csc_services",
+      "rls_enabled": true,
+      "approx_rows": 22
+    },
+    {
+      "name": "public.prarthana_departments",
+      "rls_enabled": true,
+      "approx_rows": 18,
+      "comment": "SBPF जनता प्रार्थना-पत्र केंद्र: विभाग मास्टर सूची"
+    },
+    {
+      "name": "public.prarthana_states",
+      "rls_enabled": true,
+      "approx_rows": 36,
+      "comment": "SBPF जनता प्रार्थना-पत्र केंद्र: राज्य और केंद्रशासित प्रदेश मास्टर सूची"
+    },
+    {
+      "name": "public.prarthana_districts",
+      "rls_enabled": true,
+      "approx_rows": 75,
+      "comment": "SBPF जनता प्रार्थना-पत्र केंद्र: जिला मास्टर सूची; district values require periodic official-source verification"
+    },
+    {
+      "name": "public.prarthana_templates",
+      "rls_enabled": true,
+      "approx_rows": 21,
+      "comment": "SBPF जनता प्रार्थना-पत्र केंद्र: editable A4 print-ready letter templates. Personal form entries should be rendered client-side and not persisted by default."
+    },
+    {
+      "name": "public.media_download_jobs",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.sbpf_ai_studio_projects",
+      "rls_enabled": true,
+      "approx_rows": 1
+    },
+    {
+      "name": "public.sbpf_ai_video_jobs",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.member_login_attempts",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.swarnim_video_editor_projects",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.member_signup_popup_templates",
+      "rls_enabled": true,
+      "approx_rows": 1
+    },
+    {
+      "name": "public.media_download_assets",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.education_career_guides",
+      "rls_enabled": true,
+      "approx_rows": 34
+    },
+    {
+      "name": "public.e_library_exam_papers",
+      "rls_enabled": true,
+      "approx_rows": 680
+    },
+    {
+      "name": "public.education_directory_profiles",
+      "rls_enabled": true,
+      "approx_rows": 11
+    },
+    {
+      "name": "public.education_member_workflows",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.education_workflow_reviews",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.health_services",
+      "rls_enabled": true,
+      "approx_rows": 12
+    },
+    {
+      "name": "public.health_service_requests",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.health_service_request_history",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.women_empowerment_services",
+      "rls_enabled": true,
+      "approx_rows": 11
+    },
+    {
+      "name": "public.women_empowerment_requests",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.women_empowerment_request_history",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.women_empowerment_government_schemes",
+      "rls_enabled": true,
+      "approx_rows": 13
+    },
+    {
+      "name": "public.india_state_ut_directory",
+      "rls_enabled": true,
+      "approx_rows": 36
+    },
+    {
+      "name": "public.women_empowerment_scheme_sources",
+      "rls_enabled": true,
+      "approx_rows": 37
+    },
+    {
+      "name": "public.women_empowerment_scheme_import_batches",
+      "rls_enabled": true,
+      "approx_rows": 1
+    },
+    {
+      "name": "public.women_empowerment_scheme_media",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.child_development_services",
+      "rls_enabled": true,
+      "approx_rows": 11
+    },
+    {
+      "name": "public.child_development_requests",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.child_development_request_history",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.youth_empowerment_services",
+      "rls_enabled": true,
+      "approx_rows": 10
+    },
+    {
+      "name": "public.youth_empowerment_requests",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.youth_empowerment_request_history",
+      "rls_enabled": true,
+      "approx_rows": 0
+    },
+    {
+      "name": "public.employment_skill_services",
+      "rls_enabled": true,
+      "approx_rows": 10
+    }
+  ],
+  "active_edge_function_count": 32,
+  "edge_functions": [
+    {
+      "name": "verify-member",
+      "status": "ACTIVE",
+      "version": 4,
+      "verify_jwt": false
+    },
+    {
+      "name": "member-id-card",
+      "status": "ACTIVE",
+      "version": 5,
+      "verify_jwt": true
+    },
+    {
+      "name": "member-dashboard",
+      "status": "ACTIVE",
+      "version": 25,
+      "verify_jwt": false
+    },
+    {
+      "name": "member-registration",
+      "status": "ACTIVE",
+      "version": 3,
+      "verify_jwt": false
+    },
+    {
+      "name": "admin-panel",
+      "status": "ACTIVE",
+      "version": 16,
+      "verify_jwt": false
+    },
+    {
+      "name": "kyc-upload",
+      "status": "ACTIVE",
+      "version": 2,
+      "verify_jwt": true
+    },
+    {
+      "name": "admin-kyc-panel",
+      "status": "ACTIVE",
+      "version": 3,
+      "verify_jwt": false
+    },
+    {
+      "name": "member-profile",
+      "status": "ACTIVE",
+      "version": 4,
+      "verify_jwt": false
+    },
+    {
+      "name": "member-certificate",
+      "status": "ACTIVE",
+      "version": 4,
+      "verify_jwt": false
+    },
+    {
+      "name": "verify-certificate",
+      "status": "ACTIVE",
+      "version": 2,
+      "verify_jwt": false
+    },
+    {
+      "name": "admin-logo-upload",
+      "status": "ACTIVE",
+      "version": 3,
+      "verify_jwt": false
+    },
+    {
+      "name": "admin-member-detail",
+      "status": "ACTIVE",
+      "version": 2,
+      "verify_jwt": false
+    },
+    {
+      "name": "admin-members-v5",
+      "status": "ACTIVE",
+      "version": 2,
+      "verify_jwt": false
+    },
+    {
+      "name": "admin-education",
+      "status": "ACTIVE",
+      "version": 4,
+      "verify_jwt": false
+    },
+    {
+      "name": "teacher-dashboard",
+      "status": "ACTIVE",
+      "version": 8,
+      "verify_jwt": false
+    },
+    {
+      "name": "sbpf-portal",
+      "status": "ACTIVE",
+      "version": 4,
+      "verify_jwt": false
+    },
+    {
+      "name": "swarnim-samvad",
+      "status": "ACTIVE",
+      "version": 3,
+      "verify_jwt": true
+    },
+    {
+      "name": "admin-login",
+      "status": "ACTIVE",
+      "version": 5,
+      "verify_jwt": false
+    },
+    {
+      "name": "media-video-auto-review",
+      "status": "ACTIVE",
+      "version": 2,
+      "verify_jwt": true
+    },
+    {
+      "name": "media-auto-review",
+      "status": "ACTIVE",
+      "version": 2,
+      "verify_jwt": true
+    },
+    {
+      "name": "sbpf-scheme-sync",
+      "status": "ACTIVE",
+      "version": 6,
+      "verify_jwt": false
+    },
+    {
+      "name": "payu-create-checkout",
+      "status": "ACTIVE",
+      "version": 4,
+      "verify_jwt": true
+    },
+    {
+      "name": "payu-response",
+      "status": "ACTIVE",
+      "version": 3,
+      "verify_jwt": false
+    },
+    {
+      "name": "payu-verify-payment",
+      "status": "ACTIVE",
+      "version": 2,
+      "verify_jwt": true
+    },
+    {
+      "name": "sbpf-ai-chat",
+      "status": "ACTIVE",
+      "version": 3,
+      "verify_jwt": false
+    },
+    {
+      "name": "media-download-request",
+      "status": "ACTIVE",
+      "version": 2,
+      "verify_jwt": true
+    },
+    {
+      "name": "swarnim-ai-voiceover",
+      "status": "ACTIVE",
+      "version": 3,
+      "verify_jwt": true
+    },
+    {
+      "name": "swarnim-ai-storyboard",
+      "status": "ACTIVE",
+      "version": 4,
+      "verify_jwt": false
+    },
+    {
+      "name": "swarnim-ai-create-story",
+      "status": "ACTIVE",
+      "version": 4,
+      "verify_jwt": true
+    },
+    {
+      "name": "member-id-login",
+      "status": "ACTIVE",
+      "version": 2,
+      "verify_jwt": false
+    },
+    {
+      "name": "swarnim-member-password-login",
+      "status": "ACTIVE",
+      "version": 1,
+      "verify_jwt": false
+    },
+    {
+      "name": "media-download-gallery",
+      "status": "ACTIVE",
+      "version": 1,
+      "verify_jwt": true
+    }
+  ],
+  "applied_migration_count": 234,
+  "repository_migration_sql_file_count": 3,
+  "repository_migration_sql_files": [
+    "supabase/migrations/20261010130000_hms_secure_diagnostic_order_workflow.sql",
+    "supabase/migrations/20261012000100_swarnim_csc_catalog.sql",
+    "supabase/migrations/20261012003000_member_id_login_rate_limit.sql"
+  ],
+  "warnings": [
+    "Metadata inventory only: no user rows, KYC documents, patient records, payment data, secrets, or service-role keys are exported.",
+    "Live database has 219 public tables and 234 recorded migrations; only 3 migration SQL files currently exist in the GitHub repository. This is a source-control gap, not a safe basis for recreating the database yet.",
+    "Do not run migrations from this snapshot against production automatically. Reconstruct and review missing migration SQL from the live schema before any restore or deployment."
+  ]
+}
