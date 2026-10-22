@@ -319,6 +319,22 @@ footer .footer-brand strong{font-size:19px}
 @media(max-width:390px){#sbpfFocusGrid,#sbpfCampaignGrid{grid-template-columns:1fr}#sbpfFocusGrid>.campaign h3,#sbpfCampaignGrid>.campaign h3{font-size:19px}#sbpfFocusGrid>.campaign>p,#sbpfCampaignGrid>.campaign>p{font-size:14px}}
 @media(prefers-reduced-motion:reduce){#sbpfFocusGrid>.campaign,#sbpfCampaignGrid>.campaign,#sbpfFocusGrid>.campaign img,#sbpfCampaignGrid>.campaign img{transition:none!important}#sbpfFocusGrid>.campaign:hover,#sbpfCampaignGrid>.campaign:hover{transform:none!important}}
 </style>
+
+/* Final logo correction: preserve the complete official emblem without circular cropping. */
+<style id="sbpf-final-logo-correction">
+header img#sbpfLogo.logo{
+  width:96px!important;height:96px!important;min-width:96px!important;min-height:96px!important;flex:0 0 96px!important;
+  display:block!important;object-fit:contain!important;object-position:center!important;
+  border-radius:10px!important;clip-path:none!important;padding:4px!important;
+  background:#fffdf8!important;border:1px solid #ead8b0!important;box-shadow:0 2px 9px #0002!important;
+}
+@media(max-width:700px){
+  header img#sbpfLogo.logo{width:72px!important;height:72px!important;min-width:72px!important;min-height:72px!important;flex-basis:72px!important}
+}
+@media(max-width:390px){
+  header img#sbpfLogo.logo{width:62px!important;height:62px!important;min-width:62px!important;min-height:62px!important;flex-basis:62px!important}
+}
+</style>
 </head>
 <body>
 <div class="topline">राष्ट्रहित में 24×7 तत्पर</div>
