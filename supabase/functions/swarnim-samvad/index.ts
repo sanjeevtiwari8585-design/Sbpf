@@ -1,0 +1,21 @@
+import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+const U="https://dxowhzghrdghfzoggorx.supabase.co";
+const K=Deno.env.get("SUPABASE_ANON_KEY")||"";
+const esc=(v:any)=>String(v??"").replace(/[&<>"]/g,(c:any)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+Deno.serve(async (req)=>{
+ const auth=req.headers.get("Authorization")||"";
+ if(!auth)return new Response("Login required",{status:401});
+ const ur=await fetch(U+"/auth/v1/user",{headers:{apikey:K,Authorization:auth}});
+ if(!ur.ok)return new Response("Invalid login",{status:401});
+ const user=await ur.json();
+ const ah={apikey:K,Authorization:auth};
+ const q=await fetch(U+"/rest/v1/campaign_member_access?campaign_id=eq.2&user_id=eq."+encodeURIComponent(user.id)+"&is_active=eq.true&select=id",{headers:ah});
+ if(!q.ok)return new Response("Access check failed",{status:500});
+ const rows=await q.json();
+ if(!rows.length)return new Response("<!doctype html><html lang='hi'><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><body style='font-family:Arial;padding:30px;background:#f4f7fb'><div style='max-width:600px;margin:auto;background:white;padding:28px;border-radius:16px'><h2>🔒 स्वर्णिम संवाद</h2><p>आपके सदस्य खाते को इस विशेष कार्यक्षेत्र की अनुमति नहीं दी गई है।</p><p>Access केवल Admin द्वारा दिया जाता है।</p></div></body></html>",{status:403,headers:{"Content-Type":"text/html; charset=utf-8"}});
+ const cr=await fetch(U+"/rest/v1/campaign_content?campaign_id=eq.2&is_active=eq.true&select=id,title,summary,content,source_url,video_url,image_url&order=sort_order",{headers:ah});
+ const items=cr.ok?await cr.json():[];
+ const body=items.length?items.map((x:any)=>'<div class="item"><h3>'+esc(x.title)+'</h3><p><b>'+esc(x.summary||"")+'</b></p><p>'+esc(x.content||"")+'</p>'+(x.source_url?'<a target="_blank" href="'+esc(x.source_url)+'">Source</a>':"")+(x.video_url?'<br><a target="_blank" href="'+esc(x.video_url)+'">Video</a>':"")+'</div>').join(""):'<p>अभी कोई सामग्री उपलब्ध नहीं है।';
+ const html='<!doctype html><html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>स्वर्णिम संवाद</title><style>body{margin:0;font-family:Arial,Noto Sans Devanagari,sans-serif;background:#f4f7fb;color:#172033}.wrap{max-width:1000px;margin:auto;padding:22px}.hero{background:linear-gradient(120deg,#08264b,#5b3b91);color:white;border-radius:20px;padding:28px}.hero h1{margin:0;color:#f4c64e}.panel{background:white;padding:20px;border-radius:16px;margin-top:18px;box-shadow:0 5px 20px #0001}.tag{display:inline-block;padding:6px 10px;border-radius:20px;background:#eee;margin:3px}.item{border:1px solid #e0e6ee;padding:16px;border-radius:12px;margin:10px 0}</style></head><body><div class="wrap"><div class="hero"><h1>💬 स्वर्णिम संवाद</h1><p>SBPF के अधिकृत सदस्यों के लिए विशेष कार्यक्षेत्र</p><span class="tag">🔐 Authorized Members Only</span></div><div class="panel"><h2>विशेष कार्यक्षेत्र</h2><p>यह क्षेत्र केवल Admin द्वारा अधिकृत सदस्यों के लिए है।</p>'+body+'</div></div></body></html>';
+ return new Response(html,{headers:{"Content-Type":"text/html; charset=utf-8"}});
+});
