@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SBPF कार्ड डिज़ाइन प्रीव्यू</title>
+<style>
+:root{--maroon:#781626;--gold:#c69b3c;--ink:#332a29;--muted:#6e6260;--paper:#fffdf8;--line:#ead9b9}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;padding:36px 18px;background:#f5f1eb;color:var(--ink);font-family:"Noto Sans Devanagari","Mangal",Arial,sans-serif;display:grid;place-items:center}
+.preview{width:min(100%,420px)}
+.kicker{text-align:center;color:#806a42;font-size:12px;letter-spacing:2px;font-weight:800;margin-bottom:14px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:0 12px 35px #3a24100d;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.card:hover{transform:translateY(-5px) scale(1.012);box-shadow:0 22px 46px #3a24101a;border-color:var(--gold)}
+.top{padding:23px 23px 0}
+.badge{display:inline-flex;align-items:center;gap:8px;border:1px solid #eedcb5;background:#fff8e9;color:#80601d;border-radius:999px;padding:8px 12px;font-size:11px;font-weight:800;letter-spacing:.7px}
+.badge:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--gold)}
+.identity{margin:19px 0 0;background:linear-gradient(135deg,#fffaf0,#f3e7ce);border:1px solid #ead7ae;border-radius:16px;min-height:154px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.identity:before,.identity:after{content:"";position:absolute;width:110px;height:110px;border:1px solid #ddc58f55;border-radius:50%}
+.identity:before{left:-48px;top:-45px}.identity:after{right:-48px;bottom:-50px}
+.logo{display:block;width:112px;height:112px;object-fit:contain;position:relative;z-index:1;transition:transform .22s ease}
+.card:hover .logo{transform:scale(1.06)}
+.body{padding:21px 23px 24px}
+h1{font-size:25px;line-height:1.45;color:var(--maroon);margin:0 0 9px;font-weight:800}
+p{font-size:15px;line-height:1.9;color:var(--muted);margin:0}
+.rule{height:1px;background:linear-gradient(90deg,transparent,#e7d4ae,transparent);margin:18px 0}
+.bottom{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.tagline{font-size:11px;color:#8a7652;font-weight:700;line-height:1.6}
+.link{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border:1px solid #d8bf8a;background:#fffaf0;color:var(--maroon);font-weight:800;font-size:14px;border-radius:10px;padding:11px 14px;white-space:nowrap;transition:background .18s,color .18s}
+.link:hover{background:var(--maroon);color:white;border-color:var(--maroon)}
+.note{text-align:center;color:#746c63;font-size:12px;line-height:1.8;margin:17px 10px 0}
+@media(max-width:420px){body{padding:22px 13px}.top{padding:18px 18px 0}.body{padding:18px}.identity{min-height:138px}.logo{width:100px;height:100px}h1{font-size:22px}}
+@media(prefers-reduced-motion:reduce){.card,.logo,.link{transition:none}.card:hover,.card:hover .logo{transform:none}}
+</style>
+</head>
+<body>
+<main class="preview">
+<div class="kicker">SBPF · STANDARD CARD CONCEPT</div>
+<article class="card">
+<div class="top">
+<div class="badge">01 · SWARNIM ABHIYAN</div>
+<div class="identity">
+<img class="logo" src="/public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png" alt="स्वर्णिम भारत परिवार फाउंडेशन का आधिकारिक लोगो">
+</div>
+</div>
+<div class="body">
+<h1>स्वर्णिम जन जागरण</h1>
+<p>जागरूक नागरिक, सशक्त भारत। संविधान, नागरिक अधिकारों और कर्तव्यों की सही जानकारी जन-जन तक पहुँचाने का अभियान।</p>
+<div class="rule"></div>
+<div class="bottom"><span class="tagline">सेवा · सहयोग · स्वावलंबन</span><a class="link" href="campaign.html?slug=swarnim-jan-jagran">विस्तार से पढ़ें&nbsp; →</a></div>
+</div>
+</article>
+<div class="note">माउस कार्ड पर ले जाएँ — हल्का ज़ूम दिखेगा। यह एक नमूना है; इसे पसंद करने के बाद यही फॉर्मेट बाकी कार्डों पर लागू किया जा सकता है।</div>
+</main>
+</body>
+</html>
