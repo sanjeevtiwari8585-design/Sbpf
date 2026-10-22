@@ -251,6 +251,74 @@ header img#sbpfLogo.logo{
 @media(prefers-reduced-motion:reduce){.pillar,.campaign,.info,.campaign .booster-img{transition:none}.pillar:hover,.campaign:hover,.info:hover{transform:none}}
 </style>
 
+
+<style id="sbpf-professional-home-refresh">
+:root{--wine:#761526;--gold:#d7ad4b;--surface:#fffdf8;--line:#eadcc6}
+body{background:#fffdf8;color:#282126}
+.topline{font-weight:700;letter-spacing:.25px}
+header{position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(115deg,#5d0c1a 0%,#8e1d2d 54%,#bc8e30 100%);padding-block:20px}
+header:after{content:"";position:absolute;z-index:-1;width:260px;height:260px;border:1px solid #fff5;right:-65px;top:-135px;border-radius:50%;box-shadow:0 0 0 25px #fff1,0 0 0 50px #fff1}
+header h1{letter-spacing:-.4px}
+nav{box-shadow:0 5px 18px #34130d0b;gap:5px}
+nav a{min-height:42px;display:inline-flex;align-items:center;justify-content:center;transition:background .18s,color .18s}
+.hero{position:relative;isolation:isolate;overflow:hidden;background:radial-gradient(ellipse at 86% 25%,#f4d78d 0,transparent 31%),radial-gradient(ellipse at 6% 90%,#f7e7cb 0,transparent 30%),linear-gradient(135deg,#fffaf0,#fffdf9 60%,#f9efdd);padding:clamp(48px,7vw,88px) 20px;border-bottom:1px solid #ead8ba}
+.hero:after{content:"";position:absolute;z-index:-1;width:320px;height:320px;border:1px solid #c99b4130;border-radius:50%;right:-100px;bottom:-210px;box-shadow:0 0 0 30px #c99b410a,0 0 0 60px #c99b4108}
+.hero .eyebrow{display:inline-flex;border:1px solid #ead7aa;background:#fff8e8;border-radius:999px;padding:8px 14px;letter-spacing:.7px}
+.hero h2{font-weight:850;letter-spacing:-1px}
+.hero p{font-size:clamp(16px,1.8vw,19px);line-height:1.85}
+.actions .btn{min-height:48px;box-shadow:0 5px 15px #5413200d;transition:transform .18s,box-shadow .18s}
+.actions .btn:hover{transform:translateY(-2px);box-shadow:0 9px 22px #54132018}
+.section-head{margin-bottom:32px}
+.section-head h2{letter-spacing:-.4px}
+.pillar,.campaign,.info{border-color:#e9ddcc;box-shadow:0 7px 24px #38251b08}
+.pillar{padding:23px 17px}
+.pillar span{width:56px;height:56px;font-size:26px}
+#sbpfFocusGrid,#sbpfCampaignGrid{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+#sbpfFocusGrid>.campaign,#sbpfCampaignGrid>.campaign{display:flex;flex-direction:column;padding:17px;min-width:0;height:auto;overflow:hidden;border:1px solid #eadbc5;border-radius:20px;background:#fff;box-shadow:0 7px 24px #38251b0b}
+#sbpfFocusGrid>.campaign .number,#sbpfCampaignGrid>.campaign .number{font-size:11px;letter-spacing:.45px;padding:7px 11px;margin-bottom:8px;white-space:normal}
+#sbpfFocusGrid>.campaign .booster-wrap,#sbpfCampaignGrid>.campaign .campaign-banner-wrap{display:block;position:relative;width:100%;aspect-ratio:1200/630;overflow:hidden;border-radius:13px;margin:5px 0 12px;background:#f6ead5;border:1px solid #f0e0c5}
+#sbpfFocusGrid>.campaign .booster-img,#sbpfCampaignGrid>.campaign .campaign-art-banner{display:block!important;width:100%!important;height:100%!important;aspect-ratio:auto;object-fit:cover;object-position:center;border:0;border-radius:0;box-shadow:none;transform:scale(1);transition:transform .28s ease,filter .28s ease}
+#sbpfCampaignGrid>.campaign .campaign-banner-wrap:not(.campaign-banner-art){display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#fff9ed,#f2e3c5)}
+#sbpfCampaignGrid>.campaign .campaign-banner-wrap:not(.campaign-banner-art) .campaign-official-logo{display:none!important}
+#sbpfFocusGrid>.campaign .booster-wrap:after,#sbpfCampaignGrid>.campaign .campaign-banner-wrap:after{display:none!important;content:none!important}
+#sbpfFocusGrid>.campaign h3,#sbpfCampaignGrid>.campaign h3{font-size:clamp(18px,1.4vw,22px);line-height:1.45;min-height:0;margin:8px 0 9px;color:#761526;font-weight:800;overflow-wrap:anywhere}
+#sbpfFocusGrid>.campaign>p,#sbpfCampaignGrid>.campaign>p{font-size:14px;line-height:1.75;color:#5c5350;margin:0 0 9px}
+#sbpfCampaignGrid>.campaign>p:last-child{margin-top:auto;padding-top:10px}
+#sbpfFocusGrid>.campaign .btn,#sbpfCampaignGrid>.campaign .btn{display:inline-flex;align-items:center;justify-content:center;min-height:43px;padding:9px 13px;border-radius:10px;font-size:13px}
+#sbpfCampaignGrid>.campaign .btn.secondary{background:#fff8e9;border-color:#e2c993;color:#761526}
+#sbpfCampaignGrid>.campaign .btn.secondary:hover{background:#761526;border-color:#761526;color:#fff}
+@media(hover:hover) and (pointer:fine){
+ #sbpfFocusGrid>.campaign:hover,#sbpfCampaignGrid>.campaign:hover{transform:translateY(-5px) scale(1.012);border-color:#d4ab50;box-shadow:0 17px 36px #39201520;z-index:2}
+ #sbpfFocusGrid>.campaign:hover .booster-img,#sbpfCampaignGrid>.campaign:hover .campaign-art-banner{transform:scale(1.055);filter:saturate(1.07)}
+}
+#sbpfFocusGrid>.campaign:focus-within,#sbpfCampaignGrid>.campaign:focus-within{outline:3px solid #d7ad4b;outline-offset:3px}
+.callout{box-shadow:0 14px 35px #51101a18}
+footer{background:linear-gradient(135deg,#21191d,#302127);border-top:4px solid #c6a04b}
+footer .footer-brand strong{font-size:19px}
+@media(max-width:1000px){#sbpfFocusGrid,#sbpfCampaignGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){
+ header{padding:17px 15px!important;gap:12px!important}
+ header img#sbpfLogo.logo{width:70px!important;height:70px!important;min-width:70px!important;min-height:70px!important;flex-basis:70px!important}
+ header h1{font-size:clamp(18px,5vw,25px);line-height:1.25}
+ header p{font-size:12px}
+ nav{position:relative;justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:thin;padding:8px 10px}
+ nav a{flex:0 0 auto;white-space:nowrap;font-size:13px;padding:8px 10px}
+ .hero{padding:44px 17px}
+ .hero h2{font-size:clamp(29px,8vw,40px);letter-spacing:-.5px}
+ .hero p{font-size:16px}
+ .wrap{width:100%;padding:34px 14px}
+ .section-head{margin-bottom:22px}
+ #sbpfFocusGrid,#sbpfCampaignGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ #sbpfFocusGrid>.campaign,#sbpfCampaignGrid>.campaign{padding:12px;border-radius:16px}
+ #sbpfFocusGrid>.campaign h3,#sbpfCampaignGrid>.campaign h3{font-size:17px;line-height:1.45}
+ #sbpfFocusGrid>.campaign>p,#sbpfCampaignGrid>.campaign>p{font-size:13px;line-height:1.65}
+ #sbpfFocusGrid>.campaign .number,#sbpfCampaignGrid>.campaign .number{font-size:10px;padding:6px 8px;letter-spacing:0}
+ #sbpfCampaignGrid>.campaign .btn{width:100%;padding:9px 8px;font-size:12px;white-space:normal}
+ .callout{padding:22px;border-radius:16px}
+}
+@media(max-width:390px){#sbpfFocusGrid,#sbpfCampaignGrid{grid-template-columns:1fr}#sbpfFocusGrid>.campaign h3,#sbpfCampaignGrid>.campaign h3{font-size:19px}#sbpfFocusGrid>.campaign>p,#sbpfCampaignGrid>.campaign>p{font-size:14px}}
+@media(prefers-reduced-motion:reduce){#sbpfFocusGrid>.campaign,#sbpfCampaignGrid>.campaign,#sbpfFocusGrid>.campaign img,#sbpfCampaignGrid>.campaign img{transition:none!important}#sbpfFocusGrid>.campaign:hover,#sbpfCampaignGrid>.campaign:hover{transform:none!important}}
+</style>
 </head>
 <body>
 <div class="topline">राष्ट्रहित में 24×7 तत्पर</div>
@@ -310,6 +378,44 @@ header img#sbpfLogo.logo{
       '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
     })[char]);
   }
+  function focusArtFor(slug, name) {
+    const key = String(slug || '').toLowerCase();
+    const label = String(name || '').toLowerCase();
+    const map = [
+      [/education|शिक्षा|gurukul/, 'work-area-education'],
+      [/health|स्वास्थ्य|चिकित्सा/, 'work-area-health'],
+      [/family|परिवार|child|बाल/, 'work-area-child-development'],
+      [/scheme|योजना|awareness|जागरूक/, 'work-area-government-schemes-public-awareness'],
+      [/women|महिला|empower/, 'work-area-women-empowerment'],
+      [/environment|पर्यावरण|स्वच्छता/, 'work-area-environment-protection'],
+      [/employment|skill|रोजगार|कौशल/, 'work-area-employment-skill-development'],
+      [/business|व्यापार|self-employment|स्वरोजगार/, 'work-area-business-self-employment'],
+      [/divyang|दिव्यांग/, 'work-area-divyangjan-support'],
+      [/senior|वृद्ध|वरिष्ठ/, 'work-area-senior-citizen-support'],
+      [/disaster|आपदा|राहत/, 'work-area-disaster-relief'],
+      [/service|जनसेवा|welfare|समाज/, 'work-area-social-service-public-welfare']
+    ];
+    const found = map.find(([pattern]) => pattern.test(key + ' ' + label));
+    return 'assets/boosters/' + (found ? found[1] : 'work-area-social-service-public-welfare') + '.svg';
+  }
+  function campaignArtFor(slug, name) {
+    const key = String(slug || '').toLowerCase();
+    const label = String(name || '').toLowerCase();
+    const map = [
+      [/jan-jagran|जन जागरण/, 'campaign-swarnim-jan-jagran'],
+      [/samvad|संवाद/, 'campaign-swarnim-samvad'],
+      [/prahar|प्रहार/, 'campaign-swarnim-prahar'],
+      [/sipahi|सिपाही/, 'campaign-swarnim-sipahi'],
+      [/paryavaran|पर्यावरण/, 'campaign-swarnim-paryavaran'],
+      [/vyapar|व्यापार/, 'campaign-swarnim-vyapar'],
+      [/gurukul|गुरुकुल/, 'campaign-swarnim-gurukulam'],
+      [/seva|सेवा/, 'campaign-swarnim-seva'],
+      [/book|स्वर्णिमबुक/, 'campaign-swarnim-book'],
+      [/media|मीडिया/, 'campaign-swarnim-media']
+    ];
+    const found = map.find(([pattern]) => pattern.test(key + ' ' + label));
+    return 'assets/boosters/' + (found ? found[1] : 'campaign-swarnim-seva') + '.svg';
+  }
   async function loadSbpfHomepageData() {
     try {
       const headers = { apikey: publishableKey };
@@ -324,7 +430,7 @@ header img#sbpfLogo.logo{
           grid.innerHTML = areas.map((item, index) =>
             '<article class="campaign"><div class="number">' +
             String(index + 1).padStart(2, '0') + ' • SBPF WORK AREA</div>' +
-            '<div class="booster-wrap"><img class="booster-official-logo" src="/public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png" alt="SBPF आधिकारिक लोगो"></div>' +
+            '<div class="booster-wrap"><img class="booster-img" loading="lazy" decoding="async" src="' + escapeSbpfHtml(item.image_url || focusArtFor(item.slug, item.name)) + '" alt="' + escapeSbpfHtml(item.name) + ' कार्य क्षेत्र बैनर"></div>' +
             '<h3>' + escapeSbpfHtml(item.name) + '</h3><p>' +
             escapeSbpfHtml(item.description || 'इस कार्यक्षेत्र की जानकारी शीघ्र उपलब्ध होगी।') +
             '</p></article>'
@@ -343,7 +449,7 @@ header img#sbpfLogo.logo{
               item.slug === 'swarnim-media' ? 'Swarnim Media खोलें →' : 'विस्तार से पढ़ें →';
             return '<article class="campaign"><div class="number">' +
               String(index + 1).padStart(2, '0') + ' • SWARNIM ABHIYAN</div>' +
-              (item.slug === 'swarnim-jan-jagran' ? '<div class="campaign-banner-wrap campaign-banner-art"><img class="campaign-art-banner" src="assets/swarnim-jan-jagran-banner.svg" alt="स्वर्णिम जन जागरण — जागरूक नागरिक, सशक्त भारत"></div>' : '<div class="campaign-banner-wrap"><img class="campaign-official-logo" src="/public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png" alt="SBPF आधिकारिक लोगो"></div>') +
+              '<div class="campaign-banner-wrap campaign-banner-art"><img class="campaign-art-banner" loading="lazy" decoding="async" src="' + escapeSbpfHtml(item.slug === 'swarnim-jan-jagran' ? 'assets/swarnim-jan-jagran-banner.svg' : (item.image_url || campaignArtFor(item.slug, item.name))) + '" alt="' + escapeSbpfHtml(item.name) + ' अभियान बैनर"></div>' +
               '<h3>' + escapeSbpfHtml(item.name) + '</h3><p>' +
               escapeSbpfHtml(item.description || 'इस अभियान का विवरण शीघ्र उपलब्ध होगा।') +
               '</p><p><a class="btn secondary" style="display:inline-block;padding:8px 12px;font-size:13px;margin-top:12px" href="' +
