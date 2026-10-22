@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
+<title id="title">स्वर्णिम जन जागरण — जागरूक नागरिक, सशक्त भारत</title><desc id="desc">स्वर्णिम जन जागरण अभियान का सुनहरी सुबह, भारत, तिरंगा और जनभागीदारी वाला बैनर।</desc>
+<defs>
+ <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#153d6a"/><stop offset=".42" stop-color="#f8a13b"/><stop offset=".72" stop-color="#ffce68"/><stop offset="1" stop-color="#71301c"/></linearGradient>
+ <radialGradient id="sun"><stop stop-color="#fffbd5"/><stop offset=".3" stop-color="#ffd56b" stop-opacity=".9"/><stop offset="1" stop-color="#ffb02e" stop-opacity="0"/></radialGradient>
+ <linearGradient id="maroon" x2="0" y2="1"><stop stop-color="#9d1028"/><stop offset="1" stop-color="#540819"/></linearGradient>
+ <linearGradient id="gold" x2="0" y2="1"><stop stop-color="#fff0a4"/><stop offset=".5" stop-color="#f8c642"/><stop offset="1" stop-color="#c88618"/></linearGradient>
+ <clipPath id="clip"><rect x="8" y="8" width="1184" height="504" rx="26"/></clipPath>
+</defs>
+<g clip-path="url(#clip)">
+ <rect width="1200" height="520" fill="url(#sky)"/>
+ <circle cx="420" cy="250" r="255" fill="url(#sun)"/>
+ <g stroke="#ffe8a0" stroke-opacity=".26" stroke-width="5"><path d="M420 245L60 70M420 245L150 20M420 245L300 0M420 245L560 0M420 245L760 40M420 245L900 100M420 245L30 310M420 245L850 350"/></g>
+ <path d="M0 340L60 320 110 342 160 310 210 340 260 300 310 338 360 318 420 345 470 318 520 340 580 314 640 345 700 320 760 342 820 300 880 340 940 315 1000 342 1060 308 1120 338 1200 310V520H0Z" fill="#57301f" opacity=".65"/>
+ <g fill="#1e2631" opacity=".7"><path d="M740 340V235h20v-28h16v28h20v105zM810 340V260h18v-35h14v35h18v80zM910 340V240h18v-24h12v24h18v100zM1040 340V228h18v-20h15v20h20v112zM1088 340V270h15v-38h10v38h16v70z"/><path d="M530 340V270h12v-23h12v23h13v70zM600 340V250h15v-25h13v25h15v90z"/></g>
+ <!-- simplified India silhouette -->
+ <path d="M500 105L545 120 565 150 602 164 590 188 618 211 597 237 574 251 560 284 540 318 520 352 506 384 490 350 478 320 452 294 442 266 418 245 432 220 423 193 449 177 457 147 482 132Z" fill="#a84a17" opacity=".9" stroke="#ffdf8a" stroke-width="3"/>
+ <g transform="translate(880 90) rotate(-4)"><path d="M0 0V270" stroke="#1d1a18" stroke-width="10"/><path d="M0 4L245 32 0 83Z" fill="#ff8b21"/><path d="M0 83L245 111 0 153Z" fill="#fff8e8"/><path d="M0 153L245 181 0 220Z" fill="#188348"/><circle cx="81" cy="105" r="15" fill="none" stroke="#203e79" stroke-width="3"/><g stroke="#203e79" stroke-width="1.5"><path d="M66 105h30M81 90v30M70 94l22 22M92 94l-22 22"/></g></g>
+ <!-- crowd silhouettes -->
+ <g fill="#251817"><path d="M0 470Q20 440 40 470V520H0ZM50 480Q80 420 110 480V520H50ZM120 475Q145 430 170 475V520H120ZM190 490Q220 420 250 490V520H190ZM260 480Q290 425 320 480V520H260ZM330 490Q355 440 380 490V520H330ZM400 478Q430 420 460 478V520H400ZM470 490Q500 430 530 490V520H470ZM540 480Q570 420 600 480V520H540ZM610 490Q640 430 670 490V520H610ZM680 475Q710 420 740 475V520H680ZM750 490Q780 435 810 490V520H750ZM820 480Q850 420 880 480V520H820ZM890 490Q920 430 950 490V520H890ZM960 478Q990 420 1020 478V520H960ZM1030 490Q1060 430 1090 490V520H1030ZM1100 480Q1140 420 1170 480V520H1100Z"/>
+ <g stroke="#251817" stroke-width="14" stroke-linecap="round"><path d="M70 475L64 422 45 397M64 422L85 396M225 490L218 433 198 409M218 433L242 405M380 490L376 432 356 410M376 432L398 406M550 490L548 430 530 407M548 430L568 402M720 490L720 426 700 402M720 426L740 402M895 490L892 425 873 400M892 425L912 402M1065 490L1060 430 1040 408M1060 430L1080 403"/></g></g>
+ <rect x="32" y="24" width="1136" height="90" rx="20" fill="url(#maroon)" stroke="url(#gold)" stroke-width="4"/>
+ <text x="600" y="82" text-anchor="middle" font-family="Noto Sans Devanagari,Mangal,sans-serif" font-weight="900" font-size="48" fill="url(#gold)" stroke="#5a160a" stroke-width="1.5" paint-order="stroke">स्वर्णिम जन जागरण</text>
+ <rect x="0" y="414" width="1200" height="106" fill="#180e12" opacity=".76"/>
+ <path d="M45 475Q85 440 125 475T205 475" fill="none" stroke="#ff8b24" stroke-width="9"/><path d="M45 490Q85 455 125 490T205 490" fill="none" stroke="#fff7e8" stroke-width="9"/><path d="M45 505Q85 470 125 505T205 505" fill="none" stroke="#168348" stroke-width="9"/>
+ <text x="690" y="466" text-anchor="middle" font-family="Noto Sans Devanagari,Mangal,sans-serif" font-size="38" font-weight="800" fill="#fff8e8">जागरूक नागरिक,</text>
+ <text x="690" y="508" text-anchor="middle" font-family="Noto Sans Devanagari,Mangal,sans-serif" font-size="38" font-weight="900" fill="url(#gold)">सशक्त भारत</text>
+ <rect x="8" y="8" width="1184" height="504" rx="26" fill="none" stroke="#f6c348" stroke-width="5"/>
+</g></svg>
