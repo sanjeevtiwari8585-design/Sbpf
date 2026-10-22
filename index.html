@@ -125,6 +125,33 @@ a:focus-visible,button:focus-visible{outline:3px solid #d7b34b;outline-offset:3p
 }
 </style>
 
+
+<style id="sbpf-logo-hard-clip">
+/* Force the uploaded square PNG to display as a circular seal */
+header img#sbpfLogo.logo{
+  width:112px!important;
+  height:112px!important;
+  min-width:112px!important;
+  min-height:112px!important;
+  flex:0 0 112px!important;
+  display:block!important;
+  object-fit:cover!important;
+  object-position:center!important;
+  padding:0!important;
+  border:2px solid #e3bd55!important;
+  border-radius:50%!important;
+  clip-path:circle(50% at 50% 50%)!important;
+  background:transparent!important;
+  box-shadow:0 2px 12px rgba(0,0,0,.22)!important;
+}
+@media(max-width:700px){
+  header img#sbpfLogo.logo{width:84px!important;height:84px!important;min-width:84px!important;min-height:84px!important;flex-basis:84px!important}
+}
+@media(max-width:380px){
+  header img#sbpfLogo.logo{width:70px!important;height:70px!important;min-width:70px!important;min-height:70px!important;flex-basis:70px!important}
+}
+</style>
+
 </head>
 <body>
 <div class="topline">राष्ट्रहित में 24×7 तत्पर</div>
