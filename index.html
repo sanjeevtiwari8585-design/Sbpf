@@ -4,14 +4,14 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SBPF Seva | स्वर्णिम भारत परिवार फाउंडेशन</title>
 <meta name="theme-color" content="#12345b">
-<link rel="icon" id="sbpfFavicon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='47' fill='%23d4af37'/%3E%3Ctext x='50' y='59' text-anchor='middle' font-size='24' font-weight='bold' fill='%23781626'%3ESBPF%3C/text%3E%3C/svg%3E">
+<link rel="icon" id="sbpfFavicon" type="image/svg+xml" href="/assets/sbpf-logo.svg">
 <meta name="description" content="SBPF Seva — सेवा, सहयोग, स्वावलंबन और सशक्तिकरण।">
 <style>
 :root{--maroon:#781626;--red:#9d2432;--gold:#d7b34b;--cream:#fff9ed;--ink:#242126;--muted:#67616a;--line:#eee2d1}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:#fbfaf8;line-height:1.6}
 a{color:inherit}.topline{background:var(--maroon);color:#fff;text-align:center;padding:7px 14px;font-size:13px;letter-spacing:.2px}
 header{background:linear-gradient(120deg,#711222,#9b2634 62%,#c59b36);color:white;padding:18px max(20px,calc((100% - 1120px)/2));display:flex;align-items:center;gap:16px}
-.logo{width:76px;height:76px;object-fit:contain;border-radius:50%;background:#fff;padding:4px;flex-shrink:0}header h1{font-size:clamp(21px,3vw,32px);line-height:1.2;margin:0 0 5px}header p{margin:0;color:#ffedc4;font-size:14px}
+.logo{width:104px;height:104px;object-fit:contain;border-radius:8px;background:#fffdf8;padding:3px;flex:0 0 104px}header h1{font-size:clamp(21px,3vw,32px);line-height:1.2;margin:0 0 5px}header p{margin:0;color:#ffedc4;font-size:14px}
 nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;background:#fff;border-bottom:1px solid var(--line);padding:10px 14px;position:sticky;top:0;z-index:5}
 nav a{padding:8px 12px;text-decoration:none;border-radius:9px;font-size:14px;font-weight:600}nav a:hover{background:var(--cream);color:var(--maroon)}nav .login{background:var(--maroon);color:#fff}
 .hero{background:radial-gradient(circle at 85% 20%,#f8e9bd 0,transparent 28%),linear-gradient(130deg,#fffaf0,#fff);padding:70px 20px 62px;text-align:center;border-bottom:1px solid var(--line)}
@@ -37,7 +37,7 @@ a:focus-visible,button:focus-visible{outline:3px solid #d7b34b;outline-offset:3p
 @media (max-width:700px){
   body{font-size:16px;line-height:1.65}
   header{padding:18px 18px;gap:13px;align-items:center}
-  header .logo{width:62px;height:62px;flex:0 0 62px}
+  header .logo{width:86px;height:86px;flex:0 0 86px;border-radius:6px;background:#fffdf8;padding:2px}
   header h1{font-size:clamp(20px,5.4vw,27px);line-height:1.22;overflow-wrap:anywhere}
   header p{font-size:13px;line-height:1.45;margin-top:6px}
   .topline{font-size:12px;padding:7px 10px}
@@ -64,7 +64,7 @@ a:focus-visible,button:focus-visible{outline:3px solid #d7b34b;outline-offset:3p
 }
 @media (max-width:380px){
   header{padding:14px 12px;gap:10px}
-  header .logo{width:54px;height:54px;flex-basis:54px}
+  header .logo{width:72px;height:72px;flex-basis:72px;border-radius:6px;background:#fffdf8;padding:2px}
   nav{grid-template-columns:1fr 1fr;padding:8px}
   nav a{font-size:13px}
   .hero h2{font-size:29px!important}
@@ -74,7 +74,7 @@ a:focus-visible,button:focus-visible{outline:3px solid #d7b34b;outline-offset:3p
 @media only screen and (max-device-width: 700px) and (pointer: coarse), only screen and (max-device-width: 700px) and (hover: none){
   html,body{min-width:0!important;width:100%!important;max-width:100%!important;overflow-x:hidden}
   header{padding:16px 14px!important;gap:11px!important}
-  header .logo{width:58px!important;height:58px!important;flex:0 0 58px!important}
+  header .logo{width:76px!important;height:76px!important;flex:0 0 76px!important;border-radius:6px!important;background:#fffdf8!important;padding:2px!important}
   header h1{font-size:clamp(19px,5.6vw,26px)!important;line-height:1.2!important}
   header p{font-size:12px!important}
   nav{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important;padding:9px 10px!important;position:relative!important;top:auto!important}
@@ -106,7 +106,7 @@ a:focus-visible,button:focus-visible{outline:3px solid #d7b34b;outline-offset:3p
 </head>
 <body>
 <div class="topline">राष्ट्रहित में 24×7 तत्पर</div>
-<header><img id="sbpfLogo" class="logo" alt="SBPF Logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='47' fill='%23d7b34b'/%3E%3Ctext x='50' y='59' text-anchor='middle' font-size='24' font-weight='bold' fill='%23781626'>SBPF</text%3E%3C/svg%3E"><div><h1>स्वर्णिम भारत परिवार फाउंडेशन</h1><p>सेवा • सहयोग • सशक्त भारत</p></div></header>
+<header><img id="sbpfLogo" class="logo" alt="स्वर्णिम भारत परिवार फाउंडेशन का आधिकारिक लोगो" src="/assets/sbpf-logo.svg"><div><h1>स्वर्णिम भारत परिवार फाउंडेशन</h1><p>सेवा • सहयोग • स्वावलंबन • सशक्तिकरण</p></div></header>
 <nav><a href="#home">होम</a><a href="#about">हमारा उद्देश्य</a><a href="#work">कार्य क्षेत्र</a><a href="#campaigns">अभियान</a><a href="swarnim-csc.html">जनसुविधा केंद्र</a><a href="swarnim-creator.html">स्वर्णिम Creator</a><a href="#contact">संपर्क</a><a class="login" href="member.html">सदस्य पैनल / Login</a></nav>
 <main>
 <section class="hero" id="home"><div class="eyebrow">सेवा • सहयोग • सशक्त भारत</div><h2>सेवा से सहयोग तक,<br>हर परिवार के साथ</h2><p>शिक्षा, स्वास्थ्य, सरकारी योजनाओं और जनसेवा से जुड़ें।</p><div class="actions"><a class="btn" href="member.html">सदस्य पैनल खोलें</a><a class="btn secondary" href="#work">हमारे कार्य देखें</a></div></section>
