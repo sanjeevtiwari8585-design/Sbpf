@@ -150,6 +150,30 @@ header img#sbpfLogo.logo{
 @media(max-width:380px){
   header img#sbpfLogo.logo{width:70px!important;height:70px!important;min-width:70px!important;min-height:70px!important;flex-basis:70px!important}
 }
+
+/* SBPF unified card design: consistent spacing, banner proportions, responsive grid and official seal */
+.pillars,.grid{align-items:stretch}
+.pillar,.campaign,.info{height:100%;min-width:0;overflow:hidden;border:1px solid #eadcc8;border-radius:18px;background:#fff;box-shadow:0 5px 18px rgba(64,37,20,.055);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.pillar:hover,.campaign:hover,.info:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(64,37,20,.11);border-color:#d8bd82}
+.campaign{display:flex;flex-direction:column;padding:18px;}
+.campaign .number{display:inline-flex;align-self:flex-start;align-items:center;gap:6px;background:#fbf4e5;color:#8b6719;border:1px solid #f0e1bd;border-radius:999px;padding:5px 10px;font-size:11px;letter-spacing:.8px;margin-bottom:7px}
+.campaign h3{font-size:clamp(17px,1.35vw,21px);line-height:1.35;margin:11px 0 7px;min-height:2.7em;color:#781626}
+.campaign>p{font-size:14px;line-height:1.65;color:#655b5b;margin:0 0 10px}
+.campaign>p:last-child{margin-top:auto;padding-top:8px}
+.campaign .btn.secondary{border-radius:9px;border-color:#d9c49b;background:#fffaf0;font-weight:750;transition:background .15s,color .15s}
+.campaign .btn.secondary:hover{background:#781626;color:#fff;border-color:#781626}
+.campaign .booster-wrap,.campaign .campaign-banner-wrap{position:relative;width:100%;aspect-ratio:1200/630;overflow:hidden;border-radius:12px;margin:8px 0 10px;background:#f1e7d8;isolation:isolate}
+.campaign .booster-img{display:block;width:100%;height:100%;aspect-ratio:auto;object-fit:cover;object-position:center;border-radius:0;margin:0;transition:transform .25s ease}
+.campaign:hover .booster-img{transform:scale(1.025)}
+/* Cover the old embedded square mark with a banner-coloured patch, then place the official seal above it. */
+.campaign .booster-wrap:after,.campaign .campaign-banner-wrap:after{content:"";position:absolute;z-index:1;left:3.3%;top:12%;width:21%;height:58%;border-radius:3px;background:#174b6b;pointer-events:none}
+#sbpfFocusGrid>.campaign:nth-child(1) .booster-wrap:after{background:#174b6b}#sbpfFocusGrid>.campaign:nth-child(2) .booster-wrap:after{background:#96283b}#sbpfFocusGrid>.campaign:nth-child(3) .booster-wrap:after{background:#087a59}#sbpfFocusGrid>.campaign:nth-child(4) .booster-wrap:after{background:#8c439d}#sbpfFocusGrid>.campaign:nth-child(5) .booster-wrap:after{background:#b45d1c}#sbpfFocusGrid>.campaign:nth-child(6) .booster-wrap:after{background:#245f98}#sbpfFocusGrid>.campaign:nth-child(7) .booster-wrap:after{background:#155675}#sbpfFocusGrid>.campaign:nth-child(8) .booster-wrap:after{background:#a22a3f}
+#sbpfCampaignGrid>.campaign:nth-child(1) .campaign-banner-wrap:after{background:#174b6b}#sbpfCampaignGrid>.campaign:nth-child(2) .campaign-banner-wrap:after{background:#96283b}#sbpfCampaignGrid>.campaign:nth-child(3) .campaign-banner-wrap:after{background:#087a59}#sbpfCampaignGrid>.campaign:nth-child(4) .campaign-banner-wrap:after{background:#8c439d}#sbpfCampaignGrid>.campaign:nth-child(5) .campaign-banner-wrap:after{background:#b45d1c}#sbpfCampaignGrid>.campaign:nth-child(6) .campaign-banner-wrap:after{background:#245f98}#sbpfCampaignGrid>.campaign:nth-child(7) .campaign-banner-wrap:after{background:#155675}#sbpfCampaignGrid>.campaign:nth-child(8) .campaign-banner-wrap:after{background:#a22a3f}
+.campaign .booster-official-logo,.campaign .campaign-official-logo{position:absolute;z-index:2;left:5.2%;top:18%;width:15%;height:auto;aspect-ratio:1;object-fit:cover;object-position:center;border-radius:50%;clip-path:circle(50% at 50% 50%);border:2px solid #e3bd55;background:transparent;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.pillar{padding:20px 16px}.pillar span{display:inline-flex;width:52px;height:52px;align-items:center;justify-content:center;background:#fbf4e5;border-radius:15px;color:#781626}.pillar h3{line-height:1.35}.info{padding:20px}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.campaign{padding:15px}.campaign h3{min-height:0}}
+@media(max-width:520px){.grid{grid-template-columns:1fr;gap:13px}.campaign{padding:15px}.campaign .number{font-size:10px}.campaign h3{font-size:19px}.campaign>p{font-size:14px}.campaign .booster-official-logo,.campaign .campaign-official-logo{border-width:1.5px}}
+@media(prefers-reduced-motion:reduce){.pillar,.campaign,.info,.campaign .booster-img{transition:none}.pillar:hover,.campaign:hover,.info:hover{transform:none}}
 </style>
 
 </head>
