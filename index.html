@@ -152,10 +152,7 @@ a:focus-visible,button:focus-visible{outline:3px solid #d7b34b;outline-offset:3p
       const svg = rows && rows[0] && rows[0].asset_content;
       if (!svg || !svg.trim().startsWith('<svg')) return;
       const src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
-      const logo = document.getElementById('sbpfLogo');
-      if (logo) logo.src = src;
-      const favicon = document.getElementById('sbpfFavicon');
-      if (favicon) favicon.href = src;
+      // Keep the newly selected official PNG logo; do not overwrite it with the old Supabase SVG.
     } catch (error) {
       console.warn('SBPF logo could not be loaded; keeping the built-in fallback.', error);
     }
