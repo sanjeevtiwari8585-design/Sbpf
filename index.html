@@ -24,6 +24,71 @@ nav a{padding:8px 12px;text-decoration:none;border-radius:9px;font-size:14px;fon
 footer{background:#241d20;color:#f9f3ec;padding:38px 20px 18px;text-align:left}footer a{color:#e9d7a2;text-decoration:none}footer a:hover{text-decoration:underline} .footer-inner{max-width:1120px;margin:auto}.footer-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}.footer-col h3{font-size:15px;color:#f2d78c;margin:0 0 10px}.footer-col ul{list-style:none;margin:0;padding:0}.footer-col li{margin:7px 0;font-size:13px}.footer-brand{border-bottom:1px solid #514348;padding-bottom:20px;margin-bottom:22px}.footer-brand p{margin:6px 0;color:#d6c9c7;font-size:13px}.footer-bottom{border-top:1px solid #514348;margin-top:24px;padding-top:15px;color:#d6c9c7;font-size:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.footer-emergency{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.footer-emergency a{display:inline-block;border:1px solid #6b575d;border-radius:8px;padding:6px 9px;font-size:12px}@media(max-width:650px){.footer-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}}@media(max-width:420px){.footer-grid{grid-template-columns:1fr}}
 @media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.pillars{grid-template-columns:repeat(2,1fr)}header{padding:18px 20px}.callout{align-items:flex-start;flex-direction:column}}
 @media(max-width:480px){.grid{grid-template-columns:1fr}.logo{width:58px;height:58px}.hero{padding:48px 18px}.wrap{padding:36px 16px}nav a{padding:7px 9px;font-size:13px}}
+
+/* SBPF work-area and campaign cards: readable, responsive, hover zoom */
+#sbpfFocusGrid,#sbpfCampaignGrid{align-items:stretch}
+#sbpfFocusGrid>.campaign,#sbpfCampaignGrid>.campaign{
+  min-width:0; height:100%; box-sizing:border-box; overflow:hidden;
+  border:1px solid #ead9c2; border-radius:22px; background:#fff;
+  box-shadow:0 5px 18px rgba(54,32,16,.07);
+  transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;
+}
+#sbpfFocusGrid>.campaign .booster-wrap,
+#sbpfCampaignGrid>.campaign .campaign-banner-wrap{
+  overflow:hidden; border-radius:14px; isolation:isolate;
+  background:#f7f0e6;
+}
+#sbpfFocusGrid>.campaign .booster-img,
+#sbpfCampaignGrid>.campaign .booster-img{
+  display:block; width:100%; height:auto; aspect-ratio:1200/630;
+  object-fit:cover; object-position:center; border-radius:14px;
+  transform:scale(1); transform-origin:center;
+  transition:transform .28s ease,filter .28s ease;
+}
+#sbpfFocusGrid>.campaign h3,#sbpfCampaignGrid>.campaign h3{
+  color:#761526; font-size:clamp(19px,1.35vw,23px); line-height:1.45;
+  letter-spacing:0; margin:18px 0 12px; font-weight:750;
+  overflow-wrap:anywhere;
+}
+#sbpfFocusGrid>.campaign>p,#sbpfCampaignGrid>.campaign>p{
+  color:#51483f; font-size:16px; line-height:1.8; margin-top:8px;
+}
+#sbpfFocusGrid>.campaign .number,#sbpfCampaignGrid>.campaign .number{
+  display:inline-flex; align-items:center; max-width:100%; width:max-content;
+  padding:8px 13px; margin-bottom:8px; border:1px solid #f1dfb9;
+  border-radius:999px; background:#fff8e9; color:#81570a;
+  font-size:12px; line-height:1.35; font-weight:800; letter-spacing:.7px;
+}
+@media(hover:hover) and (pointer:fine){
+  #sbpfFocusGrid>.campaign:hover,#sbpfCampaignGrid>.campaign:hover{
+    transform:translateY(-5px) scale(1.012);
+    border-color:#d6ad58;
+    box-shadow:0 16px 34px rgba(54,32,16,.16);
+    z-index:3;
+  }
+  #sbpfFocusGrid>.campaign:hover .booster-img,
+  #sbpfCampaignGrid>.campaign:hover .booster-img{
+    transform:scale(1.065); filter:saturate(1.06) contrast(1.025);
+  }
+}
+#sbpfFocusGrid>.campaign:focus-within,#sbpfCampaignGrid>.campaign:focus-within{
+  outline:3px solid #d6ad58; outline-offset:3px;
+}
+@media(max-width:850px){
+  #sbpfFocusGrid>.campaign h3,#sbpfCampaignGrid>.campaign h3{font-size:20px}
+  #sbpfFocusGrid>.campaign>p,#sbpfCampaignGrid>.campaign>p{font-size:15px;line-height:1.7}
+}
+@media(max-width:520px){
+  #sbpfFocusGrid>.campaign,#sbpfCampaignGrid>.campaign{border-radius:17px;padding:14px}
+  #sbpfFocusGrid>.campaign .booster-img,#sbpfCampaignGrid>.campaign .booster-img{border-radius:11px}
+}
+@media(prefers-reduced-motion:reduce){
+  #sbpfFocusGrid>.campaign,#sbpfCampaignGrid>.campaign,
+  #sbpfFocusGrid>.campaign .booster-img,#sbpfCampaignGrid>.campaign .booster-img{transition:none}
+  #sbpfFocusGrid>.campaign:hover,#sbpfCampaignGrid>.campaign:hover{transform:none}
+  #sbpfFocusGrid>.campaign:hover .booster-img,#sbpfCampaignGrid>.campaign:hover .booster-img{transform:none}
+}
+
 </style>
 
 <style id="sbpf-mobile-layout-polish">
