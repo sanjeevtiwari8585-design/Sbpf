@@ -22,10 +22,14 @@ nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:10px;back
 footer{background:#173126;color:#eaf4ec;padding:20px;text-align:center;font-size:13px}footer a{color:#f3c66c;text-decoration:none}
 @media(max-width:650px){header{padding:15px 13px;gap:11px}.logo{width:64px;height:64px;flex-basis:64px;border-radius:10px}header h1{font-size:clamp(18px,5vw,23px)}header p{font-size:12px}.hero{padding:42px 16px}.hero h2{font-size:clamp(29px,8vw,38px)}.hero p{font-size:15px}.wrap{padding:30px 14px}.cards{grid-template-columns:1fr}.card{padding:20px}.value-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cta{padding:21px}.cta .btn{width:100%}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px 18px;flex-wrap:wrap;text-align:left}.top-meta,.top-actions{display:flex;align-items:center;gap:8px 16px;flex-wrap:wrap}.top-meta span{white-space:nowrap}.top-actions button,.top-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:7px 11px;border:1px solid #f3c66c;border-radius:8px;background:transparent;color:white;font:inherit;font-weight:750;text-decoration:none;cursor:pointer}.top-actions a{background:#f3c66c;color:#173c2a}#translatePanel{width:100%;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 0}#translatePanel[hidden]{display:none}#google_translate_element{background:#fff;border-radius:6px;padding:4px 7px;min-height:28px}#google_translate_element select{max-width:75vw}
+@media(max-width:650px){.top{padding:10px 12px}.top-meta{display:grid;gap:3px}.top-meta span{white-space:normal}.top-actions{width:100%}.top-actions button,.top-actions a{font-size:12px;padding:7px 9px}}
+
 </style>
 </head>
 <body>
-<div class="top"><strong>CIN:</strong> U88900UP2026NPL252071 &nbsp;•&nbsp; <strong>NGO दर्पण ID:</strong> UP/2026/1197725</div>
+<div class="top"><div class="top-meta"><span><strong>CIN:</strong> U88900UP2026NPL252071</span><span><strong>NGO दर्पण ID:</strong> UP/2026/1197725</span></div><div class="top-actions"><button type="button" id="languageToggle" aria-expanded="false" aria-controls="translatePanel">🌐 भाषा परिवर्तन</button><a href="member.html">स्वयंसेवक लॉगिन</a></div><div id="translatePanel" hidden><span>अपनी भाषा चुनें:</span><div id="google_translate_element"></div></div></div>
 <header><img class="logo" alt="स्वर्णिम भारत परिवार फाउंडेशन का आधिकारिक लोगो" src="public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png"><div><h1>स्वर्णिम भारत परिवार फाउंडेशन</h1><p>सेवा • सहयोग • स्वावलंबन • सशक्तिकरण</p></div></header>
 <nav><a href="index.html">होम</a><a class="active" href="#vision">विजन और मिशन</a><a href="index.html#work">कार्य क्षेत्र</a><a href="index.html#campaigns">अभियान</a><a href="member.html">स्वयंसेवक / सदस्य लॉगिन</a></nav>
 <section class="hero"><div class="eyebrow">हमारा संकल्प • हमारा मार्ग</div><h2>जागरूक नागरिक, आत्मनिर्भर परिवार, सशक्त भारत</h2><p>हर व्यक्ति तक जानकारी, अवसर और सहयोग पहुँचाकर ऐसा समाज बनाना जहाँ सेवा, समान अवसर और स्वावलंबन को प्राथमिकता मिले।</p></section>
@@ -35,4 +39,12 @@ footer{background:#173126;color:#eaf4ec;padding:20px;text-align:center;font-size
 <section class="wrap"><div class="cta"><div><h2>इस संकल्प से जुड़ें</h2><p>अपने क्षेत्र में सेवा, जागरूकता और सहयोग के लिए भाग लें।</p></div><a class="btn" href="member.html">सदस्य / स्वयंसेवक लॉगिन →</a><a class="btn outline" href="index.html#campaigns">अभियान देखें →</a></div></section>
 </main>
 <footer>© 2026 स्वर्णिम भारत परिवार फाउंडेशन • <a href="index.html">मुख्य वेबसाइट</a></footer>
+<script>
+(function(){
+var button=document.getElementById('languageToggle'),panel=document.getElementById('translatePanel');
+if(button&&panel){button.addEventListener('click',function(){var opening=panel.hidden;panel.hidden=!opening;button.setAttribute('aria-expanded',String(opening));});}
+window.googleTranslateElementInit=function(){if(window.google&&google.translate&&google.translate.TranslateElement){new google.translate.TranslateElement({pageLanguage:'hi',includedLanguages:'hi,en,bn,gu,kn,ml,mr,ne,or,pa,ta,te,ur,as,sa,sd',autoDisplay:false},'google_translate_element');}};
+var script=document.createElement('script');script.src='https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';script.async=true;script.onerror=function(){var el=document.getElementById('google_translate_element');if(el)el.textContent='भाषा सेवा अभी उपलब्ध नहीं है।';};document.head.appendChild(script);
+})();
+</script>
 </body></html>
