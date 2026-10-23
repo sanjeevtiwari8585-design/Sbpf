@@ -31,6 +31,7 @@ main{padding:14px}.hero{background:linear-gradient(135deg,#7d1020,#a71f31);color
 .focusGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:12px}
 .focusAreaCard{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;display:flex;flex-direction:column;align-items:flex-start;gap:7px;min-width:0}
 .focusAreaCard .focusIcon{width:38px;height:38px;border-radius:10px;background:var(--cream);display:grid;place-items:center;font-size:21px}
+.campaignPoster{display:block;width:100%;aspect-ratio:1200/630;object-fit:cover;border-radius:10px;border:1px solid #ead9c2;background:#fff8e9;margin:0 0 8px}.campaignCard{overflow:hidden}.campaignCard .campaignLink{margin-top:auto}.campaignCard{align-items:stretch}
 .focusAreaCard h4{margin:0;font-size:14px;color:var(--maroon)}
 .focusAreaCard p{margin:0;font-size:12px;color:var(--muted);line-height:1.5;flex:1}
 .focusAreaCard button{border:1px solid var(--line);background:var(--cream);color:var(--maroon);border-radius:9px;padding:8px 10px;font-weight:700;font-size:12px;width:100%}
@@ -467,7 +468,9 @@ async function loadCampaigns(){
    const link=slug
     ? '<a class="campaignLink" href="campaign.html?slug='+encodeURIComponent(slug)+'">विस्तार से देखें →</a>'
     : '<span class="campaignLink" aria-disabled="true">विवरण उपलब्ध नहीं</span>';
-   return '<article class="focusAreaCard campaignCard"><div class="focusIcon">'+(campaignIcons[slug]||'📢')+'</div><h4>'+esc(campaign.name)+'</h4><p>'+esc(campaign.description||'इस अभियान की जानकारी और सामग्री शीघ्र उपलब्ध होगी।')+'</p>'+link+'</article>';
+   const posterSlug=/^swarnim-(jan-jagran|samvad|prahar|sipahi|paryavaran|vyapar|gurukulam|seva)$/.test(slug)?slug:'swarnim-seva';
+   const poster='assets/boosters/campaign-'+posterSlug+'.svg';
+   return '<article class="focusAreaCard campaignCard"><img class="campaignPoster" loading="lazy" decoding="async" src="'+poster+'" alt="'+esc(campaign.name)+' अभियान पोस्टर" onerror="this.onerror=null;this.src=\'assets/swarnim-jan-jagran-banner.svg\'"><div class="focusIcon">'+(campaignIcons[slug]||'📢')+'</div><h4>'+esc(campaign.name)+'</h4><p>'+esc(campaign.description||'इस अभियान की जानकारी और सामग्री शीघ्र उपलब्ध होगी।')+'</p>'+link+'</article>';
   }).join('');
  }catch(error){
   message.innerHTML='स्वर्णिम अभियान सूची लोड नहीं हुई: '+esc(error.message)+'<br><small>नेटवर्क या Supabase की सार्वजनिक पढ़ने की अनुमति जाँचें।</small>';
