@@ -27,6 +27,42 @@ footer{background:#173126;color:#eaf4ec;padding:20px;text-align:center;font-size
 @media(max-width:650px){.top{padding:10px 12px}.top-meta{display:grid;gap:3px}.top-meta span{white-space:normal}.top-actions{width:100%}.top-actions button,.top-actions a{font-size:12px;padding:7px 9px}}
 
 </style>
+<!-- SBPF professional circular seal finish -->
+
+<style id="sbpf-professional-circular-seal">
+/* Official emblem as a consistent circular seal across the public homepage and vision page */
+header img#sbpfLogo.logo,
+header img.logo,
+img#sbpfLogo.logo {
+  display:block!important;
+  width:clamp(68px,8vw,100px)!important;
+  height:clamp(68px,8vw,100px)!important;
+  min-width:clamp(68px,8vw,100px)!important;
+  min-height:clamp(68px,8vw,100px)!important;
+  flex:0 0 clamp(68px,8vw,100px)!important;
+  aspect-ratio:1/1!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  overflow:hidden!important;
+  border-radius:50%!important;
+  border:3px solid #f2cf73!important;
+  background:#fff!important;
+  padding:3px!important;
+  box-shadow:0 3px 12px rgba(0,0,0,.22),0 0 0 3px rgba(255,255,255,.16)!important;
+}
+header img.logo:not(#sbpfLogo) { border-radius:50%!important; }
+@media(max-width:700px){
+  header img#sbpfLogo.logo,header img.logo,img#sbpfLogo.logo {
+    width:clamp(58px,16vw,78px)!important;
+    height:clamp(58px,16vw,78px)!important;
+    min-width:clamp(58px,16vw,78px)!important;
+    min-height:clamp(58px,16vw,78px)!important;
+    flex-basis:clamp(58px,16vw,78px)!important;
+    border-width:2px!important;padding:2px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="top"><div class="top-meta"><span><strong>CIN:</strong> आधिकारिक संख्या सत्यापनाधीन</span><span><strong>NGO दर्पण ID:</strong> आधिकारिक ID सत्यापनाधीन</span></div><div class="top-actions"><button type="button" id="languageToggle" aria-expanded="false" aria-controls="translatePanel">🌐 भाषा परिवर्तन</button><a href="member.html">स्वयंसेवक लॉगिन</a></div><div id="translatePanel" hidden><span>अपनी भाषा चुनें:</span><div id="google_translate_element"></div></div></div>
