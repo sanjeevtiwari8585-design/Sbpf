@@ -545,6 +545,23 @@ header img.logo:not(#sbpfLogo) { border-radius:50%!important; }
 }
 </style>
 
+<style id="sbpf-unified-home-card-design">
+/* One consistent card system for all work areas and campaigns */
+#sbpfFocusGrid,#sbpfCampaignGrid{align-items:stretch;grid-auto-rows:1fr;gap:18px}
+#sbpfFocusGrid>.campaign,#sbpfCampaignGrid>.campaign{display:flex!important;flex-direction:column!important;align-self:stretch!important;min-width:0;min-height:100%;height:100%;padding:16px!important;border:1px solid #e6d5ad!important;border-radius:17px!important;background:linear-gradient(180deg,#fff 0%,#fffaf0 100%)!important;box-shadow:0 5px 18px rgba(58,34,15,.08)!important;overflow:hidden;transition:transform .2s ease,box-shadow .2s ease}
+#sbpfFocusGrid>.campaign:hover,#sbpfCampaignGrid>.campaign:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(58,34,15,.13)!important}
+#sbpfFocusGrid>.campaign .number,#sbpfCampaignGrid>.campaign .number{display:inline-flex;align-self:flex-start;align-items:center;min-height:28px;margin-bottom:8px;padding:5px 10px;border-radius:999px;background:#fff0c6;color:#711222;font-size:11px;font-weight:850;letter-spacing:.35px}
+#sbpfFocusGrid>.campaign .booster-wrap,#sbpfCampaignGrid>.campaign .campaign-banner-wrap{position:relative!important;width:100%!important;aspect-ratio:1200/630!important;height:auto!important;min-height:0!important;flex:0 0 auto;overflow:hidden;border-radius:12px!important;border:1px solid #ead7aa!important;margin:0 0 13px!important;background:#f8eedb!important;isolation:isolate}
+#sbpfFocusGrid>.campaign .booster-img,#sbpfCampaignGrid>.campaign .campaign-art-banner{display:block!important;width:100%!important;height:100%!important;aspect-ratio:auto!important;object-fit:cover!important;object-position:center!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+#sbpfFocusGrid>.campaign .sbpf-card-seal,#sbpfCampaignGrid>.campaign .sbpf-card-seal{position:absolute!important;z-index:3!important;top:9px!important;right:9px!important;display:block!important;width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;object-fit:contain!important;object-position:center!important;aspect-ratio:1/1!important;border:2px solid #e8c35b!important;border-radius:50%!important;background:#fff!important;padding:2px!important;box-shadow:0 2px 9px rgba(0,0,0,.22)!important}
+#sbpfFocusGrid>.campaign h3,#sbpfCampaignGrid>.campaign h3{display:flex;align-items:center;min-height:54px;margin:0 0 8px!important;padding:9px 11px;border-left:4px solid #d4af37;border-radius:0 9px 9px 0;background:#fff1cd;color:#781626!important;font-size:clamp(16px,1.5vw,19px)!important;font-weight:850!important;line-height:1.4!important}
+#sbpfFocusGrid>.campaign>p,#sbpfCampaignGrid>.campaign>p{margin:0 0 10px!important;color:#50474a!important;font-size:14px!important;line-height:1.7!important}
+#sbpfFocusGrid>.campaign>p:first-of-type,#sbpfCampaignGrid>.campaign>p:first-of-type{flex:1 0 auto;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+#sbpfFocusGrid>.campaign>p:last-child,#sbpfCampaignGrid>.campaign>p:last-child{margin-top:auto!important;padding-top:8px}
+#sbpfFocusGrid>.campaign .btn,#sbpfCampaignGrid>.campaign .btn{display:inline-flex!important;align-items:center;justify-content:center;min-height:42px;padding:10px 14px!important;border-radius:10px!important;font-weight:800!important;text-decoration:none!important}
+@media(max-width:600px){#sbpfFocusGrid,#sbpfCampaignGrid{gap:13px}#sbpfFocusGrid>.campaign,#sbpfCampaignGrid>.campaign{padding:12px!important}#sbpfFocusGrid>.campaign .sbpf-card-seal,#sbpfCampaignGrid>.campaign .sbpf-card-seal{width:36px!important;height:36px!important;min-width:36px!important;min-height:36px!important;top:7px!important;right:7px!important}#sbpfFocusGrid>.campaign h3,#sbpfCampaignGrid>.campaign h3{min-height:48px;font-size:16px!important}}
+@media(prefers-reduced-motion:reduce){#sbpfFocusGrid>.campaign,#sbpfCampaignGrid>.campaign{transition:none}}
+</style>
 </head>
 <body>
 <div class="sbpf-topbar">
@@ -678,7 +695,7 @@ header img.logo:not(#sbpfLogo) { border-radius:50%!important; }
           grid.innerHTML = areas.map((item, index) =>
             '<article class="campaign"><div class="number">' +
             String(index + 1).padStart(2, '0') + ' • SBPF WORK AREA</div>' +
-            '<div class="booster-wrap"><img class="booster-img" loading="lazy" decoding="async" src="' + escapeSbpfHtml(item.image_url || focusArtFor(item.slug, item.name)) + '" alt="' + escapeSbpfHtml(item.name) + ' कार्य क्षेत्र बैनर"></div>' +
+            '<div class="booster-wrap"><img class="booster-img" loading="lazy" decoding="async" src="' + escapeSbpfHtml(item.image_url || focusArtFor(item.slug, item.name)) + '" alt="' + escapeSbpfHtml(item.name) + ' कार्य क्षेत्र बैनर"><img class="sbpf-card-seal" loading="lazy" decoding="async" src="public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png" alt="SBPF आधिकारिक लोगो"></div>' +
             '<h3>' + escapeSbpfHtml(item.name) + '</h3><p>' +
             escapeSbpfHtml(item.description || 'इस कार्यक्षेत्र की जानकारी शीघ्र उपलब्ध होगी।') +
             '</p><p><a class="btn secondary sbpf-work-area-link" href="' + escapeSbpfHtml(workAreaLinkFor(item.slug, item.name).href) + '">' +
@@ -698,7 +715,7 @@ header img.logo:not(#sbpfLogo) { border-radius:50%!important; }
               item.slug === 'swarnim-media' ? 'Swarnim Media खोलें →' : 'विस्तार से पढ़ें →';
             return '<article class="campaign"><div class="number">' +
               String(index + 1).padStart(2, '0') + ' • SWARNIM ABHIYAN</div>' +
-              '<div class="campaign-banner-wrap campaign-banner-art"><img class="campaign-art-banner" loading="lazy" decoding="async" src="' + escapeSbpfHtml(item.slug === 'swarnim-jan-jagran' ? 'assets/swarnim-jan-jagran-banner.svg' : (item.image_url || campaignArtFor(item.slug, item.name))) + '" alt="' + escapeSbpfHtml(item.name) + ' अभियान बैनर"></div>' +
+              '<div class="campaign-banner-wrap campaign-banner-art"><img class="campaign-art-banner" loading="lazy" decoding="async" src="' + escapeSbpfHtml(item.slug === 'swarnim-jan-jagran' ? 'assets/swarnim-jan-jagran-banner.svg' : (item.image_url || campaignArtFor(item.slug, item.name))) + '" alt="' + escapeSbpfHtml(item.name) + ' अभियान बैनर"><img class="sbpf-card-seal" loading="lazy" decoding="async" src="public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png" alt="SBPF आधिकारिक लोगो"></div>' +
               '<h3>' + escapeSbpfHtml(item.name) + '</h3><p>' +
               escapeSbpfHtml(item.description || 'इस अभियान का विवरण शीघ्र उपलब्ध होगा।') +
               '</p><p><a class="btn secondary" style="display:inline-block;padding:8px 12px;font-size:13px;margin-top:12px" href="' +
