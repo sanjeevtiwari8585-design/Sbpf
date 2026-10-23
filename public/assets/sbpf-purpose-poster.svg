@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 420" role="img" aria-labelledby="title desc">
+<title id="title">स्वर्णिम भारत परिवार फाउंडेशन — सेवा और सशक्तिकरण</title>
+<desc id="desc">शिक्षा, स्वास्थ्य, महिला सशक्तिकरण, पर्यावरण और जनसेवा को दर्शाता प्रेरक पृष्ठभूमि पोस्टर।</desc>
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0c472e"/><stop offset=".58" stop-color="#167647"/><stop offset="1" stop-color="#d88c2c"/></linearGradient>
+ <linearGradient id="sun" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff4cb" stop-opacity=".9"/><stop offset="1" stop-color="#fff4cb" stop-opacity="0"/></linearGradient>
+</defs>
+<rect width="1600" height="420" fill="url(#bg)"/>
+<circle cx="1380" cy="80" r="260" fill="url(#sun)"/>
+<g fill="none" stroke="#fff" stroke-opacity=".15" stroke-width="2"><circle cx="1450" cy="210" r="210"/><circle cx="1450" cy="210" r="170"/><circle cx="1450" cy="210" r="130"/></g>
+<g transform="translate(980 58)" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".9">
+ <g transform="translate(0 12)"><path d="M0 30 Q35 5 70 30 V100 Q35 75 0 100Z"/><path d="M70 30 Q105 5 140 30 V100 Q105 75 70 100Z"/><path d="M70 30V100"/></g>
+ <g transform="translate(205 0)"><circle cx="42" cy="30" r="20"/><path d="M42 58V125M42 80L5 104M42 80L80 104M42 125L16 158M42 125L68 158"/><path d="M100 70h54v54h-54z" fill="#fff" stroke="none"/><path d="M127 80v34M110 97h34" stroke="#167647" stroke-width="10"/></g>
+ <g transform="translate(410 18)"><path d="M65 125V65M65 90Q10 90 5 40Q55 35 65 80M65 76Q70 20 125 8Q132 62 65 76Z"/><path d="M25 125h80"/></g>
+ <g transform="translate(600 18)"><circle cx="38" cy="26" r="18"/><circle cx="94" cy="26" r="18"/><path d="M8 105V75Q8 52 38 52Q68 52 68 75V105M64 105V75Q64 52 94 52Q124 52 124 75V105"/><path d="M0 105h132"/></g>
+</g>
+<g fill="#fff" opacity=".13"><path d="M0 330Q180 240 360 330T720 330T1080 330T1440 330T1800 330V420H0Z"/></g>
+<g fill="#fff" font-family="Noto Sans Devanagari,Arial,sans-serif" opacity=".95">
+ <text x="70" y="90" font-size="22" font-weight="700" letter-spacing="3">सेवा • सहयोग • स्वावलंबन • सशक्तिकरण</text>
+ <text x="70" y="150" font-size="36" font-weight="800">हर परिवार तक अवसर और सहायता</text>
+ <text x="70" y="200" font-size="23">शिक्षा  |  स्वास्थ्य  |  महिला सशक्तिकरण  |  पर्यावरण  |  जनसेवा</text>
+ <text x="70" y="250" font-size="20" opacity=".9">जागरूक नागरिक • आत्मनिर्भर समाज • समृद्ध भारत</text>
+</g>
+<g fill="#f3c66c"><circle cx="70" cy="300" r="5"/><circle cx="92" cy="300" r="5"/><circle cx="114" cy="300" r="5"/></g>
+</svg>
