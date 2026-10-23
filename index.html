@@ -353,7 +353,6 @@ footer .footer-brand strong{font-size:19px}
 @media(prefers-reduced-motion:reduce){#sbpfFocusGrid>.campaign,#sbpfCampaignGrid>.campaign,#sbpfFocusGrid>.campaign img,#sbpfCampaignGrid>.campaign img{transition:none!important}#sbpfFocusGrid>.campaign:hover,#sbpfCampaignGrid>.campaign:hover{transform:none!important}}
 </style>
 
-/* Final logo correction: preserve the complete official emblem without circular cropping. */
 <style id="sbpf-final-logo-correction">
 header img#sbpfLogo.logo{
   width:96px!important;height:96px!important;min-width:96px!important;min-height:96px!important;flex:0 0 96px!important;
@@ -366,6 +365,23 @@ header img#sbpfLogo.logo{
 }
 @media(max-width:390px){
   header img#sbpfLogo.logo{width:62px!important;height:62px!important;min-width:62px!important;min-height:62px!important;flex-basis:62px!important}
+}
+</style>
+
+/* Final production polish: keep the complete official emblem visible and make mobile navigation tidy. */
+header img#sbpfLogo.logo{
+  object-fit:contain!important; object-position:center!important;
+  clip-path:none!important; border-radius:50%!important;
+  background:#fffdf8!important; padding:3px!important;
+  border:1.5px solid #e3bd55!important;
+}
+@media(max-width:700px){
+  nav{display:flex!important;flex-wrap:nowrap!important;justify-content:flex-start!important;
+    overflow-x:auto!important;overscroll-behavior-x:contain;scrollbar-width:thin;
+    -webkit-overflow-scrolling:touch;gap:6px!important;padding:8px 10px!important}
+  nav a{flex:0 0 auto!important;white-space:nowrap!important;min-height:40px!important;
+    padding:8px 11px!important;font-size:13px!important}
+  nav a.login{grid-column:auto!important}
 }
 </style>
 
