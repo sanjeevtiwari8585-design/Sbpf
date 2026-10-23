@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SBPF सदस्य पैनल</title>
+<title>SBPF सदस्य क्षेत्र</title>
 <style>
 :root{--maroon:#7d1020;--gold:#d4af37;--cream:#fffaf0;--ink:#252525;--muted:#6b7280;--line:#eadfd0;--bg:#f7f5f2}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,system-ui,sans-serif}
@@ -15,7 +15,7 @@ main{padding:14px}.hero{background:linear-gradient(135deg,#7d1020,#a71f31);color
 .avatar{width:64px;height:64px;border-radius:50%;border:3px solid var(--gold);background:#fff;object-fit:cover}.hero h2{margin:0 0 4px;font-size:21px}.hero p{margin:3px 0;color:#ffe9c0;font-size:13px}.badge{display:inline-block;background:#fff;color:var(--maroon);padding:5px 9px;border-radius:20px;font-size:11px;font-weight:bold;margin-top:6px}
 .quick{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:12px 0}.quick button{border:1px solid var(--line);background:#fff;border-radius:12px;padding:11px 7px;color:var(--maroon);font-weight:bold;font-size:12px}
 .categories{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:15px;box-shadow:0 3px 12px #0000000a}.cardHead{display:flex;align-items:center;gap:11px}.icon{width:44px;height:44px;border-radius:12px;background:var(--cream);display:grid;place-items:center;font-size:23px}.card h3{margin:0;color:var(--maroon);font-size:16px}.card small{color:var(--muted)}.items{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}.items button{border:1px solid #eee;background:#fafafa;border-radius:9px;padding:10px 8px;text-align:left;color:#444;font-size:12px;cursor:pointer}.items button:hover{border-color:var(--gold);background:var(--cream)}
-.view{margin-top:14px}.viewHead{display:flex;align-items:center;gap:10px;margin-bottom:10px}.viewHead h2{margin:0;color:var(--maroon);font-size:19px}.back{border:0;background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 11px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.kv{padding:9px;border-bottom:1px solid #eee}.kv b{display:block;font-size:11px;color:var(--muted);margin-bottom:3px}.kv span{font-size:14px}.notice{padding:11px;border-radius:10px;background:var(--cream);border:1px solid #ead9a1;margin-bottom:8px}.success{color:#176b35}.error{color:#a01828}
+.view{margin-top:14px}.viewHead{display:flex;align-items:center;gap:10px;margin-bottom:10px}.viewHead h2{margin:0;color:var(--maroon);font-size:19px}.back{border:0;background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 11px}.area{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.kv{padding:9px;border-bottom:1px solid #eee}.kv b{display:block;font-size:11px;color:var(--muted);margin-bottom:3px}.kv span{font-size:14px}.notice{padding:11px;border-radius:10px;background:var(--cream);border:1px solid #ead9a1;margin-bottom:8px}.success{color:#176b35}.error{color:#a01828}
 .auth{max-width:470px;margin:8vh auto;padding:20px}.authBox{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 8px 30px #0001}.authLogo{width:100px;height:100px;display:block;margin:auto;object-fit:contain}.auth h1{text-align:center;color:var(--maroon);font-size:21px}.auth label{display:block;font-size:12px;font-weight:bold;margin:12px 0 5px}.auth input{width:100%;padding:12px;border:1px solid #ddd;border-radius:9px}.primary{width:100%;border:0;background:var(--maroon);color:#fff;border-radius:10px;padding:12px;font-weight:bold;margin-top:15px}.empty{text-align:center;color:var(--muted);padding:18px}
 .family-form label{display:block;font-size:12px;font-weight:700;margin:10px 0 5px}
 .family-form input,.family-form select,.family-form textarea{width:100%;padding:10px 11px;border:1px solid #d9d9d9;border-radius:9px;background:#fff;color:var(--ink)}
@@ -64,7 +64,7 @@ main{padding:14px}.hero{background:linear-gradient(135deg,#7d1020,#a71f31);color
 </div>
 <div id="app" class="app hidden">
 <header class="top">
- <img id="logo" class="logo" alt="SBPF"><div><h1>स्वर्णिम भारत परिवार फाउंडेशन</h1><small>सदस्य पैनल</small></div><div class="spacer"></div><button class="logout" onclick="logout()">बाहर निकलें</button>
+ <img id="logo" class="logo" alt="SBPF"><div><h1>स्वर्णिम भारत परिवार फाउंडेशन</h1><small>सदस्य क्षेत्र</small></div><div class="spacer"></div><button class="logout" onclick="logout()">बाहर निकलें</button>
 </header>
 <main>
  <section id="home">
@@ -109,7 +109,7 @@ main{padding:14px}.hero{background:linear-gradient(135deg,#7d1020,#a71f31);color
 <div id="profileReminder" class="modalBackdrop hidden" role="dialog" aria-modal="true" aria-labelledby="profileReminderTitle">
  <div class="modalCard">
   <h2 id="profileReminderTitle">अपनी सदस्य प्रोफ़ाइल पूरी करें</h2>
-  <p>आपकी Member ID बन चुकी है। सरकारी योजनाओं की सही जानकारी, परिवार रजिस्टर और SBPF सेवाओं के लिए पता, 6 अंकों का PIN Code और कार्यक्षेत्र भरें। आप “बाद में” चुनकर अभी पैनल का उपयोग जारी रख सकते हैं।</p>
+  <p>आपकी Member ID बन चुकी है। सरकारी योजनाओं की सही जानकारी, परिवार रजिस्टर और SBPF सेवाओं के लिए पता, 6 अंकों का PIN Code और कार्यक्षेत्र भरें। आप “बाद में” चुनकर अभी क्षेत्र का उपयोग जारी रख सकते हैं।</p>
   <div class="modalActions">
    <button type="button" onclick="completeProfileNow()">प्रोफ़ाइल पूरी करें</button>
    <button type="button" class="back" onclick="dismissProfileReminder()">बाद में</button>
