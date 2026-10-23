@@ -718,21 +718,17 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
   }
   function workAreaLinkFor(slug, name) {
     const key = String(slug || '').toLowerCase();
-    const label = String(name || '').toLowerCase();
+    const label = String(name || '');
     const routes = [
-      [/education|शिक्षा|gurukul/, 'campaign.html?slug=swarnim-gurukulam', 'शिक्षा अभियान देखें →'],
-      [/health|स्वास्थ्य|medical|चिकित्सा/, 'hms.html', 'स्वास्थ्य सहायता देखें →'],
-      [/family|परिवार|child|बाल/, 'member.html', 'सदस्य सहायता खोलें →'],
-      [/scheme|योजना|awareness|जागरूक/, 'swarnim-csc.html', 'योजना सहायता देखें →'],
-      [/women|महिला|empower/, 'campaign.html?slug=swarnim-seva', 'सेवा अभियान देखें →'],
-      [/environment|पर्यावरण|स्वच्छता/, 'campaign.html?slug=swarnim-paryavaran', 'पर्यावरण अभियान देखें →'],
-      [/employment|skill|रोजगार|कौशल/, 'campaign.html?slug=swarnim-vyapar', 'आजीविका अभियान देखें →'],
-      [/business|व्यापार|self-employment|स्वरोजगार/, 'campaign.html?slug=swarnim-vyapar', 'व्यापार अभियान देखें →'],
-      [/divyang|दिव्यांग|senior|वृद्ध|वरिष्ठ|disaster|आपदा|relief|राहत|service|जनसेवा|welfare|समाज/, 'campaign.html?slug=swarnim-seva', 'सेवा अभियान देखें →'],
-      [/samvad|संवाद|complaint|शिकायत|public service/, 'campaign.html?slug=swarnim-samvad', 'संवाद अभियान देखें →']
+      [/education|शिक्षा|gurukul/, 'education'], [/health|स्वास्थ्य|medical|चिकित्सा/, 'health'],
+      [/employment|skill|रोजगार|कौशल/, 'employment-skill-development'], [/women|महिला|empower/, 'women-empowerment'],
+      [/child|बाल|परिवार/, 'child-development'], [/business|व्यापार|self-employment|स्वरोजगार/, 'business-self-employment'],
+      [/environment|पर्यावरण|स्वच्छता/, 'environment-protection'], [/service|जनसेवा|welfare|समाज/, 'social-service-public-welfare'],
+      [/divyang|दिव्यांग/, 'divyangjan-support'], [/scheme|योजना|awareness|जागरूक/, 'government-schemes-public-awareness'],
+      [/disaster|आपदा|राहत/, 'disaster-relief'], [/senior|वृद्ध|वरिष्ठ/, 'senior-citizen-support']
     ];
     const found = routes.find(([pattern]) => pattern.test(key + ' ' + label));
-    return found ? { href: found[1], label: found[2] } : { href: '#campaigns', label: 'संबंधित अभियान देखें →' };
+    return { href: 'work-area.html?slug=' + encodeURIComponent(found ? found[1] : key), label: 'कार्य क्षेत्र खोलें →' };
   }
   function campaignArtFor(slug, name) {
     const key = String(slug || '').toLowerCase();
