@@ -22,7 +22,7 @@ button,input{font:inherit}button{cursor:pointer;border:0;border-radius:9px;paddi
 <main class="wrap">
 <section id="loginPanel" class="box login">
 <h2>अधिकृत SBPF Admin प्रवेश</h2>
-<p class="muted">यह पैनल केवल प्रमाणित लॉगिन और सर्वर की अनुमति के बाद उपलब्ध होगा। स्कूल/अस्पताल का डेटा उसकी लागू Supabase RLS नीतियों के अनुसार ही दिखेगा।</p>
+<p class="muted">यह क्षेत्र केवल प्रमाणित लॉगिन और सर्वर की अनुमति के बाद उपलब्ध होगा। स्कूल/अस्पताल का डेटा उसकी लागू Supabase RLS नीतियों के अनुसार ही दिखेगा।</p>
 <form id="loginForm"><label for="email">एडमिन ईमेल</label><input id="email" type="email" autocomplete="username" required><label for="password">पासवर्ड</label><input id="password" type="password" autocomplete="current-password" required><button id="loginBtn" type="submit" style="width:100%;margin-top:14px">सुरक्षित प्रवेश करें</button></form>
 <div id="loginMsg" class="msg hidden" role="status"></div>
 </section>
@@ -34,7 +34,7 @@ button,input{font:inherit}button{cursor:pointer;border:0;border-radius:9px;paddi
 </div>
 <div class="box"><h2 class="section-title">स्कूल सूची</h2><div id="schoolList" class="cards"><div class="empty">लोड हो रहा है…</div></div></div>
 <div class="box"><h2 class="section-title">अस्पताल सूची</h2><div id="hospitalList" class="cards"><div class="empty">लोड हो रहा है…</div></div></div>
-<div class="box"><b>सुरक्षा नोट:</b><p class="muted">यह पहला read-only एकीकरण चरण है। इस स्क्रीन से अभी कोई स्कूल, अस्पताल, मरीज, विद्यार्थी, फीस या स्वास्थ्य रिकॉर्ड बदला नहीं जा सकता। आगे के बदलाव केवल मौजूदा server-side अनुमति जाँच और परीक्षण के बाद जोड़े जाएँगे।</p><p><a href="member-panel.html">सदस्य पैनल</a> · <a href="admin-family.html">परिवार रजिस्टर समीक्षा</a></p></div>
+<div class="box"><b>सुरक्षा नोट:</b><p class="muted">यह पहला read-only एकीकरण चरण है। इस स्क्रीन से अभी कोई स्कूल, अस्पताल, मरीज, विद्यार्थी, फीस या स्वास्थ्य रिकॉर्ड बदला नहीं जा सकता। आगे के बदलाव केवल मौजूदा server-side अनुमति जाँच और परीक्षण के बाद जोड़े जाएँगे।</p><p><a href="member-panel.html">सदस्य क्षेत्र</a> · <a href="admin-family.html">परिवार रजिस्टर समीक्षा</a></p></div>
 </section>
 </main>
 <script>
@@ -61,7 +61,7 @@ async function loadDashboard(){
   const user=await api('/auth/v1/user');if(!user?.id)throw new Error('लॉगिन सत्र मान्य नहीं है।');
   $('who').textContent='लॉगिन सत्यापित: '+(user.email||'अधिकृत उपयोगकर्ता');
   // This server-side check is mandatory; client-side UI alone is not authorization.
-  let admin=false;try{admin=await rpc('is_admin');}catch(e){throw new Error('SBPF Admin अनुमति सत्यापित नहीं हुई। सामान्य सदस्य खाते को यह पैनल नहीं मिलेगा। विवरण: '+e.message);}
+  let admin=false;try{admin=await rpc('is_admin');}catch(e){throw new Error('SBPF Admin अनुमति सत्यापित नहीं हुई। सामान्य सदस्य खाते को यह क्षेत्र नहीं मिलेगा। विवरण: '+e.message);}
   if(admin!==true && !(admin&&admin.is_admin===true))throw new Error('यह खाता SBPF Admin के रूप में अधिकृत नहीं है।');
   const [schoolsResult,hospitalsResult]=await Promise.allSettled([
    api('/rest/v1/ems_schools?select=id,school_code,school_name,district,state,status&order=created_at.desc&limit=100'),
