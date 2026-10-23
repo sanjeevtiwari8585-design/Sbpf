@@ -470,7 +470,7 @@ async function loadCampaigns(){
     : '<span class="campaignLink" aria-disabled="true">विवरण उपलब्ध नहीं</span>';
    const posterSlug=/^swarnim-(jan-jagran|samvad|prahar|sipahi|paryavaran|vyapar|gurukulam|seva)$/.test(slug)?slug:'swarnim-seva';
    const poster='assets/boosters/campaign-'+posterSlug+'.svg';
-   return '<article class="focusAreaCard campaignCard"><img class="campaignPoster" loading="lazy" decoding="async" src="'+poster+'" alt="'+esc(campaign.name)+' अभियान पोस्टर" onerror="this.onerror=null;this.src=\'assets/swarnim-jan-jagran-banner.svg\'"><div class="focusIcon">'+(campaignIcons[slug]||'📢')+'</div><h4>'+esc(campaign.name)+'</h4><p>'+esc(campaign.description||'इस अभियान की जानकारी और सामग्री शीघ्र उपलब्ध होगी।')+'</p>'+link+'</article>';
+   return '<article class="focusAreaCard campaignCard"><img class="campaignPoster" loading="lazy" decoding="async" src="'+poster+'" alt="'+esc(campaign.name)+' अभियान पोस्टर" onerror="this.onerror=null;this.src=\'assets/boosters/campaign-swarnim-seva.svg\'"><div class="focusIcon">'+(campaignIcons[slug]||'📢')+'</div><h4>'+esc(campaign.name)+'</h4><p>'+esc(campaign.description||'इस अभियान की जानकारी और सामग्री शीघ्र उपलब्ध होगी।')+'</p>'+link+'</article>';
   }).join('');
  }catch(error){
   message.innerHTML='स्वर्णिम अभियान सूची लोड नहीं हुई: '+esc(error.message)+'<br><small>नेटवर्क या Supabase की सार्वजनिक पढ़ने की अनुमति जाँचें।</small>';
