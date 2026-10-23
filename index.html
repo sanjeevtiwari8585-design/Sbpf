@@ -122,6 +122,12 @@ footer{background:#241d20;color:#f9f3ec;padding:38px 20px 18px;text-align:left}f
 .sbpf-campaign-link{font-size:13px;padding:9px 12px;white-space:normal}
 @media(max-width:520px){.sbpf-vision-link{align-items:stretch;flex-direction:column}.sbpf-vision-link .btn{width:100%;text-align:center}.sbpf-campaign-link{width:100%;text-align:center}}
 
+
+.sbpf-work-area-link{display:inline-flex;white-space:normal;font-size:13px;padding:9px 12px;margin-top:8px}
+#sbpfFocusGrid>.campaign{display:flex;flex-direction:column;align-items:flex-start}
+#sbpfFocusGrid>.campaign>p:last-child{margin-top:auto;padding-top:10px}
+@media(max-width:520px){.sbpf-work-area-link{width:100%;text-align:center;justify-content:center}}
+
 </style>
 
 <style id="sbpf-mobile-layout-polish">
@@ -569,6 +575,24 @@ a:focus-visible,button:focus-visible{outline:3px solid #e99a32;outline-offset:3p
     const found = map.find(([pattern]) => pattern.test(key + ' ' + label));
     return 'assets/boosters/' + (found ? found[1] : 'work-area-social-service-public-welfare') + '.svg';
   }
+  function workAreaLinkFor(slug, name) {
+    const key = String(slug || '').toLowerCase();
+    const label = String(name || '').toLowerCase();
+    const routes = [
+      [/education|शिक्षा|gurukul/, 'campaign.html?slug=swarnim-gurukulam', 'शिक्षा अभियान देखें →'],
+      [/health|स्वास्थ्य|medical|चिकित्सा/, 'hms.html', 'स्वास्थ्य सहायता देखें →'],
+      [/family|परिवार|child|बाल/, 'member.html', 'सदस्य सहायता खोलें →'],
+      [/scheme|योजना|awareness|जागरूक/, 'swarnim-csc.html', 'योजना सहायता देखें →'],
+      [/women|महिला|empower/, 'campaign.html?slug=swarnim-seva', 'सेवा अभियान देखें →'],
+      [/environment|पर्यावरण|स्वच्छता/, 'campaign.html?slug=swarnim-paryavaran', 'पर्यावरण अभियान देखें →'],
+      [/employment|skill|रोजगार|कौशल/, 'campaign.html?slug=swarnim-vyapar', 'आजीविका अभियान देखें →'],
+      [/business|व्यापार|self-employment|स्वरोजगार/, 'campaign.html?slug=swarnim-vyapar', 'व्यापार अभियान देखें →'],
+      [/divyang|दिव्यांग|senior|वृद्ध|वरिष्ठ|disaster|आपदा|relief|राहत|service|जनसेवा|welfare|समाज/, 'campaign.html?slug=swarnim-seva', 'सेवा अभियान देखें →'],
+      [/samvad|संवाद|complaint|शिकायत|public service/, 'campaign.html?slug=swarnim-samvad', 'संवाद अभियान देखें →']
+    ];
+    const found = routes.find(([pattern]) => pattern.test(key + ' ' + label));
+    return found ? { href: found[1], label: found[2] } : { href: '#campaigns', label: 'संबंधित अभियान देखें →' };
+  }
   function campaignArtFor(slug, name) {
     const key = String(slug || '').toLowerCase();
     const label = String(name || '').toLowerCase();
@@ -604,7 +628,8 @@ a:focus-visible,button:focus-visible{outline:3px solid #e99a32;outline-offset:3p
             '<div class="booster-wrap"><img class="booster-img" loading="lazy" decoding="async" src="' + escapeSbpfHtml(item.image_url || focusArtFor(item.slug, item.name)) + '" alt="' + escapeSbpfHtml(item.name) + ' कार्य क्षेत्र बैनर"></div>' +
             '<h3>' + escapeSbpfHtml(item.name) + '</h3><p>' +
             escapeSbpfHtml(item.description || 'इस कार्यक्षेत्र की जानकारी शीघ्र उपलब्ध होगी।') +
-            '</p></article>'
+            '</p><p><a class="btn secondary sbpf-work-area-link" href="' + escapeSbpfHtml(workAreaLinkFor(item.slug, item.name).href) + '">' +
+            escapeSbpfHtml(workAreaLinkFor(item.slug, item.name).label) + '</a></p></article>'
           ).join('');
         }
       }
