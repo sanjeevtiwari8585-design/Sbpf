@@ -28,7 +28,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin-top:18px}
 <article class="card"><h2>नया अकाउंट बनाएँ</h2><p>नाम, मोबाइल, ईमेल और पासवर्ड से पंजीकरण शुरू करें। OTP नहीं माँगा जाएगा। ईमेल पुष्टि दिखे तो पहले ईमेल लिंक खोलें।</p><a class="btn primary" href="https://dxowhzghrdghfzoggorx.supabase.co/functions/v1/member-registration">नया सदस्य पंजीकरण →</a></article>
 <article class="card"><h2>पहले से सदस्य हैं?</h2><p>अपनी SBPF Member ID और वही पासवर्ड इस्तेमाल करके सदस्य डैशबोर्ड खोलें।</p><a id="memberLoginLink" class="btn secondary" href="member-panel.html">Member ID से लॉगिन →</a></article>
 </div>
-<div class="note"><strong>ज़रूरी:</strong> नया अकाउंट बनने पर दिखाई गई Member ID सुरक्षित रखें। Member Panel और SBPF के सदस्य-आधारित टूल्स में इसी Member ID और बनाए गए पासवर्ड का उपयोग करें। सार्वजनिक वेबसाइट पर सदस्यता शुल्क प्रदर्शित नहीं किया जाता।</div>
+<div class="note"><strong>ज़रूरी:</strong> नया अकाउंट बनने पर दिखाई गई Member ID सुरक्षित रखें। Member Area और SBPF के सदस्य-आधारित टूल्स में इसी Member ID और बनाए गए पासवर्ड का उपयोग करें। सार्वजनिक वेबसाइट पर सदस्यता शुल्क प्रदर्शित नहीं किया जाता।</div>
 <div class="links"><a href="index.html">← मुख्य वेबसाइट</a><a href="swarnim-ai-studio.html">Swarnim AI Studio</a><a href="swarnim-creator.html">Swarnim Creator</a><a href="swarnim-video-editor.html">Video Editor</a></div>
 </section>
 <footer>© Swarnim Bharat Parivar Foundation • सुरक्षित सदस्य प्रवेश</footer>
@@ -38,7 +38,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin-top:18px}
  const allowed=new Set(['swarnim-ai-studio.html','swarnim-creator.html','swarnim-video-editor.html']);
  const requested=new URLSearchParams(location.search).get('return_to')||'';
  if(allowed.has(requested)){
-   document.getElementById('memberLoginLink').href='member-panel.html?return_to='+encodeURIComponent(requested);
+   document.getElementById('memberLoginLink').href='member-area.html?return_to='+encodeURIComponent(requested);
  }
 })();
 </script>
