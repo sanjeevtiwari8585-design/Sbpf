@@ -74,3 +74,14 @@ GitHub Actions validates inline JavaScript syntax, required pages, promotion RPC
 
 
 - HMS diagnostic creation uses `hms_create_diagnostic_order`, an atomic server-side RPC that validates hospital role and patient scope, creates the required encounter, then creates the diagnostic order and test item together. Migration: `supabase/migrations/20261010130000_hms_secure_diagnostic_order_workflow.sql`.
+
+
+## Swarnim Samvad, Prahar and Sipahi workflows
+
+The public campaign detail page reads active content from the existing Supabase project. Detailed workflow and safety notes are documented in [docs/SWARNIM-3-CAMPAIGNS-WORKFLOWS.md](docs/SWARNIM-3-CAMPAIGNS-WORKFLOWS.md).
+
+- Swarnim Samvad: [public campaign page](https://sanjeevtiwari8585-design.github.io/Sbpf/campaign.html?slug=swarnim-samvad)
+- Swarnim Prahar: [public campaign page](https://sanjeevtiwari8585-design.github.io/Sbpf/campaign.html?slug=swarnim-prahar)
+- Swarnim Sipahi: [public campaign page](https://sanjeevtiwari8585-design.github.io/Sbpf/campaign.html?slug=swarnim-sipahi)
+
+Workflow documentation does not by itself prove all intake forms, assignment, OTP, escalation, or admin-review actions are end-to-end operational. Verify these with authorized test accounts before promising a completed production workflow.
