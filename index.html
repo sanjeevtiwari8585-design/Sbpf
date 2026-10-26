@@ -601,6 +601,39 @@ header img.logo:not(#sbpfLogo) { border-radius:50%!important; }
 #sbpfFocusGrid>.campaign .btn,#sbpfCampaignGrid>.campaign .btn{display:inline-flex!important;align-items:center;justify-content:center;min-height:42px;padding:10px 14px!important;border-radius:10px!important;font-weight:800!important;text-decoration:none!important}
 @media(max-width:600px){#sbpfFocusGrid,#sbpfCampaignGrid{gap:13px}#sbpfFocusGrid>.campaign,#sbpfCampaignGrid>.campaign{padding:12px!important}#sbpfFocusGrid>.campaign .sbpf-card-seal,#sbpfCampaignGrid>.campaign .sbpf-card-seal{width:36px!important;height:36px!important;min-width:36px!important;min-height:36px!important;top:7px!important;right:7px!important}#sbpfFocusGrid>.campaign h3,#sbpfCampaignGrid>.campaign h3{min-height:48px;font-size:16px!important}}
 @media(prefers-reduced-motion:reduce){#sbpfFocusGrid>.campaign,#sbpfCampaignGrid>.campaign{transition:none}}
+
+/* Mobile campaign posters: preserve the complete artwork instead of cropping text */
+#sbpfCampaignGrid>.campaign .campaign-banner-art{
+  position:relative!important;
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  aspect-ratio:1200/630!important;
+  overflow:hidden!important;
+  padding:0!important;
+  margin:8px 0 12px!important;
+  background:#172a27!important;
+  border-radius:12px!important;
+}
+#sbpfCampaignGrid>.campaign .campaign-banner-art .campaign-art-banner{
+  position:absolute!important;
+  inset:0!important;
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  aspect-ratio:auto!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+  transform:none!important;
+  border:0!important;
+  border-radius:12px!important;
+}
+#sbpfCampaignGrid>.campaign .campaign-banner-art .sbpf-card-seal{display:none!important}
+@media(max-width:600px){
+  #sbpfCampaignGrid>.campaign .campaign-banner-art{aspect-ratio:1200/630!important}
+  #sbpfCampaignGrid>.campaign h3{overflow-wrap:anywhere;word-break:normal;line-height:1.35}
+}
 </style>
 <style id="sbpf-value-cards-professional">
 /* Four SBPF core values: equal-size responsive cards */
