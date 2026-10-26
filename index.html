@@ -872,6 +872,9 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
           ).join('');
         }
         loadWorkAreaMemberCounts();
+        if (!window.__sbpfWorkAreaCountTimer) {
+          window.__sbpfWorkAreaCountTimer = window.setInterval(loadWorkAreaMemberCounts, 60000);
+        }
       }
       if (campaignsResponse.ok) {
         const campaigns = await campaignsResponse.json();
