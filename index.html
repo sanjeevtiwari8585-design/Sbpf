@@ -1100,5 +1100,14 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
  #sbpfFocusGrid>.campaign .sbpf-member-count strong{font-size:15px!important}
  #sbpfFocusGrid>.campaign .sbpf-member-count span{font-size:6.5px!important}
 }
+
+/* Fix double box: the live member counter replaces the old colored logo tile. */
+#sbpfFocusGrid>.campaign .booster-wrap:after{
+  content:none!important;display:none!important;
+}
+#sbpfFocusGrid>.campaign .sbpf-member-count{
+  box-shadow:none!important;
+}
+
 </style>
 </body></html>
