@@ -1138,3 +1138,13 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
 </style>
 
 </body></html>
+
+
+/* FIX: remove duplicate front/back ID-card overlay from all SBPF work-area cards */
+.campaign .campaign-banner-wrap:after,
+.campaign .booster-wrap:after,
+.campaign .campaign-official-logo,
+.campaign .booster-official-logo{
+  content:none!important;
+  display:none!important;
+}
