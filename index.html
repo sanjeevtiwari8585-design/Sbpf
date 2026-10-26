@@ -933,4 +933,12 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
 })();
 </script>
 
+<style id="sbpf-campaign-banner-no-crop">
+/* Campaign SVG banners are 1200×520; preserve the whole artwork so Hindi words are not cut off. */
+#sbpfCampaignGrid>.campaign .booster-img,
+#sbpfCampaignGrid>.campaign .campaign-banner-wrap .booster-img{
+  display:block!important;width:100%!important;height:auto!important;
+  aspect-ratio:auto!important;object-fit:contain!important;object-position:center!important;
+}
+</style>
 </body></html>
