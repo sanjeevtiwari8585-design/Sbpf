@@ -1110,4 +1110,31 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
 }
 
 </style>
+
+
+<style id="sbpf-final-work-area-single-counter">
+/* Final double-box correction for the 12 live work-area cards: only the gold-edged counter stays visible. */
+#sbpfFocusGrid>.campaign .booster-wrap::before,
+#sbpfFocusGrid>.campaign .booster-wrap::after{
+  content:none!important;
+  display:none!important;
+  width:0!important;
+  height:0!important;
+  background:none!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+#sbpfFocusGrid>.campaign .booster-wrap{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+#sbpfFocusGrid>.campaign .sbpf-member-count{
+  z-index:20!important;
+  border:1.5px solid #d6b34b!important;
+  background:#fffdf7!important;
+  box-shadow:0 1px 3px rgba(25,20,14,.1)!important;
+}
+</style>
+
 </body></html>
