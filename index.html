@@ -1070,25 +1070,24 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
 </style>
 
 <style id="sbpf-work-area-live-count-redesign">
-/* Compact member count replaces the small logo panel on each work-area poster */
+/* Align the compact member-count panel exactly over the original small logo card */
 #sbpfFocusGrid>.campaign .booster-wrap{position:relative!important;isolation:isolate!important}
 #sbpfFocusGrid>.campaign .sbpf-member-count{
- position:absolute!important;z-index:5!important;
- left:6%!important;top:17%!important;width:18%!important;height:34%!important;
- min-width:0!important;min-height:0!important;max-width:125px!important;
+ position:absolute!important;z-index:8!important;
+ left:7.1%!important;top:16.5%!important;width:20.5%!important;height:35.5%!important;
+ min-width:0!important;min-height:0!important;max-width:145px!important;
  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
  gap:4px!important;padding:5px 3px!important;box-sizing:border-box!important;overflow:hidden!important;
- border:1.5px solid #d6b34b!important;border-radius:7px!important;
- background:rgba(255,253,247,.98)!important;color:#174b6b!important;
- text-align:center!important;box-shadow:0 2px 7px rgba(25,20,14,.16)!important;
+ border:1.5px solid #d6b34b!important;border-radius:6px!important;
+ background:rgba(255,253,247,1)!important;color:#174b6b!important;
+ text-align:center!important;box-shadow:0 2px 5px rgba(25,20,14,.12)!important;
 }
 #sbpfFocusGrid>.campaign .sbpf-member-count:before{
  content:"";display:block;width:20px;height:20px;flex:0 0 20px;
- border-radius:50%;background:#e9f4ec;border:1px solid #b8d9c3;
- box-sizing:border-box;
+ border-radius:50%;background:#e9f4ec;border:1px solid #b8d9c3;box-sizing:border-box;
 }
 #sbpfFocusGrid>.campaign .sbpf-member-count strong{
- display:block!important;max-width:100%!important;font-size:clamp(16px,2vw,24px)!important;
+ display:block!important;max-width:100%!important;font-size:clamp(17px,2vw,24px)!important;
  line-height:1!important;font-weight:900!important;letter-spacing:0!important;color:#174b6b!important;
  overflow-wrap:anywhere!important;
 }
@@ -1097,7 +1096,7 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
  font-weight:800!important;letter-spacing:0!important;color:#5b4a2e!important;
 }
 @media(max-width:600px){
- #sbpfFocusGrid>.campaign .sbpf-member-count{left:6%!important;top:17%!important;width:18%!important;height:34%!important;gap:3px!important;padding:4px 2px!important;border-radius:6px!important}
+ #sbpfFocusGrid>.campaign .sbpf-member-count{left:7.1%!important;top:16.5%!important;width:20.5%!important;height:35.5%!important;gap:3px!important;padding:4px 2px!important;border-radius:5px!important}
  #sbpfFocusGrid>.campaign .sbpf-member-count:before{width:15px;height:15px;flex-basis:15px}
  #sbpfFocusGrid>.campaign .sbpf-member-count strong{font-size:clamp(14px,4.2vw,21px)!important}
  #sbpfFocusGrid>.campaign .sbpf-member-count span{font-size:7px!important;line-height:1.1!important}
