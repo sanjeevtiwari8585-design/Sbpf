@@ -127,7 +127,7 @@ async function generateAndSave(){
    if(!response.ok||result.success===false){
     $('#status').textContent='Storyboard Supabase में सेव हुआ। Job ID: '+result.job_id+'. वॉइसओवर पूरा नहीं हुआ: '+(detail||'provider/backend error')+(voiceError?.error==='voice_provider_not_configured'?' — Supabase Edge Function Secrets में TTSFREE_API_KEY जोड़ना आवश्यक है.':'')+' Final MP4 अभी render नहीं हुआ है.';
    }else if(result.voiceover?.signed_url){
-    window.swarnimRenderSource={jobId:result.job_id,audioUrl:result.voiceover.signed_url,title:headline($('#prompt').value),script:$('#script').value.trim(),ratio:$('#ratio').value,captions:$('#captions').checked,music:$('#music').checked,style:$('#style').value,duration:Number($('#duration').value)};
+    window.swarnimRenderSource={jobId:result.job_id,audioUrl:result.voiceover.signed_url,title:headline($('#prompt').value),script:$('#script').value.trim(),ratio:$('#ratio').value,captions:$('#captions').checked,music:$('#music').checked,style:$('#style').value,duration:Number($('#duration').value),imageData:uploadedImage||null};
     const renderButton=document.getElementById('renderVideo');if(renderButton)renderButton.disabled=false;
     const a=document.createElement('a');a.href=result.voiceover.signed_url;a.target='_blank';a.rel='noopener';a.textContent='सेव किया गया हिंदी ऑडियो खोलें';a.style.cssText='display:inline-block;margin-top:8px;color:#7dd3fc;font-weight:700';
     $('#status').replaceChildren(document.createTextNode('Storyboard और voiceover सेव हो गए। Job ID: '+result.job_id+'. Final MP4 अभी render नहीं हुआ है. '),a);
