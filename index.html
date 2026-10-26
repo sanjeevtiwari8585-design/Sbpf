@@ -772,6 +772,58 @@ header.sbpf-brand-header .sbpf-brand-copy p{font-size:clamp(13px,1.45vw,20px)!im
 header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!important;line-height:1.3!important}
 @media(max-width:600px){header.sbpf-brand-header{width:100%!important;padding:10px 12px!important;gap:10px!important}header.sbpf-brand-header #sbpfLogo.logo{width:58px!important;height:58px!important;min-width:58px!important;min-height:58px!important;max-width:58px!important;max-height:58px!important;flex-basis:58px!important}header.sbpf-brand-header .sbpf-brand-copy h1{font-size:clamp(17px,4.8vw,23px)!important}header.sbpf-brand-header .sbpf-brand-copy p{font-size:11px!important}header.sbpf-brand-header .sbpf-brand-motto{font-size:10px!important}}
 </style>
+
+<style id="sbpf-futuristic-12-campaign-refresh">
+/* SBPF 12 campaign cards — visible futuristic motion, mobile-safe, existing links/data preserved */
+@keyframes sbpf12Enter{from{opacity:0;transform:translateY(22px) scale(.97);filter:blur(3px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@keyframes sbpf12Border{0%,100%{background-position:0% 50%;opacity:.55}50%{background-position:100% 50%;opacity:1}}
+@keyframes sbpf12Live{0%,100%{box-shadow:0 0 0 0 rgba(53,220,166,0)}50%{box-shadow:0 0 0 4px rgba(53,220,166,.14),0 0 20px rgba(53,220,166,.22)}}
+#sbpfCampaignGrid>.campaign{
+ position:relative!important;isolation:isolate!important;overflow:hidden!important;
+ border:1px solid rgba(215,179,75,.65)!important;border-radius:20px!important;
+ background:linear-gradient(145deg,#102d35 0%,#10243a 48%,#172f40 100%)!important;
+ color:#f7fbff!important;box-shadow:0 12px 30px rgba(4,20,32,.22),inset 0 1px 0 rgba(255,255,255,.08)!important;
+ animation:sbpf12Enter .7s cubic-bezier(.2,.75,.25,1) both!important;
+ transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease!important;
+}
+#sbpfCampaignGrid>.campaign:nth-child(1){animation-delay:.04s!important}
+#sbpfCampaignGrid>.campaign:nth-child(2){animation-delay:.08s!important}
+#sbpfCampaignGrid>.campaign:nth-child(3){animation-delay:.12s!important}
+#sbpfCampaignGrid>.campaign:nth-child(4){animation-delay:.16s!important}
+#sbpfCampaignGrid>.campaign:nth-child(5){animation-delay:.20s!important}
+#sbpfCampaignGrid>.campaign:nth-child(6){animation-delay:.24s!important}
+#sbpfCampaignGrid>.campaign:nth-child(7){animation-delay:.28s!important}
+#sbpfCampaignGrid>.campaign:nth-child(8){animation-delay:.32s!important}
+#sbpfCampaignGrid>.campaign:nth-child(9){animation-delay:.36s!important}
+#sbpfCampaignGrid>.campaign:nth-child(10){animation-delay:.40s!important}
+#sbpfCampaignGrid>.campaign:nth-child(11){animation-delay:.44s!important}
+#sbpfCampaignGrid>.campaign:nth-child(12){animation-delay:.48s!important}
+#sbpfCampaignGrid>.campaign:before{
+ content:""!important;position:absolute!important;inset:0!important;z-index:0!important;pointer-events:none!important;
+ padding:1px!important;border-radius:inherit!important;
+ background:linear-gradient(120deg,#e7c66c,#48d8c2,#6b8cff,#e7c66c)!important;background-size:240% 240%!important;
+ animation:sbpf12Border 7s ease-in-out infinite!important;
+ -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0)!important;-webkit-mask-composite:xor!important;mask-composite:exclude!important;
+}
+#sbpfCampaignGrid>.campaign>*{position:relative;z-index:1}
+#sbpfCampaignGrid>.campaign .campaign-banner-wrap{border-radius:14px!important;overflow:hidden!important;box-shadow:0 8px 22px #0004!important}
+#sbpfCampaignGrid>.campaign .campaign-art-banner,#sbpfCampaignGrid>.campaign .booster-img{transition:transform .45s ease,filter .45s ease!important}
+#sbpfCampaignGrid>.campaign h3{color:#ffe4a0!important;text-shadow:0 2px 14px #0007!important}
+#sbpfCampaignGrid>.campaign>p{color:#d7e7ef!important}
+#sbpfCampaignGrid>.campaign .number{background:#0a202d!important;color:#69efd0!important;border:1px solid #2d756f!important}
+#sbpfCampaignGrid>.campaign .btn{border:1px solid #f1d37e!important;background:linear-gradient(100deg,#f0cf71,#fff0b7)!important;color:#17313a!important;border-radius:11px!important;font-weight:850!important}
+#sbpfCampaignGrid>.campaign .sbpf-member-count{animation:sbpf12Live 2.5s ease-in-out infinite!important}
+@media(hover:hover) and (pointer:fine){
+ #sbpfCampaignGrid>.campaign:hover{transform:translateY(-7px) scale(1.012)!important;border-color:#5ce5d0!important;box-shadow:0 22px 45px #071b2bb8,0 0 0 1px #4ce0c255!important}
+ #sbpfCampaignGrid>.campaign:hover .campaign-art-banner,#sbpfCampaignGrid>.campaign:hover .booster-img{transform:scale(1.045)!important;filter:saturate(1.12) contrast(1.04)!important}
+}
+@media(max-width:850px){#sbpfCampaignGrid>.campaign{border-radius:17px!important;padding:15px!important}}
+@media(prefers-reduced-motion:reduce){
+ #sbpfCampaignGrid>.campaign,#sbpfCampaignGrid>.campaign:before,#sbpfCampaignGrid>.campaign .sbpf-member-count{animation:none!important;transition:none!important}
+ #sbpfCampaignGrid>.campaign:hover{transform:none!important}
+}
+</style>
+
 </head>
 <body>
 <div class="sbpf-topbar">
