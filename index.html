@@ -914,33 +914,27 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
 </style>
 
 <style id="sbpf-workarea-visual-refresh">
-#sbpfFocusGrid>.campaign .booster-wrap{display:none!important}\n#sbpfFocusGrid>.campaign .sbpf-focus-art{
-  position:relative;isolation:isolate;display:flex;align-items:center;justify-content:space-between;
-  gap:10px;width:100%;min-height:112px;margin:0 0 13px;padding:16px 17px;overflow:hidden;
-  border:1px solid var(--focus-border,#ead8b0);border-radius:14px;
-  background:linear-gradient(125deg,var(--focus-light,#fff8e8),#fff 88%);
+#sbpfFocusGrid>.campaign .booster-wrap{display:none!important}
+#sbpfFocusGrid>.campaign .sbpf-focus-art{
+  position:relative;display:flex;align-items:center;justify-content:space-between;
+  gap:10px;width:100%;min-height:0;margin:0 0 8px;padding:7px 9px;box-sizing:border-box;
+  border:1px solid var(--focus-border,#ead8b0);border-radius:10px;
+  background:linear-gradient(110deg,var(--focus-light,#fff8e8),#fff 90%);
 }
-#sbpfFocusGrid>.campaign .sbpf-focus-art:before{
-  content:"";position:absolute;z-index:-1;width:150px;height:150px;right:-28px;top:-58px;
-  border:1px solid var(--focus-accent,#c49a36);border-radius:50%;
-  box-shadow:0 0 0 18px color-mix(in srgb,var(--focus-accent,#c49a36) 10%,transparent),
-             0 0 0 38px color-mix(in srgb,var(--focus-accent,#c49a36) 6%,transparent);
-}
-#sbpfFocusGrid>.campaign .sbpf-focus-art-copy{display:flex;flex-direction:column;gap:5px;min-width:0}
-#sbpfFocusGrid>.campaign .sbpf-focus-art-label{font-size:10px;font-weight:850;letter-spacing:1.1px;color:var(--focus-accent,#8b6719)}
-#sbpfFocusGrid>.campaign .sbpf-focus-art-title{font-size:clamp(15px,1.2vw,18px);line-height:1.35;font-weight:850;color:var(--focus-ink,#761526);overflow-wrap:anywhere}
-#sbpfFocusGrid>.campaign .sbpf-focus-art-icon{display:flex;align-items:center;justify-content:center;flex:0 0 58px;width:58px;height:58px;border:1px solid var(--focus-border,#ead8b0);border-radius:18px;background:#ffffffc9;box-shadow:0 5px 15px #28150c10;font-size:31px}
+#sbpfFocusGrid>.campaign .sbpf-focus-art:before{content:none}
+#sbpfFocusGrid>.campaign .sbpf-focus-art-copy{display:flex;flex-direction:column;gap:0;min-width:0}
+#sbpfFocusGrid>.campaign .sbpf-focus-art-label{font-size:10px;font-weight:800;letter-spacing:.35px;color:var(--focus-accent,#8b6719)}
+#sbpfFocusGrid>.campaign .sbpf-focus-art-title{display:none!important}
+#sbpfFocusGrid>.campaign .sbpf-focus-art-icon{display:flex;align-items:center;justify-content:center;flex:0 0 38px;width:38px;height:38px;border:1px solid var(--focus-border,#ead8b0);border-radius:11px;background:#fff;font-size:23px}
 #sbpfFocusGrid>.campaign .number{margin-top:0}
 @media(max-width:700px){
- #sbpfFocusGrid>.campaign .sbpf-focus-art{min-height:94px;padding:12px;border-radius:12px;gap:7px}
- #sbpfFocusGrid>.campaign .sbpf-focus-art-icon{flex-basis:46px;width:46px;height:46px;border-radius:14px;font-size:25px}
- #sbpfFocusGrid>.campaign .sbpf-focus-art-label{font-size:9px;letter-spacing:.7px}
- #sbpfFocusGrid>.campaign .sbpf-focus-art-title{font-size:14px}
+ #sbpfFocusGrid>.campaign .sbpf-focus-art{min-height:0;padding:6px 8px;border-radius:9px;gap:6px}
+ #sbpfFocusGrid>.campaign .sbpf-focus-art-icon{flex-basis:34px;width:34px;height:34px;border-radius:9px;font-size:20px}
+ #sbpfFocusGrid>.campaign .sbpf-focus-art-label{font-size:9px;letter-spacing:.2px}
 }
-@media(max-width:390px){#sbpfFocusGrid>.campaign .sbpf-focus-art{min-height:86px}}
 </style>
 <style id="sbpf-workarea-mutation-fix">
-/* Supabase replaces the work-area cards asynchronously; hide legacy banner artwork and show the new per-area art. */
+/* Keep the work-area art compact after Supabase refreshes the cards. */
 #sbpfFocusGrid>.campaign .booster-wrap{display:none!important}
 #sbpfFocusGrid>.campaign .sbpf-focus-art{display:flex!important;width:100%;box-sizing:border-box}
 </style>
@@ -949,37 +943,37 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
   function addWorkAreaArt(){
     var grid=document.getElementById('sbpfFocusGrid');
     if(!grid)return;
-    var presets=[
-      {icon:'🎓',label:'ज्ञान • शिक्षा • कौशल',title:'शिक्षा से उज्ज्वल भविष्य',accent:'#8a5a12',ink:'#59390c',light:'#fff4d8',border:'#ead3a0'},
-      {icon:'🩺',label:'स्वास्थ्य • देखभाल',title:'स्वस्थ परिवार, सशक्त समाज',accent:'#147c72',ink:'#10534e',light:'#e3f7f1',border:'#bce4d8'},
-      {icon:'🏡',label:'परिवार • सहयोग',title:'हर परिवार, हमारी प्राथमिकता',accent:'#8d3d65',ink:'#642443',light:'#fceaf3',border:'#efc8dc'},
-      {icon:'🏛️',label:'जनसुविधा • योजनाएँ',title:'सरकारी योजनाओं तक पहुँच',accent:'#2866a3',ink:'#17446f',light:'#e8f3ff',border:'#c4dcf5'},
-      {icon:'🌸',label:'सम्मान • समान अवसर',title:'महिला सशक्तिकरण',accent:'#a33d76',ink:'#72234f',light:'#fff0f7',border:'#f0c9df'},
-      {icon:'🌱',label:'प्रकृति • संरक्षण',title:'हरित और स्वच्छ भारत',accent:'#37804a',ink:'#245a32',light:'#eaf8e9',border:'#cce7c8'},
-      {icon:'🛍️',label:'व्यापार • आत्मनिर्भरता',title:'स्थानीय व्यापार को बढ़ावा',accent:'#b16b19',ink:'#74420d',light:'#fff2df',border:'#f0d2a9'},
-      {icon:'📰',label:'मीडिया • जनजागरण',title:'सही जानकारी, जागरूक समाज',accent:'#4758a5',ink:'#29366f',light:'#edf0ff',border:'#d1d8fa'},
-      {icon:'🎬',label:'रचनात्मकता • डिजिटल',title:'डिजिटल सृजन और नवाचार',accent:'#7350a5',ink:'#4a326e',light:'#f3edff',border:'#ded0f5'},
-      {icon:'🤝',label:'सेवा • सहयोग',title:'सेवा से सामाजिक बदलाव',accent:'#a13d36',ink:'#6f2823',light:'#fff0e9',border:'#f0cec2'},
-      {icon:'⚖️',label:'अधिकार • जागरूकता',title:'जागरूक नागरिक, सशक्त भारत',accent:'#53616e',ink:'#35414b',light:'#eef3f6',border:'#d2dde4'},
-      {icon:'🧭',label:'समुदाय • नेतृत्व',title:'संगठन से विकास की ओर',accent:'#9a7a20',ink:'#665013',light:'#fff8df',border:'#eee0a8'}
-    ];
-    Array.prototype.forEach.call(grid.querySelectorAll(':scope > .campaign'),function(card,index){
-      if(card.querySelector('.sbpf-focus-art'))return;
-      var p=presets[index]||presets[presets.length-1];
+    Array.prototype.forEach.call(grid.querySelectorAll(':scope > .campaign'),function(card){
       var heading=card.querySelector('h3');
-      var art=document.createElement('div');
-      art.className='sbpf-focus-art';
-      art.setAttribute('aria-hidden','true');
-      art.style.setProperty('--focus-accent',p.accent);
-      art.style.setProperty('--focus-ink',p.ink);
-      art.style.setProperty('--focus-light',p.light);
-      art.style.setProperty('--focus-border',p.border);
-      var copy=document.createElement('div');copy.className='sbpf-focus-art-copy';
-      var label=document.createElement('span');label.className='sbpf-focus-art-label';label.textContent=p.label;
-      var title=document.createElement('span');title.className='sbpf-focus-art-title';title.textContent=p.title;
-      var icon=document.createElement('span');icon.className='sbpf-focus-art-icon';icon.textContent=p.icon;
-      copy.appendChild(label);copy.appendChild(title);art.appendChild(copy);art.appendChild(icon);
-      if(heading)card.insertBefore(art,heading);else card.insertBefore(art,card.firstChild);
+      if(!heading)return;
+      var name=(heading.textContent||'').trim().toLowerCase();
+      var preset={icon:'🤝',accent:'#8b6719',ink:'#59390c',light:'#fff8e8',border:'#ead8b0',label:'SBPF कार्यक्षेत्र'};
+      if(/शिक्षा|गुरुकुल|school|education/.test(name))Object.assign(preset,{icon:'🎓',accent:'#8a5a12',light:'#fff4d8',border:'#ead3a0',label:'शिक्षा • ज्ञान • कौशल'});
+      else if(/स्वास्थ्य|हेल्थ|health/.test(name))Object.assign(preset,{icon:'🩺',accent:'#147c72',light:'#e3f7f1',border:'#bce4d8',label:'स्वास्थ्य • देखभाल'});
+      else if(/रोजगार|कौशल|व्यापार|स्वरोजगार|व्यापार/.test(name))Object.assign(preset,{icon:'🛍️',accent:'#b16b19',light:'#fff2df',border:'#f0d2a9',label:'रोजगार • कौशल • व्यापार'});
+      else if(/महिला|नारी/.test(name))Object.assign(preset,{icon:'🌸',accent:'#a33d76',light:'#fff0f7',border:'#f0c9df',label:'सम्मान • समान अवसर'});
+      else if(/बाल|बच्च/.test(name))Object.assign(preset,{icon:'🧒',accent:'#7350a5',light:'#f3edff',border:'#ded0f5',label:'बाल विकास • सुरक्षा'});
+      else if(/पर्यावरण|हरित|स्वच्छ|प्रकृति/.test(name))Object.assign(preset,{icon:'🌱',accent:'#37804a',light:'#eaf8e9',border:'#cce7c8',label:'प्रकृति • संरक्षण'});
+      else if(/सरकारी|जनसुविधा|योजना|नागरिक/.test(name))Object.assign(preset,{icon:'🏛️',accent:'#2866a3',light:'#e8f3ff',border:'#c4dcf5',label:'जनसुविधा • योजनाएँ'});
+      else if(/मीडिया|समाचार|जनजागरण/.test(name))Object.assign(preset,{icon:'📰',accent:'#4758a5',light:'#edf0ff',border:'#d1d8fa',label:'मीडिया • जनजागरण'});
+      else if(/सेवा|सहयोग/.test(name))Object.assign(preset,{icon:'🤝',accent:'#a13d36',light:'#fff0e9',border:'#f0cec2',label:'सेवा • सहयोग'});
+      var art=card.querySelector('.sbpf-focus-art');
+      if(!art){
+        art=document.createElement('div');art.className='sbpf-focus-art';art.setAttribute('aria-hidden','true');
+        var copy=document.createElement('div');copy.className='sbpf-focus-art-copy';
+        var label=document.createElement('span');label.className='sbpf-focus-art-label';
+        var title=document.createElement('span');title.className='sbpf-focus-art-title';
+        var icon=document.createElement('span');icon.className='sbpf-focus-art-icon';
+        copy.appendChild(label);copy.appendChild(title);art.appendChild(copy);art.appendChild(icon);
+        card.insertBefore(art,heading);
+      }
+      art.style.setProperty('--focus-accent',preset.accent);
+      art.style.setProperty('--focus-ink',preset.ink);
+      art.style.setProperty('--focus-light',preset.light);
+      art.style.setProperty('--focus-border',preset.border);
+      art.querySelector('.sbpf-focus-art-label').textContent=preset.label;
+      art.querySelector('.sbpf-focus-art-title').textContent=heading.textContent;
+      art.querySelector('.sbpf-focus-art-icon').textContent=preset.icon;
     });
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',addWorkAreaArt,{once:true});
