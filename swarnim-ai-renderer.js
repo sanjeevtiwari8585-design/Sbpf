@@ -65,6 +65,15 @@
       canvas.width = width; canvas.height = height;
       const ctx = canvas.getContext('2d', { alpha: false });
       if (!ctx) throw new Error('वीडियो कैनवास तैयार नहीं हुआ।');
+      let stillImage = null;
+      if (source.imageData) {
+        stillImage = new Image();
+        stillImage.src = source.imageData;
+        await new Promise((resolve, reject) => {
+          stillImage.onload = resolve;
+          stillImage.onerror = () => reject(new Error('अपलोड की गई तस्वीर रेंडर नहीं हो सकी।'));
+        });
+      }
       const captions = source.captions ? splitCaptions(source.script) : [];
       const weight = captions.reduce((sum, s) => sum + Math.max(1, s.length), 0);
       let acc = 0;
@@ -81,6 +90,15 @@
         gradient.addColorStop(0.55, 'hsl(' + ((hue + 35) % 360) + ',54%,25%)');
         gradient.addColorStop(1, 'hsl(' + ((hue + 90) % 360) + ',48%,13%)');
         ctx.fillStyle = gradient; ctx.fillRect(0, 0, width, height);
+        if (stillImage && stillImage.complete && stillImage.naturalWidth > 0) {
+          const zoom = 1.02 + 0.055 * p;
+          const scale = Math.max(width / stillImage.naturalWidth, height / stillImage.naturalHeight) * zoom;
+          const iw = stillImage.naturalWidth * scale, ih = stillImage.naturalHeight * scale;
+          const driftX = Math.sin(t * 0.12) * width * 0.025;
+          const driftY = Math.cos(t * 0.10) * height * 0.018;
+          ctx.drawImage(stillImage, (width - iw) / 2 + driftX, (height - ih) / 2 + driftY, iw, ih);
+          ctx.fillStyle = 'rgba(4,10,20,0.42)'; ctx.fillRect(0, 0, width, height);
+        }
         const orbX = width * (0.18 + 0.64 * ((Math.sin(t * 0.21) + 1) / 2));
         const orbY = height * (0.22 + 0.2 * ((Math.cos(t * 0.17) + 1) / 2));
         const orb = ctx.createRadialGradient(orbX, orbY, 2, orbX, orbY, width * 0.38);
