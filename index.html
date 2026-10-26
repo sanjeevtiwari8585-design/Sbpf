@@ -1364,6 +1364,7 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
 
 <script id="sbpf-card-social-share">
 (() => {
+  'use strict';
   const api = 'https://dxowhzghrdghfzoggorx.supabase.co/rest/v1/sbpf_card_social_shares';
   const key = 'sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
   const site = 'https://swarnimbharatclub.in/';
@@ -1371,63 +1372,130 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
     {id:'sbpfFocusGrid', type:'focus_area', label:'कार्य क्षेत्र', hash:'#work'},
     {id:'sbpfCampaignGrid', type:'campaign', label:'अभियान', hash:'#campaigns'}
   ];
-  function clean(v){return String(v || '').replace(/\\s+/g,' ').trim();}
-  function slugFor(card,type){
+  const clean = value => String(value || '').replace(/\s+/g, ' ').trim();
+  const escapeText = value => clean(value).slice(0, 650);
+  function slugFor(card, type) {
     const link = card.querySelector('a[href]');
-    if(link){
-      try { const u = new URL(link.getAttribute('href'), location.href); const slug = u.searchParams.get('slug'); if(slug) return slug; } catch(e){}
-      const path = link.getAttribute('href') || '';
-      const file = path.split('/').pop().replace(/\\.html?$/i,'');
-      if(file && file !== 'index' && !file.startsWith('#')) return file.slice(0,120);
+    if (link) {
+      try {
+        const url = new URL(link.getAttribute('href'), site);
+        if (url.searchParams.get('slug')) return url.searchParams.get('slug');
+        if (url.searchParams.get('slug') === '') return '';
+        const file = url.pathname.split('/').pop().replace(/\.html?$/i, '');
+        if (file && file !== 'index' && !file.startsWith('#')) return file.slice(0, 120);
+      } catch (_) {}
     }
-    return clean(card.dataset.slug || card.querySelector('h3')?.textContent).toLowerCase().replace(/[^a-z0-9-]+/g,'-').replace(/^-|-$/g,'').slice(0,120) || (type === 'campaign' ? 'sbpf-campaign' : 'sbpf-focus-area');
+    return clean(card.dataset.slug || card.querySelector('h3')?.textContent)
+      .toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-|-$/g, '').slice(0, 120)
+      || (type === 'campaign' ? 'sbpf-campaign' : 'sbpf-focus-area');
   }
-  async function record(type,slug,title,platform){
-    try { await fetch(api,{method:'POST',headers:{apikey:key,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({card_type:type,card_slug:slug,card_title:title,platform}),keepalive:true}); } catch(e){ console.warn('SBPF share analytics unavailable',e); }
+  async function record(type, slug, title, platform) {
+    try {
+      await fetch(api, {
+        method: 'POST',
+        headers: {apikey:key, 'Content-Type':'application/json', Prefer:'return=minimal'},
+        body: JSON.stringify({card_type:type, card_slug:slug, card_title:title, platform}),
+        keepalive: true
+      });
+    } catch (error) {
+      console.warn('SBPF share analytics unavailable; sharing still works.', error);
+    }
   }
-  function addButtons(){
-    grids.forEach(({id,type,label,hash})=>{
-      const grid=document.getElementById(id); if(!grid) return;
-      grid.querySelectorAll(':scope > .campaign').forEach(card=>{
-        if(card.querySelector('.sbpf-card-share')) return;
-        const title=clean(card.querySelector('h3')?.textContent); if(!title) return;
-        const desc=clean(Array.from(card.querySelectorAll('p')).map(p=>p.textContent).join(' ')).slice(0,650);
-        const slug=slugFor(card,type);
-        let link=site+'index.html'+hash;
-        const detail=card.querySelector('a[href*="slug="]');
-        if(type==='campaign' && detail){try{link=new URL(detail.getAttribute('href'),site).href;}catch(e){}}
-        const row=document.createElement('div'); row.className='sbpf-share-wrap';
-        const button=document.createElement('button'); button.type='button'; button.className='sbpf-card-share';
-        button.setAttribute('aria-label',title+' '+label+' की जानकारी सोशल मीडिया पर शेयर करें');
-        button.innerHTML='<span aria-hidden="true">↗</span><span>शेयर करें</span>';
-        const status=document.createElement('p'); status.className='sbpf-share-status'; status.setAttribute('aria-live','polite'); status.hidden=true;
-        button.addEventListener('click',async()=>{
-          const shareText='🌟 '+title+' | स्वर्णिम भारत परिवार फाउंडेशन (SBPF)\n'+(desc ? desc+'\n':'')+'उद्देश्य: सेवा • सहयोग • स्वावलंबन • सशक्तिकरण\nऔर जानकारी: '+link+'\n#SBPF #SwarnimBharatParivar';
-          button.disabled=true; button.style.opacity='.8';
+  async function getShareFile(card, title) {
+    const image = card.querySelector('.booster-img, .campaign-art-banner, img');
+    if (!image) return null;
+    const imageUrl = image.currentSrc || image.src;
+    if (!imageUrl || !/^https?:/i.test(imageUrl)) return null;
+    try {
+      const response = await fetch(imageUrl, {mode:'cors', cache:'force-cache'});
+      if (!response.ok) return null;
+      const blob = await response.blob();
+      if (!blob.type || !blob.type.startsWith('image/')) return null;
+      const extension = blob.type.includes('png') ? 'png' : blob.type.includes('webp') ? 'webp' : 'jpg';
+      return new File([blob], 'SBPF-' + title.replace(/[^a-zA-Z0-9-]/g, '-').slice(0,50) + '.' + extension, {type:blob.type});
+    } catch (_) {
+      return null;
+    }
+  }
+  function addButtons() {
+    grids.forEach(({id, type, label, hash}) => {
+      const grid = document.getElementById(id);
+      if (!grid) return;
+      grid.querySelectorAll(':scope > .campaign').forEach(card => {
+        if (card.querySelector('.sbpf-card-share')) return;
+        const title = clean(card.querySelector('h3')?.textContent);
+        if (!title) return;
+        const desc = escapeText(Array.from(card.querySelectorAll(':scope > p')).map(p => p.textContent).join(' '));
+        const slug = slugFor(card, type);
+        let link = site + 'index.html' + hash;
+        const detail = card.querySelector('a[href*="slug="]');
+        const workDetail = card.querySelector('a.sbpf-work-area-link[href]');
+        try {
+          if (type === 'campaign' && detail) link = new URL(detail.getAttribute('href'), site).href;
+          else if (type === 'focus_area' && workDetail) link = new URL(workDetail.getAttribute('href'), site).href;
+        } catch (_) {}
+        const row = document.createElement('div');
+        row.className = 'sbpf-share-wrap';
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'sbpf-card-share';
+        button.setAttribute('aria-label', title + ' — ' + label + ' की कार्ड सहित जानकारी शेयर करें');
+        button.innerHTML = '<span aria-hidden="true">↗</span><span>कार्ड सहित शेयर करें</span>';
+        const status = document.createElement('p');
+        status.className = 'sbpf-share-status';
+        status.setAttribute('aria-live', 'polite');
+        status.hidden = true;
+        button.addEventListener('click', async () => {
+          const shareText = '🌟 ' + title + ' | स्वर्णिम भारत परिवार फाउंडेशन (SBPF)\n'
+            + (desc ? desc + '\n' : '')
+            + 'उद्देश्य: सेवा • सहयोग • स्वावलंबन • सशक्तिकरण\nजानकारी व कार्ड: ' + link
+            + '\n#SBPF #SwarnimBharatParivar';
+          button.disabled = true;
+          status.hidden = false;
+          status.textContent = 'शेयर विकल्प तैयार हो रहे हैं…';
           try {
-            if(navigator.share){
-              await navigator.share({title:title+' | SBPF',text:shareText,url:link});
-              await record(type,slug,title,'share_sheet');
-              status.textContent='शेयर मेनू खुला — पोस्ट ऐप में पूरी करें।';
+            if (typeof navigator.share === 'function') {
+              let payload = {title:title + ' | SBPF', text:shareText, url:link};
+              if (typeof File === 'function' && typeof navigator.canShare === 'function') {
+                const file = await getShareFile(card, title);
+                if (file && navigator.canShare({files:[file]})) {
+                  payload = {title:title + ' | SBPF', text:shareText, files:[file]};
+                }
+              }
+              await navigator.share(payload);
+              status.textContent = payload.files ? 'कार्ड की तस्वीर और जानकारी शेयर कर दी गई।' : 'शेयर मेनू खुला — उपलब्ध ऐप चुनकर पोस्ट पूरी करें।';
+              await record(type, slug, title, 'share_sheet');
             } else {
-              const wa='https://wa.me/?text='+encodeURIComponent(shareText);
-              window.open(wa,'_blank','noopener,noreferrer');
-              await record(type,slug,title,'whatsapp');
-              status.textContent='WhatsApp शेयर लिंक खुल गया।';
+              const whatsapp = 'https://wa.me/?text=' + encodeURIComponent(shareText);
+              window.open(whatsapp, '_blank', 'noopener,noreferrer');
+              status.textContent = 'WhatsApp में जानकारी और कार्ड का लिंक खुल गया। तस्वीर अलग से जोड़नी पड़ सकती है।';
+              await record(type, slug, title, 'whatsapp');
             }
-          } catch(error){
-            if(error && error.name==='AbortError'){status.textContent='शेयर रद्द किया गया।';}
-            else { const wa='https://wa.me/?text='+encodeURIComponent(shareText); window.open(wa,'_blank','noopener,noreferrer'); await record(type,slug,title,'whatsapp'); status.textContent='WhatsApp शेयर लिंक खुल गया।'; }
-          } finally { status.hidden=false; button.disabled=false; button.style.opacity='1'; }
+          } catch (error) {
+            if (error && error.name === 'AbortError') {
+              status.textContent = 'शेयर रद्द किया गया।';
+            } else {
+              const whatsapp = 'https://wa.me/?text=' + encodeURIComponent(shareText);
+              window.open(whatsapp, '_blank', 'noopener,noreferrer');
+              status.textContent = 'WhatsApp में जानकारी और कार्ड का लिंक खुल गया। तस्वीर अलग से जोड़नी पड़ सकती है।';
+              await record(type, slug, title, 'whatsapp');
+            }
+          } finally {
+            button.disabled = false;
+          }
         });
-        row.append(button,status);
-        const actionP=Array.from(card.querySelectorAll('p')).find(p=>p.querySelector('a'));
-        if(actionP) actionP.insertAdjacentElement('afterend',row); else card.appendChild(row);
+        row.append(button, status);
+        const actionParagraph = Array.from(card.querySelectorAll(':scope > p')).find(p => p.querySelector('a'));
+        if (actionParagraph) actionParagraph.insertAdjacentElement('afterend', row);
+        else card.appendChild(row);
       });
     });
   }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',addButtons); else addButtons();
-  if('MutationObserver' in window) new MutationObserver(addButtons).observe(document.body,{childList:true,subtree:true});
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', addButtons);
+  else addButtons();
+  if ('MutationObserver' in window && document.body) {
+    new MutationObserver(addButtons).observe(document.body, {childList:true, subtree:true});
+  }
 })();
 </script>
 
