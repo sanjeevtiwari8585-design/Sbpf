@@ -590,7 +590,10 @@ header img.logo:not(#sbpfLogo) { border-radius:50%!important; }
 #sbpfFocusGrid>.campaign .number,#sbpfCampaignGrid>.campaign .number{display:inline-flex;align-self:flex-start;align-items:center;min-height:28px;margin-bottom:8px;padding:5px 10px;border-radius:999px;background:#fff0c6;color:#711222;font-size:11px;font-weight:850;letter-spacing:.35px}
 #sbpfFocusGrid>.campaign .booster-wrap,#sbpfCampaignGrid>.campaign .campaign-banner-wrap{position:relative!important;width:100%!important;aspect-ratio:1200/630!important;height:auto!important;min-height:0!important;flex:0 0 auto;overflow:hidden;border-radius:12px!important;border:1px solid #ead7aa!important;margin:0 0 13px!important;background:#f8eedb!important;isolation:isolate}
 #sbpfFocusGrid>.campaign .booster-img,#sbpfCampaignGrid>.campaign .campaign-art-banner{display:block!important;width:100%!important;height:100%!important;aspect-ratio:auto!important;object-fit:cover!important;object-position:center!important;border:0!important;border-radius:0!important;box-shadow:none!important}
-#sbpfFocusGrid>.campaign .sbpf-card-seal,#sbpfCampaignGrid>.campaign .sbpf-card-seal{position:absolute!important;z-index:3!important;top:9px!important;right:9px!important;display:block!important;width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;object-fit:contain!important;object-position:center!important;aspect-ratio:1/1!important;border:2px solid #e8c35b!important;border-radius:50%!important;background:#fff!important;padding:2px!important;box-shadow:0 2px 9px rgba(0,0,0,.22)!important}
+#sbpfFocusGrid>.campaign .sbpf-member-count{position:absolute!important;z-index:3!important;left:12px!important;top:20px!important;min-width:74px!important;min-height:78px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;padding:6px 7px!important;border:1px solid #e8c35b!important;border-radius:3px!important;background:rgba(255,255,255,.96)!important;color:#174b6b!important;text-align:center!important;box-shadow:0 2px 9px rgba(0,0,0,.18)!important;box-sizing:border-box!important}
+#sbpfFocusGrid>.campaign .sbpf-member-count strong{font-size:22px!important;line-height:1.1!important;font-weight:800!important;color:#174b6b!important}
+#sbpfFocusGrid>.campaign .sbpf-member-count span{font-size:9px!important;line-height:1.25!important;font-weight:800!important;letter-spacing:.2px!important;color:#574a30!important}
+@media(max-width:600px){#sbpfFocusGrid>.campaign .sbpf-member-count{left:8px!important;top:15px!important;min-width:64px!important;min-height:66px!important;padding:4px!important}#sbpfFocusGrid>.campaign .sbpf-member-count strong{font-size:19px!important}#sbpfFocusGrid>.campaign .sbpf-member-count span{font-size:8px!important}}
 #sbpfFocusGrid>.campaign h3,#sbpfCampaignGrid>.campaign h3{display:flex;align-items:center;min-height:54px;margin:0 0 8px!important;padding:9px 11px;border-left:4px solid #d4af37;border-radius:0 9px 9px 0;background:#fff1cd;color:#781626!important;font-size:clamp(16px,1.5vw,19px)!important;font-weight:850!important;line-height:1.4!important}
 #sbpfFocusGrid>.campaign>p,#sbpfCampaignGrid>.campaign>p{margin:0 0 10px!important;color:#50474a!important;font-size:14px!important;line-height:1.7!important}
 #sbpfFocusGrid>.campaign>p:first-of-type,#sbpfCampaignGrid>.campaign>p:first-of-type{flex:1 0 auto;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
@@ -824,6 +827,29 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
       console.warn('SBPF live statistics unavailable; no placeholder counts are shown as real:', error);
     }
   }
+  async function loadWorkAreaMemberCounts() {
+    const cards = Array.from(document.querySelectorAll('#sbpfFocusGrid .sbpf-member-count[data-work-area-id]'));
+    if (!cards.length) return;
+    const headers = { apikey: publishableKey, Prefer: 'count=exact' };
+    await Promise.all(cards.map(async badge => {
+      const id = Number(badge.dataset.workAreaId);
+      const value = badge.querySelector('strong');
+      try {
+        const response = await fetch(supabaseUrl + '/rest/v1/members?select=id&work_area_id=eq.' + encodeURIComponent(id), {
+          method: 'HEAD', headers, cache: 'no-store'
+        });
+        if (!response.ok) throw new Error('count unavailable');
+        const range = response.headers.get('Content-Range') || '';
+        const match = range.match(/\\/(\\d+|\\*)$/);
+        if (!match || match[1] === '*') throw new Error('exact count unavailable');
+        value.textContent = Number(match[1]).toLocaleString('en-IN');
+        badge.setAttribute('aria-label', value.textContent + ' जुड़े सदस्य');
+      } catch (error) {
+        value.textContent = '—';
+        badge.setAttribute('title', 'लाइव काउंट उपलब्ध नहीं; अनुमानित संख्या नहीं दिखाई जा रही।');
+      }
+    }));
+  }
   async function loadSbpfHomepageData() {
     try {
       const headers = { apikey: publishableKey };
@@ -838,13 +864,14 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
           grid.innerHTML = areas.map((item, index) =>
             '<article class="campaign"><div class="number">' +
             String(index + 1).padStart(2, '0') + ' • SBPF WORK AREA</div>' +
-            '<div class="booster-wrap"><img class="booster-img" loading="lazy" decoding="async" src="' + escapeSbpfHtml(item.image_url || focusArtFor(item.slug, item.name)) + '" alt="' + escapeSbpfHtml(item.name) + ' कार्य क्षेत्र बैनर"><img class="sbpf-card-seal" loading="lazy" decoding="async" src="public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png" alt="SBPF आधिकारिक लोगो"></div>' +
+            '<div class="booster-wrap"><img class="booster-img" loading="lazy" decoding="async" src="' + escapeSbpfHtml(item.image_url || focusArtFor(item.slug, item.name)) + '" alt="' + escapeSbpfHtml(item.name) + ' कार्य क्षेत्र बैनर"><div class="sbpf-member-count" data-work-area-id="' + Number(item.id) + '" aria-live="polite"><strong>—</strong><span>जुड़े सदस्य</span></div></div>' +
             '<h3>' + escapeSbpfHtml(item.name) + '</h3><p>' +
             escapeSbpfHtml(item.description || 'इस कार्यक्षेत्र की जानकारी शीघ्र उपलब्ध होगी।') +
             '</p><p><a class="btn secondary sbpf-work-area-link" href="' + escapeSbpfHtml(workAreaLinkFor(item.slug, item.name).href) + '">' +
             escapeSbpfHtml(workAreaLinkFor(item.slug, item.name).label) + '</a></p></article>'
           ).join('');
         }
+        loadWorkAreaMemberCounts();
       }
       if (campaignsResponse.ok) {
         const campaigns = await campaignsResponse.json();
