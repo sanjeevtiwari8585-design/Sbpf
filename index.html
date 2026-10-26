@@ -151,6 +151,70 @@ footer{background:#241d20;color:#f9f3ec;padding:38px 20px 18px;text-align:left}f
 
 </style>
 
+
+<style id="sbpf-futuristic-card-animation">
+/* Lightweight futuristic card motion trial: preserve existing content, routes and live data. */
+@keyframes sbpfCardReveal {
+  from { opacity: 0; transform: translateY(16px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes sbpfNeonSweep {
+  0% { background-position: 0% 50%; opacity: .45; }
+  50% { opacity: .9; }
+  100% { background-position: 200% 50%; opacity: .45; }
+}
+#sbpfFocusGrid>.campaign,#sbpfCampaignGrid>.campaign {
+  position:relative;
+  isolation:isolate;
+  animation:sbpfCardReveal .65s cubic-bezier(.2,.7,.25,1) both;
+}
+#sbpfFocusGrid>.campaign::before,#sbpfCampaignGrid>.campaign::before {
+  content:"";
+  position:absolute;inset:0;pointer-events:none;z-index:0;
+  border-radius:inherit;padding:1px;
+  background:linear-gradient(115deg,#e8bd56,#ffffff80,#39b8a0,#e8bd56);
+  background-size:200% 200%;
+  opacity:.24;
+  animation:sbpfNeonSweep 6s ease-in-out infinite;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+}
+#sbpfFocusGrid>.campaign>* ,#sbpfCampaignGrid>.campaign>* {position:relative;z-index:1}
+#sbpfFocusGrid>.campaign .sbpf-member-count {
+  animation:sbpfLiveGlow 2.4s ease-in-out infinite;
+}
+@keyframes sbpfLiveGlow {
+  0%,100% { box-shadow:0 0 0 0 rgba(239,150,50,0),0 1px 3px rgba(25,20,14,.1); }
+  50% { box-shadow:0 0 0 3px rgba(239,150,50,.12),0 0 14px rgba(239,150,50,.2); }
+}
+#sbpfFocusGrid>.campaign .btn,#sbpfCampaignGrid>.campaign .btn {
+  position:relative;overflow:hidden;
+  transition:transform .2s ease,box-shadow .2s ease,filter .2s ease;
+}
+#sbpfFocusGrid>.campaign .btn::after,#sbpfCampaignGrid>.campaign .btn::after {
+  content:"";position:absolute;top:-50%;left:-70%;width:35%;height:200%;
+  transform:rotate(22deg);background:linear-gradient(90deg,transparent,#ffffff80,transparent);
+  transition:left .45s ease;pointer-events:none;
+}
+@media(hover:hover) and (pointer:fine) {
+  #sbpfFocusGrid>.campaign:hover,#sbpfCampaignGrid>.campaign:hover {
+    transform:translateY(-5px) scale(1.012);
+    box-shadow:0 18px 38px rgba(20,70,43,.16),0 0 0 1px rgba(233,154,50,.25);
+  }
+  #sbpfFocusGrid>.campaign:hover .btn,#sbpfCampaignGrid>.campaign:hover .btn {
+    transform:translateY(-2px);box-shadow:0 8px 20px rgba(20,70,43,.2);filter:saturate(1.1);
+  }
+  #sbpfFocusGrid>.campaign:hover .btn::after,#sbpfCampaignGrid>.campaign:hover .btn::after {left:140%}
+}
+@media(prefers-reduced-motion:reduce) {
+  #sbpfFocusGrid>.campaign,#sbpfCampaignGrid>.campaign,
+  #sbpfFocusGrid>.campaign::before,#sbpfCampaignGrid>.campaign::before,
+  #sbpfFocusGrid>.campaign .sbpf-member-count {animation:none!important}
+  #sbpfFocusGrid>.campaign .btn,#sbpfCampaignGrid>.campaign .btn,
+  #sbpfFocusGrid>.campaign .btn::after,#sbpfCampaignGrid>.campaign .btn::after {transition:none!important}
+}
+</style>
+
 <style id="sbpf-live-work-area-stats">
 .sbpf-live-stats{max-width:1000px;margin:0 auto 26px;padding:18px;border:1px solid #e5d4b3;border-radius:20px;background:linear-gradient(135deg,#fffdf7 0%,#f4f8f0 58%,#fff7e5 100%);box-shadow:0 12px 30px rgba(63,45,20,.08)}
 .sbpf-live-heading{display:flex;align-items:center;gap:9px;flex-wrap:wrap;color:#164b34;font-size:14px;font-weight:850;letter-spacing:.2px}
