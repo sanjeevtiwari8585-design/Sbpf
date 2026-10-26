@@ -824,6 +824,59 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
 }
 </style>
 
+
+<style id="sbpf-campaign-specific-motion">
+@keyframes sbpfIconFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-7px) rotate(4deg)}}
+@keyframes sbpfIconPulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 var(--sbpf-glow)}50%{transform:scale(1.07);box-shadow:0 0 0 8px transparent}}
+@keyframes sbpfIconOrbit{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+@keyframes sbpfIconWave{0%,100%{transform:translateX(0) skewY(0)}25%{transform:translateX(-3px) skewY(-3deg)}75%{transform:translateX(3px) skewY(3deg)}}
+@keyframes sbpfIconShine{0%,100%{filter:drop-shadow(0 0 2px var(--sbpf-glow));opacity:.82}50%{filter:drop-shadow(0 0 10px var(--sbpf-glow));opacity:1}}
+#sbpfCampaignGrid>.campaign{--sbpf-glow:#51d6c3;--sbpf-card-accent:#4dd8c4;position:relative!important}
+#sbpfCampaignGrid>.campaign:after{
+ content:var(--sbpf-symbol,"✦");position:absolute;right:15px;top:15px;z-index:2;
+ display:grid;place-items:center;width:38px;height:38px;border-radius:13px;
+ color:var(--sbpf-card-accent);background:color-mix(in srgb,var(--sbpf-card-accent) 13%,#10243a);
+ border:1px solid color-mix(in srgb,var(--sbpf-card-accent) 60%,transparent);
+ font-size:21px;line-height:1;pointer-events:none;
+ animation:var(--sbpf-motion,sbpfIconFloat) 3.4s ease-in-out infinite;
+}
+#sbpfCampaignGrid>.campaign.sbpf-motion-jagran{--sbpf-symbol:"☀";--sbpf-card-accent:#f7c65b;--sbpf-glow:#f7c65b;--sbpf-motion:sbpfIconShine}
+#sbpfCampaignGrid>.campaign.sbpf-motion-samvad{--sbpf-symbol:"〰";--sbpf-card-accent:#63d9ef;--sbpf-glow:#63d9ef;--sbpf-motion:sbpfIconWave}
+#sbpfCampaignGrid>.campaign.sbpf-motion-prahar{--sbpf-symbol:"✦";--sbpf-card-accent:#ff6d79;--sbpf-glow:#ff6d79;--sbpf-motion:sbpfIconPulse}
+#sbpfCampaignGrid>.campaign.sbpf-motion-sipahi{--sbpf-symbol:"⬟";--sbpf-card-accent:#9daeff;--sbpf-glow:#9daeff;--sbpf-motion:sbpfIconPulse}
+#sbpfCampaignGrid>.campaign.sbpf-motion-paryavaran{--sbpf-symbol:"❧";--sbpf-card-accent:#72e6a4;--sbpf-glow:#72e6a4;--sbpf-motion:sbpfIconFloat}
+#sbpfCampaignGrid>.campaign.sbpf-motion-vyapar{--sbpf-symbol:"↗";--sbpf-card-accent:#ffc36d;--sbpf-glow:#ffc36d;--sbpf-motion:sbpfIconShine}
+#sbpfCampaignGrid>.campaign.sbpf-motion-gurukulam{--sbpf-symbol:"▤";--sbpf-card-accent:#d6a8ff;--sbpf-glow:#d6a8ff;--sbpf-motion:sbpfIconFloat}
+#sbpfCampaignGrid>.campaign.sbpf-motion-seva{--sbpf-symbol:"♡";--sbpf-card-accent:#ff91b6;--sbpf-glow:#ff91b6;--sbpf-motion:sbpfIconPulse}
+#sbpfCampaignGrid>.campaign.sbpf-motion-media{--sbpf-symbol:"▶";--sbpf-card-accent:#6ecbff;--sbpf-glow:#6ecbff;--sbpf-motion:sbpfIconShine}
+#sbpfCampaignGrid>.campaign.sbpf-motion-book{--sbpf-symbol:"▣";--sbpf-card-accent:#e9d18a;--sbpf-glow:#e9d18a;--sbpf-motion:sbpfIconFloat}
+#sbpfCampaignGrid>.campaign.sbpf-motion-creator{--sbpf-symbol:"✧";--sbpf-card-accent:#ff9cdb;--sbpf-glow:#ff9cdb;--sbpf-motion:sbpfIconOrbit}
+#sbpfCampaignGrid>.campaign.sbpf-motion-csc{--sbpf-symbol:"⌘";--sbpf-card-accent:#8de3cf;--sbpf-glow:#8de3cf;--sbpf-motion:sbpfIconWave}
+#sbpfCampaignGrid>.campaign:hover:after{animation-duration:1.4s}
+@media(max-width:520px){#sbpfCampaignGrid>.campaign:after{width:30px;height:30px;right:10px;top:10px;font-size:17px;border-radius:10px}}
+@media(prefers-reduced-motion:reduce){#sbpfCampaignGrid>.campaign:after{animation:none!important}}
+</style>
+<script id="sbpf-campaign-motion-classifier">
+(function(){
+ const rules=[
+  [/जन.?जागरण|jan.?jagran/i,'jagran'],[/संवाद|samvad/i,'samvad'],[/प्रहार|prahar/i,'prahar'],
+  [/सिपाही|sipahi/i,'sipahi'],[/पर्यावरण|paryavaran|environment/i,'paryavaran'],
+  [/व्यापार|vyapar|business/i,'vyapar'],[/गुरुकुल|gurukulam|education/i,'gurukulam'],
+  [/सेवा|seva/i,'seva'],[/मीडिया|media/i,'media'],[/बुक|book/i,'book'],
+  [/creator|क्रिएटर/i,'creator'],[/csc|जनसुविधा/i,'csc']
+ ];
+ function classify(){
+  document.querySelectorAll('#sbpfCampaignGrid>.campaign').forEach(card=>{
+   const text=(card.innerText||card.textContent||'').trim();
+   rules.forEach(([pattern,name])=>{if(pattern.test(text))card.classList.add('sbpf-motion-'+name)});
+  });
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',classify);else classify();
+ const grid=document.getElementById('sbpfCampaignGrid');
+ if(grid&&'MutationObserver'in window)new MutationObserver(classify).observe(grid,{childList:true,subtree:true});
+})();
+</script>
+
 </head>
 <body>
 <div class="sbpf-topbar">
