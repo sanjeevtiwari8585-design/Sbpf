@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SBPF Member Registration & Login</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f2f6fb;color:#17253a;font:16px system-ui,Arial,sans-serif}.wrap{max-width:760px;margin:24px auto;padding:16px}.brand{background:linear-gradient(135deg,#09284c,#15577b);color:#fff;border-radius:18px;padding:22px}.brand h1{margin:0 0 6px;color:#f5cf63;font-size:24px}.card{background:#fff;padding:22px;border-radius:16px;margin-top:16px;box-shadow:0 8px 24px #102b4812}.tabs{display:flex;gap:8px;margin-bottom:18px}.tabs button{flex:1}.grid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.field{margin-bottom:12px}label{display:block;font-size:14px;font-weight:650;margin-bottom:5px}input{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:9px;font:inherit}button{border:0;border-radius:9px;padding:12px 15px;background:#0c4b70;color:white;font-weight:700;font-size:15px;cursor:pointer}.secondary{background:#e7eef5;color:#17314a}.hidden{display:none}.msg{padding:12px;border-radius:10px;background:#fff3d1;margin-top:14px;white-space:pre-wrap}.ok{background:#e6f7ed}.err{background:#ffe8e8}.muted{color:#607086;font-size:13px}@media(max-width:560px){.grid{grid-template-columns:1fr}.wrap{margin:8px auto;padding:10px}.card{padding:16px}}
+</style></head><body><main class="wrap">
+<header class="brand"><h1>स्वर्णिम भारत परिवार फाउंडेशन</h1><div>SWARNIM BHARAT PARIVAR FOUNDATION</div><p>सदस्य पंजीकरण एवं लॉगिन</p></header>
+<section class="card"><div class="tabs"><button id="signupTab">नया अकाउंट बनाएँ</button><button id="loginTab" class="secondary">लॉगिन</button></div>
+<div id="signupPane"><h2>नया सदस्य अकाउंट</h2><p class="muted">ईमेल और पासवर्ड से अकाउंट बनाएँ। OTP नहीं माँगा जाएगा। यदि ईमेल पुष्टि चालू है, तो ईमेल में मिले लिंक से पुष्टि करके लॉगिन करें।</p>
+<div class="grid">
+<div class="field"><label for="name">पूरा नाम *</label><input id="name" autocomplete="name" required></div>
+<div class="field"><label for="mobile">मोबाइल नंबर *</label><input id="mobile" autocomplete="tel" inputmode="tel" required></div>
+<div class="field"><label for="email">ईमेल *</label><input id="email" type="email" autocomplete="email" required></div>
+<div class="field"><label for="district">जिला</label><input id="district" autocomplete="address-level2"></div>
+<div class="field"><label for="state">राज्य</label><input id="state" value="Uttar Pradesh" autocomplete="address-level1"></div>
+<div class="field"><label for="ref">Referral Code (यदि हो)</label><input id="ref" placeholder="SBPF-XXXXXX"></div>
+<div class="field"><label for="address">पूरा पता</label><input id="address" autocomplete="street-address"></div>
+<div class="field"><label for="password">पासवर्ड (कम से कम 8 अक्षर) *</label><input id="password" type="password" autocomplete="new-password" minlength="8" required></div>
+<div class="field"><label for="confirm">पासवर्ड की पुष्टि *</label><input id="confirm" type="password" autocomplete="new-password" minlength="8" required></div>
+</div><button id="signupBtn">अकाउंट बनाएँ और सदस्य पंजीकरण करें</button></div>
+<div id="loginPane" class="hidden"><h2>Member Login</h2><div class="field"><label for="loginEmail">ईमेल</label><input id="loginEmail" type="email" autocomplete="email"></div><div class="field"><label for="loginPassword">पासवर्ड</label><input id="loginPassword" type="password" autocomplete="current-password"></div><button id="loginBtn">लॉगिन करें</button><p class="muted">लॉगिन के बाद सदस्य प्रोफाइल न बनी हो तो उपलब्ध विवरण से पंजीकरण पूरा किया जाएगा।</p></div>
+<div id="msg" class="msg hidden" role="status" aria-live="polite"></div></section>
+</main>
+<script>
+const SUPABASE_URL='https://dxowhzghrdghfzoggorx.supabase.co';
+const SUPABASE_KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const $=id=>document.getElementById(id);
+function message(t,kind=''){const el=$('msg');el.textContent=t;el.className='msg '+kind}
+function pane(which){const signup=which==='signup';$('signupPane').classList.toggle('hidden',!signup);$('loginPane').classList.toggle('hidden',signup);$('signupTab').className=signup?'':'secondary';$('loginTab').className=signup?'secondary':'';$('msg').classList.add('hidden')}
+$('signupTab').onclick=()=>pane('signup');$('loginTab').onclick=()=>pane('login');
+function detailsFromForm(){return {full_name:$('name').value.trim(),mobile:$('mobile').value.trim(),address:$('address').value.trim(),district:$('district').value.trim(),state:$('state').value.trim()||'Uttar Pradesh',referral_code:$('ref').value.trim()||null}}
+async function completeMember(user,formDetails){
+ const meta=user?.user_metadata||{};
+ const d=formDetails&&formDetails.full_name?formDetails:{full_name:meta.full_name||meta.name||'',mobile:meta.mobile||'',address:meta.address||'',district:meta.district||'',state:meta.state||'Uttar Pradesh',referral_code:meta.referral_code||null};
+ if(!d.full_name||!d.mobile){message('अकाउंट लॉगिन हो गया है। सदस्य प्रोफाइल पूरी करने के लिए पंजीकरण टैब में नाम और मोबाइल भरकर “सदस्य प्रोफाइल पूरी करें” दबाएँ।','ok');return}
+ const {data,error}=await sb.rpc('register_my_member',{p_full_name:d.full_name,p_mobile:d.mobile,p_address:d.address||null,p_district:d.district||null,p_state:d.state||'Uttar Pradesh',p_referral_code:d.referral_code||null});
+ if(error){
+   if(/already exists|already registered/i.test(error.message)){message('लॉगिन सफल। सदस्य प्रोफाइल पहले से मौजूद है या मोबाइल पहले पंजीकृत है। अपने Member Dashboard में जाएँ या Admin से जाँच कराएँ।','ok');return}
+   message('अकाउंट लॉगिन हुआ, लेकिन सदस्य प्रोफाइल नहीं बन पाई: '+error.message,'err');return
+ }
+ const member=Array.isArray(data)?data[0]:data;
+ message('सदस्य पंजीकरण सफल। Member ID: '+(member?.member_id||'बन गया')+'\nअब Member Dashboard में लॉगिन करें।','ok');
+}
+$('signupBtn').onclick=async()=>{
+ const d=detailsFromForm(),email=$('email').value.trim(),pw=$('password').value,cpw=$('confirm').value;
+ if(!d.full_name||!d.mobile||!email||!pw||!cpw){message('कृपया नाम, मोबाइल, ईमेल और दोनों पासवर्ड भरें।','err');return}
+ if(!/^\d[\d\s()+-]{8,}$/.test(d.mobile)){message('कृपया वैध मोबाइल नंबर भरें।','err');return}
+ if(pw.length<8){message('पासवर्ड कम से कम 8 अक्षर का होना चाहिए।','err');return}
+ if(pw!==cpw){message('दोनों पासवर्ड एक जैसे नहीं हैं।','err');return}
+ $('signupBtn').disabled=true;
+ try{
+   const {data,error}=await sb.auth.signUp({email,password:pw,options:{data:{full_name:d.full_name,mobile:d.mobile,address:d.address,district:d.district,state:d.state,referral_code:d.referral_code}}});
+   if(error){message(error.message,'err');return}
+   if(data.session&&data.user){await completeMember(data.user,d)}
+   else{message('अकाउंट अनुरोध सफल। यदि ईमेल पुष्टि माँगी गई है तो अपने ईमेल का पुष्टि लिंक खोलें, फिर लॉगिन करें। लॉगिन के बाद सुरक्षित रूप से सदस्य प्रोफाइल पूरी की जाएगी।','ok');$('loginEmail').value=email;pane('login')}
+ }catch(e){message('अकाउंट बनाते समय त्रुटि हुई। कृपया पुनः प्रयास करें।','err')}finally{$('signupBtn').disabled=false}
+};
+$('loginBtn').onclick=async()=>{
+ const email=$('loginEmail').value.trim(),password=$('loginPassword').value;
+ if(!email||!password){message('ईमेल और पासवर्ड भरें।','err');return}
+ $('loginBtn').disabled=true;
+ try{
+  const {data,error}=await sb.auth.signInWithPassword({email,password});
+  if(error){message(error.message,'err');return}
+  const d=detailsFromForm();
+  const hasFormDetails=d.full_name&&d.mobile;
+  await completeMember(data.user,hasFormDetails?d:null);
+ }catch(e){message('लॉगिन में समस्या हुई। कृपया पुनः प्रयास करें।','err')}finally{$('loginBtn').disabled=false}
+};
+</script></body></html>
