@@ -1137,6 +1137,24 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
 }
 </style>
 
+
+<style id="sbpf-counter-live-label">
+/* Compact red LIVE indicator inside every work-area member-count box */
+#sbpfFocusGrid>.campaign .sbpf-member-count::before{
+ content:"● LIVE"!important;
+ display:block!important;
+ width:auto!important;height:auto!important;flex:0 0 auto!important;
+ padding:0!important;margin:0 0 2px!important;
+ border:0!important;border-radius:0!important;
+ background:none!important;box-shadow:none!important;
+ color:#c62828!important;
+ font-family:inherit!important;font-size:8px!important;
+ font-weight:900!important;letter-spacing:.35px!important;line-height:1.1!important;
+}
+@media(max-width:600px){
+ #sbpfFocusGrid>.campaign .sbpf-member-count::before{font-size:7px!important}
+}
+</style>
 </body></html>
 
 
