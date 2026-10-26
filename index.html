@@ -811,7 +811,7 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
         });
         if (!response.ok) throw new Error(table + ' count unavailable (' + response.status + ')');
         const range = response.headers.get('content-range') || '';
-        const match = range.match(/\/(\d+|\*)$/);
+                const match = range.match(/\/(\d+|\*)$/);
         if (!match || match[1] === '*') throw new Error(table + ' count not exposed');
         return { id, count: Number(match[1]) };
       }));
