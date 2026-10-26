@@ -1155,6 +1155,34 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
  #sbpfFocusGrid>.campaign .sbpf-member-count::before{font-size:7px!important}
 }
 </style>
+
+<style id="sbpf-counter-compact-size">
+/* Smaller member counter box, applied consistently to all 12 work-area cards */
+#sbpfFocusGrid>.campaign .sbpf-member-count{
+ left:5.8%!important;top:15.2%!important;
+ width:14%!important;height:31%!important;
+ min-width:0!important;min-height:0!important;max-width:92px!important;
+ gap:2px!important;padding:3px 2px!important;border-radius:4px!important;
+}
+#sbpfFocusGrid>.campaign .sbpf-member-count::before{
+ margin:0 0 1px!important;font-size:7px!important;letter-spacing:.2px!important;
+}
+#sbpfFocusGrid>.campaign .sbpf-member-count strong{
+ font-size:12px!important;line-height:1!important;
+}
+#sbpfFocusGrid>.campaign .sbpf-member-count span{
+ font-size:6px!important;line-height:1.05!important;
+}
+@media(max-width:600px){
+ #sbpfFocusGrid>.campaign .sbpf-member-count{
+  left:5.8%!important;top:15.2%!important;width:14%!important;height:31%!important;
+  max-width:92px!important;gap:2px!important;padding:2px 1px!important;
+ }
+ #sbpfFocusGrid>.campaign .sbpf-member-count::before{font-size:6px!important}
+ #sbpfFocusGrid>.campaign .sbpf-member-count strong{font-size:11px!important}
+ #sbpfFocusGrid>.campaign .sbpf-member-count span{font-size:5.5px!important}
+}
+</style>
 </body></html>
 
 
