@@ -914,7 +914,7 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
 </style>
 
 <style id="sbpf-workarea-visual-refresh">
-#sbpfFocusGrid>.campaign .sbpf-focus-art{
+#sbpfFocusGrid>.campaign .booster-wrap{display:none!important}\n#sbpfFocusGrid>.campaign .sbpf-focus-art{
   position:relative;isolation:isolate;display:flex;align-items:center;justify-content:space-between;
   gap:10px;width:100%;min-height:112px;margin:0 0 13px;padding:16px 17px;overflow:hidden;
   border:1px solid var(--focus-border,#ead8b0);border-radius:14px;
@@ -938,6 +938,11 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
  #sbpfFocusGrid>.campaign .sbpf-focus-art-title{font-size:14px}
 }
 @media(max-width:390px){#sbpfFocusGrid>.campaign .sbpf-focus-art{min-height:86px}}
+</style>
+<style id="sbpf-workarea-mutation-fix">
+/* Supabase replaces the work-area cards asynchronously; hide legacy banner artwork and show the new per-area art. */
+#sbpfFocusGrid>.campaign .booster-wrap{display:none!important}
+#sbpfFocusGrid>.campaign .sbpf-focus-art{display:flex!important;width:100%;box-sizing:border-box}
 </style>
 <script id="sbpf-workarea-visual-refresh">
 (function(){
@@ -979,6 +984,11 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',addWorkAreaArt,{once:true});
   else addWorkAreaArt();
+  var workGrid=document.getElementById('sbpfFocusGrid');
+  if(workGrid && window.MutationObserver){
+    var workObserver=new MutationObserver(function(){addWorkAreaArt();});
+    workObserver.observe(workGrid,{childList:true,subtree:false});
+  }
 })();
 </script>
 
