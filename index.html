@@ -741,11 +741,12 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
       [/paryavaran|पर्यावरण/, 'campaign-swarnim-paryavaran'],
       [/vyapar|व्यापार/, 'campaign-swarnim-vyapar'],
       [/gurukul|गुरुकुल/, 'campaign-swarnim-gurukulam'],
-      [/seva|सेवा/, 'campaign-swarnim-seva'],
+      // Match the specific digital-service cards before the generic "seva" keyword.
+      [/swarnim-csc|jan.?suvidha|जनसुविधा|जन सुविधा/, 'campaign-swarnim-csc'],
+      [/swarnim-creator|creator|क्रिएटर/, 'campaign-swarnim-creator'],
       [/book|स्वर्णिमबुक/, 'campaign-swarnim-book'],
       [/media|मीडिया/, 'campaign-swarnim-media'],
-      [/swarnim-csc|jan.?suvidha|जनसुविधा|जन सुविधा/, 'campaign-swarnim-csc'],
-      [/swarnim-creator|creator|क्रिएटर/, 'campaign-swarnim-creator']
+      [/seva|सेवा/, 'campaign-swarnim-seva']
     ];
     const found = map.find(([pattern]) => pattern.test(key + ' ' + label));
     return 'assets/boosters/' + (found ? found[1] : 'campaign-swarnim-seva') + '.svg';
