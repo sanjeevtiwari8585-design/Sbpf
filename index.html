@@ -151,6 +151,22 @@ footer{background:#241d20;color:#f9f3ec;padding:38px 20px 18px;text-align:left}f
 
 </style>
 
+<style id="sbpf-live-work-area-stats">
+.sbpf-live-stats{max-width:1000px;margin:0 auto 26px;padding:18px;border:1px solid #e5d4b3;border-radius:20px;background:linear-gradient(135deg,#fffdf7 0%,#f4f8f0 58%,#fff7e5 100%);box-shadow:0 12px 30px rgba(63,45,20,.08)}
+.sbpf-live-heading{display:flex;align-items:center;gap:9px;flex-wrap:wrap;color:#164b34;font-size:14px;font-weight:850;letter-spacing:.2px}
+.sbpf-live-dot{width:9px;height:9px;flex:0 0 9px;border-radius:50%;background:#19a463;box-shadow:0 0 0 4px #19a46320;animation:sbpfPulse 1.8s infinite}
+.sbpf-live-updated{margin-left:auto;color:#716a5e;font-size:11px;font-weight:600}
+.sbpf-live-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:15px}
+.sbpf-live-stat{min-width:0;padding:14px 10px;border:1px solid #e8dfcb;border-radius:14px;background:rgba(255,255,255,.86);display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px}
+.sbpf-live-icon{font-size:22px;line-height:1.2}
+.sbpf-live-value{color:#781626;font-size:clamp(24px,3vw,34px);line-height:1.2;font-weight:900;font-variant-numeric:tabular-nums}
+.sbpf-live-label{color:#51483f;font-size:12px;line-height:1.45;font-weight:750}
+.sbpf-live-foot{margin-top:12px;color:#756b5d;font-size:11px;line-height:1.5;text-align:center}
+@keyframes sbpfPulse{50%{box-shadow:0 0 0 7px #19a46308;opacity:.7}}
+@media(max-width:620px){.sbpf-live-stats{padding:13px;border-radius:16px;margin-bottom:20px}.sbpf-live-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.sbpf-live-stat{padding:12px 8px}.sbpf-live-updated{width:100%;margin-left:18px}.sbpf-live-label{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.sbpf-live-dot{animation:none}}
+</style>
+
 <style id="sbpf-mobile-layout-polish">
 /* SBPF homepage responsive polish — additive styles, existing routes and Supabase logic preserved */
 img{max-width:100%}
@@ -666,7 +682,7 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
 <main>
 <section class="hero sbpf-home-banner" id="home"><div class="sbpf-banner-content"><div class="sbpf-banner-brand"><img src="public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png" alt="SBPF आधिकारिक लोगो" loading="eager"><span>स्वर्णिम भारत परिवार फाउंडेशन</span></div><div class="eyebrow">सेवा • सहयोग • स्वावलंबन • सशक्तिकरण</div><h2>सेवा से सहयोग तक,<br><span>हर परिवार के साथ</span></h2><p>शिक्षा, स्वास्थ्य, सरकारी योजनाओं और जनसेवा के माध्यम से जागरूक, आत्मनिर्भर और सशक्त भारत की ओर।</p><div class="actions"><a class="btn sbpf-banner-primary" href="member.html">सदस्य क्षेत्र खोलें <span aria-hidden="true">→</span></a><a class="btn secondary sbpf-banner-secondary" href="#work">हमारे कार्य क्षेत्र देखें</a></div><div class="sbpf-banner-foot">जागरूक नागरिक <i></i> आत्मनिर्भर परिवार <i></i> समृद्ध भारत</div></div><div class="sbpf-banner-art" aria-hidden="true"><div class="sbpf-sun"></div><div class="sbpf-orbit sbpf-orbit-one"></div><div class="sbpf-orbit sbpf-orbit-two"></div><div class="sbpf-india-mark">भारत</div><div class="sbpf-banner-ribbon"></div></div></section>
 <section class="wrap" id="about"><div class="section-head"><h2>हमारा संकल्प</h2><p>जानकारी, अवसर और सहायता—सबके लिए।</p></div><div class="pillars"><article class="pillar sbpf-value-card"><img class="sbpf-value-logo" src="public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png" alt="SBPF आधिकारिक लोगो" loading="lazy"><span class="sbpf-value-icon">🤝</span><h3>सेवा</h3><p>परिवारों तक सहायता।</p></article><article class="pillar sbpf-value-card"><img class="sbpf-value-logo" src="public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png" alt="SBPF आधिकारिक लोगो" loading="lazy"><span class="sbpf-value-icon">🫶</span><h3>सहयोग</h3><p>समुदाय को जोड़ना।</p></article><article class="pillar sbpf-value-card"><img class="sbpf-value-logo" src="public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png" alt="SBPF आधिकारिक लोगो" loading="lazy"><span class="sbpf-value-icon">🌱</span><h3>स्वावलंबन</h3><p>शिक्षा और कौशल से आत्मनिर्भरता।</p></article><article class="pillar sbpf-value-card"><img class="sbpf-value-logo" src="public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png" alt="SBPF आधिकारिक लोगो" loading="lazy"><span class="sbpf-value-icon">🌟</span><h3>सशक्तिकरण</h3><p>समान अवसर और सशक्तिकरण।</p></article></div><div class="sbpf-vision-link"><p><strong>हमारा विजन:</strong> जागरूक नागरिक, आत्मनिर्भर परिवार और सशक्त भारत।</p><a class="btn secondary" href="vision-mission.html">विजन और मिशन विस्तार से पढ़ें →</a></div></section>
-<section class="campaigns" id="work"><div class="wrap"><div class="section-head"><h2>हमारे प्रमुख कार्य क्षेत्र</h2><p>हमारे कार्यक्षेत्रों से जुड़ें।</p></div><div class="grid" id="sbpfFocusGrid">
+<section class="campaigns" id="work"><div class="wrap"><div class="section-head"><h2>हमारे प्रमुख कार्य क्षेत्र</h2><p>सेवा, सहयोग और स्वावलंबन — अब वास्तविक डेटा के साथ।</p></div><div class="sbpf-live-stats" id="sbpfLiveStats" aria-label="SBPF लाइव आँकड़े"><div class="sbpf-live-heading"><span class="sbpf-live-dot"></span><span>SBPF लाइव डैशबोर्ड</span><span class="sbpf-live-updated" id="sbpfLiveUpdated">डेटा जाँचा जा रहा है…</span></div><div class="sbpf-live-grid"><div class="sbpf-live-stat"><span class="sbpf-live-icon">🧭</span><span class="sbpf-live-value" id="sbpfCountAreas">—</span><span class="sbpf-live-label">सक्रिय कार्यक्षेत्र</span></div><div class="sbpf-live-stat"><span class="sbpf-live-icon">🌟</span><span class="sbpf-live-value" id="sbpfCountCampaigns">—</span><span class="sbpf-live-label">सक्रिय अभियान</span></div><div class="sbpf-live-stat"><span class="sbpf-live-icon">📚</span><span class="sbpf-live-value" id="sbpfCountResources">—</span><span class="sbpf-live-label">प्रकाशित संसाधन</span></div><div class="sbpf-live-stat"><span class="sbpf-live-icon">📣</span><span class="sbpf-live-value" id="sbpfCountUpdates">—</span><span class="sbpf-live-label">अभियान सामग्री</span></div></div><div class="sbpf-live-foot" id="sbpfLiveFoot">Supabase से सुरक्षित सार्वजनिक आँकड़े लोड हो रहे हैं।</div></div><div class="grid" id="sbpfFocusGrid">
 <article class="campaign"><div class="number">01 • EDUCATION</div><h3>शिक्षा और स्वर्णिम गुरुकुलम</h3><p>अध्ययन सामग्री, डिजिटल शिक्षा और परीक्षा/रोजगार मार्गदर्शन।</p><p><a class="btn secondary sbpf-work-area-link" href="campaign.html?slug=swarnim-gurukulam">शिक्षा अभियान देखें →</a></p></article>
 <article class="campaign"><div class="number">02 • HEALTH</div><h3>स्वास्थ्य सहायता</h3><p>स्वास्थ्य संबंधी जानकारी और सहायता सेवाओं तक पहुँच।</p><p><a class="btn secondary sbpf-work-area-link" href="hms.html">स्वास्थ्य सहायता देखें →</a></p></article>
 <article class="campaign"><div class="number">03 • FAMILY</div><h3>परिवार जानकारी</h3><p>सदस्य अपनी और परिवार की जानकारी सदस्य क्षेत्र में व्यवस्थित करें।</p><p><a class="btn secondary sbpf-work-area-link" href="member.html">सदस्य सहायता खोलें →</a></p></article>
@@ -773,6 +789,41 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
     const found = map.find(([pattern]) => pattern.test(key + ' ' + label));
     return 'assets/boosters/' + (found ? found[1] : 'campaign-swarnim-seva') + '.svg';
   }
+  async function loadSbpfLiveStats() {
+    const foot = document.getElementById('sbpfLiveFoot');
+    const updated = document.getElementById('sbpfLiveUpdated');
+    const targets = [
+      ['sbpfCountAreas', 'focus_areas'],
+      ['sbpfCountCampaigns', 'campaigns'],
+      ['sbpfCountResources', 'work_area_content'],
+      ['sbpfCountUpdates', 'campaign_content']
+    ];
+    try {
+      const results = await Promise.all(targets.map(async ([id, table]) => {
+        const url = supabaseUrl + '/rest/v1/' + table + '?is_active=eq.true&select=id';
+        const response = await fetch(url, {
+          method: 'HEAD',
+          headers: { apikey: publishableKey, Prefer: 'count=exact', Range: '0-0' },
+          cache: 'no-store'
+        });
+        if (!response.ok) throw new Error(table + ' count unavailable (' + response.status + ')');
+        const range = response.headers.get('content-range') || '';
+        const match = range.match(/\\/(\\d+|\\*)$/);
+        if (!match || match[1] === '*') throw new Error(table + ' count not exposed');
+        return { id, count: Number(match[1]) };
+      }));
+      results.forEach(({id, count}) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = count.toLocaleString('en-IN');
+      });
+      if (updated) updated.textContent = 'अपडेट: ' + new Date().toLocaleTimeString('hi-IN', {hour:'2-digit', minute:'2-digit'});
+      if (foot) foot.textContent = 'वास्तविक सक्रिय रिकॉर्ड • Supabase से हर 60 सेकंड में रीफ़्रेश।';
+    } catch (error) {
+      if (updated) updated.textContent = 'लाइव डेटा अभी उपलब्ध नहीं';
+      if (foot) foot.textContent = 'डेटाबेस की सार्वजनिक अनुमति या नेटवर्क उपलब्ध होने पर वास्तविक आँकड़े दिखाई देंगे। कोई अनुमानित संख्या नहीं दिखाई जा रही।';
+      console.warn('SBPF live statistics unavailable; no placeholder counts are shown as real:', error);
+    }
+  }
   async function loadSbpfHomepageData() {
     try {
       const headers = { apikey: publishableKey };
@@ -842,6 +893,8 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
   document.addEventListener('DOMContentLoaded', () => {
     loadSbpfBranding();
     loadSbpfHomepageData();
+    loadSbpfLiveStats();
+    window.setInterval(loadSbpfLiveStats, 60000);
   });
 })();
 </script>
