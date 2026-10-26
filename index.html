@@ -1070,20 +1070,21 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
 </style>
 
 <style id="sbpf-work-area-live-count-redesign">
-/* Align the compact member-count panel exactly over the original small logo card */
+/* Precisely cover the poster's small white logo tile; compact count stays inside that tile */
 #sbpfFocusGrid>.campaign .booster-wrap{position:relative!important;isolation:isolate!important}
 #sbpfFocusGrid>.campaign .sbpf-member-count{
- position:absolute!important;z-index:8!important;
- left:7.1%!important;top:16.5%!important;width:20.5%!important;height:35.5%!important;
- min-width:0!important;min-height:0!important;max-width:145px!important;
+ position:absolute!important;z-index:9!important;
+ left:5.8%!important;top:15.2%!important;width:17.6%!important;height:38%!important;
+ min-width:0!important;min-height:0!important;max-width:130px!important;
  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
  gap:4px!important;padding:5px 3px!important;box-sizing:border-box!important;overflow:hidden!important;
- border:1.5px solid #d6b34b!important;border-radius:6px!important;
- background:rgba(255,253,247,1)!important;color:#174b6b!important;
- text-align:center!important;box-shadow:0 2px 5px rgba(25,20,14,.12)!important;
+ border:1.5px solid #d6b34b!important;border-radius:5px!important;
+ background:#fffdf7!important;color:#174b6b!important;
+ text-align:center!important;box-shadow:0 1px 3px rgba(25,20,14,.1)!important;
 }
 #sbpfFocusGrid>.campaign .sbpf-member-count:before{
- content:"";display:block;width:20px;height:20px;flex:0 0 20px;
+ content:"👥";display:flex;align-items:center;justify-content:center;
+ width:20px;height:20px;flex:0 0 20px;font-size:14px;line-height:1;
  border-radius:50%;background:#e9f4ec;border:1px solid #b8d9c3;box-sizing:border-box;
 }
 #sbpfFocusGrid>.campaign .sbpf-member-count strong{
@@ -1096,8 +1097,8 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
  font-weight:800!important;letter-spacing:0!important;color:#5b4a2e!important;
 }
 @media(max-width:600px){
- #sbpfFocusGrid>.campaign .sbpf-member-count{left:7.1%!important;top:16.5%!important;width:20.5%!important;height:35.5%!important;gap:3px!important;padding:4px 2px!important;border-radius:5px!important}
- #sbpfFocusGrid>.campaign .sbpf-member-count:before{width:15px;height:15px;flex-basis:15px}
+ #sbpfFocusGrid>.campaign .sbpf-member-count{left:5.8%!important;top:15.2%!important;width:17.6%!important;height:38%!important;gap:3px!important;padding:4px 2px!important;border-radius:5px!important}
+ #sbpfFocusGrid>.campaign .sbpf-member-count:before{width:15px;height:15px;flex-basis:15px;font-size:10px}
  #sbpfFocusGrid>.campaign .sbpf-member-count strong{font-size:clamp(14px,4.2vw,21px)!important}
  #sbpfFocusGrid>.campaign .sbpf-member-count span{font-size:7px!important;line-height:1.1!important}
 }
