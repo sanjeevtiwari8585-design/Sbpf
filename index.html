@@ -128,6 +128,27 @@ footer{background:#241d20;color:#f9f3ec;padding:38px 20px 18px;text-align:left}f
 #sbpfFocusGrid>.campaign>p:last-child{margin-top:auto;padding-top:10px}
 @media(max-width:520px){.sbpf-work-area-link{width:100%;text-align:center;justify-content:center}}
 
+
+/* SBPF work-area/campaign identity refresh: replace the harsh logo block with a premium emblem */
+.campaign .campaign-banner-wrap:after,.campaign .booster-wrap:after{
+  width:76px;height:76px;left:12px;top:20px;border-radius:20px;
+  border:1px solid rgba(255,224,130,.95);
+  box-shadow:0 8px 22px rgba(9,25,45,.22),inset 0 0 0 4px rgba(255,255,255,.12);
+  background-image:linear-gradient(145deg,rgba(255,255,255,.18),rgba(0,0,0,.12));
+}
+.campaign .campaign-official-logo,.campaign .booster-official-logo{
+  left:19px;top:27px;width:62px;height:62px;object-fit:contain;
+  padding:5px;border-radius:16px;clip-path:none;
+  background:rgba(255,255,255,.96);border:1px solid #e5c66b;
+  box-shadow:0 4px 14px rgba(0,0,0,.2);
+}
+.campaign h3{letter-spacing:-.2px}
+.campaign .number{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:30px;background:#fff6dc;border:1px solid #ead7a1}
+@media(max-width:600px){
+ .campaign .campaign-banner-wrap:after,.campaign .booster-wrap:after{left:8px;top:15px;width:62px;height:62px;border-radius:16px}
+ .campaign .campaign-official-logo,.campaign .booster-official-logo{left:13px;top:20px;width:52px;height:52px;border-radius:13px;padding:4px}
+}
+
 </style>
 
 <style id="sbpf-mobile-layout-polish">
