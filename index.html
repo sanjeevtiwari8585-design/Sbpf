@@ -877,6 +877,15 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
 })();
 </script>
 
+
+<style id="sbpf-card-share-buttons">
+#sbpfFocusGrid>.campaign .sbpf-card-share,#sbpfCampaignGrid>.campaign .sbpf-card-share{display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;margin-top:10px;padding:11px 14px;border:1px solid #d4ad52;border-radius:12px;background:linear-gradient(120deg,#781626,#a52a39);color:#fff;font:700 14px/1.35 system-ui,sans-serif;cursor:pointer;box-shadow:0 5px 14px #78162620;transition:transform .18s ease,box-shadow .18s ease}
+#sbpfFocusGrid>.campaign .sbpf-card-share:hover,#sbpfCampaignGrid>.campaign .sbpf-card-share:hover{transform:translateY(-2px);box-shadow:0 8px 18px #78162630}
+#sbpfFocusGrid>.campaign .sbpf-card-share:focus-visible,#sbpfCampaignGrid>.campaign .sbpf-card-share:focus-visible{outline:3px solid #d8b34b;outline-offset:3px}
+#sbpfFocusGrid>.campaign .sbpf-share-status,#sbpfCampaignGrid>.campaign .sbpf-share-status{font-size:12px;color:#6d4e10;margin:5px 0 0}
+@media(prefers-reduced-motion:reduce){#sbpfFocusGrid>.campaign .sbpf-card-share,#sbpfCampaignGrid>.campaign .sbpf-card-share{transition:none}}
+</style>
+
 </head>
 <body>
 <div class="sbpf-topbar">
@@ -1352,6 +1361,76 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
  #sbpfFocusGrid>.campaign .sbpf-member-count span{font-size:3.5px!important}
 }
 </style>
+
+<script id="sbpf-card-social-share">
+(() => {
+  const api = 'https://dxowhzghrdghfzoggorx.supabase.co/rest/v1/sbpf_card_social_shares';
+  const key = 'sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
+  const site = 'https://swarnimbharatclub.in/';
+  const grids = [
+    {id:'sbpfFocusGrid', type:'focus_area', label:'कार्य क्षेत्र', hash:'#work'},
+    {id:'sbpfCampaignGrid', type:'campaign', label:'अभियान', hash:'#campaigns'}
+  ];
+  function clean(v){return String(v || '').replace(/\\s+/g,' ').trim();}
+  function slugFor(card,type){
+    const link = card.querySelector('a[href]');
+    if(link){
+      try { const u = new URL(link.getAttribute('href'), location.href); const slug = u.searchParams.get('slug'); if(slug) return slug; } catch(e){}
+      const path = link.getAttribute('href') || '';
+      const file = path.split('/').pop().replace(/\\.html?$/i,'');
+      if(file && file !== 'index' && !file.startsWith('#')) return file.slice(0,120);
+    }
+    return clean(card.dataset.slug || card.querySelector('h3')?.textContent).toLowerCase().replace(/[^a-z0-9-]+/g,'-').replace(/^-|-$/g,'').slice(0,120) || (type === 'campaign' ? 'sbpf-campaign' : 'sbpf-focus-area');
+  }
+  async function record(type,slug,title,platform){
+    try { await fetch(api,{method:'POST',headers:{apikey:key,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({card_type:type,card_slug:slug,card_title:title,platform}),keepalive:true}); } catch(e){ console.warn('SBPF share analytics unavailable',e); }
+  }
+  function addButtons(){
+    grids.forEach(({id,type,label,hash})=>{
+      const grid=document.getElementById(id); if(!grid) return;
+      grid.querySelectorAll(':scope > .campaign').forEach(card=>{
+        if(card.querySelector('.sbpf-card-share')) return;
+        const title=clean(card.querySelector('h3')?.textContent); if(!title) return;
+        const desc=clean(Array.from(card.querySelectorAll('p')).map(p=>p.textContent).join(' ')).slice(0,650);
+        const slug=slugFor(card,type);
+        let link=site+'index.html'+hash;
+        const detail=card.querySelector('a[href*="slug="]');
+        if(type==='campaign' && detail){try{link=new URL(detail.getAttribute('href'),site).href;}catch(e){}}
+        const row=document.createElement('div'); row.className='sbpf-share-wrap';
+        const button=document.createElement('button'); button.type='button'; button.className='sbpf-card-share';
+        button.setAttribute('aria-label',title+' '+label+' की जानकारी सोशल मीडिया पर शेयर करें');
+        button.innerHTML='<span aria-hidden="true">↗</span><span>शेयर करें</span>';
+        const status=document.createElement('p'); status.className='sbpf-share-status'; status.setAttribute('aria-live','polite'); status.hidden=true;
+        button.addEventListener('click',async()=>{
+          const shareText='🌟 '+title+' | स्वर्णिम भारत परिवार फाउंडेशन (SBPF)\n'+(desc ? desc+'\n':'')+'उद्देश्य: सेवा • सहयोग • स्वावलंबन • सशक्तिकरण\nऔर जानकारी: '+link+'\n#SBPF #SwarnimBharatParivar';
+          button.disabled=true; button.style.opacity='.8';
+          try {
+            if(navigator.share){
+              await navigator.share({title:title+' | SBPF',text:shareText,url:link});
+              await record(type,slug,title,'share_sheet');
+              status.textContent='शेयर मेनू खुला — पोस्ट ऐप में पूरी करें।';
+            } else {
+              const wa='https://wa.me/?text='+encodeURIComponent(shareText);
+              window.open(wa,'_blank','noopener,noreferrer');
+              await record(type,slug,title,'whatsapp');
+              status.textContent='WhatsApp शेयर लिंक खुल गया।';
+            }
+          } catch(error){
+            if(error && error.name==='AbortError'){status.textContent='शेयर रद्द किया गया।';}
+            else { const wa='https://wa.me/?text='+encodeURIComponent(shareText); window.open(wa,'_blank','noopener,noreferrer'); await record(type,slug,title,'whatsapp'); status.textContent='WhatsApp शेयर लिंक खुल गया।'; }
+          } finally { status.hidden=false; button.disabled=false; button.style.opacity='1'; }
+        });
+        row.append(button,status);
+        const actionP=Array.from(card.querySelectorAll('p')).find(p=>p.querySelector('a'));
+        if(actionP) actionP.insertAdjacentElement('afterend',row); else card.appendChild(row);
+      });
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',addButtons); else addButtons();
+  if('MutationObserver' in window) new MutationObserver(addButtons).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+
 </body></html>
 
 
