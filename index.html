@@ -913,78 +913,9 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
 }
 </style>
 
-<style id="sbpf-workarea-visual-refresh">
-#sbpfFocusGrid>.campaign .booster-wrap{display:none!important}
-#sbpfFocusGrid>.campaign .sbpf-focus-art{
-  position:relative;display:flex;align-items:center;justify-content:space-between;
-  gap:10px;width:100%;min-height:0;margin:0 0 8px;padding:7px 9px;box-sizing:border-box;
-  border:1px solid var(--focus-border,#ead8b0);border-radius:10px;
-  background:linear-gradient(110deg,var(--focus-light,#fff8e8),#fff 90%);
-}
-#sbpfFocusGrid>.campaign .sbpf-focus-art:before{content:none}
-#sbpfFocusGrid>.campaign .sbpf-focus-art-copy{display:flex;flex-direction:column;gap:0;min-width:0}
-#sbpfFocusGrid>.campaign .sbpf-focus-art-label{font-size:10px;font-weight:800;letter-spacing:.35px;color:var(--focus-accent,#8b6719)}
-#sbpfFocusGrid>.campaign .sbpf-focus-art-title{display:none!important}
-#sbpfFocusGrid>.campaign .sbpf-focus-art-icon{display:flex;align-items:center;justify-content:center;flex:0 0 38px;width:38px;height:38px;border:1px solid var(--focus-border,#ead8b0);border-radius:11px;background:#fff;font-size:23px}
-#sbpfFocusGrid>.campaign .number{margin-top:0}
-@media(max-width:700px){
- #sbpfFocusGrid>.campaign .sbpf-focus-art{min-height:0;padding:6px 8px;border-radius:9px;gap:6px}
- #sbpfFocusGrid>.campaign .sbpf-focus-art-icon{flex-basis:34px;width:34px;height:34px;border-radius:9px;font-size:20px}
- #sbpfFocusGrid>.campaign .sbpf-focus-art-label{font-size:9px;letter-spacing:.2px}
-}
-</style>
-<style id="sbpf-workarea-mutation-fix">
-/* Keep the work-area art compact after Supabase refreshes the cards. */
-#sbpfFocusGrid>.campaign .booster-wrap{display:none!important}
-#sbpfFocusGrid>.campaign .sbpf-focus-art{display:flex!important;width:100%;box-sizing:border-box}
-</style>
-<script id="sbpf-workarea-visual-refresh">
-(function(){
-  function addWorkAreaArt(){
-    var grid=document.getElementById('sbpfFocusGrid');
-    if(!grid)return;
-    Array.prototype.forEach.call(grid.querySelectorAll(':scope > .campaign'),function(card){
-      var heading=card.querySelector('h3');
-      if(!heading)return;
-      var name=(heading.textContent||'').trim().toLowerCase();
-      var preset={icon:'🤝',accent:'#8b6719',ink:'#59390c',light:'#fff8e8',border:'#ead8b0',label:'SBPF कार्यक्षेत्र'};
-      if(/शिक्षा|गुरुकुल|school|education/.test(name))Object.assign(preset,{icon:'🎓',accent:'#8a5a12',light:'#fff4d8',border:'#ead3a0',label:'शिक्षा • ज्ञान • कौशल'});
-      else if(/स्वास्थ्य|हेल्थ|health/.test(name))Object.assign(preset,{icon:'🩺',accent:'#147c72',light:'#e3f7f1',border:'#bce4d8',label:'स्वास्थ्य • देखभाल'});
-      else if(/रोजगार|कौशल|व्यापार|स्वरोजगार|व्यापार/.test(name))Object.assign(preset,{icon:'🛍️',accent:'#b16b19',light:'#fff2df',border:'#f0d2a9',label:'रोजगार • कौशल • व्यापार'});
-      else if(/महिला|नारी/.test(name))Object.assign(preset,{icon:'🌸',accent:'#a33d76',light:'#fff0f7',border:'#f0c9df',label:'सम्मान • समान अवसर'});
-      else if(/बाल|बच्च/.test(name))Object.assign(preset,{icon:'🧒',accent:'#7350a5',light:'#f3edff',border:'#ded0f5',label:'बाल विकास • सुरक्षा'});
-      else if(/पर्यावरण|हरित|स्वच्छ|प्रकृति/.test(name))Object.assign(preset,{icon:'🌱',accent:'#37804a',light:'#eaf8e9',border:'#cce7c8',label:'प्रकृति • संरक्षण'});
-      else if(/सरकारी|जनसुविधा|योजना|नागरिक/.test(name))Object.assign(preset,{icon:'🏛️',accent:'#2866a3',light:'#e8f3ff',border:'#c4dcf5',label:'जनसुविधा • योजनाएँ'});
-      else if(/मीडिया|समाचार|जनजागरण/.test(name))Object.assign(preset,{icon:'📰',accent:'#4758a5',light:'#edf0ff',border:'#d1d8fa',label:'मीडिया • जनजागरण'});
-      else if(/सेवा|सहयोग/.test(name))Object.assign(preset,{icon:'🤝',accent:'#a13d36',light:'#fff0e9',border:'#f0cec2',label:'सेवा • सहयोग'});
-      var art=card.querySelector('.sbpf-focus-art');
-      if(!art){
-        art=document.createElement('div');art.className='sbpf-focus-art';art.setAttribute('aria-hidden','true');
-        var copy=document.createElement('div');copy.className='sbpf-focus-art-copy';
-        var label=document.createElement('span');label.className='sbpf-focus-art-label';
-        var title=document.createElement('span');title.className='sbpf-focus-art-title';
-        var icon=document.createElement('span');icon.className='sbpf-focus-art-icon';
-        copy.appendChild(label);copy.appendChild(title);art.appendChild(copy);art.appendChild(icon);
-        card.insertBefore(art,heading);
-      }
-      art.style.setProperty('--focus-accent',preset.accent);
-      art.style.setProperty('--focus-ink',preset.ink);
-      art.style.setProperty('--focus-light',preset.light);
-      art.style.setProperty('--focus-border',preset.border);
-      art.querySelector('.sbpf-focus-art-label').textContent=preset.label;
-      art.querySelector('.sbpf-focus-art-title').textContent=heading.textContent;
-      art.querySelector('.sbpf-focus-art-icon').textContent=preset.icon;
-    });
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',addWorkAreaArt,{once:true});
-  else addWorkAreaArt();
-  var workGrid=document.getElementById('sbpfFocusGrid');
-  if(workGrid && window.MutationObserver){
-    var workObserver=new MutationObserver(function(){addWorkAreaArt();});
-    workObserver.observe(workGrid,{childList:true,subtree:false});
-  }
-})();
-</script>
+
+
+
 
 <script id="sbpf-mobile-footer-accordion">
 (function(){
