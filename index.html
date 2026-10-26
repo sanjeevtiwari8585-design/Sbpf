@@ -840,9 +840,10 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
         });
         if (!response.ok) throw new Error('count unavailable');
         const range = response.headers.get('Content-Range') || '';
-        const match = range.match(/\\/(\\d+|\\*)$/);
-        if (!match || match[1] === '*') throw new Error('exact count unavailable');
-        value.textContent = Number(match[1]).toLocaleString('en-IN');
+        const totalText = range.slice(range.lastIndexOf('/') + 1).trim();
+        const total = Number(totalText);
+        if (!totalText || totalText === '*' || !Number.isInteger(total) || total < 0) throw new Error('exact count unavailable');
+        value.textContent = total.toLocaleString('en-IN');
         badge.setAttribute('aria-label', value.textContent + ' जुड़े सदस्य');
       } catch (error) {
         value.textContent = '—';
