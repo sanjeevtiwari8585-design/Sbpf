@@ -743,7 +743,9 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
       [/gurukul|गुरुकुल/, 'campaign-swarnim-gurukulam'],
       [/seva|सेवा/, 'campaign-swarnim-seva'],
       [/book|स्वर्णिमबुक/, 'campaign-swarnim-book'],
-      [/media|मीडिया/, 'campaign-swarnim-media']
+      [/media|मीडिया/, 'campaign-swarnim-media'],
+      [/swarnim-csc|jan.?suvidha|जनसुविधा|जन सुविधा/, 'campaign-swarnim-csc'],
+      [/swarnim-creator|creator|क्रिएटर/, 'campaign-swarnim-creator']
     ];
     const found = map.find(([pattern]) => pattern.test(key + ' ' + label));
     return 'assets/boosters/' + (found ? found[1] : 'campaign-swarnim-seva') + '.svg';
@@ -779,9 +781,18 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
             { name: 'स्वर्णिम जनसुविधा केंद्र', slug: 'swarnim-csc', description: 'सरकारी सेवाओं, योजनाओं, प्रमाणपत्रों, रोजगार और अधिकृत पोर्टल की जानकारी।' }
           ];
           extras.forEach(extra => {
-            if (!campaigns.some(item => item.slug === extra.slug || (extra.slug === 'swarnim-csc' && /जनसुविधा केंद्र|swarnim csc/i.test(item.name || '')))) campaigns.push(extra);
+            if (!campaigns.some(item => item.slug === extra.slug || (extra.slug === 'swarnim-csc' && /जनसुविधा केंद्र|swarnim csc/i.test(item.name || '')) || (extra.slug === 'swarnim-creator' && /swarnim creator|स्वर्णिम creator/i.test(item.name || '')))) campaigns.push(extra);
           });
-          grid.innerHTML = campaigns.map((item, index) => {
+          // Normalize the two extra cards and remove duplicate database rows by slug/name.
+          const normalized = campaigns.map(item => {
+            const text = String(item.slug || '') + ' ' + String(item.name || '');
+            if (/swarnim-csc|जनसुविधा केंद्र|जनसुविधा|swarnim csc/i.test(text)) return {...item, slug:'swarnim-csc', name:'स्वर्णिम जनसुविधा केंद्र', description:'सरकारी सेवाएँ, योजनाएँ, प्रमाणपत्र, रोजगार और अधिकृत पोर्टल की जानकारी।', image_url:null};
+            if (/swarnim-creator|स्वर्णिम creator|swarnim creator/i.test(text)) return {...item, slug:'swarnim-creator', name:'स्वर्णिम Creator', description:'वीडियो निर्माण, संपादन और रचनात्मक डिजिटल सामग्री के लिए स्वर्णिम Creator।', image_url:null};
+            return item;
+          });
+          const seen = new Set();
+          const uniqueCampaigns = normalized.filter(item => { const key = String(item.slug || item.name || '').toLowerCase().trim(); if (seen.has(key)) return false; seen.add(key); return true; });
+          grid.innerHTML = uniqueCampaigns.map((item, index) => {
             const target = item.slug === 'swarnim-book' ? 'swarnim-book.html' :
               item.slug === 'swarnim-media' ? 'swarnim-media/index.html' :
               item.slug === 'swarnim-creator' ? 'swarnim-creator.html' :
@@ -793,7 +804,7 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
               item.slug === 'swarnim-csc' ? 'जनसुविधा केंद्र खोलें →' : 'विस्तार से पढ़ें →';
             return '<article class="campaign"><div class="number">' +
               String(index + 1).padStart(2, '0') + ' • SWARNIM ABHIYAN</div>' +
-              '<div class="campaign-banner-wrap campaign-banner-art"><img class="campaign-art-banner" loading="lazy" decoding="async" src="' + escapeSbpfHtml((item.slug === 'swarnim-jan-jagran' ? 'assets/boosters/campaign-swarnim-jan-jagran.svg' : (item.image_url || campaignArtFor(item.slug, item.name)))) + '" alt="' + escapeSbpfHtml(item.name) + ' अभियान बैनर"><img class="sbpf-card-seal" loading="lazy" decoding="async" src="public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png" alt="SBPF आधिकारिक लोगो"></div>' +
+              '<div class="campaign-banner-wrap campaign-banner-art"><img class="campaign-art-banner" loading="lazy" decoding="async" src="' + escapeSbpfHtml((item.slug === 'swarnim-jan-jagran' ? 'assets/boosters/campaign-swarnim-jan-jagran.svg' : (item.slug === 'swarnim-csc' ? 'assets/boosters/campaign-swarnim-csc.svg' : item.slug === 'swarnim-creator' ? 'assets/boosters/campaign-swarnim-creator.svg' : (item.image_url || campaignArtFor(item.slug, item.name))))) + '" alt="' + escapeSbpfHtml(item.name) + ' अभियान बैनर"><img class="sbpf-card-seal" loading="lazy" decoding="async" src="public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png" alt="SBPF आधिकारिक लोगो"></div>' +
               '<h3>' + escapeSbpfHtml(item.name) + '</h3><p>' +
               escapeSbpfHtml(item.description || 'इस अभियान का विवरण शीघ्र उपलब्ध होगा।') +
               '</p><p><a class="btn secondary" style="display:inline-block;padding:8px 12px;font-size:13px;margin-top:12px" href="' +
