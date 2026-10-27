@@ -1372,7 +1372,7 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
     {id:'sbpfFocusGrid', type:'focus_area', label:'कार्य क्षेत्र', hash:'#work'},
     {id:'sbpfCampaignGrid', type:'campaign', label:'अभियान', hash:'#campaigns'}
   ];
-  const clean = value => String(value || '').replace(/\\s+/g, ' ').trim();
+  const clean = value => String(value || '').replace(/\s+/g, ' ').trim();
   const escapeText = value => clean(value).slice(0, 650);
   function cardLink(card, type, hash) {
     const links = Array.from(card.querySelectorAll('a[href]'));
@@ -1415,10 +1415,10 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
         status.setAttribute('aria-live', 'polite');
         status.hidden = true;
         button.addEventListener('click', async () => {
-          const shareText = '🌟 ' + title + ' | स्वर्णिम भारत परिवार फाउंडेशन (SBPF)\\n'
-            + (desc ? desc + '\\n' : '')
-            + 'उद्देश्य: सेवा • सहयोग • स्वावलंबन • सशक्तिकरण\\nजानकारी व कार्ड: ' + link
-            + '\\n#SBPF #SwarnimBharatParivar';
+          const shareText = '🌟 ' + title + ' | स्वर्णिम भारत परिवार फाउंडेशन (SBPF)\n'
+            + (desc ? desc + '\n' : '')
+            + 'उद्देश्य: सेवा • सहयोग • स्वावलंबन • सशक्तिकरण\nजानकारी व कार्ड: ' + link
+            + '\n#SBPF #SwarnimBharatParivar';
           status.hidden = false;
           status.textContent = 'शेयर विकल्प खोले जा रहे हैं…';
           const nativeShare = typeof navigator.share === 'function';
