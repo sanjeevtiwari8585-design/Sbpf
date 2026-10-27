@@ -1377,20 +1377,43 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
   function cardLink(card, type, hash) {
     const links = Array.from(card.querySelectorAll('a[href]'));
     const preferred = type === 'campaign'
-      ? links.find(a => /slug=/.test(a.href))
+      ? links.find(a => /[?&]slug=/.test(a.getAttribute('href') || ''))
       : links.find(a => a.classList.contains('sbpf-work-area-link'));
-    if (preferred) { try { return new URL(preferred.getAttribute('href'), site).href; } catch (_) {} }
+    if (preferred) {
+      try { return new URL(preferred.getAttribute('href'), site).href; } catch (_) {}
+    }
+    const detail = links.find(a => {
+      try { const u = new URL(a.getAttribute('href'), site); return u.origin === new URL(site).origin && !u.hash && !/^(index)?\.html?$/i.test(u.pathname.split('/').pop()); } catch (_) { return false; }
+    });
+    if (detail) { try { return new URL(detail.getAttribute('href'), site).href; } catch (_) {} }
     return site + 'index.html' + hash;
   }
   async function record(type, slug, title, platform) {
     try {
-      await fetch(api, {
+      fetch(api, {
         method:'POST',
         headers:{apikey:key, 'Content-Type':'application/json', Prefer:'return=minimal'},
         body:JSON.stringify({card_type:type, card_slug:slug, card_title:title, platform}),
         keepalive:true
-      });
-    } catch (error) { console.warn('SBPF share analytics unavailable; sharing still works.', error); }
+      }).catch(() => {});
+    } catch (_) {}
+  }
+  async function getCardFile(card, title) {
+    const image = card.querySelector('.booster-img, .campaign-art-banner, img');
+    if (!image) return null;
+    const src = image.currentSrc || image.src || image.getAttribute('src');
+    if (!src || !/^https?:/i.test(src)) return null;
+    try {
+      const response = await Promise.race([
+        fetch(src, {mode:'cors', cache:'force-cache'}),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('image-timeout')), 2500))
+      ]);
+      if (!response.ok) return null;
+      const blob = await response.blob();
+      if (!blob.type || !blob.type.startsWith('image/')) return null;
+      const ext = blob.type.includes('png') ? 'png' : blob.type.includes('webp') ? 'webp' : 'jpg';
+      return new File([blob], 'SBPF-' + title.replace(/[^a-zA-Z0-9-]/g, '-').slice(0,45) + '.' + ext, {type:blob.type});
+    } catch (_) { return null; }
   }
   function addButtons() {
     grids.forEach(({id, type, label, hash}) => {
@@ -1408,8 +1431,8 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'sbpf-card-share';
-        button.setAttribute('aria-label', title + ' — ' + label + ' की जानकारी शेयर करें');
-        button.innerHTML = '<span aria-hidden="true">↗</span><span>कार्ड सहित शेयर करें</span>';
+        button.setAttribute('aria-label', title + ' — ' + label + ' कार्ड और पूरी जानकारी शेयर करें');
+        button.innerHTML = '<span aria-hidden="true">↗</span><span>कार्ड और लिंक शेयर करें</span>';
         const status = document.createElement('p');
         status.className = 'sbpf-share-status';
         status.setAttribute('aria-live', 'polite');
@@ -1417,18 +1440,27 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
         button.addEventListener('click', async () => {
           const shareText = '🌟 ' + title + ' | स्वर्णिम भारत परिवार फाउंडेशन (SBPF)\n'
             + (desc ? desc + '\n' : '')
-            + 'उद्देश्य: सेवा • सहयोग • स्वावलंबन • सशक्तिकरण\nजानकारी व कार्ड: ' + link
-            + '\n#SBPF #SwarnimBharatParivar';
+            + 'उद्देश्य: सेवा • सहयोग • स्वावलंबन • सशक्तिकरण\n'
+            + 'पूरी जानकारी और संबंधित पेज: ' + link + '\n'
+            + '#SBPF #SwarnimBharatParivar';
           status.hidden = false;
-          status.textContent = 'शेयर विकल्प खोले जा रहे हैं…';
-          const nativeShare = typeof navigator.share === 'function';
+          status.textContent = 'कार्ड और पूरा लिंक तैयार हो रहा है…';
           try {
-            if (nativeShare) {
-              await navigator.share({title:title + ' | SBPF', text:shareText, url:link});
-              status.textContent = 'शेयर मेनू खुला। WhatsApp, Facebook या अन्य ऐप चुनकर पोस्ट पूरी करें।';
+            if (typeof navigator.share === 'function') {
+              let payload = {title:title + ' | SBPF', text:shareText, url:link};
+              if (typeof File === 'function' && typeof navigator.canShare === 'function') {
+                const file = await getCardFile(card, title);
+                if (file && navigator.canShare({files:[file]})) {
+                  payload = {title:title + ' | SBPF', text:shareText + '\nकार्ड की तस्वीर भी संलग्न है।', files:[file]};
+                }
+              }
+              await navigator.share(payload);
+              status.textContent = payload.files
+                ? 'कार्ड की तस्वीर, जानकारी और संबंधित वेबसाइट लिंक शेयर मेनू में भेजे गए।'
+                : 'जानकारी और पूरा संबंधित लिंक शेयर मेनू में भेजे गए। इस डिवाइस पर तस्वीर संलग्न नहीं हो सकी।';
               record(type, slug, title, 'share_sheet');
             } else {
-              status.textContent = 'WhatsApp खुल रहा है…';
+              status.textContent = 'WhatsApp में पूरी जानकारी और लिंक खोले जा रहे हैं…';
               window.location.href = 'https://wa.me/?text=' + encodeURIComponent(shareText);
               record(type, slug, title, 'whatsapp');
             }
@@ -1436,7 +1468,7 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
             if (error && error.name === 'AbortError') {
               status.textContent = 'शेयर रद्द किया गया।';
             } else {
-              status.textContent = 'WhatsApp में शेयर विकल्प खोला जा रहा है…';
+              status.textContent = 'WhatsApp में पूरी जानकारी और लिंक खोले जा रहे हैं…';
               window.location.href = 'https://wa.me/?text=' + encodeURIComponent(shareText);
               record(type, slug, title, 'whatsapp');
             }
@@ -1451,9 +1483,7 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', addButtons);
   else addButtons();
-  if ('MutationObserver' in window && document.body) {
-    new MutationObserver(addButtons).observe(document.body, {childList:true, subtree:true});
-  }
+  if ('MutationObserver' in window && document.body) new MutationObserver(addButtons).observe(document.body, {childList:true, subtree:true});
 })();
 </script>
 
