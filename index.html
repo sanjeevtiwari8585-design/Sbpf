@@ -1372,23 +1372,22 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
     {id:'sbpfFocusGrid', type:'focus_area', label:'कार्य क्षेत्र', hash:'#work'},
     {id:'sbpfCampaignGrid', type:'campaign', label:'अभियान', hash:'#campaigns'}
   ];
-  const clean = value => String(value || '').replace(/\s+/g, ' ').trim();
-  const escapeText = value => clean(value).slice(0, 650);
+  const clean = v => String(v || '').replace(/\\s+/g, ' ').trim();
+  const safe = v => clean(v).slice(0, 650);
+  const slugify = v => clean(v).toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-|-$/g, '').slice(0,120);
   function cardLink(card, type, hash) {
     const links = Array.from(card.querySelectorAll('a[href]'));
     const preferred = type === 'campaign'
       ? links.find(a => /[?&]slug=/.test(a.getAttribute('href') || ''))
       : links.find(a => a.classList.contains('sbpf-work-area-link'));
-    if (preferred) {
-      try { return new URL(preferred.getAttribute('href'), site).href; } catch (_) {}
-    }
+    if (preferred) { try { return new URL(preferred.getAttribute('href'), site).href; } catch (_) {} }
     const detail = links.find(a => {
-      try { const u = new URL(a.getAttribute('href'), site); return u.origin === new URL(site).origin && !u.hash && !/^(index)?\.html?$/i.test(u.pathname.split('/').pop()); } catch (_) { return false; }
+      try { const u = new URL(a.getAttribute('href'), site); return u.origin === new URL(site).origin && !u.hash && !/^(index)?\\.html?$/i.test(u.pathname.split('/').pop()); } catch (_) { return false; }
     });
     if (detail) { try { return new URL(detail.getAttribute('href'), site).href; } catch (_) {} }
     return site + 'index.html' + hash;
   }
-  async function record(type, slug, title, platform) {
+  function record(type, slug, title, platform) {
     try {
       fetch(api, {
         method:'POST',
@@ -1398,22 +1397,24 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
       }).catch(() => {});
     } catch (_) {}
   }
-  async function getCardFile(card, title) {
-    const image = card.querySelector('.booster-img, .campaign-art-banner, img');
-    if (!image) return null;
-    const src = image.currentSrc || image.src || image.getAttribute('src');
+  async function imageFile(card, title) {
+    const img = card.querySelector('.booster-img, .campaign-art-banner, img');
+    if (!img) return null;
+    const src = img.currentSrc || img.src || img.getAttribute('src');
     if (!src || !/^https?:/i.test(src)) return null;
     try {
-      const response = await Promise.race([
-        fetch(src, {mode:'cors', cache:'force-cache'}),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('image-timeout')), 2500))
-      ]);
+      const response = await fetch(src, {mode:'cors', cache:'force-cache'});
       if (!response.ok) return null;
       const blob = await response.blob();
       if (!blob.type || !blob.type.startsWith('image/')) return null;
-      const ext = blob.type.includes('png') ? 'png' : blob.type.includes('webp') ? 'webp' : 'jpg';
-      return new File([blob], 'SBPF-' + title.replace(/[^a-zA-Z0-9-]/g, '-').slice(0,45) + '.' + ext, {type:blob.type});
+      const mime = blob.type === 'image/svg+xml' ? 'image/png' : blob.type;
+      if (mime === 'image/png' && blob.type === 'image/svg+xml') return null;
+      const ext = mime.includes('png') ? 'png' : mime.includes('webp') ? 'webp' : 'jpg';
+      return new File([blob], 'SBPF-' + (slugify(title) || 'card') + '.' + ext, {type:mime});
     } catch (_) { return null; }
+  }
+  function whatsapp(text) {
+    window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank', 'noopener,noreferrer');
   }
   function addButtons() {
     grids.forEach(({id, type, label, hash}) => {
@@ -1423,55 +1424,58 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
         if (card.querySelector('.sbpf-card-share')) return;
         const title = clean(card.querySelector('h3')?.textContent);
         if (!title) return;
-        const desc = escapeText(Array.from(card.querySelectorAll(':scope > p')).map(p => p.textContent).join(' '));
-        const slug = clean(card.dataset.slug || title).toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-|-$/g, '').slice(0,120);
+        const desc = safe(Array.from(card.querySelectorAll(':scope > p')).map(p => p.textContent).join(' '));
+        const slug = slugify(card.dataset.slug || title);
         const link = cardLink(card, type, hash);
         const row = document.createElement('div');
         row.className = 'sbpf-share-wrap';
+        row.style.cssText = 'width:100%;margin-top:12px';
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'sbpf-card-share';
-        button.setAttribute('aria-label', title + ' — ' + label + ' कार्ड और पूरी जानकारी शेयर करें');
-        button.innerHTML = '<span aria-hidden="true">↗</span><span>कार्ड और लिंक शेयर करें</span>';
+        button.setAttribute('aria-label', title + ' — ' + label + ' कार्ड शेयर करें');
+        button.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:44px;padding:11px 14px;border:0;border-radius:10px;background:linear-gradient(120deg,#145a38,#218653);color:#fff;font:700 15px/1.4 system-ui,sans-serif;cursor:pointer;box-shadow:0 4px 12px #145a3826';
+        button.innerHTML = '<span aria-hidden="true">↗</span><span>कार्ड शेयर करें</span>';
         const status = document.createElement('p');
         status.className = 'sbpf-share-status';
+        status.style.cssText = 'font-size:12px;line-height:1.5;margin:7px 0 0;color:#315642;overflow-wrap:anywhere';
         status.setAttribute('aria-live', 'polite');
         status.hidden = true;
         button.addEventListener('click', async () => {
-          const shareText = '🌟 ' + title + ' | स्वर्णिम भारत परिवार फाउंडेशन (SBPF)\n'
-            + (desc ? desc + '\n' : '')
-            + 'उद्देश्य: सेवा • सहयोग • स्वावलंबन • सशक्तिकरण\n'
-            + 'पूरी जानकारी और संबंधित पेज: ' + link + '\n'
-            + '#SBPF #SwarnimBharatParivar';
+          const shareText = '🌟 ' + title + ' | स्वर्णिम भारत परिवार फाउंडेशन (SBPF)\\n'
+            + (desc ? desc + '\\n' : '')
+            + 'उद्देश्य: सेवा • सहयोग • स्वावलंबन • सशक्तिकरण\\n'
+            + 'पूरी जानकारी: ' + link + '\\n#SBPF #SwarnimBharatParivar';
+          button.disabled = true;
+          button.style.opacity = '.75';
           status.hidden = false;
-          status.textContent = 'कार्ड और पूरा लिंक तैयार हो रहा है…';
+          status.textContent = 'कार्ड की तस्वीर तैयार की जा रही है…';
           try {
-            if (typeof navigator.share === 'function') {
-              let payload = {title:title + ' | SBPF', text:shareText, url:link};
-              if (typeof File === 'function' && typeof navigator.canShare === 'function') {
-                const file = await getCardFile(card, title);
-                if (file && navigator.canShare({files:[file]})) {
-                  payload = {title:title + ' | SBPF', text:shareText + '\nकार्ड की तस्वीर भी संलग्न है।', files:[file]};
-                }
-              }
-              await navigator.share(payload);
-              status.textContent = payload.files
-                ? 'कार्ड की तस्वीर, जानकारी और संबंधित वेबसाइट लिंक शेयर मेनू में भेजे गए।'
-                : 'जानकारी और पूरा संबंधित लिंक शेयर मेनू में भेजे गए। इस डिवाइस पर तस्वीर संलग्न नहीं हो सकी।';
-              record(type, slug, title, 'share_sheet');
+            const file = await imageFile(card, title);
+            if (file && typeof navigator.share === 'function' && typeof navigator.canShare === 'function' && navigator.canShare({files:[file]})) {
+              await navigator.share({title:title + ' | SBPF', text:shareText, files:[file]});
+              status.textContent = 'कार्ड की तस्वीर और जानकारी शेयर मेनू में भेज दी गई।';
+              record(type, slug, title, 'image_share');
+            } else if (typeof navigator.share === 'function') {
+              await navigator.share({title:title + ' | SBPF', text:shareText, url:link});
+              status.textContent = 'जानकारी और लिंक शेयर हुए। इस ब्राउज़र में कार्ड की तस्वीर फ़ाइल के रूप में शेयर नहीं हो सकी।';
+              record(type, slug, title, 'text_share');
             } else {
-              status.textContent = 'WhatsApp में पूरी जानकारी और लिंक खोले जा रहे हैं…';
-              window.location.href = 'https://wa.me/?text=' + encodeURIComponent(shareText);
-              record(type, slug, title, 'whatsapp');
+              whatsapp(shareText);
+              status.textContent = 'WhatsApp में कार्ड का विवरण और लिंक खुल रहा है। तस्वीर भेजने के लिए कार्ड की तस्वीर अलग से संलग्न करनी होगी।';
+              record(type, slug, title, 'whatsapp_text');
             }
-          } catch (error) {
-            if (error && error.name === 'AbortError') {
-              status.textContent = 'शेयर रद्द किया गया।';
+          } catch (err) {
+            if (err && err.name === 'AbortError') {
+              status.textContent = 'शेयर रद्द किया गया। दोबारा कोशिश कर सकते हैं।';
             } else {
-              status.textContent = 'WhatsApp में पूरी जानकारी और लिंक खोले जा रहे हैं…';
-              window.location.href = 'https://wa.me/?text=' + encodeURIComponent(shareText);
-              record(type, slug, title, 'whatsapp');
+              whatsapp(shareText);
+              status.textContent = 'WhatsApp में जानकारी और लिंक खुल रहे हैं। यदि तस्वीर अपने-आप संलग्न न हो, तो कार्ड की तस्वीर अलग से जोड़ें।';
+              record(type, slug, title, 'whatsapp_fallback');
             }
+          } finally {
+            button.disabled = false;
+            button.style.opacity = '1';
           }
         });
         row.append(button, status);
