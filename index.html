@@ -1372,50 +1372,25 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
     {id:'sbpfFocusGrid', type:'focus_area', label:'कार्य क्षेत्र', hash:'#work'},
     {id:'sbpfCampaignGrid', type:'campaign', label:'अभियान', hash:'#campaigns'}
   ];
-  const clean = value => String(value || '').replace(/\s+/g, ' ').trim();
+  const clean = value => String(value || '').replace(/\\s+/g, ' ').trim();
   const escapeText = value => clean(value).slice(0, 650);
-  function slugFor(card, type) {
-    const link = card.querySelector('a[href]');
-    if (link) {
-      try {
-        const url = new URL(link.getAttribute('href'), site);
-        if (url.searchParams.get('slug')) return url.searchParams.get('slug');
-        if (url.searchParams.get('slug') === '') return '';
-        const file = url.pathname.split('/').pop().replace(/\.html?$/i, '');
-        if (file && file !== 'index' && !file.startsWith('#')) return file.slice(0, 120);
-      } catch (_) {}
-    }
-    return clean(card.dataset.slug || card.querySelector('h3')?.textContent)
-      .toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-|-$/g, '').slice(0, 120)
-      || (type === 'campaign' ? 'sbpf-campaign' : 'sbpf-focus-area');
+  function cardLink(card, type, hash) {
+    const links = Array.from(card.querySelectorAll('a[href]'));
+    const preferred = type === 'campaign'
+      ? links.find(a => /slug=/.test(a.href))
+      : links.find(a => a.classList.contains('sbpf-work-area-link'));
+    if (preferred) { try { return new URL(preferred.getAttribute('href'), site).href; } catch (_) {} }
+    return site + 'index.html' + hash;
   }
   async function record(type, slug, title, platform) {
     try {
       await fetch(api, {
-        method: 'POST',
-        headers: {apikey:key, 'Content-Type':'application/json', Prefer:'return=minimal'},
-        body: JSON.stringify({card_type:type, card_slug:slug, card_title:title, platform}),
-        keepalive: true
+        method:'POST',
+        headers:{apikey:key, 'Content-Type':'application/json', Prefer:'return=minimal'},
+        body:JSON.stringify({card_type:type, card_slug:slug, card_title:title, platform}),
+        keepalive:true
       });
-    } catch (error) {
-      console.warn('SBPF share analytics unavailable; sharing still works.', error);
-    }
-  }
-  async function getShareFile(card, title) {
-    const image = card.querySelector('.booster-img, .campaign-art-banner, img');
-    if (!image) return null;
-    const imageUrl = image.currentSrc || image.src;
-    if (!imageUrl || !/^https?:/i.test(imageUrl)) return null;
-    try {
-      const response = await fetch(imageUrl, {mode:'cors', cache:'force-cache'});
-      if (!response.ok) return null;
-      const blob = await response.blob();
-      if (!blob.type || !blob.type.startsWith('image/')) return null;
-      const extension = blob.type.includes('png') ? 'png' : blob.type.includes('webp') ? 'webp' : 'jpg';
-      return new File([blob], 'SBPF-' + title.replace(/[^a-zA-Z0-9-]/g, '-').slice(0,50) + '.' + extension, {type:blob.type});
-    } catch (_) {
-      return null;
-    }
+    } catch (error) { console.warn('SBPF share analytics unavailable; sharing still works.', error); }
   }
   function addButtons() {
     grids.forEach(({id, type, label, hash}) => {
@@ -1426,62 +1401,45 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
         const title = clean(card.querySelector('h3')?.textContent);
         if (!title) return;
         const desc = escapeText(Array.from(card.querySelectorAll(':scope > p')).map(p => p.textContent).join(' '));
-        const slug = slugFor(card, type);
-        let link = site + 'index.html' + hash;
-        const detail = card.querySelector('a[href*="slug="]');
-        const workDetail = card.querySelector('a.sbpf-work-area-link[href]');
-        try {
-          if (type === 'campaign' && detail) link = new URL(detail.getAttribute('href'), site).href;
-          else if (type === 'focus_area' && workDetail) link = new URL(workDetail.getAttribute('href'), site).href;
-        } catch (_) {}
+        const slug = clean(card.dataset.slug || title).toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-|-$/g, '').slice(0,120);
+        const link = cardLink(card, type, hash);
         const row = document.createElement('div');
         row.className = 'sbpf-share-wrap';
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'sbpf-card-share';
-        button.setAttribute('aria-label', title + ' — ' + label + ' की कार्ड सहित जानकारी शेयर करें');
+        button.setAttribute('aria-label', title + ' — ' + label + ' की जानकारी शेयर करें');
         button.innerHTML = '<span aria-hidden="true">↗</span><span>कार्ड सहित शेयर करें</span>';
         const status = document.createElement('p');
         status.className = 'sbpf-share-status';
         status.setAttribute('aria-live', 'polite');
         status.hidden = true;
         button.addEventListener('click', async () => {
-          const shareText = '🌟 ' + title + ' | स्वर्णिम भारत परिवार फाउंडेशन (SBPF)\n'
-            + (desc ? desc + '\n' : '')
-            + 'उद्देश्य: सेवा • सहयोग • स्वावलंबन • सशक्तिकरण\nजानकारी व कार्ड: ' + link
-            + '\n#SBPF #SwarnimBharatParivar';
-          button.disabled = true;
+          const shareText = '🌟 ' + title + ' | स्वर्णिम भारत परिवार फाउंडेशन (SBPF)\\n'
+            + (desc ? desc + '\\n' : '')
+            + 'उद्देश्य: सेवा • सहयोग • स्वावलंबन • सशक्तिकरण\\nजानकारी व कार्ड: ' + link
+            + '\\n#SBPF #SwarnimBharatParivar';
           status.hidden = false;
-          status.textContent = 'शेयर विकल्प तैयार हो रहे हैं…';
+          status.textContent = 'शेयर विकल्प खोले जा रहे हैं…';
+          const nativeShare = typeof navigator.share === 'function';
           try {
-            if (typeof navigator.share === 'function') {
-              let payload = {title:title + ' | SBPF', text:shareText, url:link};
-              if (typeof File === 'function' && typeof navigator.canShare === 'function') {
-                const file = await getShareFile(card, title);
-                if (file && navigator.canShare({files:[file]})) {
-                  payload = {title:title + ' | SBPF', text:shareText, files:[file]};
-                }
-              }
-              await navigator.share(payload);
-              status.textContent = payload.files ? 'कार्ड की तस्वीर और जानकारी शेयर कर दी गई।' : 'शेयर मेनू खुला — उपलब्ध ऐप चुनकर पोस्ट पूरी करें।';
-              await record(type, slug, title, 'share_sheet');
+            if (nativeShare) {
+              await navigator.share({title:title + ' | SBPF', text:shareText, url:link});
+              status.textContent = 'शेयर मेनू खुला। WhatsApp, Facebook या अन्य ऐप चुनकर पोस्ट पूरी करें।';
+              record(type, slug, title, 'share_sheet');
             } else {
-              const whatsapp = 'https://wa.me/?text=' + encodeURIComponent(shareText);
-              window.open(whatsapp, '_blank', 'noopener,noreferrer');
-              status.textContent = 'WhatsApp में जानकारी और कार्ड का लिंक खुल गया। तस्वीर अलग से जोड़नी पड़ सकती है।';
-              await record(type, slug, title, 'whatsapp');
+              status.textContent = 'WhatsApp खुल रहा है…';
+              window.location.href = 'https://wa.me/?text=' + encodeURIComponent(shareText);
+              record(type, slug, title, 'whatsapp');
             }
           } catch (error) {
             if (error && error.name === 'AbortError') {
               status.textContent = 'शेयर रद्द किया गया।';
             } else {
-              const whatsapp = 'https://wa.me/?text=' + encodeURIComponent(shareText);
-              window.open(whatsapp, '_blank', 'noopener,noreferrer');
-              status.textContent = 'WhatsApp में जानकारी और कार्ड का लिंक खुल गया। तस्वीर अलग से जोड़नी पड़ सकती है।';
-              await record(type, slug, title, 'whatsapp');
+              status.textContent = 'WhatsApp में शेयर विकल्प खोला जा रहा है…';
+              window.location.href = 'https://wa.me/?text=' + encodeURIComponent(shareText);
+              record(type, slug, title, 'whatsapp');
             }
-          } finally {
-            button.disabled = false;
           }
         });
         row.append(button, status);
