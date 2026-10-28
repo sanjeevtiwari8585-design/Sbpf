@@ -1624,6 +1624,46 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
 </script>
 
 
+
+<style id="sbpf-work-area-count-left-logo-right">
+/* 12 कार्यक्षेत्र कार्ड: लाइव काउंटिंग बाईं ओर, GitHub में मौजूद आधिकारिक SBPF लोगो दाईं ओर */
+#sbpfFocusGrid>.campaign .booster-wrap{position:relative!important}
+#sbpfFocusGrid>.campaign .sbpf-work-area-official-logo{
+  position:absolute!important;z-index:21!important;top:8px!important;right:8px!important;
+  left:auto!important;width:clamp(34px,7.2%,66px)!important;height:auto!important;
+  aspect-ratio:1/1!important;object-fit:contain!important;display:block!important;
+  padding:3px!important;border:1.5px solid #d6b34b!important;border-radius:50%!important;
+  background:#fffdf7!important;box-shadow:0 1px 5px #0003!important;
+}
+#sbpfFocusGrid>.campaign .sbpf-member-count{left:8px!important;right:auto!important;top:8px!important}
+@media(max-width:600px){
+ #sbpfFocusGrid>.campaign .sbpf-work-area-official-logo{top:6px!important;right:6px!important;width:clamp(30px,8%,48px)!important;padding:2px!important}
+ #sbpfFocusGrid>.campaign .sbpf-member-count{left:6px!important;top:6px!important}
+}
+</style>
+<script id="sbpf-work-area-official-logo-inject">
+(function(){
+ const logoSrc="public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png";
+ function applyOfficialLogo(){
+   const grid=document.getElementById('sbpfFocusGrid');
+   if(!grid)return;
+   grid.querySelectorAll(':scope > .campaign .booster-wrap').forEach(function(wrap){
+     if(wrap.querySelector('.sbpf-work-area-official-logo'))return;
+     const img=document.createElement('img');
+     img.className='sbpf-work-area-official-logo';
+     img.src=logoSrc;
+     img.alt='स्वर्णिम भारत परिवार फाउंडेशन का आधिकारिक लोगो';
+     img.loading='lazy';
+     img.decoding='async';
+     wrap.appendChild(img);
+   });
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',applyOfficialLogo);
+ else applyOfficialLogo();
+ if('MutationObserver' in window && document.body)new MutationObserver(applyOfficialLogo).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+
 </body></html>
 
 
