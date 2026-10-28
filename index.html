@@ -947,6 +947,15 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
 }
 </style>
 
+
+<style id="sbpf-counter-and-official-logo">
+/* Each work-area banner: real Supabase member count on the left, existing official SBPF logo on the right. */
+#sbpfFocusGrid>.campaign .booster-wrap{position:relative!important;overflow:hidden!important;isolation:isolate!important}
+#sbpfFocusGrid>.campaign .sbpf-member-count{left:5.8%!important;right:auto!important;top:15.2%!important;width:17.6%!important;height:38%!important}
+#sbpfFocusGrid>.campaign .sbpf-card-official-logo{position:absolute!important;z-index:9!important;right:5.8%!important;left:auto!important;top:15.2%!important;width:17.6%!important;height:38%!important;max-width:112px!important;object-fit:contain!important;object-position:center!important;padding:2px!important;box-sizing:border-box!important;border:1.5px solid #d6b34b!important;border-radius:6px!important;background:#fffdf7!important;box-shadow:0 1px 3px rgba(25,20,14,.1)!important;display:block!important}
+@media(max-width:600px){#sbpfFocusGrid>.campaign .sbpf-member-count{left:4.5%!important;top:10%!important;width:19%!important;height:34%!important}#sbpfFocusGrid>.campaign .sbpf-card-official-logo{right:4.5%!important;top:10%!important;width:19%!important;height:34%!important}}
+@media(prefers-reduced-motion:reduce){#sbpfFocusGrid>.campaign .sbpf-card-official-logo{transition:none!important}}
+</style>
 </head>
 <body>
 <div class="sbpf-topbar">
@@ -1139,7 +1148,7 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
           grid.innerHTML = areas.map((item, index) =>
             '<article class="campaign"><div class="number">' +
             String(index + 1).padStart(2, '0') + ' • SBPF WORK AREA</div>' +
-            '<div class="booster-wrap"><img class="booster-img" loading="lazy" decoding="async" src="' + escapeSbpfHtml(focusArtFor(item.slug, item.name)) + '" alt="' + escapeSbpfHtml(item.name) + ' कार्य क्षेत्र बैनर"><div class="sbpf-member-count" data-work-area-id="' + Number(item.id) + '" aria-live="polite"><strong>—</strong><span>जुड़े सदस्य</span></div></div>' +
+            '<div class="booster-wrap"><img class="booster-img" loading="lazy" decoding="async" src="' + escapeSbpfHtml(focusArtFor(item.slug, item.name)) + '" alt="' + escapeSbpfHtml(item.name) + ' कार्य क्षेत्र बैनर"><div class="sbpf-member-count" data-work-area-id="' + Number(item.id) + '" aria-live="polite"><strong>—</strong><span>लाइव सदस्य</span></div><img class="sbpf-card-official-logo" loading="lazy" decoding="async" src="/public/assets/sbpf-logo.svg" alt="स्वर्णिम भारत परिवार फाउंडेशन का आधिकारिक लोगो"></div>' +
             '<h3>' + escapeSbpfHtml(item.name) + '</h3><p>' +
             escapeSbpfHtml(item.description || 'इस कार्यक्षेत्र की जानकारी शीघ्र उपलब्ध होगी।') +
             '</p><p><a class="btn secondary sbpf-work-area-link" href="' + escapeSbpfHtml(workAreaLinkFor(item.slug, item.name).href) + '">' +
