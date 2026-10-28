@@ -1397,21 +1397,83 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
       }).catch(() => {});
     } catch (_) {}
   }
-  async function imageFile(card, title) {
-    const img = card.querySelector('.booster-img, .campaign-art-banner, img');
-    if (!img) return null;
-    const src = img.currentSrc || img.src || img.getAttribute('src');
-    if (!src || !/^https?:/i.test(src)) return null;
-    try {
-      const response = await fetch(src, {mode:'cors', cache:'force-cache'});
-      if (!response.ok) return null;
-      const blob = await response.blob();
-      if (!blob.type || !blob.type.startsWith('image/')) return null;
-      const mime = blob.type === 'image/svg+xml' ? 'image/png' : blob.type;
-      if (mime === 'image/png' && blob.type === 'image/svg+xml') return null;
-      const ext = mime.includes('png') ? 'png' : mime.includes('webp') ? 'webp' : 'jpg';
-      return new File([blob], 'SBPF-' + (slugify(title) || 'card') + '.' + ext, {type:mime});
-    } catch (_) { return null; }
+  async function imageFile(card, title, desc, link) {
+    const source = card.querySelector('.booster-img, .campaign-art-banner, img');
+    const canvas = document.createElement('canvas');
+    canvas.width = 1080;
+    canvas.height = 1350;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+    // Branded share card: render the visual plus title, summary and exact detail link.
+    const gradient = ctx.createLinearGradient(0, 0, 1080, 1350);
+    gradient.addColorStop(0, '#781626');
+    gradient.addColorStop(1, '#145a38');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#fffdf7';
+    ctx.fillRect(36, 36, 1008, 1278);
+    ctx.fillStyle = '#781626';
+    ctx.fillRect(36, 36, 1008, 105);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 38px system-ui, sans-serif';
+    ctx.fillText('स्वर्णिम भारत परिवार फाउंडेशन', 68, 102, 940);
+    let y = 176;
+    if (source) {
+      try {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = source.currentSrc || source.src || source.getAttribute('src');
+        await new Promise((resolve, reject) => {
+          img.onload = resolve;
+          img.onerror = reject;
+        });
+        const maxW = 940, maxH = 570;
+        const scale = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight);
+        const w = img.naturalWidth * scale, h = img.naturalHeight * scale;
+        ctx.drawImage(img, (1080 - w) / 2, y, w, h);
+        y += h + 38;
+      } catch (_) {
+        ctx.fillStyle = '#f4e8d7';
+        ctx.fillRect(70, y, 940, 230);
+        ctx.fillStyle = '#781626';
+        ctx.font = 'bold 44px system-ui, sans-serif';
+        ctx.fillText('SBPF • सेवा • सहयोग', 100, y + 125);
+        y += 270;
+      }
+    }
+    ctx.fillStyle = '#781626';
+    ctx.font = 'bold 44px system-ui, sans-serif';
+    const wrap = (text, maxWidth, lineHeight, maxLines) => {
+      const words = String(text || '').split(/\s+/);
+      let line = '', lines = [];
+      for (const word of words) {
+        const test = line ? line + ' ' + word : word;
+        if (ctx.measureText(test).width > maxWidth && line) {
+          lines.push(line); line = word;
+          if (lines.length >= maxLines) break;
+        } else line = test;
+      }
+      if (line && lines.length < maxLines) lines.push(line);
+      lines.forEach((ln, i) => ctx.fillText(ln, 76, y + i * lineHeight, maxWidth));
+      y += lines.length * lineHeight;
+    };
+    wrap(title, 930, 56, 2);
+    y += 16;
+    ctx.fillStyle = '#333333';
+    ctx.font = '28px system-ui, sans-serif';
+    wrap(desc || 'सेवा • सहयोग • स्वावलंबन • सशक्तिकरण', 920, 42, 4);
+    ctx.fillStyle = '#145a38';
+    ctx.font = 'bold 25px system-ui, sans-serif';
+    const urlText = 'पूरी जानकारी: ' + link;
+    ctx.fillText(urlText, 76, Math.min(1240, Math.max(y + 35, 1180)), 920);
+    ctx.fillStyle = '#b18b32';
+    ctx.fillRect(36, 1270, 1008, 44);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 24px system-ui, sans-serif';
+    ctx.fillText('swarnimbharatclub.in  |  #SBPF', 76, 1300, 920);
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+    if (!blob) return null;
+    return new File([blob], 'SBPF-' + (slugify(title) || 'card') + '.png', {type:'image/png'});
   }
   function whatsapp(text) {
     window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank', 'noopener,noreferrer');
@@ -1449,12 +1511,12 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
           button.disabled = true;
           button.style.opacity = '.75';
           status.hidden = false;
-          status.textContent = 'कार्ड की तस्वीर तैयार की जा रही है…';
+          status.textContent = 'पूरे कार्ड की तस्वीर और जानकारी तैयार की जा रही है…';
           try {
-            const file = await imageFile(card, title);
+            const file = await imageFile(card, title, desc, link);
             if (file && typeof navigator.share === 'function' && typeof navigator.canShare === 'function' && navigator.canShare({files:[file]})) {
               await navigator.share({title:title + ' | SBPF', text:shareText, files:[file]});
-              status.textContent = 'कार्ड की तस्वीर और जानकारी शेयर मेनू में भेज दी गई।';
+              status.textContent = 'पूरा ब्रांडेड कार्ड, विवरण और संबंधित लिंक शेयर मेनू में भेज दिए गए।';
               record(type, slug, title, 'image_share');
             } else if (typeof navigator.share === 'function') {
               await navigator.share({title:title + ' | SBPF', text:shareText, url:link});
