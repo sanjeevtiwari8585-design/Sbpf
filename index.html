@@ -886,6 +886,26 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
 @media(prefers-reduced-motion:reduce){#sbpfFocusGrid>.campaign .sbpf-card-share,#sbpfCampaignGrid>.campaign .sbpf-card-share{transition:none}}
 </style>
 
+
+<style id="sbpf-work-area-remove-extra-emblem-final">
+/* Only the 12 work-area cards: hide the extra SBPF emblem and its embedded text,
+   while restoring the actual work-area banner artwork and keeping the live counter. */
+#sbpfFocusGrid>.campaign .booster-wrap .booster-official-logo,
+#sbpfFocusGrid>.campaign .booster-wrap .campaign-official-logo,
+#sbpfFocusGrid>.campaign .booster-wrap img[alt*="आधिकारिक लोगो"]{
+  display:none!important;visibility:hidden!important;
+}
+#sbpfFocusGrid>.campaign .booster-wrap{
+  display:block!important;position:relative!important;width:100%!important;
+  height:auto!important;aspect-ratio:1200/630!important;overflow:hidden!important;
+  background:#f6ead5!important;border:1px solid #ead7aa!important;
+}
+#sbpfFocusGrid>.campaign .booster-wrap>.booster-img{
+  display:block!important;visibility:visible!important;position:relative!important;
+  width:100%!important;height:100%!important;aspect-ratio:auto!important;
+  object-fit:cover!important;object-position:center!important;
+}
+</style>
 </head>
 <body>
 <div class="sbpf-topbar">
