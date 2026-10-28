@@ -1098,7 +1098,7 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
           grid.innerHTML = areas.map((item, index) =>
             '<article class="campaign"><div class="number">' +
             String(index + 1).padStart(2, '0') + ' • SBPF WORK AREA</div>' +
-            '<div class="booster-wrap"><img class="booster-img" loading="lazy" decoding="async" src="' + escapeSbpfHtml(item.image_url || focusArtFor(item.slug, item.name)) + '" alt="' + escapeSbpfHtml(item.name) + ' कार्य क्षेत्र बैनर"><div class="sbpf-member-count" data-work-area-id="' + Number(item.id) + '" aria-live="polite"><strong>—</strong><span>जुड़े सदस्य</span></div></div>' +
+            '<div class="booster-wrap"><img class="booster-img" loading="lazy" decoding="async" src="' + escapeSbpfHtml(focusArtFor(item.slug, item.name)) + '" alt="' + escapeSbpfHtml(item.name) + ' कार्य क्षेत्र बैनर"><div class="sbpf-member-count" data-work-area-id="' + Number(item.id) + '" aria-live="polite"><strong>—</strong><span>जुड़े सदस्य</span></div></div>' +
             '<h3>' + escapeSbpfHtml(item.name) + '</h3><p>' +
             escapeSbpfHtml(item.description || 'इस कार्यक्षेत्र की जानकारी शीघ्र उपलब्ध होगी।') +
             '</p><p><a class="btn secondary sbpf-work-area-link" href="' + escapeSbpfHtml(workAreaLinkFor(item.slug, item.name).href) + '">' +
