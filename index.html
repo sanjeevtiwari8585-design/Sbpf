@@ -1023,7 +1023,7 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
       [/seva|सेवा/, 'campaign-swarnim-seva']
     ];
     const found = map.find(([pattern]) => pattern.test(key + ' ' + label));
-    return 'assets/boosters/' + (found ? found[1] : 'campaign-swarnim-seva') + '.svg';
+    return 'assets/boosters/' + (found ? found[1] : 'campaign-swarnim-seva') + '.svg' + (/book|media/i.test(key + ' ' + label) ? '?v=20261029-clean-card-art' : '');
   }
   async function loadSbpfLiveStats() {
     const foot = document.getElementById('sbpfLiveFoot');
