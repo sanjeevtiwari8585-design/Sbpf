@@ -35,7 +35,7 @@ main{padding:14px}.hero{background:linear-gradient(135deg,#7d1020,#a71f31);color
 .focusAreaCard h4{margin:0;font-size:14px;color:var(--maroon)}
 .focusAreaCard p{margin:0;font-size:12px;color:var(--muted);line-height:1.5;flex:1}
 .focusAreaCard button{border:1px solid var(--line);background:var(--cream);color:var(--maroon);border-radius:9px;padding:8px 10px;font-weight:700;font-size:12px;width:100%}
-.campaignCard .campaignLink{display:block;margin-top:5px;width:100%;text-align:center;text-decoration:none;border:1px solid var(--line);background:var(--cream);color:var(--maroon);border-radius:9px;padding:8px 10px;font-weight:700;font-size:12px}
+.campaignCard .campaignLink{display:block;margin-top:5px;width:100%;text-align:center;text-decoration:none;border:1px solid var(--line);background:var(--cream);color:var(--maroon);border-radius:9px;padding:8px 10px;font-weight:700;font-size:12px;cursor:pointer}
 .areaRequestForm label{display:block;font-size:12px;font-weight:700;margin:10px 0 5px}
 .areaRequestForm input,.areaRequestForm select,.areaRequestForm textarea{width:100%;padding:10px;border:1px solid #d9d9d9;border-radius:9px}
 .areaRequestForm textarea{min-height:100px;resize:vertical}
@@ -154,7 +154,7 @@ function dismissProfileReminder(){$('profileReminder')?.classList.add('hidden')}
 function completeProfileNow(){dismissProfileReminder();openView('profile-edit')}
 function home(){$('home').classList.remove('hidden');$('view').classList.add('hidden')}
 const titles={profile:'मेरी जानकारी','profile-edit':'प्रोफ़ाइल संपादित करें',family:'परिवार रजिस्टर',kyc:'पहचान दस्तावेज़',id:'Digital Member ID Card',payment:'सदस्यता शुल्क व रसीद',certificate:'प्रमाण-पत्र',education:'शिक्षा',services:'सेवा क्षेत्र',network:'मेरा नेटवर्क',updates:'नई जानकारी','work-education':'शिक्षा','work-health':'स्वास्थ्य','work-employment':'रोजगार अवसर एवं कौशल','work-women':'महिला सशक्तिकरण','work-child':'बाल विकास','work-public':'जनसेवा','work-samvad':'शिकायत संवाद','work-civic':'नागरिक सहायता','work-environment':'पर्यावरण व समाज सेवा','work-activities':'मेरे कार्य'};
-async function openView(k){$('home').classList.add('hidden');$('view').classList.remove('hidden');$('viewTitle').textContent=titles[k];$('viewBody').innerHTML='<div class="panel">लोड हो रहा है...</div>';try{if(k==='profile')profileView();else if(k==='profile-edit')await profileEditView();else if(k==='family')await familyView();else if(k==='kyc')kycView();else if(k==='id')await idView();else if(k==='payment')await paymentView();else if(k==='certificate')await certificateView();else if(k==='education')await educationView();else if(k==='services')await servicesView();else if(k==='network')await networkView();else if(k==='updates')await updatesView();else if(k.startsWith('area-'))await dynamicWorkAreaView(k);else if(k.startsWith('work-'))workAreaView(k)}catch(e){$('viewBody').innerHTML='<div class="panel error">'+esc(e.message)+'</div>'}}
+async function openView(k){$('home').classList.add('hidden');$('view').classList.remove('hidden');$('viewTitle').textContent=titles[k]||'अभियान कार्यक्षेत्र';$('viewBody').innerHTML='<div class="area">लोड हो रहा है...</div>';try{if(k.startsWith('campaign-'))await campaignDetailView(Number(k.slice(9)));else if(k==='profile')profileView();else if(k==='profile-edit')await profileEditView();else if(k==='family')await familyView();else if(k==='kyc')kycView();else if(k==='id')await idView();else if(k==='payment')await paymentView();else if(k==='certificate')await certificateView();else if(k==='education')await educationView();else if(k==='services')await servicesView();else if(k==='network')await networkView();else if(k==='updates')await updatesView();else if(k.startsWith('area-'))await dynamicWorkAreaView(k);else if(k.startsWith('work-'))workAreaView(k)}catch(e){$('viewBody').innerHTML='<div class="area error">'+esc(e.message)+'</div>'}}
 function profileView(){$('viewBody').innerHTML='<div class="panel"><div class="notice">'+(profile.profile_completed?'प्रोफ़ाइल पूरी होने की स्थिति: Completed':'प्रोफ़ाइल अधूरी है। कृपया अपनी सही जानकारी पूरी करें।')+'</div><div class="row">'+kv('नाम',profile.full_name)+kv('Member ID',profile.member_id)+kv('मोबाइल',profile.mobile)+kv('ईमेल',profile.email)+kv('पिता/अभिभावक',profile.father_name)+kv('जन्म तिथि',profile.dob)+kv('लिंग',profile.gender)+kv('पता',profile.address)+kv('जिला',profile.district)+kv('राज्य',profile.state)+kv('पिन कोड',profile.pincode)+kv('देश',profile.country)+kv('पद',profile.designation)+kv('कार्यक्षेत्र',profile.work_area_name||profile.work_area_id)+kv('जानकारी की स्थिति',profile.profile_completed?'Completed':'Incomplete')+'</div><button class="primary" onclick="openView(\'profile-edit\')">प्रोफ़ाइल संपादित / पूरी करें</button></div>'}
 
 
@@ -466,7 +466,7 @@ async function loadCampaigns(){
   grid.innerHTML=activeCampaigns.map(campaign=>{
    const slug=typeof campaign.slug==='string'?campaign.slug:'';
    const link=slug
-    ? '<a class="campaignLink" href="campaign.html?slug='+encodeURIComponent(slug)+'" target="_blank" rel="noopener noreferrer">विस्तार से देखें →</a>'
+    ? '<button class="campaignLink" type="button" onclick="openView(\'campaign-'+Number(campaign.id)+'\')">अभियान खोलें →</button>'
     : '<span class="campaignLink" aria-disabled="true">विवरण उपलब्ध नहीं</span>';
    const posterSlug=/^swarnim-(jan-jagran|samvad|prahar|sipahi|paryavaran|vyapar|gurukulam|seva)$/.test(slug)?slug:'swarnim-seva';
    const poster='assets/boosters/campaign-'+posterSlug+'.svg';
@@ -477,6 +477,154 @@ async function loadCampaigns(){
   grid.innerHTML='';
  }
 }
+
+const campaignWorkflowIcons={'swarnim-samvad':'💬','swarnim-prahar':'📣','swarnim-sipahi':'🛡️'};
+function workflowStatusLabel(value){
+ const labels={submitted:'जमा हुआ',assigned:'जिम्मेदारी सौंपी गई',in_progress:'कार्य जारी',under_review:'समीक्षा में',resolved:'समाधान हुआ',closed:'बंद',pending:'लंबित',approved:'स्वीकृत',rejected:'अस्वीकृत',completed:'पूरा'};
+ return labels[String(value||'').toLowerCase()]||String(value||'लंबित');
+}
+async function campaignDetailView(campaignId){
+ let campaign=activeCampaigns.find(x=>Number(x.id)===Number(campaignId));
+ if(!campaign){
+  const rows=await api('/rest/v1/campaigns?id=eq.'+Number(campaignId)+'&is_active=eq.true&select=id,name,slug,description&limit=1');
+  campaign=Array.isArray(rows)?rows[0]:null;
+ }
+ if(!campaign)throw new Error('यह अभियान उपलब्ध नहीं है।');
+ $('viewTitle').textContent=campaign.name;
+ const [categoryRows,contentRows]=await Promise.all([
+  api('/rest/v1/campaign_categories?campaign_id=eq.'+Number(campaign.id)+'&is_active=eq.true&select=id,name,slug,description,sort_order&order=sort_order.asc'),
+  api('/rest/v1/campaign_content?campaign_id=eq.'+Number(campaign.id)+'&is_active=eq.true&select=id,title,summary,content,image_url,source_url,video_url,category_id,sort_order&order=sort_order.asc')
+ ]);
+ const cats=Array.isArray(categoryRows)?categoryRows:[],items=Array.isArray(contentRows)?contentRows:[];
+ let html='<section class="area"><div class="cardHead"><div class="icon">'+(campaignWorkflowIcons[campaign.slug]||'📢')+'</div><div><h3>'+esc(campaign.name)+'</h3><small>सदस्य अभियान कार्यक्षेत्र • Supabase से जुड़ा</small></div></div><p style="line-height:1.7;margin:12px 0">'+esc(campaign.description||'अभियान की जानकारी, गतिविधियाँ और सदस्य अनुरोध।')+'</p><div class="notice">कार्यप्रवाह: जानकारी देखें → अनुरोध/गतिविधि दर्ज करें → स्थिति और टीम की कार्रवाई देखें।</div></section>';
+ if(cats.length){
+  html+='<section class="area"><h3 style="color:var(--maroon);margin:0 0 10px">अभियान की श्रेणियाँ</h3><div class="items">'+cats.map(c=>'<div class="notice" style="margin:0"><b>'+esc(c.name)+'</b>'+(c.description?'<div style="font-size:12px;margin-top:4px">'+esc(c.description)+'</div>':'')+'</div>').join('')+'</div></section>';
+ }
+ if(items.length){
+  html+='<section class="area"><h3 style="color:var(--maroon);margin:0 0 10px">अभियान सामग्री ('+items.length+')</h3>';
+  html+=items.map(item=>{
+   const cat=cats.find(c=>String(c.id)===String(item.category_id));
+   const image=item.image_url?'<img src="'+esc(item.image_url)+'" alt="" loading="lazy" style="width:100%;max-height:210px;object-fit:contain;border-radius:10px;margin:4px 0 8px">':'';
+   const links=(item.source_url&&/^https?:\/\//i.test(item.source_url)?'<a href="'+esc(item.source_url)+'" target="_blank" rel="noopener noreferrer">स्रोत खोलें ↗</a>':'')+(item.video_url&&/^https?:\/\//i.test(item.video_url)?' <a href="'+esc(item.video_url)+'" target="_blank" rel="noopener noreferrer">वीडियो देखें ↗</a>':'');
+   return '<article class="notice" style="margin:9px 0;background:#fff"><small>'+esc(cat?.name||'अभियान सामग्री')+'</small><h4 style="margin:5px 0;color:var(--maroon)">'+esc(item.title)+'</h4>'+image+(item.summary?'<p><b>'+esc(item.summary)+'</b></p>':'')+'<p style="white-space:pre-wrap">'+esc(item.content||'विवरण जल्द उपलब्ध होगा।')+'</p>'+(links?'<div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:8px">'+links+'</div>':'')+'</article>';
+  }).join('')+'</section>';
+ }else{
+  html+='<section class="area"><h3 style="color:var(--maroon)">अभियान सामग्री</h3><p class="empty">अभी कोई प्रकाशित सामग्री उपलब्ध नहीं है।</p></section>';
+ }
+ if(campaign.slug==='swarnim-samvad'){
+  html+=await samvadWorkflowMarkup();
+ }else{
+  html+=await generalCampaignWorkflowMarkup(campaign);
+ }
+ $('viewBody').innerHTML=html;
+ if(campaign.slug==='swarnim-samvad'){
+  const form=$('samvadMemberForm');if(form)form.addEventListener('submit',submitSamvadMemberComplaint);
+  await loadSamvadMemberHistory();
+ }else{
+  const form=$('campaignRequestForm');if(form)form.addEventListener('submit',e=>submitCampaignRequest(e,campaign));
+  await loadCampaignRequestHistory(campaign);
+ }
+}
+async function samvadWorkflowMarkup(){
+ let regions=[];
+ try{const r=await api('/rest/v1/samvad_regions?is_active=eq.true&select=id,name,level&order=id.asc');regions=Array.isArray(r)?r:[]}catch(e){console.warn('Samvad regions unavailable',e)}
+ const regionOptions=regions.map(r=>'<option value="'+Number(r.id)+'">'+esc(r.name)+' — '+esc(r.level)+'</option>').join('');
+ return '<section class="area"><div class="cardHead"><div class="icon">📝</div><div><h3>स्वर्णिम संवाद — शिकायत दर्ज करें</h3><small>शिकायत संख्या और कार्रवाई की स्थिति इसी पैनल में देखें</small></div></div>'+
+ (regions.length?'':'<div class="notice error">क्षेत्र सूची लोड नहीं हुई। पेज रीफ्रेश करके दोबारा प्रयास करें।</div>')+
+ '<form id="samvadMemberForm" class="family-form"><fieldset><legend>शिकायत / जनसंवाद विवरण</legend><div class="form-grid">'+
+ '<div><label>नाम *</label><input name="citizen_name" required maxlength="120" value="'+esc(profile?.full_name||'')+'"></div>'+
+ '<div><label>मोबाइल नंबर</label><input name="citizen_mobile" inputmode="tel" maxlength="15" value="'+esc(profile?.mobile||'')+'"></div>'+
+ '<div><label>ईमेल</label><input name="citizen_email" type="email" maxlength="160" value="'+esc(profile?.email||'')+'"></div>'+
+ '<div><label>पिन कोड *</label><input name="pincode" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required value="'+esc(profile?.pincode||'')+'"></div>'+
+ '<div><label>क्षेत्र / जिला *</label><select name="region_id" required><option value="">क्षेत्र चुनें</option>'+regionOptions+'</select></div>'+
+ '<div><label>शिकायत श्रेणी</label><select name="category"><option>नागरिक सुविधा</option><option>सरकारी योजना</option><option>स्थानीय समस्या</option><option>शिक्षा</option><option>स्वास्थ्य</option><option>पर्यावरण</option><option>अन्य</option></select></div>'+
+ '<div><label>प्राथमिकता</label><select name="urgency"><option value="normal">सामान्य</option><option value="low">कम</option><option value="high">उच्च</option><option value="urgent">अति आवश्यक</option></select></div>'+
+ '<div><label>पता</label><input name="citizen_address" maxlength="250" value="'+esc(profile?.address||'')+'"></div>'+
+ '<div style="grid-column:1/-1"><label>विषय *</label><input name="subject" required minlength="3" maxlength="180"></div>'+
+ '<div style="grid-column:1/-1"><label>विवरण *</label><textarea name="description" required minlength="10" maxlength="3000" placeholder="समस्या, स्थान और अपेक्षित सहायता स्पष्ट लिखें"></textarea></div>'+
+ '</div><button id="samvadSubmitBtn" class="primary" type="submit">शिकायत सुरक्षित रूप से जमा करें</button><div id="samvadSubmitMsg" aria-live="polite"></div></fieldset></form>'+
+ '<div class="notice">ध्यान दें: अभी सक्रिय पिन-कोड अधिकारी मैपिंग उपलब्ध नहीं मिली। शिकायत क्षेत्र के आधार पर दर्ज होगी; अधिकारी आवंटन एडमिन व्यवस्था उपलब्ध होने पर होगा।</div></section>'+
+ '<section class="area"><h3 style="color:var(--maroon)">मेरी शिकायतें और कार्रवाई</h3><div id="samvadHistory"><div class="empty">रिकॉर्ड लोड हो रहे हैं…</div></div></section>';
+}
+async function submitSamvadMemberComplaint(event){
+ event.preventDefault();
+ const form=$('samvadMemberForm'),btn=$('samvadSubmitBtn'),msg=$('samvadSubmitMsg');
+ if(!form.reportValidity())return;
+ const val=n=>form.elements[n]?.value?.trim()||'';
+ const pin=val('pincode');
+ if(!/^[0-9]{6}$/.test(pin)){msg.innerHTML='<div class="notice error">सही 6 अंकों का पिन कोड भरें।</div>';return}
+ btn.disabled=true;btn.textContent='शिकायत जमा हो रही है…';
+ try{
+  const result=await rpc('submit_samvad_complaint',{
+   p_citizen_name:val('citizen_name'),p_citizen_mobile:val('citizen_mobile')||null,p_citizen_email:val('citizen_email')||null,
+   p_citizen_address:val('citizen_address')||null,p_subject:val('subject'),p_description:val('description'),
+   p_category:val('category')||'अन्य',p_urgency:val('urgency')||'normal',p_region_id:Number(val('region_id')),
+   p_source:'member_panel',p_pincode:pin
+  });
+  const item=Array.isArray(result)?result[0]:result;
+  msg.innerHTML='<div class="notice success"><b>शिकायत दर्ज हो गई।</b><br>शिकायत संख्या: <b>'+esc(item?.complaint_no||'दर्ज')+'</b><br>स्थिति: '+esc(item?.assigned_officer?'अधिकारी को भेजी गई':'जमा हुई; अधिकारी आवंटन लंबित')+'</div>';
+  form.reset();if(form.elements.citizen_name)form.elements.citizen_name.value=profile?.full_name||'';
+  if(form.elements.citizen_mobile)form.elements.citizen_mobile.value=profile?.mobile||'';
+  if(form.elements.citizen_email)form.elements.citizen_email.value=profile?.email||'';
+  if(form.elements.citizen_address)form.elements.citizen_address.value=profile?.address||'';
+  if(form.elements.pincode)form.elements.pincode.value=profile?.pincode||'';
+  await loadSamvadMemberHistory();
+ }catch(error){msg.innerHTML='<div class="notice error">शिकायत जमा नहीं हुई: '+esc(error.message)+'</div>'}
+ finally{btn.disabled=false;btn.textContent='शिकायत सुरक्षित रूप से जमा करें'}
+}
+async function loadSamvadMemberHistory(){
+ const box=$('samvadHistory');if(!box)return;
+ try{
+  const rows=await rpc('get_my_samvad_complaints');
+  const list=Array.isArray(rows)?rows:[];
+  if(!list.length){box.innerHTML='<div class="empty">अभी कोई शिकायत दर्ज नहीं है।</div>';return}
+  box.innerHTML=list.map(x=>'<article class="notice" style="margin:8px 0"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><b>'+esc(x.complaint_no)+' — '+esc(x.subject)+'</b><span class="badge">'+esc(workflowStatusLabel(x.status))+'</span></div><p>श्रेणी: '+esc(x.category||'—')+' • प्राथमिकता: '+esc(x.urgency||'सामान्य')+'</p><p>जिम्मेदार टीम: '+esc(x.government_officer_name||x.department_name||'आवंटन लंबित')+'</p><p>अंतिम अपडेट: '+esc(x.last_action_at?new Date(x.last_action_at).toLocaleString('hi-IN'):'अभी नहीं')+'</p>'+(x.resolution_summary?'<p><b>परिणाम:</b> '+esc(x.resolution_summary)+'</p>':'')+'<button class="back" type="button" onclick="showSamvadMemberActions('+Number(x.id)+')">कार्रवाई का इतिहास देखें</button><div id="samvadActions-'+Number(x.id)+'"></div></article>').join('');
+ }catch(error){box.innerHTML='<div class="notice error">शिकायत इतिहास नहीं खुला: '+esc(error.message)+'</div>'}
+}
+async function showSamvadMemberActions(id){
+ const box=$('samvadActions-'+Number(id));if(!box)return;box.innerHTML='<div class="empty">कार्रवाई लोड हो रही है…</div>';
+ try{const rows=await rpc('get_my_samvad_actions',{p_complaint_id:Number(id)});const list=Array.isArray(rows)?rows:[];
+  box.innerHTML=list.length?list.map(a=>'<div class="notice" style="margin:6px 0;background:#fff"><b>'+esc(a.summary||a.action_type||'कार्रवाई')+'</b><br><small>'+esc(a.action_date?new Date(a.action_date).toLocaleString('hi-IN'):'—')+' • '+esc(a.officer_name||a.department_name||'SBPF टीम')+'</small>'+(a.details?'<p>'+esc(a.details)+'</p>':'')+(a.reference_no?'<small>संदर्भ: '+esc(a.reference_no)+'</small>':'')+'</div>').join(''):'<div class="empty">अभी कार्रवाई दर्ज नहीं है।</div>';
+ }catch(error){box.innerHTML='<div class="notice error">इतिहास नहीं खुला: '+esc(error.message)+'</div>'}
+}
+async function generalCampaignWorkflowMarkup(campaign){
+ const isSipahi=campaign.slug==='swarnim-sipahi',isPrahar=campaign.slug==='swarnim-prahar';
+ const heading=isSipahi?'स्वर्णिम सिपाही — स्वयंसेवक पंजीकरण':isPrahar?'स्वर्णिम प्रहार — गतिविधि / जागरूकता रिपोर्ट':'अभियान में सहभागिता / सहायता अनुरोध';
+ const desc=isSipahi?'स्वयंसेवा में रुचि, कौशल और उपलब्धता दर्ज करें। टीम समीक्षा के बाद आगे की जिम्मेदारी दी जाएगी.':isPrahar?'जागरूकता गतिविधि, स्थानीय पहल या अभियान सहायता का विवरण जमा करें।':'इस अभियान से संबंधित अपना अनुरोध दर्ज करें।';
+ return '<section class="area"><div class="cardHead"><div class="icon">'+(isSipahi?'🛡️':isPrahar?'📣':'📝')+'</div><div><h3>'+heading+'</h3><small>आपका अनुरोध सदस्य खाते से जोड़ा जाएगा</small></div></div><p>'+desc+'</p>'+
+ '<form id="campaignRequestForm" class="family-form"><fieldset><legend>विवरण भरें</legend>'+
+ '<label>विषय *</label><input name="subject" required minlength="3" maxlength="160" placeholder="'+(isSipahi?'स्वयंसेवक के रूप में जुड़ना':isPrahar?'जागरूकता गतिविधि / रिपोर्ट':'सहभागिता अनुरोध')+'">'+
+ '<label>'+(isSipahi?'आपके कौशल और अनुभव *':'गतिविधि / अनुरोध का विवरण *')+'</label><textarea name="description" required minlength="10" maxlength="2500" placeholder="'+(isSipahi?'अपने कौशल, क्षेत्र और उपलब्ध समय के बारे में लिखें':isPrahar?'गतिविधि, स्थान, तिथि और परिणाम लिखें':'अपनी आवश्यकता स्पष्ट लिखें')+'"></textarea>'+
+ '<label>राज्य</label><input name="state" maxlength="100" value="'+esc(profile?.state||'Uttar Pradesh')+'">'+
+ '<label>जिला</label><input name="district" maxlength="100" value="'+esc(profile?.district||'')+'">'+
+ '<button id="campaignRequestBtn" class="primary" type="submit">'+(isSipahi?'स्वयंसेवक अनुरोध भेजें':isPrahar?'गतिविधि रिपोर्ट जमा करें':'अनुरोध जमा करें')+'</button><div id="campaignRequestMsg" aria-live="polite"></div></fieldset></form>'+
+ '<div class="notice">जमा करने के बाद स्थिति नीचे दिखाई देगी। टीम की समीक्षा/स्वीकृति अलग चरण है; अनुरोध जमा होने से स्वतः नियुक्ति नहीं होती।</div></section>'+
+ '<section class="area"><h3 style="color:var(--maroon)">मेरे अनुरोध और स्थिति</h3><div id="campaignRequestHistory"><div class="empty">रिकॉर्ड लोड हो रहे हैं…</div></div></section>';
+}
+async function submitCampaignRequest(event,campaign){
+ event.preventDefault();const form=$('campaignRequestForm'),btn=$('campaignRequestBtn'),msg=$('campaignRequestMsg');
+ if(!form.reportValidity())return;
+ const val=n=>form.elements[n]?.value?.trim()||'';
+ btn.disabled=true;btn.textContent='Supabase में जमा हो रहा है…';
+ try{
+  const requestType=campaign.slug==='swarnim-sipahi'?'volunteer':'member_request';
+  const id=await rpc('submit_work_area_request',{p_work_area:campaign.name,p_request_type:requestType,p_subject:val('subject'),p_description:val('description'),p_state:val('state')||null,p_district:val('district')||null});
+  msg.innerHTML='<div class="notice success"><b>अनुरोध जमा हो गया।</b><br>संदर्भ संख्या: '+esc(id||'दर्ज')+'</div>';
+  form.reset();if(form.elements.state)form.elements.state.value=profile?.state||'Uttar Pradesh';if(form.elements.district)form.elements.district.value=profile?.district||'';
+  await loadCampaignRequestHistory(campaign);
+ }catch(error){msg.innerHTML='<div class="notice error">अनुरोध जमा नहीं हुआ: '+esc(error.message)+'</div>'}
+ finally{btn.disabled=false;btn.textContent=campaign.slug==='swarnim-sipahi'?'स्वयंसेवक अनुरोध भेजें':campaign.slug==='swarnim-prahar'?'गतिविधि रिपोर्ट जमा करें':'अनुरोध जमा करें'}
+}
+async function loadCampaignRequestHistory(campaign){
+ const box=$('campaignRequestHistory');if(!box)return;
+ try{
+  const user=await api('/auth/v1/user');
+  const rows=await api('/rest/v1/work_area_requests?user_id=eq.'+encodeURIComponent(user.id)+'&work_area=eq.'+encodeURIComponent(campaign.name)+'&select=id,request_type,subject,description,status,admin_note,created_at,updated_at&order=created_at.desc&limit=30');
+  const list=Array.isArray(rows)?rows:[];
+  box.innerHTML=list.length?list.map(x=>'<article class="notice" style="margin:8px 0"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><b>#'+Number(x.id)+' — '+esc(x.subject)+'</b><span class="badge">'+esc(workflowStatusLabel(x.status))+'</span></div><small>'+esc(x.request_type)+' • '+esc(x.created_at?new Date(x.created_at).toLocaleString('hi-IN'):'—')+'</small><p style="white-space:pre-wrap">'+esc(x.description||'')+'</p>'+(x.admin_note?'<p><b>टीम की टिप्पणी:</b> '+esc(x.admin_note)+'</p>':'')+'</article>').join(''):'<div class="empty">अभी कोई अनुरोध दर्ज नहीं है।</div>';
+ }catch(error){box.innerHTML='<div class="notice error">स्थिति नहीं खुली: '+esc(error.message)+'</div>'}
+}
+
 let activeFocusAreas=[];
 async function loadFocusAreas(){
  const message=$('focusAreasMessage'),grid=$('focusAreasGrid');
