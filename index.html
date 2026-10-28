@@ -906,6 +906,47 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
   object-fit:cover!important;object-position:center!important;
 }
 </style>
+
+<style id="sbpf-uniform-card-text-format">
+/* One consistent typography system for all homepage work-area and campaign cards. */
+#sbpfFocusGrid>.campaign .number,
+#sbpfCampaignGrid>.campaign .number{
+  font-family:inherit!important;font-size:12px!important;line-height:1.4!important;
+  font-weight:800!important;letter-spacing:.5px!important;
+}
+#sbpfFocusGrid>.campaign h3,
+#sbpfCampaignGrid>.campaign h3{
+  font-family:inherit!important;font-size:20px!important;line-height:1.4!important;
+  font-weight:750!important;letter-spacing:0!important;text-transform:none!important;
+  margin:14px 0 10px!important;min-height:2.8em;overflow-wrap:anywhere;
+}
+#sbpfFocusGrid>.campaign>p,
+#sbpfCampaignGrid>.campaign>p{
+  font-family:inherit!important;font-size:15px!important;line-height:1.7!important;
+  font-weight:400!important;letter-spacing:0!important;margin:8px 0!important;
+}
+#sbpfFocusGrid>.campaign .sbpf-member-count,
+#sbpfCampaignGrid>.campaign .sbpf-member-count{
+  font-family:inherit!important;line-height:1.4!important;
+}
+#sbpfFocusGrid>.campaign .btn,
+#sbpfCampaignGrid>.campaign .btn{
+  font-family:inherit!important;font-size:14px!important;line-height:1.35!important;
+  font-weight:750!important;letter-spacing:0!important;text-transform:none!important;
+}
+@media(max-width:520px){
+  #sbpfFocusGrid>.campaign h3,
+  #sbpfCampaignGrid>.campaign h3{font-size:18px!important;line-height:1.4!important;min-height:2.8em}
+  #sbpfFocusGrid>.campaign>p,
+  #sbpfCampaignGrid>.campaign>p{font-size:14px!important;line-height:1.65!important}
+  #sbpfFocusGrid>.campaign .btn,
+  #sbpfCampaignGrid>.campaign .btn{font-size:14px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  #sbpfFocusGrid>.campaign h3,#sbpfCampaignGrid>.campaign h3{transition:none}
+}
+</style>
+
 </head>
 <body>
 <div class="sbpf-topbar">
