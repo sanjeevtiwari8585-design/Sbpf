@@ -466,7 +466,7 @@ async function loadCampaigns(){
   grid.innerHTML=activeCampaigns.map(campaign=>{
    const slug=typeof campaign.slug==='string'?campaign.slug:'';
    const link=slug
-    ? '<a class="campaignLink" href="campaign.html?slug='+encodeURIComponent(slug)+'">विस्तार से देखें →</a>'
+    ? '<a class="campaignLink" href="campaign.html?slug='+encodeURIComponent(slug)+'" target="_blank" rel="noopener noreferrer">विस्तार से देखें →</a>'
     : '<span class="campaignLink" aria-disabled="true">विवरण उपलब्ध नहीं</span>';
    const posterSlug=/^swarnim-(jan-jagran|samvad|prahar|sipahi|paryavaran|vyapar|gurukulam|seva)$/.test(slug)?slug:'swarnim-seva';
    const poster='assets/boosters/campaign-'+posterSlug+'.svg';
