@@ -5,5 +5,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Verify BVS page
-        run: test -f bvs.html && grep -q "Swarnim Vyapar" bvs.html
+      - name: Verify BVS member portal
+        run: test -f bvs.html && grep -q "Bhumi Vyapar System" bvs.html && test -f bvs-admin.html && test -f bvs-marketplace.html && test -f bhumi-vyapar.html
