@@ -1,79 +1,39 @@
 <!doctype html>
-<html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BVS | स्वर्णिम व्यापार</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BVS सदस्य पोर्टल | स्वर्णिम व्यापार</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--wine:#781626;--gold:#c59b36;--ink:#29232a;--bg:#f7f4ef}*{box-sizing:border-box}body{margin:0;font:16px/1.5 system-ui,"Noto Sans Devanagari",sans-serif;background:var(--bg);color:var(--ink)}header{background:linear-gradient(120deg,var(--wine),#9c2b38,var(--gold));color:#fff;padding:28px 18px}.wrap{max-width:1000px;margin:auto;padding:0 16px}.hero{padding:18px 0}.hero h1{margin:0;font-size:clamp(27px,5vw,42px)}.links{display:flex;gap:12px;flex-wrap:wrap}.links a{color:#fff}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:16px}.card{background:#fff;border:1px solid #eadfd3;border-radius:14px;padding:20px;margin:18px 0;box-shadow:0 4px 18px #4b2a1512}.card h2{margin-top:0;color:var(--wine)}label{display:block;font-weight:650;margin:10px 0 4px}input,textarea,select,button{width:100%;padding:12px;border:1px solid #cfc7bd;border-radius:8px;font:inherit}button{margin-top:12px;background:var(--wine);color:#fff;border:0;font-weight:700;cursor:pointer}.muted{color:#716a67;font-size:14px}.notice{padding:12px;background:#fff4d8;border-radius:9px;margin:12px 0}.msg{white-space:pre-wrap;margin:12px 0;padding:12px;border-radius:8px;background:#eee}.listing{border-top:1px solid #eee;padding:12px 0}.pill{display:inline-block;background:#f2e9d9;border-radius:20px;padding:3px 10px;font-size:13px}.hidden{display:none}@media(min-width:700px){.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}}
+:root{--wine:#781626;--gold:#c59b36;--ink:#29232a;--bg:#f7f4ef}*{box-sizing:border-box}body{margin:0;font:16px/1.55 system-ui,"Noto Sans Devanagari",sans-serif;background:var(--bg);color:var(--ink)}header{background:linear-gradient(120deg,var(--wine),#9c2b38,var(--gold));color:white;padding:24px 16px}.wrap{max-width:1050px;margin:auto;padding:18px}.hero h1{margin:0;font-size:clamp(26px,5vw,40px)}a{color:var(--wine)}.nav{display:flex;gap:15px;flex-wrap:wrap;margin-top:10px}.nav a{color:white}.card{background:white;border:1px solid #eadfd3;border-radius:15px;padding:19px;margin:16px 0;box-shadow:0 4px 18px #4b2a1510}.card h2{margin:0 0 12px;color:var(--wine)}label{display:block;font-weight:650;margin:10px 0 4px}input,textarea,select,button{width:100%;padding:11px;border:1px solid #cfc7bd;border-radius:9px;font:inherit}button{background:var(--wine);color:white;border:0;font-weight:750;cursor:pointer;margin-top:12px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:0 14px}.msg,.hint{padding:12px;border-radius:9px;background:#fff4d8;margin:12px 0}.muted{color:#716a67;font-size:13px}.listing{border-top:1px solid #eee;padding:13px 0}.pill{display:inline-block;background:#f2e9d9;border-radius:20px;padding:3px 10px;font-size:13px}.photos{display:flex;gap:8px;flex-wrap:wrap}.photos img{width:100px;height:78px;object-fit:cover;border-radius:8px}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions a{font-weight:700}.hidden{display:none}
 </style></head><body>
-<header><div class="wrap hero"><div>SWARNIM BHARAT PARIVAR FOUNDATION</div><h1>स्वर्णिम व्यापार सेवा (BVS)</h1><p>सदस्य-आधारित Business एवं Property Management Portal</p><div class="links"><a href="campaign.html?slug=swarnim-vyapar">स्वर्णिम व्यापार अभियान</a><a href="member-registration.html">SBPF Member Login</a><a href="index.html">मुख्य वेबसाइट</a></div></div></header>
-<main class="wrap">
-<div class="notice">BVS में कार्य करने के लिए पहले SBPF Member Login करें। आपका लॉगिन सत्र इसी वेबसाइट पर उपयोग होगा।</div>
-<div id="msg" class="msg" role="status">सिस्टम जाँच रहा है…</div>
-<section class="card"><h2>मेरा Business Profile</h2><form id="businessForm"><div class="formgrid">
-<div><label>व्यवसाय / फर्म का नाम *</label><input id="business_name" required maxlength="150"></div>
-<div><label>व्यवसाय का प्रकार</label><input id="business_type" placeholder="Real Estate / Builder / Agent"></div>
-<div><label>मोबाइल नंबर</label><input id="phone" inputmode="tel"></div>
-<div><label>WhatsApp नंबर</label><input id="whatsapp" inputmode="tel"></div>
-<div><label>शहर</label><input id="city"></div>
-<div><label>राज्य</label><input id="state" value="Uttar Pradesh"></div>
-</div><label>पूरा पता</label><input id="address"><label>व्यवसाय परिचय</label><textarea id="description" rows="3"></textarea><button type="submit">Business Profile जमा करें</button></form><p class="muted">प्रोफाइल पहले Pending रहेगी। Admin की जाँच और स्वीकृति के बाद ही इसे सक्रिय माना जाएगा।</p><div id="businessStatus"></div></section>
-<section class="card"><h2>Property / Real Estate Listing जोड़ें</h2><form id="propertyForm"><div class="formgrid">
-<div><label>प्रॉपर्टी का शीर्षक *</label><input id="title" required maxlength="180" placeholder="जैसे: 100 गज का आवासीय प्लॉट"></div>
-<div><label>संपत्ति का प्रकार *</label><select id="property_type"><option value="plot">प्लॉट</option><option value="house">मकान</option><option value="shop">दुकान</option><option value="commercial">कमर्शियल</option><option value="land">कृषि / अन्य भूमि</option></select></div>
-<div><label>लिस्टिंग का प्रकार</label><select id="listing_type"><option value="sale">बिक्री</option><option value="rent">किराया</option><option value="lease">लीज़</option></select></div>
-<div><label>माँगी गई कीमत (₹)</label><input id="price" type="number" min="0" step="1"></div>
-</div><label>पूरा स्थान / पता</label><input id="location" placeholder="क्षेत्र, शहर, जिला, राज्य"><label>विवरण</label><textarea id="property_description" rows="4"></textarea><button type="submit">प्रॉपर्टी Draft जमा करें</button></form><p class="muted">नई लिस्टिंग Draft के रूप में सेव होगी। सार्वजनिक रूप से दिखाने से पहले सत्यापन और Admin Approval आवश्यक है।</p></section>
-<section class="card"><h2>मेरी प्रॉपर्टी लिस्टिंग</h2><div id="properties"><p class="muted">लॉगिन के बाद आपकी लिस्टिंग यहाँ दिखेगी।</p></div></section>
-</main>
+<header><div class="wrap hero"><div>SWARNIM BHARAT PARIVAR FOUNDATION</div><h1>स्वर्णिम व्यापार — BVS</h1><p>Bhumi Vyapar System | सदस्य बिजनेस एवं प्रॉपर्टी पोर्टल</p><div class="nav"><a href="campaign.html?slug=swarnim-vyapar">स्वर्णिम व्यापार</a><a href="bvs-marketplace.html">प्रॉपर्टी देखें</a><a href="member-registration.html">SBPF सदस्य लॉगिन</a><a href="index.html">मुख्य वेबसाइट</a></div></div></header>
+<main class="wrap"><div id="msg" class="msg">SBPF सदस्य लॉगिन जाँचा जा रहा है…</div>
+<section class="card"><h2>मेरा बिजनेस प्रोफाइल</h2><form id="businessForm"><div class="grid">
+<div><label>व्यवसाय / फर्म का नाम *</label><input id="business_name" required maxlength="150"></div><div><label>व्यवसाय का प्रकार</label><select id="business_type"><option>Property Dealer</option><option>Builder / Developer</option><option>Real Estate Agency</option><option>Land Owner</option><option>Other</option></select></div>
+<div><label>मोबाइल</label><input id="phone" inputmode="tel"></div><div><label>WhatsApp</label><input id="whatsapp" inputmode="tel"></div><div><label>शहर</label><input id="city"></div><div><label>राज्य</label><input id="state" value="Uttar Pradesh"></div></div>
+<label>पूरा पता</label><input id="address"><label>व्यवसाय परिचय</label><textarea id="description" rows="3"></textarea><button type="submit">प्रोफाइल जमा / अपडेट करें</button></form><p class="muted">प्रोफाइल SBPF प्रशासन की जाँच तक Pending रहेगी। स्वीकृति के बाद ही सार्वजनिक विज्ञापन जोड़े जा सकेंगे।</p><div id="businessStatus"></div></section>
+<section class="card"><h2>नई प्रॉपर्टी लिस्टिंग</h2><form id="propertyForm"><div class="grid">
+<div><label>विज्ञापन शीर्षक *</label><input id="title" required maxlength="180" placeholder="उदाहरण: कानपुर में 100 गज प्लॉट"></div>
+<div><label>प्रॉपर्टी प्रकार *</label><select id="property_type"><option value="plot">प्लॉट</option><option value="house">मकान / फ्लैट</option><option value="shop">दुकान</option><option value="commercial">कमर्शियल</option><option value="land">कृषि / अन्य भूमि</option></select></div>
+<div><label>लेन-देन</label><select id="listing_type"><option value="sale">बिक्री</option><option value="rent">किराया</option><option value="lease">लीज़</option></select></div>
+<div><label>कीमत (₹)</label><input id="price" type="number" min="0" step="1"></div>
+<div><label>क्षेत्रफल</label><input id="area" type="number" min="0" step="0.01"></div>
+<div><label>क्षेत्रफल इकाई</label><select id="area_unit"><option value="sqft">वर्ग फुट</option><option value="sqyd">वर्ग गज</option><option value="acre">एकड़</option><option value="bigha">बीघा</option></select></div>
+<div><label>बेडरूम (यदि लागू)</label><input id="bedrooms" type="number" min="0"></div><div><label>बाथरूम (यदि लागू)</label><input id="bathrooms" type="number" min="0"></div>
+<div><label>फर्निशिंग</label><select id="furnishing"><option value="">लागू नहीं</option><option>Unfurnished</option><option>Semi-furnished</option><option>Furnished</option></select></div>
+<div><label>संपर्क व्यक्ति</label><input id="contact_name"></div><div><label>संपर्क मोबाइल</label><input id="contact_phone" inputmode="tel"></div>
+</div><label>पूरा स्थान / पता *</label><input id="location" required placeholder="मोहल्ला, शहर, जिला, राज्य"><label>विवरण</label><textarea id="property_description" rows="4"></textarea><label>प्रॉपर्टी फोटो (अधिकतम 5, JPG/PNG/WebP, 5MB प्रति फोटो)</label><input id="images" type="file" accept="image/jpeg,image/png,image/webp" multiple><button type="submit">लिस्टिंग जमा करें</button></form><p class="muted">हर विज्ञापन Draft/Pending रहेगा। SBPF की जाँच और मंजूरी के बाद ही Marketplace में दिखेगा।</p></section>
+<section class="card"><h2>मेरी प्रॉपर्टी लिस्टिंग</h2><div id="properties" class="muted">लॉगिन के बाद लिस्टिंग यहाँ दिखेगी।</div></section></main>
 <script>
-const SUPABASE_URL='https://dxowhzghrdghfzoggorx.supabase.co';
-const SUPABASE_KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
-const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const $=id=>document.getElementById(id);
-const say=(t)=>{$('msg').textContent=t};
-let currentUser=null, business=null;
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-async function init(){
- const {data:{user},error}=await sb.auth.getUser();
- if(error||!user){say('आप लॉगिन नहीं हैं। पहले SBPF Member Login करें, फिर इसी पेज पर लौटें।');return;}
- currentUser=user;
- const {data,error:e}=await sb.from('bvs_business_profiles').select('*').eq('member_id',user.id).order('created_at',{ascending:false}).limit(1);
- if(e){say('Business Profile लोड नहीं हुआ: '+e.message);return;}
- business=data?.[0]||null;
- if(business){
-  ['business_name','business_type','phone','whatsapp','city','state','address','description'].forEach(k=>{if($(k))$(k).value=business[k]||''});
-  $('businessStatus').textContent='वर्तमान स्थिति: '+business.status;
-  $('businessForm').querySelector('button').textContent='Business Profile अपडेट करें';
- }else{$('businessStatus').textContent='अभी कोई Business Profile जमा नहीं है।'}
- await loadProperties();
- say('SBPF सदस्य लॉगिन सत्यापित। BVS पोर्टल उपयोग के लिए तैयार है।');
-}
-$('businessForm').addEventListener('submit',async e=>{
- e.preventDefault();if(!currentUser)return say('पहले SBPF Member Login करें।');
- const payload={member_id:currentUser.id,business_name:$('business_name').value.trim(),business_type:$('business_type').value.trim(),phone:$('phone').value.trim(),whatsapp:$('whatsapp').value.trim(),city:$('city').value.trim(),state:$('state').value.trim(),address:$('address').value.trim(),description:$('description').value.trim()};
- let result;
- if(business) result=await sb.from('bvs_business_profiles').update(payload).eq('id',business.id).select().single();
- else result=await sb.from('bvs_business_profiles').insert(payload).select().single();
- if(result.error)return say('सेव नहीं हुआ: '+result.error.message);
- business=result.data;$('businessStatus').textContent='वर्तमान स्थिति: '+business.status;say('Business Profile सफलतापूर्वक सेव हुई। Admin Approval लंबित है।');
-});
-$('propertyForm').addEventListener('submit',async e=>{
- e.preventDefault();if(!currentUser)return say('पहले SBPF Member Login करें।');
- if(!business)return say('पहले Business Profile जमा करें।');
- if(business.status!=='approved')return say('आपकी Business Profile अभी '+business.status+' है। Property Listing के लिए Admin Approval आवश्यक है।');
- const payload={business_id:business.id,title:$('title').value.trim(),property_type:$('property_type').value,listing_type:$('listing_type').value,price:$('price').value?Number($('price').value):null,location:$('location').value.trim(),description:$('property_description').value.trim(),status:'draft'};
- const {error}=await sb.from('bvs_properties').insert(payload);
- if(error)return say('लिस्टिंग सेव नहीं हुई: '+error.message);
- $('propertyForm').reset();say('प्रॉपर्टी Draft सफलतापूर्वक सेव हुई।');await loadProperties();
-});
-async function loadProperties(){
- if(!business)return;
- const {data,error}=await sb.from('bvs_properties').select('id,title,property_type,listing_type,price,location,status,created_at').eq('business_id',business.id).order('created_at',{ascending:false});
- if(error){$('properties').textContent='लिस्टिंग लोड नहीं हुई: '+error.message;return;}
- $('properties').replaceChildren();
- if(!data?.length){$('properties').textContent='अभी कोई प्रॉपर्टी लिस्टिंग नहीं है।';return;}
- data.forEach(p=>{const div=document.createElement('div');div.className='listing';const title=document.createElement('strong');title.textContent=p.title;const meta=document.createElement('div');meta.className='muted';meta.textContent=[p.property_type,p.listing_type,p.location,p.price?'₹'+Number(p.price).toLocaleString('en-IN'):null].filter(Boolean).join(' • ');const status=document.createElement('span');status.className='pill';status.textContent='स्थिति: '+p.status;div.append(title,meta,status);$('properties').append(div);});
-}
-sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_IN'&&session?.user){currentUser=session.user;init();}if(event==='SIGNED_OUT'){currentUser=null;business=null;say('लॉगआउट हो गया। कृपया SBPF Member Login करें।')}});
-init();
+const URL='https://dxowhzghrdghfzoggorx.supabase.co',KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo',sb=supabase.createClient(URL,KEY),$=id=>document.getElementById(id);
+let user=null,business=null;
+function say(t){$('msg').textContent=t}
+function safe(v){return String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+async function init(){const r=await sb.auth.getUser();user=r.data.user;if(!user){say('पहले SBPF Member Login करें। लॉगिन के बाद इसी पेज पर लौटें।');return}
+const p=await sb.from('bvs_business_profiles').select('*').eq('member_id',user.id).order('created_at',{ascending:false}).limit(1);if(p.error){say('प्रोफाइल लोड त्रुटि: '+p.error.message);return}business=p.data&&p.data[0]||null;
+if(business){['business_name','business_type','phone','whatsapp','city','state','address','description'].forEach(k=>{if($(k))$(k).value=business[k]||''});$('businessStatus').textContent='प्रोफाइल स्थिति: '+business.status}else $('businessStatus').textContent='अभी प्रोफाइल जमा नहीं है।';await loadProperties();say('SBPF सदस्य लॉगिन सत्यापित।')}
+$('businessForm').addEventListener('submit',async e=>{e.preventDefault();if(!user)return say('पहले लॉगिन करें।');const payload={member_id:user.id,business_name:$('business_name').value.trim(),business_type:$('business_type').value,phone:$('phone').value.trim(),whatsapp:$('whatsapp').value.trim(),city:$('city').value.trim(),state:$('state').value.trim(),address:$('address').value.trim(),description:$('description').value.trim()};const r=business?await sb.from('bvs_business_profiles').update(payload).eq('id',business.id).select().single():await sb.from('bvs_business_profiles').insert(payload).select().single();if(r.error)return say('सेव नहीं हुआ: '+r.error.message);business=r.data;$('businessStatus').textContent='प्रोफाइल स्थिति: '+business.status;say('प्रोफाइल जमा हो गई। Admin verification लंबित है।')});
+$('propertyForm').addEventListener('submit',async e=>{e.preventDefault();if(!user)return say('पहले SBPF Member Login करें।');if(!business||business.status!=='approved')return say('पहले Business Profile की SBPF Admin से मंजूरी आवश्यक है।');const files=Array.from($('images').files||[]);if(files.length>5)return say('अधिकतम 5 फोटो चुनें।');for(const f of files){if(f.size>5242880)return say('हर फोटो 5MB से कम होनी चाहिए।');if(!['image/jpeg','image/png','image/webp'].includes(f.type))return say('केवल JPG, PNG या WebP फोटो स्वीकार हैं।')}
+say('फोटो अपलोड हो रही हैं…');const urls=[];for(const f of files){const ext=f.name.split('.').pop().toLowerCase(),path=user.id+'/'+crypto.randomUUID()+'.'+ext;const up=await sb.storage.from('bvs-property-images').upload(path,f,{contentType:f.type,upsert:false});if(up.error)return say('फोटो अपलोड त्रुटि: '+up.error.message);urls.push(sb.storage.from('bvs-property-images').getPublicUrl(path).data.publicUrl)}
+const payload={business_id:business.id,title:$('title').value.trim(),property_type:$('property_type').value,listing_type:$('listing_type').value,price:$('price').value?Number($('price').value):null,area:$('area').value?Number($('area').value):null,area_unit:$('area_unit').value,bedrooms:$('bedrooms').value?Number($('bedrooms').value):null,bathrooms:$('bathrooms').value?Number($('bathrooms').value):null,furnishing:$('furnishing').value||null,contact_name:$('contact_name').value.trim(),contact_phone:$('contact_phone').value.trim(),location:$('location').value.trim(),description:$('property_description').value.trim(),images:urls,status:'draft'};
+const r=await sb.from('bvs_properties').insert(payload);if(r.error)return say('लिस्टिंग सेव नहीं हुई: '+r.error.message);$('propertyForm').reset();say('लिस्टिंग और फोटो जमा हो गईं। Admin approval के बाद सार्वजनिक होगी।');await loadProperties()});
+async function loadProperties(){if(!business)return;const r=await sb.from('bvs_properties').select('id,title,property_type,listing_type,price,location,status,images,created_at').eq('business_id',business.id).order('created_at',{ascending:false});if(r.error){$('properties').textContent=r.error.message;return}if(!r.data.length){$('properties').textContent='अभी कोई विज्ञापन नहीं।';return}$('properties').innerHTML=r.data.map(p=>'<div class="listing"><b>'+safe(p.title)+'</b><div class="muted">'+safe(p.property_type)+' • '+safe(p.listing_type)+' • '+safe(p.location)+' • '+(p.price?'₹'+Number(p.price).toLocaleString('en-IN'):'कीमत पूछें')+'</div><span class="pill">स्थिति: '+safe(p.status)+'</span><div class="photos">'+(p.images||[]).map(u=>'<img src="'+safe(u)+'" alt="Property photo">').join('')+'</div></div>').join('')}
+sb.auth.onAuthStateChange((ev,s)=>{if(ev==='SIGNED_IN'&&s&&s.user){user=s.user;init()}if(ev==='SIGNED_OUT'){user=null;business=null;say('लॉगआउट हो गया।')}});init();
 </script></body></html>
