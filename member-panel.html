@@ -238,7 +238,7 @@ async function familyView(){
  const verification=await rpc('get_my_member_verification_status');
  const verificationStatus=Array.isArray(verification)?verification[0]:verification;
  if(!verificationStatus?.fully_verified){
-   $('viewBody').innerHTML='<div class="panel"><div class="notice"><b>परिवार रजिस्टर अभी लॉक है।</b><br>यह सुविधा केवल swarnimbharat.club के मौजूदा SBPF सदस्य के पूर्ण सत्यापन के बाद खुलेगी। पहले सदस्य सत्यापन पूरा करें।</div><div class="row">'+
+   $('viewBody').innerHTML='<div class="panel"><div class="notice"><b>परिवार रजिस्टर अभी लॉक है।</b><br>यह सुविधा केवल swarnimbharatclub.in के मौजूदा SBPF सदस्य के पूर्ण सत्यापन के बाद खुलेगी। पहले सदस्य सत्यापन पूरा करें।</div><div class="row">'+
    kv('ईमेल सत्यापन',verificationStatus?.email_verified?'पूरा':'लंबित')+
    kv('मोबाइल OTP',verificationStatus?.mobile_verified?'पूरा':'लंबित')+
    kv('KYC दस्तावेज़',verificationStatus?.kyc_status==='verified'?'सत्यापित':'लंबित')+
