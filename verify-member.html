@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#781626">
+<title>सदस्य ID सत्यापन | Swarnim Bharat Club</title>
+<style>
+:root{--wine:#781626;--gold:#d7b34b;--ink:#26212a;--muted:#6d6268;--line:#eadfd3}
+*{box-sizing:border-box}body{margin:0;padding:18px;background:#f7f3ee;color:var(--ink);font:16px/1.55 system-ui,"Noto Sans Devanagari",sans-serif}
+main{max-width:650px;margin:24px auto;background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 14px 40px #4c201012}
+header{padding:24px;text-align:center;color:#fff;background:linear-gradient(120deg,#711222,#9b2634 65%,#bd963b);border-bottom:5px solid var(--gold)}
+.mark{width:62px;height:62px;margin:0 auto 10px;border:2px solid var(--gold);border-radius:50%;display:grid;place-items:center;color:#ffe4a0;font-weight:900}
+h1{font-size:23px;margin:0 0 4px}header p{margin:0;color:#ffedc4;font-size:13px}
+.content{padding:22px}.status{padding:12px 14px;border-radius:11px;background:#fff4d8;color:#79540c;font-weight:800;margin-bottom:14px}
+.status.ok{background:#e7f6ed;color:#176b35}.status.bad{background:#fdebea;color:#a01828}
+.item{padding:12px 0;border-bottom:1px solid #eee}.label{font-size:12px;color:var(--muted)}.value{font-size:16px;font-weight:750;overflow-wrap:anywhere}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}.check{padding:11px;border:1px solid var(--line);border-radius:10px;font-size:13px}.yes{color:#176b35}.no{color:#a01828}
+.note{font-size:12px;color:var(--muted);background:#faf8f5;padding:12px;border-radius:10px;margin-top:18px}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:0 20px 18px}
+@media(max-width:480px){body{padding:9px}.checks{grid-template-columns:1fr}main{margin:10px auto}.content{padding:16px}}
+</style></head>
+<body><main>
+<header><div class="mark">SBC</div><h1>स्वर्णिम भारत क्लब</h1><p>SWARNIM BHARAT CLUB • SBPF MEMBER ID VERIFICATION</p></header>
+<section class="content" id="result"><div class="status">सदस्य रिकॉर्ड की जाँच हो रही है…</div></section>
+<footer>© Swarnim Bharat Parivar Foundation • Secure Member Verification</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const labels={member_id_valid:"Member ID",email_verified:"ईमेल सत्यापन",mobile_otp_verified:"मोबाइल OTP",kyc_verified:"KYC सत्यापन",payment_verified:"भुगतान",membership_active:"सदस्यता वैधता",annual_verification_valid:"वार्षिक सत्यापन"};
+async function load(){
+ const token=new URLSearchParams(location.search).get("token");
+ if(!token){$("result").innerHTML='<div class="status bad">QR Token उपलब्ध नहीं है।</div>';return}
+ try{
+  const res=await fetch("https://dxowhzghrdghfzoggorx.supabase.co/functions/v1/verify-member?format=json&token="+encodeURIComponent(token),{cache:"no-store"});
+  const data=await res.json();
+  if(!res.ok||!data.verified){$("result").innerHTML='<div class="status bad">'+esc(data.error||"सदस्य रिकॉर्ड नहीं मिला")+'</div>';return}
+  const cls=data.fully_verified?"ok":"";
+  const checkHtml=Object.entries(data.checks||{}).map(([k,v])=>'<div class="check '+(v?"yes":"no")+'">'+(v?"✓ ":"○ ")+esc(labels[k]||k)+': <b>'+(v?"सत्यापित":"लंबित")+'</b></div>').join("");
+  $("result").innerHTML='<div class="status '+cls+'">'+esc(data.status_label)+'</div><div class="item"><div class="label">MEMBER ID</div><div class="value">'+esc(data.member.member_id)+'</div></div><div class="item"><div class="label">सदस्य का नाम</div><div class="value">'+esc(data.member.full_name)+'</div></div><div class="item"><div class="label">सदस्यता प्रारंभ</div><div class="value">'+esc(data.member.membership_start_date||"रिकॉर्ड उपलब्ध नहीं")+'</div></div><div class="item"><div class="label">सदस्यता समाप्ति</div><div class="value">'+esc(data.member.membership_end_date||"निर्धारित नहीं")+'</div></div><h3>सत्यापन विवरण</h3><div class="checks">'+checkHtml+'</div><div class="note">'+esc(data.note)+'<br>जाँच समय: '+esc(data.checked_at)+'</div>';
+ }catch(e){$("result").innerHTML='<div class="status bad">सत्यापन सेवा से संपर्क नहीं हो पाया। कृपया बाद में पुनः प्रयास करें।</div>'}
+}
+load();
+</script></body></html>
