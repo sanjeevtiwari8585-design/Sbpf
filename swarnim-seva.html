@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>स्वर्णिम सेवा | SBPF</title>
+<style>
+:root{--maroon:#7d1020;--gold:#d4af37;--cream:#fffaf0;--ink:#252525;--muted:#687080;--line:#eadfd0}
+*{box-sizing:border-box}body{margin:0;background:#f7f5f2;color:var(--ink);font-family:Arial,system-ui,sans-serif;line-height:1.5}header{background:linear-gradient(120deg,#7d1020,#a71f31);color:#fff;padding:18px max(16px,calc((100% - 980px)/2));border-bottom:4px solid var(--gold)}header h1{margin:0;font-size:24px}header p{margin:4px 0 0;color:#ffe9c0}.wrap{max-width:980px;margin:auto;padding:18px}.box{background:#fff;border:1px solid var(--line);border-radius:15px;padding:16px;margin:12px 0}.notice{padding:11px;border-radius:10px;background:var(--cream);border:1px solid #ead9a1;margin:9px 0}.success{background:#effaf1;border-color:#b7dfc0;color:#176b35}.error{background:#fff0f0;border-color:#f2c2c2;color:#a01828}label{display:block;font-size:13px;font-weight:700;margin:11px 0 5px}input,select,textarea,button{font:inherit}input,select,textarea{width:100%;padding:11px;border:1px solid #d7d7d7;border-radius:9px;background:#fff}textarea{min-height:90px;resize:vertical}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.primary{width:100%;border:0;background:var(--maroon);color:#fff;border-radius:10px;padding:12px;font-weight:700;margin-top:14px;cursor:pointer}.primary:disabled{opacity:.6}.consent{display:flex;align-items:flex-start;gap:9px;font-weight:500;line-height:1.4}.consent input{width:auto;margin-top:4px}.case{border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0}.case h3{margin:5px 0;color:var(--maroon)}small,.muted{color:var(--muted)}a{color:var(--maroon)}@media(max-width:620px){.grid{grid-template-columns:1fr}.wrap{padding:10px}}
+</style></head><body>
+<header><h1>🤝 स्वर्णिम सेवा सहायता केंद्र</h1><p>हर घर तक सहयोग, हर व्यक्ति तक सम्मान</p></header>
+<main class="wrap"><div class="box"><a href="member-panel.html">← सदस्य पैनल पर वापस जाएँ</a><div id="familyInfo" class="notice">आपका परिवार रजिस्टर जाँचा जा रहा है…</div>
+<form id="caseForm" class="hidden"><h2>नया सहायता आवेदन</h2><p class="muted">आवेदन SBPF द्वारा समीक्षा के लिए जाएगा। आवेदन से सहायता की गारंटी नहीं होती; निर्णय सत्यापन, उपलब्ध संसाधनों और लागू नियमों पर निर्भर होगा।</p>
+<label>किस परिवार सदस्य के लिए?</label><select name="family_member_id" id="familyMember"><option value="">पूरे परिवार के लिए</option></select>
+<label>सहायता श्रेणी *</label><select name="category_id" id="category" required><option value="">लोड हो रही है…</option></select>
+<label>आवेदन का विषय *</label><input name="title" maxlength="180" required placeholder="संक्षेप में जरूरत लिखें">
+<label>जरूरत का पूरा विवरण *</label><textarea name="description" maxlength="3000" required placeholder="समस्या, वर्तमान स्थिति और आवश्यक सहयोग बताएं"></textarea>
+<label>किस प्रकार का सहयोग चाहिए?</label><input name="requested_support" maxlength="500" placeholder="मार्गदर्शन / संपर्क / सामग्री / अन्य">
+<div class="grid"><div><label>तात्कालिकता *</label><select name="urgency"><option value="normal">सामान्य</option><option value="high">शीघ्र</option><option value="urgent">तत्काल</option><option value="critical">अत्यंत गंभीर / आपातकाल</option></select></div><div><label>संपर्क मोबाइल</label><input name="contact_phone" id="contactPhone" maxlength="15" inputmode="tel"></div></div>
+<label>संपर्क का पसंदीदा तरीका</label><select name="preferred_contact"><option value="phone">फोन</option><option value="whatsapp">WhatsApp</option><option value="in_person">व्यक्तिगत</option><option value="email">ईमेल</option></select>
+<label class="consent"><input type="checkbox" name="consent_confirmed" required> मैं पुष्टि करता/करती हूँ कि आवेदन की जानकारी सही है और SBPF इस आवेदन पर मुझसे संपर्क कर सकता है।</label>
+<label class="consent"><input type="checkbox" name="privacy_acknowledged" required> मैं सहमत हूँ कि आवेदन की जानकारी केवल अधिकृत SBPF सेवा अधिकारियों द्वारा सहायता प्रक्रिया के लिए देखी जाए।</label>
+<button class="primary" id="submitBtn">सहायता आवेदन जमा करें</button><div id="formMsg" aria-live="polite"></div></form></div>
+<div class="box"><h2>मेरे परिवार के आवेदन</h2><div id="cases">लोड हो रहे हैं…</div></div></main>
+<script>
+const API='https://dxowhzghrdghfzoggorx.supabase.co',KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo',token=localStorage.getItem('sbpf_access_token')||'';
+const $=id=>document.getElementById(id),esc=v=>String(v??'—').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+async function api(path,opts={}){const h={apikey:KEY,Authorization:'Bearer '+token,...(opts.headers||{})};const r=await fetch(API+path,{...opts,headers:h});let j;try{j=await r.json()}catch{}if(!r.ok)throw Error(j?.message||j?.details||j?.hint||'अनुरोध पूरा नहीं हुआ');return j}
+const labels={submitted:'आवेदन जमा',under_review:'समीक्षा में',need_more_info:'अतिरिक्त जानकारी चाहिए',verified:'सत्यापित',assigned:'अधिकारी/स्वयंसेवक नियुक्त',in_progress:'कार्य जारी',referred:'संबंधित संस्था को भेजा',partially_supported:'आंशिक सहायता',resolved:'समाधान हुआ',closed:'बंद',rejected:'स्वीकृत नहीं'};
+let user,family,categories=[];
+async function init(){
+ if(!token){$('familyInfo').innerHTML='सदस्य पैनल में पहले लॉगिन करें, फिर यहाँ आएँ।';return}
+ user=await api('/auth/v1/user');
+ const fs=await api('/rest/v1/member_pariwar_register?select=id,family_code,family_name,state,district,tehsil,village_or_ward,pincode,mobile&created_by=eq.'+encodeURIComponent(user.id)+'&order=updated_at.desc&limit=1');
+ family=Array.isArray(fs)&&fs[0];
+ if(!family){$('familyInfo').innerHTML='पहले अपना परिवार रजिस्टर पूरा करें। <a href="member-panel.html">परिवार रजिस्टर खोलें</a>';return}
+ const [cs,ms,rows]=await Promise.all([
+ api('/rest/v1/seva_categories?is_active=eq.true&select=id,name,slug&order=sort_order.asc'),
+ api('/rest/v1/member_pariwar_members?family_id=eq.'+family.id+'&select=id,full_name,relation_to_head&order=id.asc'),
+ api('/rest/v1/swarnim_family_service_cases?family_id=eq.'+family.id+'&select=id,case_number,title,description,urgency,status,submitted_at,resolution_summary,category_id&order=created_at.desc&limit=50')
+ ]);
+ categories=Array.isArray(cs)?cs:[];$('category').innerHTML='<option value="">श्रेणी चुनें</option>'+categories.map(x=>'<option value="'+x.id+'">'+esc(x.name)+'</option>').join('');
+ $('familyMember').innerHTML='<option value="">पूरे परिवार के लिए</option>'+(ms||[]).map(x=>'<option value="'+x.id+'">'+esc(x.full_name)+' — '+esc(x.relation_to_head)+'</option>').join('');
+ $('contactPhone').value=family.mobile||'';
+ $('familyInfo').innerHTML='<b>परिवार:</b> '+esc(family.family_name)+' • '+esc(family.family_code||'कोड लंबित')+'<br><b>क्षेत्र:</b> '+esc(family.village_or_ward)+', '+esc(family.district)+', '+esc(family.state)+' — '+esc(family.pincode);
+ $('caseForm').classList.remove('hidden');
+ $('cases').innerHTML=(rows||[]).length?(rows||[]).map(x=>{const cat=categories.find(a=>a.id===x.category_id);return '<article class="case"><b>'+esc(x.case_number)+'</b> • <b>'+esc(labels[x.status]||x.status)+'</b><h3>'+esc(x.title)+'</h3><small>'+esc(cat?.name||'सहायता')+' • '+esc(x.urgency)+'</small><p>'+esc(x.description)+'</p>'+(x.resolution_summary?'<p><b>कार्रवाई:</b> '+esc(x.resolution_summary)+'</p>':'')+'<small>'+esc(x.submitted_at?new Date(x.submitted_at).toLocaleString('hi-IN'):'')+'</small></article>'}).join(''):'<p class="muted">अभी कोई सहायता आवेदन नहीं है।</p>';
+}
+$('caseForm').addEventListener('submit',async e=>{
+ e.preventDefault();const f=e.currentTarget;if(!f.reportValidity())return;
+ const d=new FormData(f),v=k=>String(d.get(k)||'').trim(),b=$('submitBtn');
+ const payload={family_id:family.id,family_member_id:v('family_member_id')?Number(v('family_member_id')):null,user_id:user.id,category_id:Number(v('category_id')),title:v('title'),description:v('description'),requested_support:v('requested_support')||null,urgency:v('urgency'),state:family.state||null,district:family.district||null,tehsil:family.tehsil||null,village_or_ward:family.village_or_ward||null,pincode:family.pincode||null,contact_phone:v('contact_phone')||null,preferred_contact:v('preferred_contact'),consent_confirmed:d.get('consent_confirmed')==='on',privacy_acknowledged:d.get('privacy_acknowledged')==='on'};
+ b.disabled=true;b.textContent='आवेदन सुरक्षित हो रहा है…';
+ try{const out=await api('/rest/v1/swarnim_family_service_cases',{method:'POST',headers:{'Content-Type':'application/json',Prefer:'return=representation'},body:JSON.stringify(payload)});if(!out?.[0]?.case_number)throw Error('आवेदन नंबर की पुष्टि नहीं मिली');$('formMsg').innerHTML='<div class="notice success">आवेदन जमा हो गया। केस नंबर: <b>'+esc(out[0].case_number)+'</b></div>';f.reset();await init()}catch(err){$('formMsg').innerHTML='<div class="notice error">आवेदन जमा नहीं हुआ: '+esc(err.message)+'</div>'}finally{b.disabled=false;b.textContent='सहायता आवेदन जमा करें'}
+});
+init().catch(e=>{$('familyInfo').innerHTML='<div class="error">लोड नहीं हुआ: '+esc(e.message)+'</div>'});
+</script></body></html>
