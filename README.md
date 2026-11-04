@@ -18,6 +18,8 @@ Swarnim Bharat Parivar Foundation — public site and member portal using GitHub
 - Member entry: https://sanjeevtiwari8585-design.github.io/Sbpf/member.html
 - Member panel: https://sanjeevtiwari8585-design.github.io/Sbpf/member-panel.html
 - Admin family review: https://sanjeevtiwari8585-design.github.io/Sbpf/admin-family.html
+- Swarnim Seva member helpdesk: https://sanjeevtiwari8585-design.github.io/Sbpf/swarnim-seva.html
+- Swarnim Seva admin console: https://sanjeevtiwari8585-design.github.io/Sbpf/admin-swarnim-seva.html
 - Work-area admin: https://sanjeevtiwari8585-design.github.io/Sbpf/admin-work-areas.html (focus areas, published content, member request review, and work-area branding using Supabase RLS).
 - Campaign details and public content: https://sanjeevtiwari8585-design.github.io/Sbpf/campaign.html?slug=swarnim-jan-jagran (open any campaign from the home page to see its detail page)
 - Campaign 09 — SwarnimBook: https://sanjeevtiwari8585-design.github.io/Sbpf/swarnim-book.html (social posts, media links, profiles, likes, comments, follows using existing `swarnim_book_*` tables and RLS).
