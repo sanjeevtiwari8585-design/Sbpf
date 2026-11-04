@@ -44,7 +44,7 @@ async function refresh(){
   $('memberId').textContent=s.member_id||'—';
   $('overall').className='status'+(s.fully_verified?' ok':'');
   $('overall').textContent=s.fully_verified?'✓ पूर्ण सत्यापित सदस्य':'सत्यापन अधूरा — नीचे लंबित चरण पूरे करें';
-  const entries=[['ईमेल सत्यापन',s.email_verified],['मोबाइल OTP',s.mobile_verified],['KYC दस्तावेज़',String(s.kyc_status||'').toLowerCase()==='verified'],['भुगतान पुष्टि',s.payment_verified],['सदस्यता सक्रिय',s.membership_active],['वार्षिक सत्यापन',String(s.annual_verification_status||'').toLowerCase()==='verified'&&(!s.annual_valid_until||s.annual_valid_until>=new Date().toISOString().slice(0,10))]];
+  const entries=[['ईमेल सत्यापन',s.email_verified],['मोबाइल OTP',s.mobile_verified],['KYC दस्तावेज़',String(s.kyc_status||'').toLowerCase()==='verified'],['सदस्यता सक्रिय',s.membership_active],['वार्षिक सत्यापन',String(s.annual_verification_status||'').toLowerCase()==='verified'&&(!s.annual_valid_until||s.annual_valid_until>=new Date().toISOString().slice(0,10))]];
   $('checks').innerHTML=entries.map(([label,ok])=>'<div class="item">'+label+'<br><span class="'+(ok?'yes':'no')+'">'+(ok?'✓ सत्यापित':'○ लंबित')+'</span></div>').join('');
   const user=await call('/auth/v1/user');if(user.phone)$('phone').value=user.phone;else if(! $('phone').value)$('phone').value='';
  }catch(error){$('authCard').hidden=false;$('authCard').innerHTML='<div class="status">'+String(error.message||error)+'</div><a class="link" href="/member-panel.html">दोबारा लॉगिन करें</a>'}
