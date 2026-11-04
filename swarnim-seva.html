@@ -30,7 +30,7 @@ async function init(){
  const verification=await api('/rest/v1/rpc/get_my_member_verification_status',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
  const verificationStatus=Array.isArray(verification)?verification[0]:verification;
  if(!verificationStatus?.fully_verified){
-   $('familyInfo').innerHTML='<b>स्वर्णिम सेवा अभी लॉक है।</b><br>यह सुविधा केवल swarnimbharat.club के मौजूदा SBPF सदस्य के पूर्ण सत्यापन के बाद खुलेगी। पहले सदस्य सत्यापन पूरा करें।<br><a href="member-verification.html">सदस्य सत्यापन पूरा करें</a>';
+   $('familyInfo').innerHTML='<b>स्वर्णिम सेवा अभी लॉक है।</b><br>यह सुविधा केवल swarnimbharatclub.in के मौजूदा SBPF सदस्य के पूर्ण सत्यापन के बाद खुलेगी। पहले सदस्य सत्यापन पूरा करें।<br><a href="member-verification.html">सदस्य सत्यापन पूरा करें</a>';
    $('caseForm').classList.add('hidden');
    $('cases').textContent='सत्यापन पूरा होने के बाद परिवार के सहायता आवेदन यहाँ दिखाई देंगे।';
    return;
