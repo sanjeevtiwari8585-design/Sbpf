@@ -234,6 +234,19 @@ async function familyView(){
  let family=null,members=[];
  const currentUser=await api('/auth/v1/user');
  if(!currentUser?.id)throw new Error('लॉगिन सत्र सत्यापित नहीं हुआ। कृपया दोबारा प्रवेश करें।');
+ // परिवार रजिस्टर केवल मौजूदा SBPF सदस्यता के पूर्ण सत्यापन के बाद खुलेगा।
+ const verification=await rpc('get_my_member_verification_status');
+ const verificationStatus=Array.isArray(verification)?verification[0]:verification;
+ if(!verificationStatus?.fully_verified){
+   $('viewBody').innerHTML='<div class="panel"><div class="notice"><b>परिवार रजिस्टर अभी लॉक है।</b><br>यह सुविधा केवल swarnimbharat.club के मौजूदा SBPF सदस्य के पूर्ण सत्यापन के बाद खुलेगी। पहले सदस्य सत्यापन पूरा करें।</div><div class="row">'+
+   kv('ईमेल सत्यापन',verificationStatus?.email_verified?'पूरा':'लंबित')+
+   kv('मोबाइल OTP',verificationStatus?.mobile_verified?'पूरा':'लंबित')+
+   kv('KYC दस्तावेज़',verificationStatus?.kyc_status==='verified'?'सत्यापित':'लंबित')+
+   kv('सक्रिय सदस्यता',verificationStatus?.membership_active?'सक्रिय':'लंबित')+
+   kv('वार्षिक सत्यापन',verificationStatus?.annual_verification_status==='verified'?'सत्यापित':'लंबित')+
+   '</div><a class="primary" style="display:block;text-align:center;text-decoration:none" href="member-verification.html">सदस्य सत्यापन पूरा करें</a></div>';
+   return;
+ }
  // Always scope this read to the current account. Admin access must not expose another family's record here.
  const rows=await api('/rest/v1/member_pariwar_register?select='+fields+'&created_by=eq.'+encodeURIComponent(currentUser.id)+'&order=updated_at.desc&limit=1');
  family=Array.isArray(rows)&&rows.length?rows[0]:null;
