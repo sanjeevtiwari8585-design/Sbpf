@@ -53,6 +53,12 @@ footer{background:#241d20;color:#f9f3ec;text-align:center;padding:25px 16px}foot
   <p>प्लॉट, मकान, दुकान और कमर्शियल प्रॉपर्टी के विज्ञापन देखें। SBPF सदस्य अपना सत्यापित बिजनेस प्रोफाइल बनाकर प्रॉपर्टी लिस्टिंग जमा कर सकते हैं।</p>
   <div class="stats"><a class="chip" href="bvs-marketplace.html">प्रॉपर्टी देखें</a><a class="chip" href="bvs.html">सदस्य लॉगिन / विज्ञापन पोस्ट करें</a><a class="chip" href="bvs-admin.html">Admin Panel</a></div>
  </section>
+ <section id="swarnimSevaEntry" class="hero" style="display:none;margin-top:16px;border:2px solid #d7b34b">
+  <div class="eyebrow">SWARNIM SEVA — MEMBER SUPPORT</div>
+  <h2>परिवार रजिस्टर और सहायता आवेदन</h2>
+  <p>मौजूदा SBPF सदस्य अपने परिवार का विवरण देखें, सत्यापन पूरा करें और पात्रता के अनुसार सहायता के लिए आवेदन करें। सहायता आवेदन अधिकृत टीम की समीक्षा के बाद आगे बढ़ेंगे।</p>
+  <div class="stats"><a class="chip" href="member-panel.html">परिवार रजिस्टर खोलें</a><a class="chip" href="member-verification.html">सदस्य सत्यापन</a><a class="chip" href="swarnim-seva.html">स्वर्णिम सेवा आवेदन</a></div>
+ </section>
  <div class="tools">
   <input id="search" type="search" placeholder="शीर्षक या सामग्री खोजें…" aria-label="अभियान सामग्री खोजें">
   <select id="categoryFilter" aria-label="श्रेणी चुनें"><option value="">सभी श्रेणियाँ</option></select>
@@ -135,7 +141,7 @@ async function init(){
 $('search').addEventListener('input',renderItems);
 $('categoryFilter').addEventListener('change',renderItems);
 document.getElementById('campaignLogo').src='/public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png';
-if(new URLSearchParams(location.search).get('slug')==='swarnim-vyapar') $('bvsEntry').style.display='block';
+const currentSlug=new URLSearchParams(location.search).get('slug');\nif(currentSlug==='swarnim-vyapar') $('bvsEntry').style.display='block';\nif(currentSlug==='swarnim-seva') $('swarnimSevaEntry').style.display='block';
 init();
 </script>
 </body>
