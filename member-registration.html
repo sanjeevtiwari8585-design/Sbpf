@@ -1,13 +1,13 @@
 <!doctype html>
 <html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SBPF Member Registration & Login</title>
+<title>Swarnim Bharat Club | Member Registration & Login</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f2f6fb;color:#17253a;font:16px system-ui,Arial,sans-serif}.wrap{max-width:760px;margin:24px auto;padding:16px}.brand{background:linear-gradient(135deg,#09284c,#15577b);color:#fff;border-radius:18px;padding:22px}.brand h1{margin:0 0 6px;color:#f5cf63;font-size:24px}.card{background:#fff;padding:22px;border-radius:16px;margin-top:16px;box-shadow:0 8px 24px #102b4812}.tabs{display:flex;gap:8px;margin-bottom:18px}.tabs button{flex:1}.grid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.field{margin-bottom:12px}label{display:block;font-size:14px;font-weight:650;margin-bottom:5px}input{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:9px;font:inherit}button{border:0;border-radius:9px;padding:12px 15px;background:#0c4b70;color:white;font-weight:700;font-size:15px;cursor:pointer}.secondary{background:#e7eef5;color:#17314a}.hidden{display:none}.msg{padding:12px;border-radius:10px;background:#fff3d1;margin-top:14px;white-space:pre-wrap}.ok{background:#e6f7ed}.err{background:#ffe8e8}.muted{color:#607086;font-size:13px}@media(max-width:560px){.grid{grid-template-columns:1fr}.wrap{margin:8px auto;padding:10px}.card{padding:16px}}
 </style></head><body><main class="wrap">
-<header class="brand"><h1>स्वर्णिम भारत परिवार फाउंडेशन</h1><div>SWARNIM BHARAT PARIVAR FOUNDATION</div><p>सदस्य पंजीकरण एवं लॉगिन</p></header>
+<header class="brand"><h1>स्वर्णिम भारत क्लब</h1><div>SWARNIM BHARAT CLUB • SWARNIM BHARAT PARIVAR FOUNDATION</div><p>केंद्रीय सदस्य पंजीकरण एवं सत्यापन</p></header>
 <section class="card"><div class="tabs"><button id="signupTab">नया अकाउंट बनाएँ</button><button id="loginTab" class="secondary">लॉगिन</button></div>
-<div id="signupPane"><h2>नया सदस्य अकाउंट</h2><p class="muted">ईमेल और पासवर्ड से अकाउंट बनाएँ। OTP नहीं माँगा जाएगा। यदि ईमेल पुष्टि चालू है, तो ईमेल में मिले लिंक से पुष्टि करके लॉगिन करें।</p>
+<div id="signupPane"><h2>नया सदस्य अकाउंट</h2><p class="muted">ईमेल और पासवर्ड से अकाउंट बनाएँ। Member ID जारी होने के बाद KYC, भुगतान और वार्षिक सत्यापन की स्थिति सदस्य डैशबोर्ड में देखी जा सकेगी।</p>
 <div class="grid">
 <div class="field"><label for="name">पूरा नाम *</label><input id="name" autocomplete="name" required></div>
 <div class="field"><label for="mobile">मोबाइल नंबर *</label><input id="mobile" autocomplete="tel" inputmode="tel" required></div>
@@ -41,7 +41,7 @@ async function completeMember(user,formDetails){
    message('अकाउंट लॉगिन हुआ, लेकिन सदस्य प्रोफाइल नहीं बन पाई: '+error.message,'err');return
  }
  const member=Array.isArray(data)?data[0]:data;
- message('सदस्य पंजीकरण सफल। Member ID: '+(member?.member_id||'बन गया')+'\nअब Member Dashboard में लॉगिन करें।','ok');
+ message('सदस्य पंजीकरण सफल। Member ID: '+(member?.member_id||'बन गया')+'\nअब https://swarnimbharat.club/member-panel.html पर Member ID से प्रवेश करें।','ok');
 }
 $('signupBtn').onclick=async()=>{
  const d=detailsFromForm(),email=$('email').value.trim(),pw=$('password').value,cpw=$('confirm').value;
