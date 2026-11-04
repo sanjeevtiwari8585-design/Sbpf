@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#781626">
+<title>वार्षिक सदस्य सत्यापन प्रशासन | SBPF</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--wine:#781626;--gold:#d7b34b;--ink:#26212a;--muted:#6d6268;--line:#eadfd3}*{box-sizing:border-box}
+body{margin:0;background:#f7f3ee;color:var(--ink);font:15px/1.5 system-ui,"Noto Sans Devanagari",sans-serif;padding:16px}
+main{max-width:1000px;margin:20px auto}.head,.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px}
+.head{background:linear-gradient(120deg,#711222,#9b2634 65%,#bd963b);color:#fff;border-bottom:4px solid var(--gold)}
+h1{margin:0 0 4px;font-size:23px}.head p{margin:0;color:#ffedc4}.muted{color:var(--muted);font-size:13px}
+input,select{padding:11px;border:1px solid var(--line);border-radius:8px;font:inherit;width:100%;margin:5px 0 12px}
+button{border:0;border-radius:8px;padding:10px 13px;background:var(--wine);color:white;font-weight:750;cursor:pointer;margin:3px}button:disabled{opacity:.6}
+.secondary{background:#eee8e3;color:var(--wine)}.danger{background:#a01828}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:10px;border-bottom:1px solid #eee;text-align:left;vertical-align:top}th{color:var(--wine);background:#fffaf4}
+.msg{padding:11px;border-radius:9px;background:#fff3d5;margin:10px 0;white-space:pre-wrap}.hidden{display:none!important}.actions{white-space:nowrap}
+@media(max-width:650px){body{padding:8px}.card{overflow:auto}table{min-width:720px}}
+</style></head><body><main>
+<header class="head"><h1>SBPF — वार्षिक सदस्य सत्यापन</h1><p>केवल अधिकृत प्रशासक • Admin Review Console</p></header>
+<section class="card" id="loginCard"><h2>Admin Login</h2><p class="muted">अपने अधिकृत SBPF Admin ईमेल और पासवर्ड से प्रवेश करें।</p>
+<label>ईमेल</label><input id="email" type="email" autocomplete="username">
+<label>पासवर्ड</label><input id="password" type="password" autocomplete="current-password">
+<button id="login">Admin Login</button><div id="loginMsg" class="msg hidden"></div></section>
+<section class="card hidden" id="queueCard"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><h2>सत्यापन अनुरोध</h2><button class="secondary" id="refresh">Refresh</button></div>
+<p class="muted">सदस्य द्वारा भेजे गए चालू वर्ष के अनुरोध देखें। सत्यापन से पहले संगठन के रिकॉर्ड और आवश्यक प्रमाणों की मैन्युअल जाँच करें।</p>
+<label>सूची स्थिति</label><select id="filter"><option value="pending">लंबित</option><option value="verified">सत्यापित</option><option value="rejected">अस्वीकृत</option><option value="">सभी</option></select>
+<div id="queueMsg" class="msg hidden"></div><div id="queue"></div></section>
+</main><script>
+const URL='https://dxowhzghrdghfzoggorx.supabase.co',KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
+const sb=supabase.createClient(URL,KEY);
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function msg(id,t){$(id).hidden=false;$(id).textContent=t}
+async function adminCheck(){
+ const {data,error}=await sb.rpc('is_admin');
+ if(error||data!==true)throw new Error('इस खाते को Admin अनुमति नहीं है।');
+ $('loginCard').classList.add('hidden');$('queueCard').classList.remove('hidden');await loadQueue();
+}
+async function loadQueue(){
+ $('queue').textContent='सूची लोड हो रही है…';
+ try{
+  const value=$('filter').value;
+  const {data,error}=await sb.rpc('admin_member_annual_verification_queue',{p_status:value||null});
+  if(error)throw error;
+  if(!data?.length){$('queue').innerHTML='<p class="muted">इस स्थिति में कोई अनुरोध नहीं मिला।</p>';return}
+  $('queue').innerHTML='<table><thead><tr><th>Member ID</th><th>नाम</th><th>मोबाइल</th><th>वर्ष</th><th>घोषणा</th><th>स्थिति</th><th>वैधता</th><th>कार्रवाई</th></tr></thead><tbody>'+data.map(x=>'<tr><td><b>'+esc(x.member_id)+'</b></td><td>'+esc(x.full_name)+'</td><td>'+esc(x.mobile)+'</td><td>'+esc(x.verification_year)+'</td><td>'+(x.declaration_accepted?'स्वीकार':'नहीं')+'</td><td>'+esc(x.status)+'</td><td>'+esc(x.valid_until||'—')+'</td><td class="actions">'+(x.status==='pending'?'<button data-id="'+Number(x.member_row_id)+'" data-action="verified">स्वीकृत</button><button class="danger" data-id="'+Number(x.member_row_id)+'" data-action="rejected">अस्वीकृत</button>':'—')+'</td></tr>').join('')+'</tbody></table>';
+  $('queue').querySelectorAll('button[data-id]').forEach(b=>b.addEventListener('click',()=>review(Number(b.dataset.id),b.dataset.action)));
+ }catch(e){$('queue').textContent='सूची लोड नहीं हुई: '+e.message}
+}
+async function review(id,decision){
+ const validUntil=String(new Date().getFullYear())+'-12-31';
+ if(decision==='verified'&&!confirm('क्या आपने सदस्य के रिकॉर्ड की जाँच कर ली है? वार्षिक सत्यापन स्वीकृत करें?'))return;
+ if(decision==='rejected'&&!confirm('क्या आप इस वार्षिक सत्यापन अनुरोध को अस्वीकार करना चाहते हैं?'))return;
+ try{
+  const {error}=await sb.rpc('admin_review_member_annual_verification',{p_member_row_id:id,p_decision:decision,p_valid_until:decision==='verified'?validUntil:null});
+  if(error)throw error;
+  msg('queueMsg',decision==='verified'?'वार्षिक सत्यापन स्वीकृत हो गया।':'अनुरोध अस्वीकार हो गया।');
+  await loadQueue();
+ }catch(e){msg('queueMsg','कार्रवाई नहीं हुई: '+e.message)}
+}
+$('login').onclick=async()=>{const b=$('login');b.disabled=true;try{const {error}=await sb.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});if(error)throw error;await adminCheck()}catch(e){msg('loginMsg','लॉगिन असफल: '+e.message)}finally{b.disabled=false}};
+$('refresh').onclick=loadQueue;$('filter').onchange=loadQueue;
+(async()=>{const {data}=await sb.auth.getSession();if(data.session){try{await adminCheck()}catch(e){msg('loginMsg',e.message)}}})();
+</script></body></html>
