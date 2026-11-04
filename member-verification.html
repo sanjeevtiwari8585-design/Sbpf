@@ -34,7 +34,7 @@ let access=localStorage.getItem('sbpf_access_token')||'';
 const $=id=>document.getElementById(id);
 async function call(path,options={}){const headers={apikey:KEY,Authorization:'Bearer '+access,...(options.headers||{})};const res=await fetch(URL+path,{...options,headers});let data={};try{data=await res.json()}catch{}if(!res.ok)throw new Error(data.msg||data.message||data.error_description||data.error||'अनुरोध पूरा नहीं हुआ');return data}
 function showMsg(t){$('otpMsg').hidden=false;$('otpMsg').textContent=t}
-function e164(value){const v=String(value||'').trim().replace(/[\\s()-]/g,'');if(/^\\+[1-9]\\d{7,14}$/.test(v))return v;if(/^\\d{10}$/.test(v))return '+91'+v;if(/^91\\d{10}$/.test(v))return '+'+v;throw new Error('वैध मोबाइल नंबर भरें। उदाहरण: 9876543210 या +919876543210')}
+function e164(value){const v=String(value||'').trim().replace(/[\s()-]/g,'');if(/^\+[1-9]\d{7,14}$/.test(v))return v;if(/^\d{10}$/.test(v))return '+91'+v;if(/^91\d{10}$/.test(v))return '+'+v;throw new Error('वैध मोबाइल नंबर भरें। उदाहरण: 9876543210 या +919876543210')}
 async function refresh(){
  if(!access){$('authCard').hidden=false;return}
  try{
@@ -50,6 +50,6 @@ async function refresh(){
  }catch(error){$('authCard').hidden=false;$('authCard').innerHTML='<div class="status">'+String(error.message||error)+'</div><a class="link" href="/member-panel.html">दोबारा लॉगिन करें</a>'}
 }
 $('sendOtp').onclick=async()=>{const b=$('sendOtp');try{b.disabled=true;const phone=e164($('phone').value);await call('/auth/v1/user',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone})});showMsg('OTP भेजने का अनुरोध सफल। SMS में आया OTP दर्ज करें।')}catch(e){showMsg('OTP नहीं भेजा जा सका: '+e.message+'\nSupabase Auth में Phone/SMS provider configuration जाँचें।')}finally{b.disabled=false}};
-$('verifyOtp').onclick=async()=>{const b=$('verifyOtp');try{b.disabled=true;const phone=e164($('phone').value),otp=$('otp').value.trim();if(!/^\\d{6}$/.test(otp))throw new Error('6 अंकों का OTP भरें।');const result=await call('/auth/v1/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone,token:otp,type:'phone_change'})});if(result.access_token){access=result.access_token;localStorage.setItem('sbpf_access_token',access)}if(result.refresh_token)localStorage.setItem('sbpf_refresh_token',result.refresh_token);showMsg('मोबाइल OTP सत्यापित हो गया। स्थिति अपडेट हो रही है।');await refresh()}catch(e){showMsg('OTP सत्यापित नहीं हुआ: '+e.message)}finally{b.disabled=false}};
+$('verifyOtp').onclick=async()=>{const b=$('verifyOtp');try{b.disabled=true;const phone=e164($('phone').value),otp=$('otp').value.trim();if(!/^\d{6}$/.test(otp))throw new Error('6 अंकों का OTP भरें।');const result=await call('/auth/v1/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone,token:otp,type:'phone_change'})});if(result.access_token){access=result.access_token;localStorage.setItem('sbpf_access_token',access)}if(result.refresh_token)localStorage.setItem('sbpf_refresh_token',result.refresh_token);showMsg('मोबाइल OTP सत्यापित हो गया। स्थिति अपडेट हो रही है।');await refresh()}catch(e){showMsg('OTP सत्यापित नहीं हुआ: '+e.message)}finally{b.disabled=false}};
 refresh();
 </script></body></html>
