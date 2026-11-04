@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#781626">
+<title>सदस्य सत्यापन केंद्र | Swarnim Bharat Club</title>
+<style>
+:root{--wine:#781626;--gold:#d7b34b;--ink:#25212a;--muted:#6b6268;--line:#eadfd3}*{box-sizing:border-box}
+body{margin:0;background:#f7f3ee;color:var(--ink);font:16px/1.55 system-ui,"Noto Sans Devanagari",sans-serif;padding:16px}
+main{max-width:760px;margin:20px auto}.head,.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:14px}
+.head{background:linear-gradient(120deg,#711222,#9b2634 65%,#bd963b);color:#fff;border-bottom:5px solid var(--gold)}
+h1{margin:0 0 5px;font-size:24px}.head p{margin:0;color:#ffedc4;font-size:13px}
+h2{font-size:18px;color:var(--wine);margin:0 0 12px}.muted{color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.item{border:1px solid var(--line);border-radius:11px;padding:12px;font-size:14px}.yes{color:#176b35;font-weight:800}.no{color:#a01828;font-weight:800}
+.status{padding:13px;border-radius:11px;background:#fff3d5;color:#7b570d;font-weight:800;margin-bottom:14px}.status.ok{background:#e5f6ec;color:#176b35}
+label{display:block;font-size:13px;font-weight:700;margin:12px 0 5px}input{width:100%;padding:12px;border:1px solid #d8cfc7;border-radius:9px;font:inherit}
+button,.link{display:inline-block;border:0;border-radius:9px;padding:12px 15px;background:var(--wine);color:white;font-weight:750;text-decoration:none;cursor:pointer;margin-top:12px}
+button:disabled{opacity:.6;cursor:wait}.secondary{background:#fff;color:var(--wine);border:1px solid var(--line)}.msg{margin-top:12px;padding:11px;border-radius:10px;background:#fff3d5;font-size:13px;white-space:pre-wrap}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:10px}
+@media(max-width:520px){body{padding:9px}.grid{grid-template-columns:1fr}.head,.card{padding:16px}}
+</style></head><body><main>
+<header class="head"><h1>स्वर्णिम भारत क्लब</h1><p>SWARNIM BHARAT CLUB • CENTRAL MEMBER VERIFICATION</p></header>
+<section class="card" id="authCard"><div class="status">सदस्य सत्यापन देखने के लिए पहले Member Panel में लॉगिन करें।</div><a class="link" href="/member-panel.html">Member Panel में लॉगिन करें</a></section>
+<section class="card" id="statusCard" hidden><div id="overall" class="status">सत्यापन स्थिति लोड हो रही है…</div><h2>Member ID: <span id="memberId">—</span></h2><div class="grid" id="checks"></div></section>
+<section class="card" id="phoneCard" hidden><h2>मोबाइल OTP सत्यापन</h2><p class="muted">अपने पंजीकृत मोबाइल नंबर पर OTP भेजें। भारत के 10 अंकों के नंबर में +91 अपने-आप जोड़ा जाएगा। OTP किसी के साथ साझा न करें।</p>
+<label for="phone">मोबाइल नंबर</label><input id="phone" inputmode="tel" autocomplete="tel" placeholder="9876543210">
+<button type="button" id="sendOtp">OTP भेजें</button>
+<label for="otp">SMS में प्राप्त 6 अंकों का OTP</label><input id="otp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456">
+<button type="button" id="verifyOtp">OTP सत्यापित करें</button><div id="otpMsg" class="msg" hidden></div>
+<p class="muted">OTP SMS भेजने के लिए Supabase Auth में Phone provider और SMS provider सक्रिय होना आवश्यक है।</p></section>
+<section class="card" id="actionsCard" hidden><h2>अगले आवश्यक चरण</h2><p class="muted">KYC दस्तावेज़ अपलोड, भुगतान और वार्षिक सत्यापन के लिए सदस्य डैशबोर्ड खोलें। भुगतान की पुष्टि केवल सर्वर-सत्यापित transaction से होगी।</p><a class="link" href="/member-panel.html">KYC / भुगतान / ID Card खोलें</a><a class="link secondary" href="/verify-member.html" style="margin-left:6px">सार्वजनिक QR सत्यापन</a></section>
+<footer>निजी दस्तावेज़, आधार/PAN नंबर और संपर्क विवरण सार्वजनिक सत्यापन पेज पर प्रदर्शित नहीं किए जाते।</footer>
+</main>
+<script>
+const URL='https://dxowhzghrdghfzoggorx.supabase.co',KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
+let access=localStorage.getItem('sbpf_access_token')||'';
+const $=id=>document.getElementById(id);
+async function call(path,options={}){const headers={apikey:KEY,Authorization:'Bearer '+access,...(options.headers||{})};const res=await fetch(URL+path,{...options,headers});let data={};try{data=await res.json()}catch{}if(!res.ok)throw new Error(data.msg||data.message||data.error_description||data.error||'अनुरोध पूरा नहीं हुआ');return data}
+function showMsg(t){$('otpMsg').hidden=false;$('otpMsg').textContent=t}
+function e164(value){const v=String(value||'').trim().replace(/[\\s()-]/g,'');if(/^\\+[1-9]\\d{7,14}$/.test(v))return v;if(/^\\d{10}$/.test(v))return '+91'+v;if(/^91\\d{10}$/.test(v))return '+'+v;throw new Error('वैध मोबाइल नंबर भरें। उदाहरण: 9876543210 या +919876543210')}
+async function refresh(){
+ if(!access){$('authCard').hidden=false;return}
+ try{
+  const rows=await call('/rest/v1/rpc/get_my_member_verification_status',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
+  const s=Array.isArray(rows)?rows[0]:rows;if(!s)throw new Error('सदस्य रिकॉर्ड नहीं मिला।');
+  $('authCard').hidden=true;$('statusCard').hidden=false;$('phoneCard').hidden=false;$('actionsCard').hidden=false;
+  $('memberId').textContent=s.member_id||'—';
+  $('overall').className='status'+(s.fully_verified?' ok':'');
+  $('overall').textContent=s.fully_verified?'✓ पूर्ण सत्यापित सदस्य':'सत्यापन अधूरा — नीचे लंबित चरण पूरे करें';
+  const entries=[['ईमेल सत्यापन',s.email_verified],['मोबाइल OTP',s.mobile_verified],['KYC दस्तावेज़',String(s.kyc_status||'').toLowerCase()==='verified'],['भुगतान पुष्टि',s.payment_verified],['सदस्यता सक्रिय',s.membership_active],['वार्षिक सत्यापन',String(s.annual_verification_status||'').toLowerCase()==='verified'&&(!s.annual_valid_until||s.annual_valid_until>=new Date().toISOString().slice(0,10))]];
+  $('checks').innerHTML=entries.map(([label,ok])=>'<div class="item">'+label+'<br><span class="'+(ok?'yes':'no')+'">'+(ok?'✓ सत्यापित':'○ लंबित')+'</span></div>').join('');
+  const user=await call('/auth/v1/user');if(user.phone)$('phone').value=user.phone;else if(! $('phone').value)$('phone').value='';
+ }catch(error){$('authCard').hidden=false;$('authCard').innerHTML='<div class="status">'+String(error.message||error)+'</div><a class="link" href="/member-panel.html">दोबारा लॉगिन करें</a>'}
+}
+$('sendOtp').onclick=async()=>{const b=$('sendOtp');try{b.disabled=true;const phone=e164($('phone').value);await call('/auth/v1/user',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone})});showMsg('OTP भेजने का अनुरोध सफल। SMS में आया OTP दर्ज करें।')}catch(e){showMsg('OTP नहीं भेजा जा सका: '+e.message+'\nSupabase Auth में Phone/SMS provider configuration जाँचें।')}finally{b.disabled=false}};
+$('verifyOtp').onclick=async()=>{const b=$('verifyOtp');try{b.disabled=true;const phone=e164($('phone').value),otp=$('otp').value.trim();if(!/^\\d{6}$/.test(otp))throw new Error('6 अंकों का OTP भरें।');const result=await call('/auth/v1/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone,token:otp,type:'phone_change'})});if(result.access_token){access=result.access_token;localStorage.setItem('sbpf_access_token',access)}if(result.refresh_token)localStorage.setItem('sbpf_refresh_token',result.refresh_token);showMsg('मोबाइल OTP सत्यापित हो गया। स्थिति अपडेट हो रही है।');await refresh()}catch(e){showMsg('OTP सत्यापित नहीं हुआ: '+e.message)}finally{b.disabled=false}};
+refresh();
+</script></body></html>
