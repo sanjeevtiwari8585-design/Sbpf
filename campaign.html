@@ -79,6 +79,17 @@ footer{background:#241d20;color:#f9f3ec;text-align:center;padding:25px 16px}foot
   </div>
   <p class="seva-note">नोट: आवेदन जमा होने से सहायता की गारंटी नहीं होती। सहायता सत्यापन, पात्रता, उपलब्ध संसाधनों और लागू नियमों के अनुसार तय होगी। एडमिन पैनल केवल अधिकृत SBPF अधिकारियों के लिए है।</p>
  </section>
+ <section id="swarnimBookEntry" class="hero" style="display:none;margin-top:16px;border:2px solid #d7b34b">
+  <div class="eyebrow">CAMPAIGN 09 • SWARNIM BOOK SOCIAL NETWORK</div>
+  <h2>स्वर्णिम बुक — अपना डिजिटल परिवार</h2>
+  <p>SBPF के सदस्य अपनी मौजूदा Member ID से सामाजिक नेटवर्क में प्रवेश करें। पोस्ट, फोटो/वीडियो लिंक, लाइक, कमेंट, फॉलो और सदस्य प्रोफाइल की सुविधाएँ उपलब्ध हैं। Android मोबाइल पर इसे ऐप की तरह इंस्टॉल भी किया जा सकता है।</p>
+  <div class="stats">
+   <a class="chip" href="swarnim-book-office.html">Swarnim Book Office / ऐप इंस्टॉल</a>
+   <a class="chip" href="swarnim-book.html">Swarnim Book खोलें</a>
+   <a class="chip" href="member-panel.html">SBPF Member ID लॉगिन</a>
+  </div>
+  <p class="seva-note">Member ID का वही पासवर्ड इस्तेमाल करें जो अधिकृत SBPF सदस्य खाते के लिए है। ऐप इंस्टॉल विकल्प Android Chrome में उपलब्धता के अनुसार दिखेगा।</p>
+ </section>
  <div class="tools">
   <input id="search" type="search" placeholder="शीर्षक या सामग्री खोजें…" aria-label="अभियान सामग्री खोजें">
   <select id="categoryFilter" aria-label="श्रेणी चुनें"><option value="">सभी श्रेणियाँ</option></select>
@@ -163,6 +174,7 @@ $('categoryFilter').addEventListener('change',renderItems);
 document.getElementById('campaignLogo').src='/public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png';
 const currentSlug=new URLSearchParams(location.search).get('slug');
 if(currentSlug==='swarnim-vyapar') $('bvsEntry').style.display='block';
+if(currentSlug==='swarnim-book') $('swarnimBookEntry').style.display='block';
 if(currentSlug==='swarnim-seva') { $('swarnimSevaEntry').style.display='block'; loadSevaCategories(); }
 async function loadSevaCategories(){
  try{
