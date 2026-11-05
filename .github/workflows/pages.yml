@@ -58,6 +58,22 @@ jobs:
       - name: Validate browser video renderer JavaScript
         run: node --check swarnim-ai-renderer.js
 
+      - name: Validate Swarnim Book app assets
+        run: |
+          test -s swarnim-book-office.html
+          test -s swarnim-book.html
+          test -s swarnim-book.webmanifest
+          test -s swarnim-book-sw.js
+          python - <<'PY'
+          import json, pathlib
+          manifest=json.loads(pathlib.Path('swarnim-book.webmanifest').read_text(encoding='utf-8'))
+          assert manifest.get('name') == 'Swarnim Book - SBPF'
+          assert manifest.get('display') == 'standalone'
+          assert pathlib.Path('swarnim-book-office.html').is_file()
+          assert pathlib.Path('public/assets/sbpf-logo.svg').is_file()
+          print('Swarnim Book PWA assets and SBPF logo verified.')
+          PY
+
       - name: Smoke-test site structure and local links
         run: |
           python - <<'PY'
