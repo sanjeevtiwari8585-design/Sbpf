@@ -74,6 +74,16 @@ jobs:
           print('Swarnim Book PWA assets and SBPF logo verified.')
           PY
 
+      - name: Verify SwarnimBook social features
+        run: |
+          grep -q "get_my_member_verification_status" swarnim-book.html
+          grep -q "sbpf_social_stories" swarnim-book.html
+          grep -q "sbpf_social_start_direct_thread" swarnim-book.html
+          grep -q "sbpf_social_create_group_thread" swarnim-book.html
+          grep -q "sbpf_social_notifications" swarnim-book.html
+          test -s supabase/migrations/20261105120000_sbpf_social_direct_threads.sql
+          grep -q "sbpf_user_fully_verified" supabase/migrations/20261105120000_sbpf_social_direct_threads.sql
+
       - name: Smoke-test site structure and local links
         run: |
           python - <<'PY'
