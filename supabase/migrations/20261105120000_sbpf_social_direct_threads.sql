@@ -35,7 +35,8 @@ begin
     and lower(coalesce(v_annual_status,''))='verified'
     and (v_annual_until is null or v_annual_until>=v_today);
 end;
-$$;
+$;
+revoke all on function private.sbpf_user_fully_verified(uuid) from public, anon, authenticated;
 
 create or replace function public.sbpf_social_list_active_members()
 returns table(user_id uuid, display_name text, username text)
@@ -101,7 +102,7 @@ begin
   select array_agg(distinct x) into v_members from unnest(coalesce(p_member_ids,'{}'::uuid[])) as x where x is not null and x<>v_user_id;
   if coalesce(cardinality(v_members),0)<1 or cardinality(v_members)>24 then raise exception 'समूह में अपने अलावा 1 से 24 सत्यापित सदस्य चुनें'; end if;
   if exists(select 1 from unnest(v_members) x where not private.sbpf_user_fully_verified(x)) then raise exception 'समूह में केवल पूरी तरह सत्यापित SBPF सदस्य जोड़े जा सकते हैं'; end if;
-  if exists(select 1 from public.sbpf_social_blocks b where (b.blocker_id=v_user_id and b.blocked_id=any(v_members)) or (b.blocked_id=v_user_id and b.blocker_id=any(v_members))) then raise exception 'ब्लॉक किए गए सदस्य को समूह में नहीं जोड़ा जा सकता'; end if;
+  if exists(select 1 from public.sbpf_social_blocks b where (b.blocker_id=v_user_id and b.blocked_id=any(v_members)) or (b.blocked_id=v_user_id and b.blocker_id=any(v_members)) or (b.blocker_id=any(v_members) and b.blocked_id=any(v_members))) then raise exception 'ब्लॉक किए गए सदस्य को समूह में नहीं जोड़ा जा सकता'; end if;
   insert into public.sbpf_social_message_threads(thread_type,title,created_by) values('group',v_title,v_user_id) returning id into v_thread_id;
   insert into public.sbpf_social_message_members(thread_id,user_id) select v_thread_id,member_id from (select v_user_id as member_id union select unnest(v_members)) q;
   return v_thread_id;
