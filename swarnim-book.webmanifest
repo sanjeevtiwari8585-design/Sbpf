@@ -1,0 +1,20 @@
+{
+  "name": "Swarnim Book - SBPF",
+  "short_name": "Swarnim Book",
+  "description": "SBPF का अपना सामाजिक नेटवर्क",
+  "lang": "hi",
+  "start_url": "./swarnim-book.html?source=installed-app",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#faf8f5",
+  "theme_color": "#781626",
+  "icons": [
+    {
+      "src": "/public/assets/sbpf-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
