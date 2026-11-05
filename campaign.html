@@ -28,6 +28,8 @@ input,select{width:100%;padding:11px 12px;border:1px solid #ddd2c4;border-radius
 .article h3{color:var(--maroon);margin:0 0 8px;font-size:18px}.article p{margin:8px 0;color:#514c4e;white-space:pre-wrap;overflow-wrap:anywhere}
 .article .meta{font-size:12px;color:var(--muted);margin-bottom:6px}.article .links{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}.article .links a{font-size:13px;font-weight:750;text-decoration:none}.article .links a:hover{text-decoration:underline}
 .empty,.notice{padding:18px;border:1px solid var(--line);border-radius:12px;background:white;color:var(--muted)}
+.seva-flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:18px}.seva-flow>div{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;min-width:0}.seva-flow b{display:block;color:var(--maroon);margin-bottom:5px}.seva-flow span{display:block;color:#514c4e;font-size:13px}.seva-categories{margin-top:17px;padding-top:13px;border-top:1px solid var(--line)}.seva-categories>.stats{margin-top:8px}.seva-note{font-size:12px!important;margin-top:13px!important;color:var(--muted)!important}
+@media(max-width:720px){.seva-flow{grid-template-columns:repeat(2,minmax(0,1fr))}}
 footer{background:#241d20;color:#f9f3ec;text-align:center;padding:25px 16px}footer p{color:#d6c9c7;font-size:13px;margin:4px}
 @media(max-width:720px){header{padding:16px 14px}.logo{width:55px;height:55px}.wrap{padding:22px 12px 40px}.hero{padding:21px}.catalog{grid-template-columns:1fr}.tools{grid-template-columns:1fr}}
 </style>
@@ -54,10 +56,26 @@ footer{background:#241d20;color:#f9f3ec;text-align:center;padding:25px 16px}foot
   <div class="stats"><a class="chip" href="bvs-marketplace.html">प्रॉपर्टी देखें</a><a class="chip" href="bvs.html">सदस्य लॉगिन / विज्ञापन पोस्ट करें</a><a class="chip" href="bvs-admin.html">Admin Panel</a></div>
  </section>
  <section id="swarnimSevaEntry" class="hero" style="display:none;margin-top:16px;border:2px solid #d7b34b">
-  <div class="eyebrow">SWARNIM SEVA — MEMBER SUPPORT</div>
-  <h2>परिवार रजिस्टर और सहायता आवेदन</h2>
-  <p>मौजूदा SBPF सदस्य अपने परिवार का विवरण देखें, सत्यापन पूरा करें और पात्रता के अनुसार सहायता के लिए आवेदन करें। सहायता आवेदन अधिकृत टीम की समीक्षा के बाद आगे बढ़ेंगे।</p>
-  <div class="stats"><a class="chip" href="member-panel.html">परिवार रजिस्टर खोलें</a><a class="chip" href="member-verification.html">सदस्य सत्यापन</a><a class="chip" href="swarnim-seva.html">स्वर्णिम सेवा आवेदन</a></div>
+  <div class="eyebrow">SWARNIM SEVA — COMPLETE SERVICE WORKFLOW</div>
+  <h2>स्वर्णिम सेवा सहायता केंद्र</h2>
+  <p>SBPF के मौजूदा सदस्य खाते और सत्यापन के माध्यम से परिवार रजिस्टर, सहायता आवेदन, आवेदन की स्थिति, अधिकृत समीक्षा और स्वयंसेवक आवंटन एक ही सेवा प्रक्रिया में उपलब्ध हैं।</p>
+  <div class="stats">
+   <a class="chip" href="member-panel.html">1. सदस्य लॉगिन / परिवार रजिस्टर</a>
+   <a class="chip" href="member-verification.html">2. सदस्य सत्यापन</a>
+   <a class="chip" href="swarnim-seva.html">3. सहायता आवेदन / स्थिति देखें</a>
+   <a class="chip" href="swarnim-seva-admin.html">4. अधिकृत सेवा एडमिन</a>
+  </div>
+  <div class="seva-flow">
+   <div><b>आवेदन</b><span>सदस्य सत्यापन और परिवार रजिस्टर के बाद सहायता श्रेणी, जरूरत, प्राथमिकता और संपर्क विवरण जमा करें।</span></div>
+   <div><b>समीक्षा</b><span>अधिकृत SBPF टीम आवेदन की जाँच करे और जरूरत पड़ने पर अतिरिक्त जानकारी माँगे।</span></div>
+   <div><b>टीम आवंटन</b><span>अधिकृत एडमिन उपलब्ध स्वयंसेवक/अधिकारी नियुक्त करे और कार्रवाई अपडेट करे।</span></div>
+   <div><b>ट्रैकिंग</b><span>सदस्य केस नंबर, वर्तमान स्थिति और परिवार को दिखने वाली कार्रवाई की जानकारी देखें।</span></div>
+  </div>
+  <div class="seva-categories">
+   <b>सक्रिय सहायता श्रेणियाँ</b>
+   <div id="sevaCategoryList" class="stats"><span class="chip">श्रेणियाँ लोड हो रही हैं…</span></div>
+  </div>
+  <p class="seva-note">नोट: आवेदन जमा होने से सहायता की गारंटी नहीं होती। सहायता सत्यापन, पात्रता, उपलब्ध संसाधनों और लागू नियमों के अनुसार तय होगी। एडमिन पैनल केवल अधिकृत SBPF अधिकारियों के लिए है।</p>
  </section>
  <div class="tools">
   <input id="search" type="search" placeholder="शीर्षक या सामग्री खोजें…" aria-label="अभियान सामग्री खोजें">
@@ -141,7 +159,16 @@ async function init(){
 $('search').addEventListener('input',renderItems);
 $('categoryFilter').addEventListener('change',renderItems);
 document.getElementById('campaignLogo').src='/public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png';
-const currentSlug=new URLSearchParams(location.search).get('slug');\nif(currentSlug==='swarnim-vyapar') $('bvsEntry').style.display='block';\nif(currentSlug==='swarnim-seva') $('swarnimSevaEntry').style.display='block';
+const currentSlug=new URLSearchParams(location.search).get('slug');
+if(currentSlug==='swarnim-vyapar') $('bvsEntry').style.display='block';
+if(currentSlug==='swarnim-seva') { $('swarnimSevaEntry').style.display='block'; loadSevaCategories(); }
+async function loadSevaCategories(){
+ try{
+  const rows=await getRows('/rest/v1/seva_categories?is_active=eq.true&select=name,description&order=sort_order.asc');
+  const list=Array.isArray(rows)?rows:[];
+  $('sevaCategoryList').innerHTML=list.length?list.map(x=>'<span class="chip" title="'+esc(x.description||'')+'">'+esc(x.name)+'</span>').join(''):'<span class="chip">अभी श्रेणियाँ उपलब्ध नहीं हैं</span>';
+ }catch(error){$('sevaCategoryList').innerHTML='<span class="chip">श्रेणियाँ अभी लोड नहीं हो सकीं</span>';}
+}
 init();
 </script>
 </body>
