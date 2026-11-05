@@ -81,3 +81,31 @@ end;
 $$;
 revoke all on function public.sbpf_social_start_direct_thread(uuid) from public, anon;
 grant execute on function public.sbpf_social_start_direct_thread(uuid) to authenticated;
+
+-- Verified-member group chat creation (1-24 additional members).
+create or replace function public.sbpf_social_create_group_thread(p_title text, p_member_ids uuid[])
+returns bigint
+language plpgsql security definer
+set search_path = public, private, pg_temp
+as $$
+declare
+  v_user_id uuid := auth.uid();
+  v_thread_id bigint;
+  v_title text := btrim(coalesce(p_title,''));
+  v_members uuid[];
+begin
+  if v_user_id is null or not private.sbpf_user_fully_verified(v_user_id) then
+    raise exception 'समूह बनाने के लिए पूरा सत्यापित SBPF सदस्य होना आवश्यक है';
+  end if;
+  if v_title='' or length(v_title)>80 then raise exception 'समूह का नाम 1 से 80 अक्षरों में लिखें'; end if;
+  select array_agg(distinct x) into v_members from unnest(coalesce(p_member_ids,'{}'::uuid[])) as x where x is not null and x<>v_user_id;
+  if coalesce(cardinality(v_members),0)<1 or cardinality(v_members)>24 then raise exception 'समूह में अपने अलावा 1 से 24 सत्यापित सदस्य चुनें'; end if;
+  if exists(select 1 from unnest(v_members) x where not private.sbpf_user_fully_verified(x)) then raise exception 'समूह में केवल पूरी तरह सत्यापित SBPF सदस्य जोड़े जा सकते हैं'; end if;
+  if exists(select 1 from public.sbpf_social_blocks b where (b.blocker_id=v_user_id and b.blocked_id=any(v_members)) or (b.blocked_id=v_user_id and b.blocker_id=any(v_members))) then raise exception 'ब्लॉक किए गए सदस्य को समूह में नहीं जोड़ा जा सकता'; end if;
+  insert into public.sbpf_social_message_threads(thread_type,title,created_by) values('group',v_title,v_user_id) returning id into v_thread_id;
+  insert into public.sbpf_social_message_members(thread_id,user_id) select v_thread_id,member_id from (select v_user_id as member_id union select unnest(v_members)) q;
+  return v_thread_id;
+end;
+$$;
+revoke all on function public.sbpf_social_create_group_thread(text,uuid[]) from public, anon;
+grant execute on function public.sbpf_social_create_group_thread(text,uuid[]) to authenticated;
