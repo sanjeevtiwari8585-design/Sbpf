@@ -19,6 +19,13 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:10px}
 <header class="head"><h1>स्वर्णिम भारत क्लब</h1><p>SWARNIM BHARAT CLUB • CENTRAL MEMBER VERIFICATION</p></header>
 <section class="card" id="authCard"><div class="status">सदस्य सत्यापन देखने के लिए पहले Member Panel में लॉगिन करें।</div><a class="link" href="/member-panel.html">Member Panel में लॉगिन करें</a></section>
 <section class="card" id="statusCard" hidden><div id="overall" class="status">सत्यापन स्थिति लोड हो रही है…</div><h2>Member ID: <span id="memberId">—</span></h2><div class="grid" id="checks"></div></section>
+<section class="card" id="legacyCard" hidden><h2>पुराने पोर्टल का Member ID लिंक करें</h2><p class="muted">swarnimbharat.club पर पहले से बने सदस्य अपने पुराने Member ID से पहचान लिंक कर सकते हैं। OTP उसी पुराने पोर्टल पर पंजीकृत मोबाइल पर भेजा जाएगा।</p>
+<label for="legacyMemberId">पुराना Member ID</label><input id="legacyMemberId" autocomplete="off" maxlength="64" placeholder="अपना पुराना Member ID लिखें">
+<button type="button" id="legacySendOtp">पुराने मोबाइल पर OTP भेजें</button>
+<label for="legacyOtp">पुराने मोबाइल पर प्राप्त OTP</label><input id="legacyOtp" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="OTP दर्ज करें">
+<button type="button" id="legacyVerifyOtp">OTP सत्यापित करके लिंक करें</button>
+<div id="legacyMsg" class="msg" hidden></div><div id="legacyResult" class="item" hidden></div>
+<p class="muted">यह सुविधा पुराने डेवलपर की API उपलब्ध होने के बाद सक्रिय होगी। पुराने पोर्टल की KYC/सदस्यता जानकारी नए पोर्टल की अपनी सुरक्षा जाँच को समाप्त नहीं करती।</p></section>
 <section class="card" id="phoneCard" hidden><h2>मोबाइल OTP सत्यापन</h2><p class="muted">अपने पंजीकृत मोबाइल नंबर पर OTP भेजें। भारत के 10 अंकों के नंबर में +91 अपने-आप जोड़ा जाएगा। OTP किसी के साथ साझा न करें।</p>
 <label for="phone">मोबाइल नंबर</label><input id="phone" inputmode="tel" autocomplete="tel" placeholder="9876543210">
 <button type="button" id="sendOtp">OTP भेजें</button>
@@ -34,21 +41,32 @@ let access=localStorage.getItem('sbpf_access_token')||'';
 const $=id=>document.getElementById(id);
 async function call(path,options={}){const headers={apikey:KEY,Authorization:'Bearer '+access,...(options.headers||{})};const res=await fetch(URL+path,{...options,headers});let data={};try{data=await res.json()}catch{}if(!res.ok)throw new Error(data.msg||data.message||data.error_description||data.error||'अनुरोध पूरा नहीं हुआ');return data}
 function showMsg(t){$('otpMsg').hidden=false;$('otpMsg').textContent=t}
+function legacyMsg(t){$('legacyMsg').hidden=false;$('legacyMsg').textContent=t}
+async function legacyAction(action){
+ const member_id=$('legacyMemberId').value.trim();
+ if(!member_id)throw new Error('पुराना Member ID भरें।');
+ const body={action,member_id};
+ if(action==='verify_otp')body.otp=$('legacyOtp').value.trim();
+ const result=await call('/functions/v1/legacy-member-link',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+ return result;
+}
 function e164(value){const v=String(value||'').trim().replace(/[\s()-]/g,'');if(/^\+[1-9]\d{7,14}$/.test(v))return v;if(/^\d{10}$/.test(v))return '+91'+v;if(/^91\d{10}$/.test(v))return '+'+v;throw new Error('वैध मोबाइल नंबर भरें। उदाहरण: 9876543210 या +919876543210')}
 async function refresh(){
  if(!access){$('authCard').hidden=false;return}
  try{
   const rows=await call('/rest/v1/rpc/get_my_member_verification_status',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
   const s=Array.isArray(rows)?rows[0]:rows;if(!s)throw new Error('सदस्य रिकॉर्ड नहीं मिला।');
-  $('authCard').hidden=true;$('statusCard').hidden=false;$('phoneCard').hidden=false;$('actionsCard').hidden=false;
+  $('authCard').hidden=true;$('statusCard').hidden=false;$('phoneCard').hidden=false;$('actionsCard').hidden=false;$('legacyCard').hidden=false;
   $('memberId').textContent=s.member_id||'—';
   $('overall').className='status'+(s.fully_verified?' ok':'');
   $('overall').textContent=s.fully_verified?'✓ पूर्ण सत्यापित सदस्य':'सत्यापन अधूरा — नीचे लंबित चरण पूरे करें';
   const entries=[['ईमेल सत्यापन',s.email_verified],['मोबाइल OTP',s.mobile_verified],['KYC दस्तावेज़',String(s.kyc_status||'').toLowerCase()==='verified'],['सदस्यता सक्रिय',s.membership_active],['वार्षिक सत्यापन',String(s.annual_verification_status||'').toLowerCase()==='verified'&&(!s.annual_valid_until||s.annual_valid_until>=new Date().toISOString().slice(0,10))]];
   $('checks').innerHTML=entries.map(([label,ok])=>'<div class="item">'+label+'<br><span class="'+(ok?'yes':'no')+'">'+(ok?'✓ सत्यापित':'○ लंबित')+'</span></div>').join('');
-  const user=await call('/auth/v1/user');if(user.phone)$('phone').value=user.phone;else if(! $('phone').value)$('phone').value='';
+  const user=await call('/auth/v1/user');if(user.phone)$('phone').value=user.phone;else if(! $('phone').value)$('phone').value='';\n  try{const links=await call('/rest/v1/rpc/get_my_legacy_member_link',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});const link=Array.isArray(links)?links[0]:links;if(link?.legacy_member_id){$('legacyMemberId').value=link.legacy_member_id;$('legacyResult').hidden=false;$('legacyResult').textContent='पुराना Member ID लिंक है: '+link.legacy_member_id+' • सदस्यता: '+link.legacy_membership_status;}}catch(e){/* migration not applied yet */}
  }catch(error){$('authCard').hidden=false;$('authCard').innerHTML='<div class="status">'+String(error.message||error)+'</div><a class="link" href="/member-panel.html">दोबारा लॉगिन करें</a>'}
 }
+$('legacySendOtp').onclick=async()=>{const b=$('legacySendOtp');try{b.disabled=true;const r=await legacyAction('start_otp');legacyMsg(r.message||('OTP भेजा गया। '+(r.mobile_masked||'')))}catch(e){legacyMsg('OTP अनुरोध पूरा नहीं हुआ: '+e.message)}finally{b.disabled=false}};
+$('legacyVerifyOtp').onclick=async()=>{const b=$('legacyVerifyOtp');try{b.disabled=true;const r=await legacyAction('verify_otp');$('legacyResult').hidden=false;$('legacyResult').textContent='✓ पुराना Member ID लिंक हो गया: '+(r.legacy_member_id||'')+' • '+(r.full_name||'')+' • सदस्यता: '+(r.membership_status||'');legacyMsg(r.note||'पहचान सफलतापूर्वक लिंक हुई।')}catch(e){legacyMsg('लिंक नहीं हो सका: '+e.message)}finally{b.disabled=false}};
 $('sendOtp').onclick=async()=>{const b=$('sendOtp');try{b.disabled=true;const phone=e164($('phone').value);await call('/auth/v1/user',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone})});showMsg('OTP भेजने का अनुरोध सफल। SMS में आया OTP दर्ज करें।')}catch(e){showMsg('OTP नहीं भेजा जा सका: '+e.message+'\nSupabase Auth में Phone/SMS provider configuration जाँचें।')}finally{b.disabled=false}};
 $('verifyOtp').onclick=async()=>{const b=$('verifyOtp');try{b.disabled=true;const phone=e164($('phone').value),otp=$('otp').value.trim();if(!/^\d{6}$/.test(otp))throw new Error('6 अंकों का OTP भरें।');const result=await call('/auth/v1/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone,token:otp,type:'phone_change'})});if(result.access_token){access=result.access_token;localStorage.setItem('sbpf_access_token',access)}if(result.refresh_token)localStorage.setItem('sbpf_refresh_token',result.refresh_token);showMsg('मोबाइल OTP सत्यापित हो गया। स्थिति अपडेट हो रही है।');await refresh()}catch(e){showMsg('OTP सत्यापित नहीं हुआ: '+e.message)}finally{b.disabled=false}};
 $('annualSubmit').onclick=async()=>{const b=$('annualSubmit');try{b.disabled=true;await call('/rest/v1/rpc/submit_my_member_annual_verification',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});$('annualMsg').hidden=false;$('annualMsg').textContent='वार्षिक सत्यापन अनुरोध जमा हो गया है। एडमिन समीक्षा के बाद स्थिति अपडेट होगी।';await refresh()}catch(e){$('annualMsg').hidden=false;$('annualMsg').textContent='अनुरोध जमा नहीं हुआ: '+e.message}finally{b.disabled=false}};
