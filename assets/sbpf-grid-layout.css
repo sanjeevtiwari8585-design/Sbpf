@@ -1,0 +1,29 @@
+/* SBPF responsive grid system — shared across all portal pages */
+:root{--sbpf-grid-gap:clamp(12px,1.5vw,20px);--sbpf-card-radius:18px}
+:where(.grid,.cards-grid,.card-grid,.card-grid-container,.campaign-grid,.campaigns-grid,.feature-grid,.features-grid,.service-grid,.services-grid,.work-area-grid,.work-areas-grid,.dashboard-grid,.portal-grid,.module-grid,.project-grid,.stats-grid,.category-grid){
+ display:grid!important;
+ grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))!important;
+ gap:var(--sbpf-grid-gap)!important;
+ align-items:stretch;
+}
+:where(.grid,.cards-grid,.card-grid,.card-grid-container,.campaign-grid,.campaigns-grid,.feature-grid,.features-grid,.service-grid,.services-grid,.work-area-grid,.work-areas-grid,.dashboard-grid,.portal-grid,.module-grid,.project-grid,.stats-grid,.category-grid)>:where(.card,.campaign,.pillar,.info,.feature-card,.service-card,.module-card,.project-card,.stat-card,.work-area-card){
+ min-width:0;max-width:100%;height:100%;box-sizing:border-box;
+}
+:where(.card,.campaign,.pillar,.info,.feature-card,.service-card,.module-card,.project-card,.stat-card,.work-area-card){
+ overflow-wrap:anywhere;
+}
+:where(.card,.feature-card,.service-card,.module-card,.project-card,.stat-card,.work-area-card){
+ border-radius:var(--sbpf-card-radius);
+}
+:where(.grid,.cards-grid,.card-grid,.campaign-grid,.campaigns-grid,.feature-grid,.features-grid,.service-grid,.services-grid,.work-area-grid,.work-areas-grid,.dashboard-grid,.portal-grid,.module-grid,.project-grid,.stats-grid,.category-grid) img{
+ max-width:100%;height:auto;
+}
+@media(max-width:600px){
+ :where(.grid,.cards-grid,.card-grid,.card-grid-container,.campaign-grid,.campaigns-grid,.feature-grid,.features-grid,.service-grid,.services-grid,.work-area-grid,.work-areas-grid,.dashboard-grid,.portal-grid,.module-grid,.project-grid,.stats-grid,.category-grid){
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))!important;
+  gap:12px!important;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ :where(.card,.campaign,.pillar,.info,.feature-card,.service-card,.module-card,.project-card,.stat-card,.work-area-card){transition:none!important;animation:none!important}
+}
