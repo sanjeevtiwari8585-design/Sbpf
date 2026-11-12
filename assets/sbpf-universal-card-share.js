@@ -8,7 +8,7 @@
   const SITE='https://swarnimbharatclub.in/';
   const SELECTOR='[data-sbpf-share-card],.sbpf-shareable-card,.campaign,.pillar,.info,.card,.service-card,.work-area-card,.focus-area-card,.project-card,.scheme-card,.benefit-card,.job-card,.opportunity-card,.feature-card,.content-card,.post-card,.media-card,.listing-card,.seva-card';
   const clean=v=>String(v||'').replace(/\s+/g,' ').trim();
-  const slugify=v=>clean(v).toLowerCase().replace(/[^a-z0-9-]+/g,'-').replace(/^-|-$/g,'').slice(0,110)||'sbpf-card';
+  const slugify=v=>clean(v).toLowerCase().replace(/[^\p{L}\p{N}-]+/gu,'-').replace(/^-|-$/g,'').slice(0,110)||'sbpf-card';
   const log=(type,slug,title,platform)=>{
     try{fetch(API,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json',Prefer:'return=minimal'},
       body:JSON.stringify({card_type:type,card_slug:slug,card_title:clean(title).slice(0,240),platform}),keepalive:true}).catch(()=>{});}catch(_){}

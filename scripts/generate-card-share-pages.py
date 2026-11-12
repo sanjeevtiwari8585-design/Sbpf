@@ -29,7 +29,7 @@ def clean(value):
 
 def slugify(value):
     value = clean(value).lower()
-    value = re.sub(r'[^a-z0-9-]+', '-', value).strip('-')
+    value = re.sub(r'[^\w-]+', '-', value, flags=re.UNICODE).strip('-')
     return (value[:110] or 'sbpf-card')
 
 def fetch_rows(table):
@@ -46,7 +46,7 @@ def absolute_image(value):
     return urllib.parse.urljoin(SITE, value)
 
 def route_page(record):
-    route = 'share/{}/{}/'.format(record['type'], urllib.parse.quote(record['slug'], safe='-'))
+    route = 'share/{}/{}/'.format(record['type'], record['slug'])
     return route + 'index.html'
 
 def render_page(record):
@@ -54,7 +54,7 @@ def render_page(record):
     description = clean(record['description']) or 'सेवा • सहयोग • स्वावलंबन • सशक्तिकरण'
     target = record.get('target') or 'index.html'
     target_url = urllib.parse.urljoin(SITE, target)
-    canonical = SITE + route_page(record).removesuffix('index.html')
+    canonical = SITE + urllib.parse.quote(route_page(record).removesuffix('index.html'), safe='/-')
     image = absolute_image(record.get('image'))
     esc = html.escape
     return f'''<!doctype html>
