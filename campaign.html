@@ -123,7 +123,9 @@ function renderItems(){
  $('catalog').innerHTML=shown.map(item=>{
   const category=categories.find(c=>String(c.id)===String(item.category_id));
   const text=item.content||item.summary||'इस विषय का विवरण शीघ्र उपलब्ध होगा।';
-  return '<article class="article"><div class="meta">'+esc(category?.name||'अभियान सामग्री')+'</div><h3>'+esc(item.title)+'</h3>'+
+  return '<article class="article" data-sbpf-share-card data-share-type="campaign_content" data-share-slug="'+esc(item.slug||item.id)+'" data-share-title="'+esc(item.title)+'" data-share-description="'+esc(item.summary||text)+'" data-share-image="'+esc(item.image_url||'')+'" id="campaign-content-'+esc(item.id)+'">'+
+   (item.image_url?'<img loading="lazy" src="'+esc(item.image_url)+'" alt="'+esc(item.title)+'" style="width:100%;max-height:260px;object-fit:cover;border-radius:11px;margin-bottom:12px">':'')+
+   '<div class="meta">'+esc(category?.name||'अभियान सामग्री')+'</div><h3>'+esc(item.title)+'</h3>'+
    (item.summary&&item.content?'<p><b>'+esc(item.summary)+'</b></p>':'')+
    '<p>'+esc(text)+'</p><div class="links">'+safeLink(item.source_url,'आधिकारिक स्रोत')+safeLink(item.video_url,'वीडियो देखें')+'</div></article>';
  }).join('');
@@ -154,7 +156,7 @@ async function init(){
   $('breadcrumbCampaign').textContent=campaign.name;
   const [catRows,contentRows]=await Promise.all([
    getRows('/rest/v1/campaign_categories?campaign_id=eq.'+encodeURIComponent(campaign.id)+'&is_active=eq.true&select=id,name,slug,description,sort_order&order=sort_order.asc'),
-   getRows('/rest/v1/campaign_content?campaign_id=eq.'+encodeURIComponent(campaign.id)+'&is_active=eq.true&select=id,title,slug,summary,content,source_url,video_url,category_id,sort_order&order=sort_order.asc')
+   getRows('/rest/v1/campaign_content?campaign_id=eq.'+encodeURIComponent(campaign.id)+'&is_active=eq.true&select=id,title,slug,summary,content,image_url,source_url,video_url,category_id,sort_order&order=sort_order.asc')
   ]);
   categories=Array.isArray(catRows)?catRows:[];
   items=Array.isArray(contentRows)?contentRows:[];
@@ -186,5 +188,6 @@ async function loadSevaCategories(){
 }
 init();
 </script>
+<script src="assets/sbpf-card-share.js"></script>
 </body>
 </html>
