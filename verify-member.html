@@ -3,42 +3,53 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#781626">
-<title>सदस्य ID सत्यापन | Swarnim Bharat Club</title>
+<title>स्वयंसेवक डिजिटल पहचान पत्र | Swarnim Bharat Club</title>
 <style>
-:root{--wine:#781626;--gold:#d7b34b;--ink:#26212a;--muted:#6d6268;--line:#eadfd3}
-*{box-sizing:border-box}body{margin:0;padding:18px;background:#f7f3ee;color:var(--ink);font:16px/1.55 system-ui,"Noto Sans Devanagari",sans-serif}
-main{max-width:650px;margin:24px auto;background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 14px 40px #4c201012}
-header{padding:24px;text-align:center;color:#fff;background:linear-gradient(120deg,#711222,#9b2634 65%,#bd963b);border-bottom:5px solid var(--gold)}
-.mark{width:62px;height:62px;margin:0 auto 10px;border:2px solid var(--gold);border-radius:50%;display:grid;place-items:center;color:#ffe4a0;font-weight:900}
-h1{font-size:23px;margin:0 0 4px}header p{margin:0;color:#ffedc4;font-size:13px}
-.content{padding:22px}.status{padding:12px 14px;border-radius:11px;background:#fff4d8;color:#79540c;font-weight:800;margin-bottom:14px}
-.status.ok{background:#e7f6ed;color:#176b35}.status.bad{background:#fdebea;color:#a01828}
-.item{padding:12px 0;border-bottom:1px solid #eee}.label{font-size:12px;color:var(--muted)}.value{font-size:16px;font-weight:750;overflow-wrap:anywhere}
-.checks{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}.check{padding:11px;border:1px solid var(--line);border-radius:10px;font-size:13px}.yes{color:#176b35}.no{color:#a01828}
-.note{font-size:12px;color:var(--muted);background:#faf8f5;padding:12px;border-radius:10px;margin-top:18px}
-footer{text-align:center;color:var(--muted);font-size:11px;padding:0 20px 18px}
-@media(max-width:480px){body{padding:9px}.checks{grid-template-columns:1fr}main{margin:10px auto}.content{padding:16px}}
-</style><link rel="stylesheet" href="assets/sbpf-grid-layout.css">
+:root{--wine:#781626;--wine2:#9b2634;--gold:#d7b34b;--ink:#28232a;--muted:#6b6268;--line:#eadfd3;--green:#176b42}
+*{box-sizing:border-box}body{margin:0;padding:18px;background:linear-gradient(145deg,#f7f3ee,#eee8df);color:var(--ink);font:15px/1.5 system-ui,"Noto Sans Devanagari",sans-serif}
+main{max-width:780px;margin:22px auto}.brand{text-align:center;margin:0 0 14px;color:var(--wine)}.brand small{display:block;color:var(--muted);letter-spacing:1.2px;font-size:10px;font-weight:800}
+.card{position:relative;overflow:hidden;background:#fff;border:1px solid #ddcba7;border-radius:20px;box-shadow:0 16px 38px #3d1b1b18}.top{display:flex;align-items:center;gap:14px;padding:17px 20px;background:linear-gradient(120deg,#65101f,#922337 65%,#b28a37);color:#fff;border-bottom:4px solid var(--gold)}
+.logo{width:48px;height:48px;flex:0 0 48px;border:1px solid #f5d982;border-radius:12px;background:#fff8e8;display:grid;place-items:center;color:var(--wine);font-weight:950;font-size:14px;letter-spacing:-1px}
+.org{min-width:0}.org h1{margin:0;font-size:clamp(17px,3vw,23px);line-height:1.25}.org p{margin:4px 0 0;color:#ffe8b5;font-size:10px;font-weight:800;letter-spacing:1px}
+.body{padding:18px 20px}.status{padding:10px 13px;border-radius:10px;background:#fff3d5;color:#7b570d;font-size:13px;font-weight:850;border:1px solid #f0dfb5;margin-bottom:14px}.status.ok{background:#e7f6ed;color:#176b35;border-color:#cce8d5}.status.bad{background:#fdebea;color:#a01828;border-color:#f2cccc}
+.content{display:grid;grid-template-columns:minmax(0,1fr) 165px;gap:18px;align-items:center}.fields{display:grid;grid-template-columns:1fr 1fr;gap:9px}.field{padding:10px 12px;background:#fbf8f3;border:1px solid var(--line);border-radius:10px;min-width:0}.label{font-size:9px;color:var(--muted);font-weight:850;letter-spacing:.5px}.value{font-size:14px;font-weight:850;overflow-wrap:anywhere;margin-top:3px}.portrait{width:54px;height:54px;float:right;margin:0 0 8px 12px;border-radius:12px;border:2px solid var(--gold);background:#f8edcf;color:var(--wine);display:grid;place-items:center;font-size:20px;font-weight:900}
+.qrbox{text-align:center;border:1px dashed #d9c38b;border-radius:13px;padding:10px;background:#fffdf8}.qrbox img{display:block;width:132px;height:132px;max-width:100%;margin:auto}.qrbox b{display:block;font-size:10px;color:var(--wine);margin-top:6px;letter-spacing:.5px}.qrbox small{display:block;font-size:9px;color:var(--muted);margin-top:3px}
+.checks{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:14px}.check{padding:8px;border:1px solid var(--line);border-radius:9px;font-size:10px;font-weight:750}.yes{color:var(--green)}.no{color:#a01828}
+.note{padding:10px 12px;margin-top:13px;background:#faf7f1;border-radius:9px;color:var(--muted);font-size:10px}.actions{display:flex;justify-content:center;gap:9px;margin:14px 0}.actions button{border:0;border-radius:9px;padding:11px 17px;background:var(--wine);color:white;font-weight:800;cursor:pointer}.actions a{padding:10px 15px;border:1px solid #ddcfc5;border-radius:9px;color:var(--wine);text-decoration:none;font-weight:800;background:#fff}
+footer{text-align:center;color:var(--muted);font-size:10px;padding:0 10px 14px}
+@media(max-width:560px){body{padding:9px}.content{grid-template-columns:1fr}.qrbox{display:flex;align-items:center;justify-content:center;gap:12px;text-align:left}.qrbox img{width:104px;height:104px;margin:0}.qrbox b{margin:0}.qrbox small{max-width:150px}.body{padding:14px}.top{padding:14px}.checks{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:370px){.fields{grid-template-columns:1fr}.qrbox img{width:90px;height:90px}}
+@page{size:A5 portrait;margin:10mm}
+@media print{body{padding:0;background:#fff}.brand,.actions{display:none}.card{box-shadow:none;border-radius:10px;break-inside:avoid}.top{print-color-adjust:exact;-webkit-print-color-adjust:exact}.status,.field,.qrbox,.note{print-color-adjust:exact;-webkit-print-color-adjust:exact}main{max-width:none;margin:0}}
+</style>
+<link rel="stylesheet" href="assets/sbpf-grid-layout.css">
 </head>
 <body><main>
-<header><div class="mark">SBC</div><h1>स्वर्णिम भारत क्लब</h1><p>SWARNIM BHARAT CLUB • SBPF MEMBER ID VERIFICATION</p></header>
-<section class="content" id="result"><div class="status">सदस्य रिकॉर्ड की जाँच हो रही है…</div></section>
-<footer>© Swarnim Bharat Parivar Foundation • Secure Member Verification</footer>
+<div class="brand"><b>स्वर्णिम भारत क्लब</b><small>SWARNIM BHARAT PARIVAR FOUNDATION</small></div>
+<section class="card" id="card">
+<header class="top"><div class="logo">SBPF</div><div class="org"><h1>स्वयंसेवक डिजिटल पहचान पत्र</h1><p>VOLUNTEER DIGITAL IDENTITY CARD</p></div></header>
+<div class="body" id="result"><div class="status">सुरक्षित रिकॉर्ड लोड हो रहा है…</div></div>
+<footer>QR स्कैन करके इस पहचान पत्र और सत्यापन स्थिति की पुष्टि करें • निजी दस्तावेज़ सार्वजनिक नहीं हैं</footer>
+</section>
+<div class="actions"><button type="button" onclick="window.print()">कार्ड प्रिंट / PDF</button><a href="https://www.swarnimbharat.club/volunteer-registration">स्वयंसेवक पंजीकरण</a></div>
 </main>
 <script>
 const $=id=>document.getElementById(id);
-const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const labels={member_id_valid:"Member ID",email_verified:"ईमेल सत्यापन",mobile_otp_verified:"मोबाइल OTP",kyc_verified:"KYC सत्यापन",payment_verified:"भुगतान",membership_active:"सदस्यता वैधता",annual_verification_valid:"वार्षिक सत्यापन"};
+const esc=v=>String(v??"—").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const labels={member_id_valid:"Member ID",email_verified:"ईमेल",mobile_otp_verified:"मोबाइल OTP",kyc_verified:"KYC",payment_verified:"भुगतान",membership_active:"सदस्यता",annual_verification_valid:"वार्षिक सत्यापन"};
 async function load(){
  const token=new URLSearchParams(location.search).get("token");
- if(!token){$("result").innerHTML='<div class="status bad">QR Token उपलब्ध नहीं है।</div>';return}
+ if(!token){$("result").innerHTML='<div class="status bad">QR Token उपलब्ध नहीं है। यह कार्ड केवल अधिकृत QR लिंक से खुलेगा।</div>';return}
  try{
-  const res=await fetch("https://dxowhzghrdghfzoggorx.supabase.co/functions/v1/verify-member?format=json&token="+encodeURIComponent(token),{cache:"no-store"});
-  const data=await res.json();
+  const endpoint="https://dxowhzghrdghfzoggorx.supabase.co/functions/v1/verify-member?format=json&token="+encodeURIComponent(token);
+  const res=await fetch(endpoint,{cache:"no-store"});const data=await res.json();
   if(!res.ok||!data.verified){$("result").innerHTML='<div class="status bad">'+esc(data.error||"सदस्य रिकॉर्ड नहीं मिला")+'</div>';return}
-  const cls=data.fully_verified?"ok":"";
-  const checkHtml=Object.entries(data.checks||{}).map(([k,v])=>'<div class="check '+(v?"yes":"no")+'">'+(v?"✓ ":"○ ")+esc(labels[k]||k)+': <b>'+(v?"सत्यापित":"लंबित")+'</b></div>').join("");
-  $("result").innerHTML='<div class="status '+cls+'">'+esc(data.status_label)+'</div><div class="item"><div class="label">MEMBER ID</div><div class="value">'+esc(data.member.member_id)+'</div></div><div class="item"><div class="label">सदस्य का नाम</div><div class="value">'+esc(data.member.full_name)+'</div></div><div class="item"><div class="label">सदस्यता प्रारंभ</div><div class="value">'+esc(data.member.membership_start_date||"रिकॉर्ड उपलब्ध नहीं")+'</div></div><div class="item"><div class="label">सदस्यता समाप्ति</div><div class="value">'+esc(data.member.membership_end_date||"निर्धारित नहीं")+'</div></div><h3>सत्यापन विवरण</h3><div class="checks">'+checkHtml+'</div><div class="note">'+esc(data.note)+'<br>जाँच समय: '+esc(data.checked_at)+'</div>';
+  const m=data.member||{},checks=data.checks||{};
+  const status=data.fully_verified?"पूर्ण सत्यापित स्वयंसेवक":"सत्यापन लंबित — यह सक्रिय सदस्यता का प्रमाण नहीं है";
+  const checkHtml=Object.entries(checks).map(([k,v])=>'<div class="check '+(v?"yes":"no")+'">'+(v?"✓ ":"○ ")+esc(labels[k]||k)+': '+(v?"सत्यापित":"लंबित")+'</div>').join("");
+  const verifyUrl="https://dxowhzghrdghfzoggorx.supabase.co/functions/v1/verify-member?token="+encodeURIComponent(token);
+  const initials=String(m.full_name||"SBPF").trim().split(/\s+/).slice(0,2).map(x=>x[0]||"").join("").toUpperCase();
+  $("result").innerHTML='<div class="status '+(data.fully_verified?"ok":"")+'">'+esc(status)+'</div><div class="content"><div><div class="portrait" aria-label="प्रोफ़ाइल फोटो उपलब्ध नहीं">'+esc(initials||"SB")+'</div><div class="fields"><div class="field"><div class="label">VOLUNTEER / MEMBER ID</div><div class="value">'+esc(m.member_id)+'</div></div><div class="field"><div class="label">नाम / NAME</div><div class="value">'+esc(m.full_name)+'</div></div><div class="field"><div class="label">सदस्यता प्रारंभ</div><div class="value">'+esc(m.membership_start_date||"रिकॉर्ड के अनुसार")+'</div></div><div class="field"><div class="label">वैधता समाप्ति</div><div class="value">'+esc(m.membership_end_date||"निर्धारित नहीं")+'</div></div></div></div><div class="qrbox"><img alt="QR सत्यापन कोड" src="https://quickchart.io/qr?text='+encodeURIComponent(verifyUrl)+'&size=220"><div><b>SCAN TO VERIFY</b><small>स्कैन करने पर यही डिजिटल कार्ड खुलेगा</small></div></div></div><div class="checks">'+checkHtml+'</div><div class="note">'+esc(data.note||"यह डिजिटल कार्ड Supabase के सदस्य रिकॉर्ड से प्राप्त जानकारी दिखाता है।")+'<br>जाँच समय: '+esc(data.checked_at)+'</div>';
  }catch(e){$("result").innerHTML='<div class="status bad">सत्यापन सेवा से संपर्क नहीं हो पाया। कृपया बाद में पुनः प्रयास करें।</div>'}
 }
 load();
