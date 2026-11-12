@@ -1147,6 +1147,34 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
   }
 }
 </style>
+
+<style id="sbpf-abhiyaan-grid-final">
+/* Abhiyan grid matches the Sathi/work-area card grid */
+#sbpfCampaignGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  grid-auto-rows:1fr!important;
+  gap:8px!important;
+  row-gap:8px!important;
+  column-gap:8px!important;
+  align-items:stretch!important;
+}
+#sbpfCampaignGrid>.campaign{
+  min-width:0!important;width:100%!important;max-width:100%!important;
+  min-height:0!important;height:100%!important;margin:0!important;
+  box-sizing:border-box!important;
+}
+@media(max-width:1000px){
+  #sbpfCampaignGrid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:8px!important;row-gap:8px!important;column-gap:8px!important;
+  }
+}
+@media(max-width:520px){
+  #sbpfCampaignGrid>.campaign{padding:12px!important;border-radius:14px!important}
+}
+</style>
+
 </head>
 <body>
 <div class="sbpf-topbar">
