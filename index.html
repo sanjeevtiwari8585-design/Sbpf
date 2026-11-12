@@ -1097,8 +1097,8 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
 /* Compact work-area cards: remove artificial blank space without changing the artwork. */
 #sbpfFocusGrid{
   display:grid!important;
-  grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))!important;
-  gap:8px!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:10px!important;
   align-items:start!important;
 }
 #sbpfFocusGrid>.campaign{
@@ -1116,9 +1116,12 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
   outline:3px solid #d6ad58!important;
   outline-offset:2px!important;
 }
+@media(max-width:900px){
+  #sbpfFocusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+}
 @media(max-width:600px){
-  #sbpfFocusGrid{gap:7px!important}
-  #sbpfFocusGrid>.campaign{padding:9px!important;border-radius:14px!important}
+  #sbpfFocusGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+  #sbpfFocusGrid>.campaign{padding:10px!important;border-radius:14px!important}
 }
 </style>
 </head>
