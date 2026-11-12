@@ -27,3 +27,32 @@
 @media(prefers-reduced-motion:reduce){
  :where(.card,.campaign,.pillar,.info,.feature-card,.service-card,.module-card,.project-card,.stat-card,.work-area-card){transition:none!important;animation:none!important}
 }
+
+
+/* SBPF 12 work-area cards: seamless mobile grid matching the approved 4-column layout. */
+#sbpfFocusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:0!important;
+  column-gap:0!important;
+  row-gap:0!important;
+  align-items:stretch!important;
+}
+#sbpfFocusGrid>.campaign{
+  min-width:0!important;
+  max-width:none!important;
+  width:100%!important;
+  margin:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+@media(max-width:600px){
+  #sbpfFocusGrid{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:0!important;
+  }
+  #sbpfFocusGrid>.campaign{
+    padding:7px 5px!important;
+    border-radius:0!important;
+  }
+}
