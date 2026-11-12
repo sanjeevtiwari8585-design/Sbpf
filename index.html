@@ -1068,6 +1068,30 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
 }
 </style>
 
+
+<style id="sbpf-campaign-title-readability-fix">
+/* Readable campaign titles: remove the bright glow that makes Hindi text hard to read. */
+#sbpfCampaignGrid>.campaign h3{
+  display:flex!important;align-items:center!important;
+  min-height:54px!important;margin:0 0 10px!important;padding:10px 12px!important;
+  background:#fff1cd!important;color:#781626!important;
+  -webkit-text-fill-color:#781626!important;
+  border:0!important;border-left:4px solid #d4af37!important;
+  border-radius:0 9px 9px 0!important;
+  box-shadow:none!important;text-shadow:none!important;
+  filter:none!important;opacity:1!important;
+  font-weight:800!important;line-height:1.45!important;
+  overflow-wrap:anywhere!important;
+}
+#sbpfCampaignGrid>.campaign h3::before,
+#sbpfCampaignGrid>.campaign h3::after{
+  content:none!important;display:none!important;
+}
+@media(max-width:600px){
+  #sbpfCampaignGrid>.campaign h3{font-size:17px!important;min-height:48px!important}
+}
+</style>
+
 </head>
 <body>
 <div class="sbpf-topbar">
