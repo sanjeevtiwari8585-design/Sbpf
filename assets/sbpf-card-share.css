@@ -1,0 +1,7 @@
+.sbpf-full-card-share-holder{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.sbpf-full-card-share{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:44px;padding:10px 14px;border:1px solid #d4ad52;border-radius:11px;background:linear-gradient(120deg,#145a38,#218653);color:#fff;font:750 14px/1.4 system-ui,sans-serif;cursor:pointer;box-shadow:0 4px 12px #145a3826}
+.sbpf-full-card-share:hover{filter:brightness(1.06)}
+.sbpf-full-card-share:focus-visible{outline:3px solid #d8b34b;outline-offset:3px}
+.sbpf-full-card-share:disabled{opacity:.65;cursor:wait}
+.sbpf-full-card-share-status{font-size:12px;line-height:1.55;color:#315642;overflow-wrap:anywhere;margin:0}
+.sbpf-full-card-share-status[hidden]{display:none}
