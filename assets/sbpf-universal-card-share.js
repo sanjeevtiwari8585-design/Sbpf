@@ -68,14 +68,15 @@
     const description=clean(card.dataset.shareDescription||Array.from(card.querySelectorAll(':scope > p,p')).map(p=>p.textContent).join(' ')).slice(0,650);
     const grid=card.closest('#sbpfCampaignGrid,#sbpfFocusGrid');
     const type=card.dataset.shareType||(grid?.id==='sbpfCampaignGrid'?'campaign':grid?.id==='sbpfFocusGrid'?'focus_area':'campaign_content');
-    const grid=card.closest('#sbpfCampaignGrid,#sbpfFocusGrid');
+    const existingDetail=detailLink(card);
     let slug=clean(card.dataset.shareSlug||'');
-    if(!slug)slug=slugify(heading?.textContent||card.id||'sbpf-card');
+    if(!slug){try{slug=new URL(existingDetail).searchParams.get('slug')||'';}catch(_){}}
+    slug=slugify(slug||heading?.textContent||card.id||'sbpf-card');
     const detail=grid?.id==='sbpfFocusGrid'
       ? new URL('work-area.html?slug='+encodeURIComponent(slug),location.origin+'/').href
       : grid?.id==='sbpfCampaignGrid'
         ? new URL('campaign.html?slug='+encodeURIComponent(slug),location.origin+'/').href
-        : detailLink(card);
+        : existingDetail;
     if(!card.hasAttribute('data-sbpf-no-card-navigation')){
       card.style.cursor='pointer';
       card.setAttribute('tabindex',card.hasAttribute('tabindex')?card.getAttribute('tabindex'):'0');
