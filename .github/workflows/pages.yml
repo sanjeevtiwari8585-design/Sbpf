@@ -25,34 +25,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Enable full-card social sharing on public pages
-        run: |
-          python - <<'PY'
-          import pathlib
-          excluded = (
-              'admin-', 'bvs-admin', 'ems-hms-admin', 'member-panel',
-              'member-registration', 'member-verification', 'member.html',
-              'policy.html', 'verify-member', 'swarnim-book-office',
-              'swarnim-seva-admin', 'women-empowerment-admin'
-          )
-          tag = '<script defer src="/assets/sbpf-universal-card-share.js"></script>'
-          count = 0
-          for page in pathlib.Path('.').rglob('*.html'):
-              if '.git' in page.parts or 'node_modules' in page.parts:
-                  continue
-              if page.name.lower().startswith(excluded):
-                  continue
-              source = page.read_text(encoding='utf-8')
-              if tag in source:
-                  continue
-              if '</body>' in source.lower():
-                  pos = source.lower().rfind('</body>')
-                  source = source[:pos] + tag + '\n' + source[pos:]
-              else:
-                  source += '\n' + tag + '\n'
-              page.write_text(source, encoding='utf-8')
-              count += 1
-          print(f'Enabled universal SBPF sharing on {count} public HTML pages.')
-          PY
+        run: python scripts/enable-card-sharing.py
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -92,6 +65,7 @@ jobs:
         run: |
           node --check assets/sbpf-card-share.js
           node --check assets/sbpf-universal-card-share.js
+          python -m py_compile scripts/enable-card-sharing.py
 
       - name: Validate Swarnim Book app assets
         run: |
