@@ -1092,6 +1092,35 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
 }
 </style>
 
+
+<style id="sbpf-work-area-gap-and-card-click-fix">
+/* Compact work-area cards: remove artificial blank space without changing the artwork. */
+#sbpfFocusGrid{
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))!important;
+  gap:8px!important;
+  align-items:start!important;
+}
+#sbpfFocusGrid>.campaign{
+  height:auto!important;
+  min-height:0!important;
+  align-self:start!important;
+  padding:12px!important;
+  cursor:pointer;
+}
+#sbpfFocusGrid>.campaign>p:last-child{
+  margin-top:8px!important;
+  padding-top:0!important;
+}
+#sbpfFocusGrid>.campaign:focus-visible{
+  outline:3px solid #d6ad58!important;
+  outline-offset:2px!important;
+}
+@media(max-width:600px){
+  #sbpfFocusGrid{gap:7px!important}
+  #sbpfFocusGrid>.campaign{padding:9px!important;border-radius:14px!important}
+}
+</style>
 </head>
 <body>
 <div class="sbpf-topbar">
@@ -1800,6 +1829,33 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
 })();
 </script>
 
+
+<script id="sbpf-work-area-card-id-verification">
+(function(){
+  'use strict';
+  const grid=document.getElementById('sbpfFocusGrid');
+  if(!grid)return;
+  const destination='/member-verification.html';
+  grid.querySelectorAll(':scope > .campaign').forEach(function(card,index){
+    card.setAttribute('role','link');
+    card.setAttribute('tabindex','0');
+    const heading=card.querySelector('h3');
+    const title=heading?heading.textContent.trim():'कार्य क्षेत्र';
+    card.setAttribute('aria-label',title+' — सदस्य ID सत्यापन खोलें');
+    card.addEventListener('click',function(event){
+      if(event.target.closest('a,button,input,select,textarea,[role="button"]'))return;
+      window.location.href=destination;
+    });
+    card.addEventListener('keydown',function(event){
+      if(event.target!==card)return;
+      if(event.key==='Enter'||event.key===' '){
+        event.preventDefault();
+        window.location.href=destination;
+      }
+    });
+  });
+})();
+</script>
 </body></html>
 
 
