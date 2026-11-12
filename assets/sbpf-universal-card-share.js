@@ -45,8 +45,16 @@
     else{ctx.fillStyle='#f4e8d7';ctx.fillRect(72,y,936,145);ctx.fillStyle='#781626';ctx.font='bold 38px system-ui';ctx.fillText('SBPF • सेवा • सहयोग',100,y+88);y+=180;}
     ctx.fillStyle='#781626';y=wrapped(ctx,title,76,y,928,60,2,'bold 46px system-ui')+18;
     ctx.fillStyle='#343034';y=wrapped(ctx,description||'सेवा • सहयोग • स्वावलंबन • सशक्तिकरण',76,y,928,43,4,'28px system-ui')+24;
-    ctx.fillStyle='#145a38';wrapped(ctx,'पूरी जानकारी और QR: '+shareUrl,76,Math.min(1195,Math.max(y,1110)),928,34,2,'bold 24px system-ui');
-    ctx.fillStyle='#b18b32';ctx.fillRect(34,1260,1012,56);ctx.fillStyle='#fff';ctx.font='bold 25px system-ui';ctx.fillText('swarnimbharatclub.in  |  #SBPF',76,1298,920);
+    ctx.fillStyle='#145a38';const linkY=y+30;wrapped(ctx,'पूरी जानकारी और QR: '+shareUrl,76,linkY,928,34,2,'bold 24px system-ui');
+    const footerY=linkY+76;
+    const old=canvas, finalHeight=Math.min(1700,Math.max(900,footerY+105));
+    if(finalHeight!==canvas.height){
+      const copy=document.createElement('canvas');copy.width=1080;copy.height=finalHeight;
+      copy.getContext('2d').drawImage(old,0,0);
+      canvas.width=1080;canvas.height=finalHeight;
+      canvas.getContext('2d').drawImage(copy,0,0);
+    }
+    ctx.fillStyle='#b18b32';ctx.fillRect(34,canvas.height-70,1012,70);ctx.fillStyle='#fff';ctx.font='bold 25px system-ui';ctx.fillText('swarnimbharatclub.in  |  #SBPF',76,canvas.height-27,920);
     return await new Promise(resolve=>canvas.toBlob(blob=>resolve(blob?new File([blob],'SBPF-'+slugify(title)+'.png',{type:'image/png'}):null),'image/png'));
   }
   async function copyText(value){try{await navigator.clipboard.writeText(value);return true;}catch(_){
@@ -60,8 +68,30 @@
     const description=clean(card.dataset.shareDescription||Array.from(card.querySelectorAll(':scope > p,p')).map(p=>p.textContent).join(' ')).slice(0,650);
     const grid=card.closest('#sbpfCampaignGrid,#sbpfFocusGrid');
     const type=card.dataset.shareType||(grid?.id==='sbpfCampaignGrid'?'campaign':grid?.id==='sbpfFocusGrid'?'focus_area':'campaign_content');
-    const detail=detailLink(card);
-    let slug=clean(card.dataset.shareSlug||card.id);
+    const grid=card.closest('#sbpfCampaignGrid,#sbpfFocusGrid');
+    let slug=clean(card.dataset.shareSlug||'');
+    if(!slug)slug=slugify(heading?.textContent||card.id||'sbpf-card');
+    const detail=grid?.id==='sbpfFocusGrid'
+      ? new URL('work-area.html?slug='+encodeURIComponent(slug),location.origin+'/').href
+      : grid?.id==='sbpfCampaignGrid'
+        ? new URL('campaign.html?slug='+encodeURIComponent(slug),location.origin+'/').href
+        : detailLink(card);
+    if(!card.hasAttribute('data-sbpf-no-card-navigation')){
+      card.style.cursor='pointer';
+      card.setAttribute('tabindex',card.hasAttribute('tabindex')?card.getAttribute('tabindex'):'0');
+      card.setAttribute('role',card.getAttribute('role')||'link');
+      const openCard=event=>{
+        if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+        if(event.target.closest('a,button,input,select,textarea,summary,[contenteditable="true"],.sbpf-universal-share'))return;
+        location.href=detail;
+      };
+      card.addEventListener('click',openCard);
+      card.addEventListener('keydown',event=>{
+        if((event.key==='Enter'||event.key===' ')&&event.target===card){event.preventDefault();location.href=detail;}
+      });
+      card.setAttribute('aria-label',(title||'SBPF कार्ड')+' — पूरी जानकारी खोलें');
+    }
+    
     if(!slug){try{slug=new URL(detail).searchParams.get('slug')||'';}catch(_){}}
     slug=slugify(slug||title);
     const shareUrl=sharePath(type,slug);
