@@ -1124,6 +1124,29 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
   #sbpfFocusGrid>.campaign{padding:10px!important;border-radius:14px!important}
 }
 </style>
+
+<style id="sbpf-final-mobile-two-column-fix">
+/* Final authoritative rule: work-area cards must stay two columns on phones and tablets. */
+@media screen and (max-width: 1100px) {
+  html body #sbpfFocusGrid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-auto-flow: row !important;
+    gap: 8px !important;
+    column-gap: 8px !important;
+    row-gap: 8px !important;
+    width: 100% !important;
+    align-items: stretch !important;
+  }
+  html body #sbpfFocusGrid > .campaign {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+}
+</style>
 </head>
 <body>
 <div class="sbpf-topbar">
