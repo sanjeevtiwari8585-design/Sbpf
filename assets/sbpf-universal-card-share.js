@@ -13,12 +13,17 @@
     try{fetch(API,{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json',Prefer:'return=minimal'},
       body:JSON.stringify({card_type:type,card_slug:slug,card_title:clean(title).slice(0,240),platform}),keepalive:true}).catch(()=>{});}catch(_){}
   };
-  function detailLink(card){
+  function detailLink(card,type,slug){
+    const explicit=card.dataset.detailUrl||card.dataset.href||card.dataset.target;
+    if(explicit){try{return new URL(explicit,location.href).href;}catch(_){}}
     const a=Array.from(card.querySelectorAll('a[href]')).find(x=>{
       const h=x.getAttribute('href')||'';return h&&!h.startsWith('#')&&!/^javascript:/i.test(h)&&!/^(mailto:|tel:)/i.test(h);
     });
     if(a){try{return new URL(a.getAttribute('href'),location.href).href;}catch(_){}}
-    if(!card.id)card.id='sbpf-card-'+slugify(card.dataset.shareSlug||card.querySelector('h2,h3,h4')?.textContent||'card');
+    const special={'swarnim-book':'swarnim-book.html','swarnim-media':'swarnim-media/index.html','swarnim-creator':'swarnim-creator.html','swarnim-csc':'swarnim-csc.html'};
+    if(type==='focus_area')return new URL('work-area.html?slug='+encodeURIComponent(slug),SITE).href;
+    if(type==='campaign')return new URL(special[slug]||('campaign.html?slug='+encodeURIComponent(slug)),SITE).href;
+    if(!card.id)card.id='sbpf-card-'+slugify(card.querySelector('h2,h3,h4')?.textContent||'card');
     const u=new URL(location.href);u.hash=card.id;return u.href;
   }
   function sharePath(type,slug){
@@ -47,15 +52,11 @@
     ctx.fillStyle='#343034';y=wrapped(ctx,description||'सेवा • सहयोग • स्वावलंबन • सशक्तिकरण',76,y,928,43,4,'28px system-ui')+24;
     ctx.fillStyle='#145a38';const linkY=y+30;wrapped(ctx,'पूरी जानकारी और QR: '+shareUrl,76,linkY,928,34,2,'bold 24px system-ui');
     const footerY=linkY+76;
-    const old=canvas, finalHeight=Math.min(1700,Math.max(900,footerY+105));
-    if(finalHeight!==canvas.height){
-      const copy=document.createElement('canvas');copy.width=1080;copy.height=finalHeight;
-      copy.getContext('2d').drawImage(old,0,0);
-      canvas.width=1080;canvas.height=finalHeight;
-      canvas.getContext('2d').drawImage(copy,0,0);
-    }
-    ctx.fillStyle='#b18b32';ctx.fillRect(34,canvas.height-70,1012,70);ctx.fillStyle='#fff';ctx.font='bold 25px system-ui';ctx.fillText('swarnimbharatclub.in  |  #SBPF',76,canvas.height-27,920);
-    return await new Promise(resolve=>canvas.toBlob(blob=>resolve(blob?new File([blob],'SBPF-'+slugify(title)+'.png',{type:'image/png'}):null),'image/png'));
+    const finalHeight=Math.min(1700,Math.max(900,footerY+105));
+    const output=document.createElement('canvas');output.width=1080;output.height=finalHeight;
+    const out=output.getContext('2d');out.drawImage(canvas,0,0);
+    out.fillStyle='#b18b32';out.fillRect(34,finalHeight-70,1012,70);out.fillStyle='#fff';out.font='bold 25px system-ui';out.fillText('swarnimbharatclub.in  |  #SBPF',76,finalHeight-27,920);
+    return await new Promise(resolve=>output.toBlob(blob=>resolve(blob?new File([blob],'SBPF-'+slugify(title)+'.png',{type:'image/png'}):null),'image/png'));
   }
   async function copyText(value){try{await navigator.clipboard.writeText(value);return true;}catch(_){
     const box=document.createElement('textarea');box.value=value;box.style.cssText='position:fixed;opacity:0';document.body.appendChild(box);box.select();
@@ -117,7 +118,19 @@
       btn('कार्ड PNG डाउनलोड',async()=>{try{const file=await makeImage(card,title,description,shareUrl);if(!file){note('कार्ड तस्वीर तैयार नहीं हो सकी।');return;}const url=URL.createObjectURL(file),a=document.createElement('a');a.href=url;a.download=file.name;a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);note('पूरा कार्ड PNG डाउनलोड हो गया। QR कोड अलग से डाउनलोड करने के लिए QR विकल्प खोलें।');}catch(e){note('कार्ड डाउनलोड नहीं हो सका।');}}),
       btn('▦ QR कोड',()=>{qrPanel.hidden=!qrPanel.hidden;if(!qrPanel.hidden){log(type,slug,title,'qr_view');note('इस कार्ड का अलग QR कोड तैयार है।');}})
     );
-    wrap.append(qrPanel,status);(card.querySelector(':scope > .body')||card).append(wrap);card.dataset.sbpfUniversalReady='1';
+    wrap.append(qrPanel,status);(card.querySelector(':scope > .body')||card).append(wrap);
+    card.dataset.sbpfUniversalReady='1';
+    card.style.cursor='pointer';
+    if(!card.hasAttribute('tabindex'))card.setAttribute('tabindex','0');
+    if(!card.hasAttribute('role'))card.setAttribute('role','link');
+    const openCard=e=>{
+      if(e.target.closest('a,button,input,select,textarea,label,[role="button"],.sbpf-universal-share'))return;
+      if(e.type==='keydown'&&e.key!=='Enter'&&e.key!==' ')return;
+      if(e.type==='keydown')e.preventDefault();
+      if(detail&&detail!==location.href)location.href=detail;
+    };
+    card.addEventListener('click',openCard);
+    card.addEventListener('keydown',openCard);
   }
   function scan(root=document){if(root instanceof HTMLElement&&root.matches(SELECTOR))attach(root);root.querySelectorAll?.(SELECTOR).forEach(attach);}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>scan());else scan();
