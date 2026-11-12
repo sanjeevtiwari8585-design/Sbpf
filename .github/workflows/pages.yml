@@ -58,6 +58,9 @@ jobs:
       - name: Validate browser video renderer JavaScript
         run: node --check swarnim-ai-renderer.js
 
+      - name: Validate reusable SBPF card sharing JavaScript
+        run: node --check assets/sbpf-card-share.js
+
       - name: Validate Swarnim Book app assets
         run: |
           test -s swarnim-book-office.html
