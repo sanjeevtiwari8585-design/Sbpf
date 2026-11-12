@@ -27,6 +27,9 @@ jobs:
       - name: Enable full-card social sharing on public pages
         run: python scripts/enable-card-sharing.py
 
+      - name: Generate individual social preview pages from Supabase cards
+        run: python scripts/generate-card-share-pages.py
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -65,7 +68,8 @@ jobs:
         run: |
           node --check assets/sbpf-card-share.js
           node --check assets/sbpf-universal-card-share.js
-          python -m py_compile scripts/enable-card-sharing.py
+          node --check assets/sbpf-share-landing.js
+          python -m py_compile scripts/enable-card-sharing.py scripts/generate-card-share-pages.py
 
       - name: Validate Swarnim Book app assets
         run: |
