@@ -20,39 +20,40 @@
 }
 @media(max-width:600px){
  :where(.grid,.pillars,.footer-grid,.cards-grid,.card-grid,.card-grid-container,.campaign-grid,.campaigns-grid,.feature-grid,.features-grid,.service-grid,.services-grid,.work-area-grid,.work-areas-grid,.dashboard-grid,.portal-grid,.module-grid,.project-grid,.stats-grid,.category-grid){
-  grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
   gap:12px!important;
+ }
+ :where(.grid,.pillars,.footer-grid,.cards-grid,.card-grid,.card-grid-container,.campaign-grid,.campaigns-grid,.feature-grid,.features-grid,.service-grid,.services-grid,.work-area-grid,.work-areas-grid,.dashboard-grid,.portal-grid,.module-grid,.project-grid,.stats-grid,.category-grid)>:where(.card,.campaign,.pillar,.info,.feature-card,.service-card,.module-card,.project-card,.stat-card,.work-area-card){
+  border-radius:14px!important;
+  padding:12px!important;
  }
 }
 @media(prefers-reduced-motion:reduce){
  :where(.card,.campaign,.pillar,.info,.feature-card,.service-card,.module-card,.project-card,.stat-card,.work-area-card){transition:none!important;animation:none!important}
 }
 
-
-/* SBPF 12 work-area cards: seamless mobile grid matching the approved 4-column layout. */
+/* 12 work-area cards: two clear columns on mobile, with visible spacing. */
 #sbpfFocusGrid{
-  display:grid!important;
-  grid-template-columns:repeat(4,minmax(0,1fr))!important;
-  gap:0!important;
-  column-gap:0!important;
-  row-gap:0!important;
-  align-items:stretch!important;
+ display:grid!important;
+ grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ gap:12px!important;
+ align-items:stretch!important;
 }
 #sbpfFocusGrid>.campaign{
-  min-width:0!important;
-  max-width:none!important;
-  width:100%!important;
-  margin:0!important;
-  border-radius:0!important;
-  box-shadow:none!important;
+ min-width:0!important;
+ max-width:100%!important;
+ width:100%!important;
+ margin:0!important;
+ border-radius:16px!important;
+ box-shadow:0 5px 18px rgba(54,32,16,.07)!important;
 }
 @media(max-width:600px){
-  #sbpfFocusGrid{
-    grid-template-columns:repeat(4,minmax(0,1fr))!important;
-    gap:0!important;
-  }
-  #sbpfFocusGrid>.campaign{
-    padding:7px 5px!important;
-    border-radius:0!important;
-  }
+ #sbpfFocusGrid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:12px!important;
+ }
+ #sbpfFocusGrid>.campaign{
+  padding:12px!important;
+  border-radius:14px!important;
+ }
 }
