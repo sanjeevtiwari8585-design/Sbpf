@@ -4,7 +4,7 @@
   const SUPABASE_URL = 'https://dxowhzghrdghfzoggorx.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
   const SHARE_API = SUPABASE_URL + '/rest/v1/sbpf_card_social_shares';
-  const clean = value => String(value || '').replace(/\\s+/g, ' ').trim();
+  const clean = value => String(value || '').replace(/\s+/g, ' ').trim();
   const esc = value => String(value || '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   const slugify = value => clean(value).toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-|-$/g, '').slice(0, 110) || 'card';
 
