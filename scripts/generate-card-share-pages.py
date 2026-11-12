@@ -71,7 +71,6 @@ def render_page(record):
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)} | SBPF">
 <meta name="twitter:description" content="{esc(description[:300])}"><meta name="twitter:image" content="{esc(image)}">
 <meta http-equiv="refresh" content="3;url={esc(target_url)}">
-<script type="application/ld+json">{jsonld}</script>
 <style>body{{margin:0;background:#f7f2eb;color:#31252a;font:16px system-ui,sans-serif}}main{{max-width:760px;margin:6vh auto;padding:24px}}article{{background:#fff;border:1px solid #eadfce;border-radius:18px;padding:22px;box-shadow:0 8px 28px #321c1212}}img{{display:block;max-width:100%;max-height:390px;object-fit:contain;margin:0 auto 18px;border-radius:12px}}h1{{color:#781626;line-height:1.4}}p{{line-height:1.8}}a,button{{display:inline-block;border:0;border-radius:9px;background:#781626;color:#fff;padding:12px 18px;text-decoration:none;font-weight:700;cursor:pointer}}</style>
 </head><body data-card-type="{esc(record['type'])}" data-card-slug="{esc(record['slug'])}" data-card-title="{esc(title)}" data-target="{esc(target_url)}">
 <main><article><img src="{esc(image)}" alt="{esc(title)}"><h1>{esc(title)}</h1><p>{esc(description)}</p>
