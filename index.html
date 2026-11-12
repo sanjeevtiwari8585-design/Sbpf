@@ -1027,6 +1027,47 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
 </style>
 
 <link rel="stylesheet" href="assets/sbpf-grid-layout.css">
+
+<style id="sbpf-unified-card-grid">
+/* Unified responsive card grid across the SBPF home page */
+.pillars,#sbpfFocusGrid,#sbpfCampaignGrid,.sbpf-live-grid,.footer-grid{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  align-items:stretch!important;
+  gap:16px!important;
+}
+.pillars>.pillar,#sbpfFocusGrid>.campaign,#sbpfCampaignGrid>.campaign,
+.sbpf-live-grid>.sbpf-live-stat,.footer-grid>.footer-col{
+  min-width:0!important;width:auto!important;max-width:none!important;
+}
+#sbpfFocusGrid>.campaign,#sbpfCampaignGrid>.campaign{
+  height:100%;display:flex;flex-direction:column;align-items:stretch;
+}
+#sbpfFocusGrid>.campaign>p:last-of-type,
+#sbpfCampaignGrid>.campaign>p:last-of-type{margin-top:auto}
+@media(max-width:900px){
+  .pillars,#sbpfFocusGrid,#sbpfCampaignGrid,.sbpf-live-grid,.footer-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:13px!important;
+  }
+}
+@media(max-width:520px){
+  .pillars,#sbpfFocusGrid,#sbpfCampaignGrid,.sbpf-live-grid,.footer-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;
+  }
+  #sbpfFocusGrid>.campaign,#sbpfCampaignGrid>.campaign{padding:12px!important;border-radius:14px!important}
+  #sbpfFocusGrid>.campaign h3,#sbpfCampaignGrid>.campaign h3{font-size:15px!important;line-height:1.4!important}
+  #sbpfFocusGrid>.campaign>p,#sbpfCampaignGrid>.campaign>p{font-size:12px!important;line-height:1.55!important}
+  #sbpfFocusGrid>.campaign .number,#sbpfCampaignGrid>.campaign .number{font-size:10px!important;padding:5px 7px!important}
+  #sbpfFocusGrid>.campaign .btn,#sbpfCampaignGrid>.campaign .btn{font-size:11px!important;padding:8px 7px!important;width:100%;text-align:center}
+}
+@media(max-width:360px){
+  #sbpfFocusGrid,#sbpfCampaignGrid{grid-template-columns:minmax(0,1fr)!important}
+}
+@media(prefers-reduced-motion:reduce){
+  #sbpfFocusGrid>.campaign,#sbpfCampaignGrid>.campaign{transition:none!important;animation:none!important}
+}
+</style>
+
 </head>
 <body>
 <div class="sbpf-topbar">
