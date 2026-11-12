@@ -57,9 +57,6 @@ def render_page(record):
     canonical = SITE + route_page(record).removesuffix('index.html')
     image = absolute_image(record.get('image'))
     esc = html.escape
-    jsonld = json.dumps({'@context':'https://schema.org','@type':'WebPage','name':title,
-                         'description':description,'url':canonical,'image':image},
-                        ensure_ascii=False).replace('</', '<\\/')
     return f'''<!doctype html>
 <html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{esc(title)} | SBPF</title>
