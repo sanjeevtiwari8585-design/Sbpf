@@ -498,7 +498,7 @@ demoBonusButton?.addEventListener('click',()=>{
  $('demoBonusResult').textContent='डेमो: दैनिक बोनस स्क्रीन सही काम कर रही है। वास्तविक बोनस या Coin क्लेम नहीं हुआ।';
 });
 
-loadRewardCategories().catch(e=>{const el=$('rewardCategoriesTestGrid');if(el)el.textContent='Rewards कार्ड लोड नहीं हुए: '+e.message;});
+loadRewardCategories().catch(e=>{const message='Rewards कार्ड लोड नहीं हुए: '+(e&&e.message?e.message:'नेटवर्क या Supabase त्रुटि');['rewardCategoriesPublicGrid','rewardCategoriesTestGrid','rewardCategoriesMemberGrid'].forEach(id=>{const el=$(id);if(el)el.textContent=message;});say(message,'error');});
 load();
 })();
 </script>
