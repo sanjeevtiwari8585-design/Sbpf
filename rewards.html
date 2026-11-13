@@ -204,7 +204,7 @@ async function load(){
  if(!token){$('loginPrompt').classList.remove('hidden');say('सदस्य सत्यापन आवश्यक है।');return;}
  try{
   user=await api('/auth/v1/user');
-  if(!user?.id)throw new Error('लॉगिन सत्र उपलब्ध नहीं है।');
+  if(!user?.id)throw new Error('सुरक्षित सदस्य सत्र उपलब्ध नहीं है।');
   const adminResult=await api('/rest/v1/rpc/is_admin',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
   isAdmin=adminResult===true;
   if(!isAdmin){
