@@ -481,7 +481,7 @@ async function loadRewardCategories(){
  const url='/rest/v1/sbpf_reward_categories?select=id,slug,title,description,icon,reward_label,reward_mode,action_label,destination_url,is_enabled,display_order,policy_note&is_enabled=eq.true&order=display_order.asc';
  const rows=await api(url);
  const cards=Array.isArray(rows)?rows:[];
- const render=items=>items.map(item=>{const watch=item.slug==='watch-earn';return '<article class="card reward-category-card" data-category="'+esc(item.slug)+'" data-destination-url="'+esc(item.destination_url||'')+'"><div class="reward-category-head"><div class="reward-category-icon">'+esc(item.icon)+'</div><h3>'+esc(item.title)+'</h3></div>'+(watch?'':'<p>'+esc(item.description)+'</p>')+'<span class="tag">'+(watch?'25 Coin':esc(item.reward_label))+'</span><button type="button" data-reward-action="'+esc(item.slug)+'">'+(watch?'Share':esc(item.action_label))+'</button></article>';}).join('');
+ const render=items=>items.map(item=>{const watch=item.slug==='watch-earn';return '<article class="card reward-category-card" data-category="'+esc(item.slug)+'" data-destination-url="'+esc(item.destination_url||'')+'"><div class="reward-category-head"><div class="reward-category-icon">'+esc(item.icon)+'</div><h3>'+esc(item.title)+'</h3></div>'+'<p>'+esc(item.description)+'</p><span class="tag">'+(watch?'Long 10 Coin · Short 2 Coin':esc(item.reward_label))+'</span><button type="button" data-reward-action="'+esc(item.slug)+'">'+(watch?'वीडियो देखें':esc(item.action_label))+'</button></article>';}).join('');
  ['rewardCategoriesPublicGrid','rewardCategoriesTestGrid','rewardCategoriesMemberGrid'].forEach(id=>{const el=$(id);if(el)el.innerHTML=cards.length?render(cards):'<p class="muted">अभी कोई Rewards कार्ड प्रकाशित नहीं है।</p>';});
  if(isAdmin)await loadAdminRewardCategories();
 }
@@ -505,14 +505,7 @@ document.addEventListener('click',async event=>{
   }else if(slug==='coin-wallet'){
    const target=$('ledger')||$('redeemForm');target?.scrollIntoView({behavior:'smooth',block:'center'});
   }else if(slug==='watch-earn'){
-   const link=action.closest('[data-category]')?.dataset.destinationUrl;
-   if(!link){say('वीडियो लिंक उपलब्ध नहीं है।','error');return;}
-   const shareData={title:'SBPF Watch & Earn',text:'SBPF का आधिकारिक वीडियो देखें: पूरा वीडियो देखना अनिवार्य है। पात्रता और 25 Coin का दावा सत्यापन के बाद होगा।',url:link};
-   try{
-    if(navigator.share){await navigator.share(shareData);say('Watch & Earn वीडियो लिंक शेयर किया गया।','ok');}
-    else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(link);say('वीडियो लिंक कॉपी हो गया। अब इसे शेयर कर सकते हैं।','ok');}
-    else{window.prompt('वीडियो लिंक कॉपी करें:',link);}
-   }catch(e){if(e.name!=='AbortError')say('शेयर नहीं हो सका: '+e.message,'error');}
+   window.location.href='watch-earn.html';
   }else if(slug==='daily-task'){
    const target=$('tasks');if(target)target.scrollIntoView({behavior:'smooth',block:'center'});else say('दैनिक टास्क सदस्य सत्यापन के बाद उपलब्ध होंगे।');
   }else if(slug==='google-review'){
