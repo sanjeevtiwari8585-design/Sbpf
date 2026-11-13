@@ -71,7 +71,7 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
 @media(max-width:640px){.rewards-test-grid{grid-template-columns:1fr}.rewards-test-grid>.card{min-height:0}.rewards-test-grid>.card:nth-child(3){grid-column:auto}}
 
 
-.reward-categories-grid{grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:12px}
+.public-rewards-preview{margin:22px 0}.reward-categories-grid{grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:12px}
 .reward-category-card{display:flex;flex-direction:column;min-height:205px;gap:7px}
 .reward-category-head{display:flex;align-items:center;gap:10px}
 .reward-category-icon{width:46px;height:46px;flex:0 0 46px;display:grid;place-items:center;border-radius:14px;background:#fff4d8;font-size:25px}
@@ -95,6 +95,11 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
 <div class="actions"><a class="btn" href="member-panel.html">सदस्य लॉगिन</a><a class="btn alt" href="index.html">मुख्य वेबसाइट</a></div>
 </section>
 
+<section class="public-rewards-preview">
+<div class="section-title"><h2>🎁 SBPF Rewards गतिविधियाँ</h2><span class="tag">सभी के लिए जानकारी</span></div>
+<p class="muted">नीचे Rewards Zone के उपलब्ध कार्ड देखें। Coin कमाना, Spin और INR रिडेम्पशन केवल पात्र एवं सत्यापित सदस्य लॉगिन के बाद, एडमिन लॉन्च नियमों के अनुसार उपलब्ध होंगे।</p>
+<div id="rewardCategoriesPublicGrid" class="grid reward-categories-grid"><div class="card">Rewards कार्ड लोड हो रहे हैं…</div></div>
+</section>
 <div id="message" class="notice">Rewards Zone की स्थिति जाँची जा रही है…</div>
 <section id="dashboard" class="hidden">
 <div class="stats">
@@ -418,7 +423,7 @@ async function loadRewardCategories(){
  const rows=await api(url);
  const cards=Array.isArray(rows)?rows:[];
  const render=items=>items.map(item=>'<article class="card reward-category-card" data-category="'+esc(item.slug)+'" data-destination-url="'+esc(item.destination_url||'')+'"><div class="reward-category-head"><div class="reward-category-icon">'+esc(item.icon)+'</div><h3>'+esc(item.title)+'</h3></div><p>'+esc(item.description)+'</p><span class="tag">'+esc(item.reward_label)+'</span><button type="button" data-reward-action="'+esc(item.slug)+'">'+esc(item.action_label)+'</button></article>').join('');
- ['rewardCategoriesTestGrid','rewardCategoriesMemberGrid'].forEach(id=>{const el=$(id);if(el)el.innerHTML=cards.length?render(cards):'<p class="muted">अभी कोई Rewards कार्ड प्रकाशित नहीं है।</p>';});
+ ['rewardCategoriesPublicGrid','rewardCategoriesTestGrid','rewardCategoriesMemberGrid'].forEach(id=>{const el=$(id);if(el)el.innerHTML=cards.length?render(cards):'<p class="muted">अभी कोई Rewards कार्ड प्रकाशित नहीं है।</p>';});
  if(isAdmin)await loadAdminRewardCategories();
 }
 async function loadAdminRewardCategories(){
