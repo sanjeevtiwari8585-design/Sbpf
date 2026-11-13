@@ -70,6 +70,18 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
 @media(min-width:900px){.rewards-test-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.rewards-test-grid>.card:nth-child(3){grid-column:span 2}}
 @media(max-width:640px){.rewards-test-grid{grid-template-columns:1fr}.rewards-test-grid>.card{min-height:0}.rewards-test-grid>.card:nth-child(3){grid-column:auto}}
 
+
+.reward-categories-grid{grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:12px}
+.reward-category-card{display:flex;flex-direction:column;min-height:205px;gap:7px}
+.reward-category-head{display:flex;align-items:center;gap:10px}
+.reward-category-icon{width:46px;height:46px;flex:0 0 46px;display:grid;place-items:center;border-radius:14px;background:#fff4d8;font-size:25px}
+.reward-category-card h3{margin:0;color:var(--wine);font-size:17px}
+.reward-category-card p{margin:0;color:var(--muted);font-size:13px}
+.reward-category-card .tag{align-self:flex-start;white-space:normal}
+.reward-category-card button{margin-top:auto;align-self:flex-start}
+@media(min-width:900px){.reward-categories-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:640px){.reward-categories-grid{grid-template-columns:1fr}.reward-category-card{min-height:0}}
+
 </style>
 </head>
 <body>
@@ -90,6 +102,8 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
 <div class="stat"><small>अनुमानित INR मूल्य</small><strong id="inrBalance">₹0.00</strong></div>
 <div class="stat"><small>सदस्य सत्यापन</small><strong id="memberStatus">—</strong></div>
 </div>
+<div class="section-title"><h2>🎯 Rewards गतिविधियाँ</h2><span class="tag">Supabase से लाइव</span></div>
+ <div id="rewardCategoriesMemberGrid" class="grid reward-categories-grid"><div class="card">Rewards कार्ड लोड हो रहे हैं…</div></div>
 <div class="section-title"><h2>🎡 Spin & Win</h2><span class="tag">हर 24 घंटे में 1 मौका</span></div>
 <div class="panel" id="memberSpinPanel">
  <p class="spin-info">व्हील पर 10, 40, 50 और 100 Coin के चार समान परिणाम हैं। हर परिणाम की संभावना 25% है।</p>
@@ -117,7 +131,10 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
  <div class="section-title"><h2>Admin Rewards Control</h2><span class="tag">केवल अधिकृत एडमिन</span></div>
  <p id="adminLaunchState" class="notice">Rewards launch स्थिति जाँची जा रही है…</p>
  <div class="admin-actions"><button id="toggleRewards" type="button" class="alt">Rewards चालू / बंद</button></div>
- <div class="section-title"><h2>नया टास्क बनाएँ</h2></div>
+ <div class="section-title"><h2>Rewards कार्ड प्रबंधन</h2></div>
+ <p class="muted">यहाँ से कार्ड चालू/बंद करें और प्रदर्शित रिवॉर्ड नियम बदलें। Google Review और Social Follow पर Coin रिवॉर्ड नहीं दिए जाएँगे।</p>
+ <div id="adminRewardCategories" class="list"><p class="muted">कार्ड लोड हो रहे हैं…</p></div>
+<div class="section-title"><h2>नया टास्क बनाएँ</h2></div>
  <form id="taskForm" class="admin-form">
   <div><label for="taskTitle">टास्क शीर्षक</label><input id="taskTitle" required maxlength="140"></div>
   <div><label for="taskType">टास्क प्रकार</label><select id="taskType"><option value="video_watch">वीडियो टास्क</option><option value="daily_task">दैनिक टास्क</option><option value="team_service">टीम सेवा</option></select></div>
@@ -147,22 +164,9 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
   <div class="stat"><small>अनुमानित INR</small><strong>₹0.00</strong></div>
   <div class="stat"><small>टेस्ट सत्यापन</small><strong>सक्रिय</strong></div>
  </div>
- <div class="section-title"><h2>Rewards Zone टेस्ट विकल्प</h2></div>
- <div class="grid rewards-test-grid">
-  <article class="card"><h3>🎬 Watch & Earn</h3><p>वीडियो टास्क कार्ड और निर्देशों की जाँच।</p><button id="demoWatchButton" type="button">डेमो टास्क देखें</button><p id="demoWatchResult" class="muted" aria-live="polite">केवल स्क्रीन/फ्लो टेस्ट।</p></article>
-  <article class="card"><h3>🎁 Daily Bonus</h3><p>दैनिक बोनस सेक्शन का दृश्य परीक्षण।</p><button id="demoBonusButton" type="button">डेमो बोनस देखें</button><p id="demoBonusResult" class="muted" aria-live="polite">यह वास्तविक बोनस क्लेम नहीं करेगा।</p></article>
-  <article class="card"><h3>🎡 Spin & Win</h3><p>चार सही Coin परिणामों वाला टेस्ट व्हील; हर परिणाम की समान संभावना।</p><div class="spin-demo"><div class="spin-wheel-wrap"><div class="spin-pointer"></div><div id="demoSpinWheel" class="spin-wheel eight"><div class="spin-labels eight"><span>100</span><span>50</span><span>40</span><span>10</span><span>100</span><span>50</span><span>40</span><span>10</span></div></div></div><button id="spinDemoButton" type="button">🎡 डेमो व्हील घुमाएँ</button><div id="spinDemoResult" class="spin-result" aria-live="polite">यह केवल डेमो है—वास्तविक Coin नहीं जुड़ेंगे।</div></div></article>
-  <article class="card"><h3>🪙 Coin Wallet</h3><p>टेस्ट वॉलेट का नमूना। वास्तविक बैलेंस और लेनदेन में कोई बदलाव नहीं होगा।</p><div class="admin-card"><div class="row"><div><b>उपलब्ध टेस्ट Coin</b><small>डेमो बैलेंस</small></div><strong>0</strong></div><div class="row"><div><b>अनुमानित INR</b><small>केवल जानकारी</small></div><strong>₹0.00</strong></div><div class="row"><div><b>लेनदेन इतिहास</b><small>अभी कोई टेस्ट लेनदेन नहीं</small></div><span class="tag">खाली</span></div></div><p class="muted">वास्तविक वॉलेट तभी दिखेगा जब सदस्य सामान्य लॉगिन से प्रवेश करेगा।</p></article>
-  <article class="card"><h3>⭐ Google Review / Feedback</h3><p>SBPF की सेवा पर अपनी सच्ची और स्वतंत्र राय दें। सकारात्मक या नकारात्मक—किसी भी समीक्षा के बदले Coin नहीं दिए जाएँगे।</p><span class="tag">कोई रिवॉर्ड नहीं · नीति-अनुकूल</span><button type="button" data-demo-action="review">जानकारी देखें</button><p class="muted" id="demo-review">Google Business Profile का आधिकारिक लिंक एडमिन जोड़ेगा।</p></article>
-  <article class="card"><h3>📣 Social Media Subscribe & Follow</h3><p>SBPF के आधिकारिक YouTube, Facebook और Instagram चैनल खोजें और स्वेच्छा से जुड़ें। Follow / Subscribe के बदले Coin नहीं मिलेंगे।</p><span class="tag">प्रमोशन लिंक · कोई रिवॉर्ड नहीं</span><button type="button" data-demo-action="social">चैनल जानकारी देखें</button><p class="muted" id="demo-social">आधिकारिक चैनल लिंक एडमिन जोड़ेगा।</p></article>
-  <article class="card"><h3>🔗 Post Share</h3><p>SBPF की सार्वजनिक वेबसाइट या अभियान पेज का लिंक अपने परिचितों के साथ साझा करें।</p><span class="tag">स्वैच्छिक शेयर</span><button type="button" data-demo-action="share">SBPF लिंक साझा करें</button><p class="muted" id="demo-share">शेयर करने पर अपने-आप Coin नहीं जुड़ेंगे।</p></article>
-  <article class="card"><h3>👥 Referral & Invite</h3><p>किसी इच्छुक व्यक्ति को SBPF के बारे में बताएँ। रेफरल तभी मान्य होगा जब नया सदस्य अपनी सहमति से पंजीकरण और आवश्यक सत्यापन पूरा करे।</p><span class="tag">Admin नियमों के अनुसार</span><button type="button" data-demo-action="referral">रेफरल प्रक्रिया देखें</button><p class="muted" id="demo-referral">रिवॉर्ड दर और पात्रता एडमिन द्वारा तय होगी।</p></article>
-  <article class="card"><h3>📅 Daily Check-in</h3><p>सदस्य पैनल में दैनिक उपस्थिति दर्ज करें और आज के सीखने / सेवा कार्य देखें।</p><span class="tag">दैनिक गतिविधि</span><button type="button" data-demo-action="checkin">डेमो चेक-इन देखें</button><p class="muted" id="demo-checkin">यह टेस्ट केवल स्क्रीन दिखाता है; कोई Coin जारी नहीं करता।</p></article>
-  <article class="card"><h3>🎯 Campaign Participation</h3><p>Swarnim Jan Jagran, Paryavaran, Gurukulam, Seva और अन्य SBPF अभियानों में भाग लें।</p><span class="tag">प्रमाण / एडमिन समीक्षा आवश्यक</span><button type="button" data-demo-action="campaign">अभियान देखें</button><p class="muted" id="demo-campaign">स्वीकृत गतिविधियों के लिए ही रिवॉर्ड नियम लागू होंगे।</p></article>
-  <article class="card"><h3>🤝 Volunteer Service</h3><p>स्थानीय सेवा, जागरूकता, सहायता और आयोजन में किए गए वास्तविक कार्य का विवरण व प्रमाण जमा करें।</p><span class="tag">सत्यापन के बाद</span><button type="button" data-demo-action="volunteer">सेवा कार्य देखें</button><p class="muted" id="demo-volunteer">एडमिन समीक्षा के बाद ही पात्रता तय होगी।</p></article>
-  <article class="card"><h3>📲 SBPF App / Website Visit</h3><p>SBPF वेबसाइट खोलें, सदस्य सुविधाएँ समझें और आधिकारिक ऐप उपलब्ध होने पर सुरक्षित लिंक से इंस्टॉल करें।</p><span class="tag">जानकारी और सहायता</span><button type="button" data-demo-action="app">मुख्य वेबसाइट खोलें</button><p class="muted" id="demo-app">ऐप डाउनलोड लिंक उपलब्ध होने पर यहाँ दिखेगा।</p></article>
-
- </div>
+ <div class="section-title"><h2>Rewards Zone के सभी कार्य</h2><span class="tag">Supabase से लाइव</span></div>
+ <div id="rewardCategoriesTestGrid" class="grid reward-categories-grid"><div class="card">Rewards कार्ड लोड हो रहे हैं…</div></div>
+ 
  <div class="actions"><button id="exitTestMode" type="button" class="alt">टेस्ट मोड बंद करें</button></div>
 </section>
 </main>
@@ -407,6 +411,66 @@ document.querySelectorAll('[data-demo-action]').forEach(btn=>btn.addEventListene
  if(target)target.textContent=promoMessages[action]||'यह डेमो विकल्प है।';
 }));
 
+
+async function loadRewardCategories(){
+ const url='/rest/v1/sbpf_reward_categories?select=id,slug,title,description,icon,reward_label,reward_mode,action_label,destination_url,is_enabled,display_order,policy_note&is_enabled=eq.true&order=display_order.asc';
+ const rows=await api(url);
+ const cards=Array.isArray(rows)?rows:[];
+ const render=items=>items.map(item=>'<article class="card reward-category-card" data-category="'+esc(item.slug)+'"><div class="reward-category-head"><div class="reward-category-icon">'+esc(item.icon)+'</div><h3>'+esc(item.title)+'</h3></div><p>'+esc(item.description)+'</p><span class="tag">'+esc(item.reward_label)+'</span><button type="button" data-reward-action="'+esc(item.slug)+'">'+esc(item.action_label)+'</button></article>').join('');
+ ['rewardCategoriesTestGrid','rewardCategoriesMemberGrid'].forEach(id=>{const el=$(id);if(el)el.innerHTML=cards.length?render(cards):'<p class="muted">अभी कोई Rewards कार्ड प्रकाशित नहीं है।</p>';});
+ if(isAdmin)await loadAdminRewardCategories();
+}
+async function loadAdminRewardCategories(){
+ const el=$('adminRewardCategories');if(!el)return;
+ try{
+  const rows=await api('/rest/v1/sbpf_reward_categories?select=id,slug,title,reward_label,reward_mode,is_enabled,display_order&order=display_order.asc');
+  el.innerHTML=rows.length?rows.map(x=>'<div class="row"><div><b>'+esc(x.title)+'</b><small>'+esc(x.slug)+' · '+esc(x.reward_mode)+' · '+esc(x.reward_label)+'</small></div><div class="admin-actions"><button type="button" data-admin-category-edit="'+x.id+'">रिवॉर्ड नियम</button><button type="button" class="alt" data-admin-category-toggle="'+x.id+'" data-enabled="'+x.is_enabled+'">'+(x.is_enabled?'बंद करें':'चालू करें')+'</button></div></div>').join(''):'<p class="muted">कोई कार्ड उपलब्ध नहीं।</p>';
+ }catch(e){el.textContent='कार्ड प्रबंधन लोड नहीं हुआ: '+e.message;}
+}
+document.addEventListener('click',async event=>{
+ const action=event.target.closest('[data-reward-action]');
+ if(action){
+  const slug=action.dataset.rewardAction;
+  const destinations={'campaign-participation':'campaign.html','volunteer-service':'volunteer-registration','app-website-visit':'index.html'};
+  if(slug==='post-share'){
+   const shareData={title:'Swarnim Bharat Parivar Foundation',text:'SBPF की आधिकारिक वेबसाइट और अभियान देखें',url:'https://swarnimbharatclub.in/'};
+   try{if(navigator.share)await navigator.share(shareData);else if(navigator.clipboard){await navigator.clipboard.writeText(shareData.url);say('SBPF वेबसाइट लिंक कॉपी हो गया।','ok');}else say(shareData.url,'ok');}catch(e){if(e.name!=='AbortError')say('शेयर नहीं हो सका: '+e.message,'error');}
+  }else if(slug==='spin-wheel'){
+   const target=$('memberSpinPanel')||$('demoSpinWheel');target?.scrollIntoView({behavior:'smooth',block:'center'});
+  }else if(slug==='coin-wallet'){
+   const target=$('ledger')||$('redeemForm');target?.scrollIntoView({behavior:'smooth',block:'center'});
+  }else if(slug==='watch-earn'||slug==='daily-task'){
+   const target=$('tasks');if(target)target.scrollIntoView({behavior:'smooth',block:'center'});else say('वीडियो और दैनिक टास्क सामान्य सदस्य लॉगिन के बाद उपलब्ध होंगे।');
+  }else if(slug==='google-review'){
+   say('Google Review लिंक एडमिन द्वारा जोड़ना बाकी है। समीक्षा स्वैच्छिक होगी; इसके बदले Coin नहीं मिलेंगे।');
+  }else if(slug==='social-follow'){
+   say('आधिकारिक YouTube, Facebook और Instagram लिंक एडमिन द्वारा जोड़ना बाकी है। Follow / Subscribe के बदले Coin नहीं मिलेंगे।');
+  }else if(slug==='daily-checkin'){
+   say('दैनिक Check-in का वास्तविक रिवॉर्ड नियम एडमिन सेट करेगा। यह कार्ड अभी गतिविधि का प्रवेश बिंदु है।');
+  }else if(slug==='referral-invite'){
+   window.location.href='member-panel.html';
+  }else if(destinations[slug]){
+   window.location.href=destinations[slug];
+  }else{
+   say('यह गतिविधि सामान्य सदस्य लॉगिन और प्रकाशित टास्क के बाद उपलब्ध होगी।');
+  }
+ }
+ const toggle=event.target.closest('[data-admin-category-toggle]');
+ if(toggle){
+  const id=toggle.dataset.adminCategoryToggle,next=toggle.dataset.enabled!=='true';
+  try{await api('/rest/v1/sbpf_reward_categories?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({is_enabled:next,updated_at:new Date().toISOString()})});await loadRewardCategories();say('Rewards कार्ड की स्थिति अपडेट हो गई।','ok');}
+  catch(e){say('कार्ड अपडेट नहीं हुआ: '+e.message,'error');}
+ }
+ const edit=event.target.closest('[data-admin-category-edit]');
+ if(edit){
+  const id=edit.dataset.adminCategoryEdit;
+  const value=window.prompt('इस कार्ड पर दिखाने वाला रिवॉर्ड नियम लिखें:');
+  if(value===null||!value.trim())return;
+  try{await api('/rest/v1/sbpf_reward_categories?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({reward_label:value.trim(),updated_at:new Date().toISOString()})});await loadRewardCategories();say('रिवॉर्ड नियम सेव हो गया।','ok');}
+  catch(e){say('रिवॉर्ड नियम सेव नहीं हुआ: '+e.message,'error');}
+ }
+});
+
 const demoWatchButton=$('demoWatchButton');
 demoWatchButton?.addEventListener('click',()=>{
  $('demoWatchResult').textContent='डेमो: वीडियो टास्क का विवरण/निर्देश सफलतापूर्वक खुला। कोई Coin जारी नहीं हुआ।';
@@ -416,6 +480,7 @@ demoBonusButton?.addEventListener('click',()=>{
  $('demoBonusResult').textContent='डेमो: दैनिक बोनस स्क्रीन सही काम कर रही है। वास्तविक बोनस या Coin क्लेम नहीं हुआ।';
 });
 
+loadRewardCategories().catch(e=>{const el=$('rewardCategoriesTestGrid');if(el)el.textContent='Rewards कार्ड लोड नहीं हुए: '+e.message;});
 load();
 })();
 </script>
