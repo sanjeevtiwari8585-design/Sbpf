@@ -51,7 +51,7 @@ $("verifyForm").addEventListener("submit",async e=>{
   if(!response.ok)throw new Error(data.error||"सत्यापन पूरा नहीं हो सका।");
   const checks=[["Member ID",data.checks.member_id_valid],["भुगतान",data.checks.payment_verified],["KYC",data.checks.kyc_verified],["सदस्यता",data.checks.membership_active],["वार्षिक सत्यापन",data.checks.annual_verification_valid]];
   $("result").className="result "+(data.fully_verified?"ok":"pending");
-  $("result").innerHTML='<div class="status">'+(data.fully_verified?"✓ पूर्ण सत्यापित":"सत्यापन लंबित")+'</div><div style="font-size:13px;margin-top:4px">Member ID: <b>'+esc(data.member_id)+'</b></div><div class="checks">'+checks.map(([name,ok])=>'<div class="check">'+esc(name)+'<br><span class="'+(ok?"yes":"no")+'">'+(ok?"✓ सत्यापित":"○ लंबित")+'</span></div>').join("")+'</div><div style="font-size:11px;color:#756d70;margin-top:10px">जाँच समय: '+new Date(data.checked_at).toLocaleString("hi-IN")+'</div>';
+  $("result").innerHTML='<div class="status">'+(data.fully_verified?"✓ पूर्ण सत्यापित":"सत्यापन लंबित")+'</div><div style="font-size:13px;margin-top:4px">Member ID: <b>'+esc(data.member_id||member_id)+'</b></div><div class="checks">'+checks.map(([name,ok])=>'<div class="check">'+esc(name)+'<br><span class="'+(ok?"yes":"no")+'">'+(ok?"✓ सत्यापित":"○ लंबित")+'</span></div>').join("")+'</div><div style="font-size:11px;color:#756d70;margin-top:10px">जाँच समय: '+new Date(data.checked_at).toLocaleString("hi-IN")+'</div>';
  }catch(err){$("message").textContent=err.message||"सत्यापन सेवा उपलब्ध नहीं है।"}
  finally{btn.disabled=false;btn.textContent="सदस्य सत्यापित करें"}
 });
