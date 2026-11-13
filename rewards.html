@@ -1,40 +1,181 @@
 <!doctype html>
 <html lang="hi">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#145a38">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#781626">
+<meta name="description" content="SBPF Rewards Zone — सत्यापित सदस्यों के लिए कार्य, SBPF Coin और रिवॉर्ड।">
 <title>SBPF Rewards Zone | स्वर्णिम भारत परिवार फाउंडेशन</title>
 <style>
-:root{--green:#145a38;--gold:#d6ad45;--cream:#fff9ed;--ink:#252126}
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#fbfaf8;color:var(--ink);line-height:1.6}
-header{background:linear-gradient(120deg,#711222,#9b2634 62%,#c59b36);color:#fff;padding:22px max(18px,calc((100% - 980px)/2))}
-header a{color:#fff;text-decoration:none;font-weight:700}main{max-width:980px;margin:auto;padding:38px 18px}
-.hero{padding:30px 22px;border-radius:22px;background:linear-gradient(130deg,#fff7e4,#fff);border:1px solid #ead9b8;text-align:center}
-.hero .icon{font-size:48px}.hero h1{margin:8px 0;color:#781626;font-size:clamp(28px,5vw,42px)}.hero p{max-width:650px;margin:10px auto;color:#62595a}
-.status{display:inline-block;padding:6px 12px;border-radius:30px;background:#e8f4eb;color:#145a38;font-weight:800;font-size:13px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:22px 0}.card{background:#fff;border:1px solid #eee2d1;border-radius:16px;padding:20px}.card b{display:block;color:#781626;font-size:18px}.card span{font-size:28px}.card p{margin:6px 0 0;color:#655d5d;font-size:14px}
-.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:22px}.btn{display:inline-block;padding:12px 20px;border-radius:10px;background:#781626;color:white;text-decoration:none;font-weight:750}.btn.alt{background:#145a38}
-.note{margin-top:20px;padding:15px;border-left:4px solid var(--gold);background:#fff9ed;border-radius:10px;font-size:14px}
-@media(max-width:520px){.grid{grid-template-columns:1fr}.hero{padding:24px 16px}}
+:root{--wine:#781626;--wine2:#a52c39;--gold:#d7b34b;--green:#145a38;--ink:#28232a;--muted:#6d6268;--line:#eadfd3;--cream:#fff9ed;--bg:#fbfaf8}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 system-ui,-apple-system,"Noto Sans Devanagari",sans-serif}
+a{color:inherit}header{background:linear-gradient(120deg,#65101f,#922337 60%,#c49b3e);color:#fff;padding:14px max(16px,calc((100% - 1060px)/2));display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+header a{color:#fff;text-decoration:none;font-weight:750}header .spacer{flex:1}header .brand{font-size:12px;letter-spacing:1px;color:#ffedc4}
+main{max-width:1060px;margin:auto;padding:24px 16px 48px}
+.hero{border:1px solid #e5c77e;border-radius:22px;padding:26px;background:radial-gradient(circle at 90% 10%,#f4e5bd,transparent 30%),linear-gradient(130deg,#fff7e4,#fff);text-align:center}
+.hero .coin{font-size:42px}.hero h1{margin:5px 0;color:var(--wine);font-size:clamp(27px,5vw,40px);line-height:1.2}.hero p{max-width:690px;margin:10px auto;color:#62595a}
+.pill{display:inline-flex;align-items:center;padding:5px 11px;border-radius:99px;background:#e8f4eb;color:var(--green);font-size:12px;font-weight:850}
+.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px}
+.btn,button{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:10px;padding:11px 16px;background:var(--wine);color:#fff;text-decoration:none;font:inherit;font-weight:800;cursor:pointer}
+.btn.alt,button.alt{background:var(--green)}button:disabled{opacity:.55;cursor:wait}
+.notice{margin:16px 0;padding:13px 15px;border:1px solid #ead9a1;border-left:4px solid var(--gold);border-radius:12px;background:var(--cream);font-size:14px}
+.notice.error{border-color:#e9c6c9;background:#fff1f2;color:#8b1d2b}.notice.ok{border-color:#c9e4d1;background:#eff9f1;color:#155d35}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}
+.stat,.card,.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px;box-shadow:0 4px 16px #25151008;min-width:0}
+.stat small{display:block;color:var(--muted);font-weight:700}.stat strong{display:block;color:var(--wine);font-size:clamp(22px,4vw,30px);line-height:1.25;margin-top:5px}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:26px 0 12px}.section-title h2{margin:0;color:var(--wine);font-size:21px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card h3{margin:0 0 6px;color:var(--wine);font-size:18px}.card p{margin:6px 0;color:var(--muted);font-size:14px}.meta{display:flex;gap:7px;flex-wrap:wrap;margin:9px 0}.tag{display:inline-block;padding:4px 8px;border-radius:99px;background:#f6efe4;color:#72531a;font-size:11px;font-weight:800}
+.card .btn, .card button{margin-top:9px}.video-link{display:inline-block;margin-top:5px;color:var(--green);font-weight:800;overflow-wrap:anywhere}
+.list{display:grid;gap:8px}.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f0e9e2}.row:last-child{border-bottom:0}.row small{display:block;color:var(--muted)}
+form{display:grid;gap:9px}label{font-size:13px;font-weight:800}input,select,textarea{width:100%;padding:11px 12px;border:1px solid #d8cfc7;border-radius:10px;background:#fff;color:var(--ink);font:inherit}textarea{min-height:78px;resize:vertical}
+.hidden{display:none!important}.muted{color:var(--muted);font-size:13px}
+footer{max-width:1060px;margin:auto;padding:0 16px 30px;text-align:center;color:var(--muted);font-size:12px}
+@media(max-width:640px){main{padding:14px 12px 36px}.hero{padding:22px 15px}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:1/-1}.grid{grid-template-columns:1fr}.section-title h2{font-size:19px}.stat,.card,.panel{padding:14px}}
 </style>
 </head>
 <body>
-<header><a href="index.html">← SBPF मुख्य वेबसाइट</a></header>
+<header><a href="index.html">← SBPF मुख्य वेबसाइट</a><span class="spacer"></span><span class="brand">SWARNIM BHARAT PARIVAR FOUNDATION</span></header>
 <main>
 <section class="hero">
-<div class="icon" aria-hidden="true">🎁</div>
-<span class="status">केवल सत्यापित SBPF सदस्य</span>
+<div class="coin" aria-hidden="true">🪙</div>
+<span class="pill">केवल सत्यापित SBPF सदस्य</span>
 <h1>SBPF Rewards Zone</h1>
-<p>सीखें, भाग लें और रिवॉर्ड पॉइंट अर्जित करें। वीडियो टास्क, दैनिक बोनस, क्विज़, स्पिन और स्क्रैच रिवॉर्ड एक ही स्थान पर।</p>
-<div class="actions"><a class="btn" href="member.html">सदस्य लॉगिन करें</a><a class="btn alt" href="member-verification.html">सदस्य सत्यापन</a></div>
+<p>सीखें, सेवा करें, टास्क पूरा करें और SBPF Coin अर्जित करें। स्वीकृत कॉइन को निर्धारित नियमों के अनुसार INR रिवॉर्ड के लिए अनुरोध किया जा सकता है।</p>
+<div class="actions"><a class="btn" href="member-panel.html">सदस्य लॉगिन</a><a class="btn alt" href="index.html">मुख्य वेबसाइट</a></div>
 </section>
-<section class="grid" aria-label="Rewards सुविधाएँ">
-<article class="card"><span>▶️</span><b>Watch & Earn</b><p>SBPF द्वारा स्वीकृत वीडियो और सीखने वाले टास्क।</p></article>
-<article class="card"><span>🎡</span><b>Spin & Win</b><p>नियमों के अनुसार सीमित दैनिक मुफ्त स्पिन।</p></article>
-<article class="card"><span>🎟️</span><b>Scratch & Win</b><p>उपलब्ध मुफ्त स्क्रैच कार्ड से पॉइंट रिवॉर्ड।</p></article>
-<article class="card"><span>🎁</span><b>Daily Bonus</b><p>पात्र सत्यापित सदस्यों के लिए दैनिक बोनस।</p></article>
+
+<div id="message" class="notice">Rewards Zone की स्थिति जाँची जा रही है…</div>
+<section id="dashboard" class="hidden">
+<div class="stats">
+<div class="stat"><small>मेरे SBPF Coins</small><strong id="coinBalance">0</strong></div>
+<div class="stat"><small>अनुमानित INR मूल्य</small><strong id="inrBalance">₹0.00</strong></div>
+<div class="stat"><small>सदस्य सत्यापन</small><strong id="memberStatus">—</strong></div>
+</div>
+<div class="section-title"><h2>आज के उपलब्ध टास्क</h2><span class="tag">Admin-approved</span></div>
+<div id="tasks" class="grid"><div class="card">टास्क लोड हो रहे हैं…</div></div>
+
+<div class="section-title"><h2>मेरी Coin History</h2></div>
+<div class="panel"><div id="ledger" class="list"><p class="muted">रिकॉर्ड लोड हो रहे हैं…</p></div></div>
+
+<div class="section-title"><h2>INR रिवॉर्ड निकालने का अनुरोध</h2></div>
+<div class="panel">
+<p class="muted">100 SBPF Coin = ₹1.00। भुगतान केवल एडमिन द्वारा अनुरोध, उपलब्ध बैलेंस और भुगतान प्रमाण जाँचने के बाद मैन्युअल रूप से किया जाएगा।</p>
+<form id="redeemForm">
+<div><label for="redeemPoints">कितने Coin रिडीम करने हैं?</label><input id="redeemPoints" type="number" min="100" step="100" required placeholder="उदाहरण: 1000"></div>
+<div><label for="payoutMethod">भुगतान का तरीका</label><select id="payoutMethod" required><option value="">चुनें</option><option value="upi">UPI</option><option value="bank_transfer">बैंक ट्रांसफर</option><option value="other">अन्य / एडमिन से संपर्क</option></select></div>
+<button id="redeemButton" type="submit">INR रिवॉर्ड अनुरोध भेजें</button>
+</form>
+<div id="redemptions" class="list" style="margin-top:12px"></div>
+</div>
 </section>
-<div class="note"><b>महत्वपूर्ण:</b> यह Rewards Zone का प्रवेश पृष्ठ है। पॉइंट वॉलेट, वीडियो सत्यापन, स्पिन/स्क्रैच क्लेम और एडमिन नियंत्रण सक्रिय होने के बाद ही वास्तविक पॉइंट जारी होंगे। फिलहाल कोई पॉइंट या पुरस्कार क्लेम उपलब्ध नहीं है। पॉइंट नकद नहीं हैं।</div>
+<section id="loginPrompt" class="panel hidden">
+<h2 style="color:var(--wine);margin-top:0">पहले सदस्य लॉगिन करें</h2>
+<p>Rewards Zone केवल मौजूदा SBPF सदस्य लॉगिन और सत्यापन के बाद उपलब्ध है।</p>
+<a class="btn" href="member-panel.html">Member Panel में लॉगिन करें</a>
+</section>
 </main>
+<footer>SBPF Coin एक आंतरिक रिवॉर्ड पॉइंट है, बैंक जमा या निवेश उत्पाद नहीं। कॉइन केवल स्वीकृत कार्यों पर मिलेंगे। सदस्य जोड़ने मात्र पर नकद कमीशन नहीं दिया जाता।</footer>
+
+<script>
+(function(){
+'use strict';
+const SUPABASE_URL='https://dxowhzghrdghfzoggorx.supabase.co';
+const SUPABASE_KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
+let token=localStorage.getItem('sbpf_access_token')||'';
+let user=null, member=null, config={coin_per_inr:100,manual_payout:true,rewards_enabled:false}, teams=[];
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function api(path,options){
+ const opts=options||{},headers={apikey:SUPABASE_KEY,...(opts.headers||{})};
+ if(token)headers.Authorization='Bearer '+token;
+ const response=await fetch(SUPABASE_URL+path,{...opts,headers});
+ let data=null;try{data=await response.json()}catch(_){}
+ if(!response.ok)throw new Error(data?.message||data?.msg||data?.error_description||data?.error||('HTTP '+response.status));
+ return data;
+}
+function say(text,kind){const el=$('message');el.className='notice'+(kind?' '+kind:'');el.textContent=text;}
+function isVerified(m){return !!m&&m.status==='active'&&m.membership_status==='active'&&m.payment_status==='paid'&&m.kyc_status==='verified'&&m.membership_end_date&&m.membership_end_date>=new Date().toISOString().slice(0,10);}
+async function load(){
+ if(!token){$('loginPrompt').classList.remove('hidden');say('सदस्य लॉगिन आवश्यक है।');return;}
+ try{
+  user=await api('/auth/v1/user');
+  if(!user?.id)throw new Error('लॉगिन सत्र उपलब्ध नहीं है।');
+  const rows=await api('/rest/v1/members?select=member_id,status,membership_status,payment_status,kyc_status,membership_end_date&user_id=eq.'+encodeURIComponent(user.id)+'&limit=1');
+  member=Array.isArray(rows)?rows[0]:null;
+  if(!isVerified(member)){
+   $('loginPrompt').classList.remove('hidden');
+   say('आपका SBPF सदस्य रिकॉर्ड अभी पूर्ण सत्यापित नहीं है। सक्रिय सदस्यता, भुगतान, KYC और वैधता की पुष्टि के बाद Rewards Zone खुलेगा।','error');
+   return;
+  }
+  const settings=await api('/rest/v1/sbpf_rewards_config?select=coin_per_inr,manual_payout,rewards_enabled&id=eq.1');
+  if(Array.isArray(settings)&&settings[0])config=settings[0];
+  if(!config.rewards_enabled){
+   $('dashboard').classList.remove('hidden');
+   $('memberStatus').textContent='सत्यापित';
+   say('आपका सदस्य सत्यापन सफल है। Rewards Zone का डेटा ढाँचा तैयार है; एडमिन द्वारा रिवॉर्ड लॉन्च और टास्क प्रकाशित होने की प्रतीक्षा है।','ok');
+  }else{
+   $('dashboard').classList.remove('hidden');
+   $('memberStatus').textContent='सत्यापित';
+   say('स्वागत है! आपके लिए उपलब्ध SBPF Rewards टास्क नीचे दिए गए हैं।','ok');
+  }
+  await Promise.all([loadWallet(),loadTasks(),loadTeams(),loadRedemptions()]);
+ }catch(error){
+  $('loginPrompt').classList.remove('hidden');
+  say('Rewards Zone अभी डेटा नहीं पढ़ सका: '+error.message,'error');
+ }
+}
+async function loadWallet(){
+ const rows=await api('/rest/v1/sbpf_reward_wallet_ledger?select=points_delta,entry_type,description,created_at&member_profile_id=eq.'+encodeURIComponent(user.id)+'&order=created_at.desc&limit=30');
+ const ledger=Array.isArray(rows)?rows:[];
+ const balance=ledger.reduce((sum,row)=>sum+Number(row.points_delta||0),0);
+ $('coinBalance').textContent=balance.toLocaleString('en-IN');
+ $('inrBalance').textContent='₹'+(balance/Number(config.coin_per_inr||100)).toFixed(2);
+ $('ledger').innerHTML=ledger.length?ledger.map(row=>'<div class="row"><div><b>'+esc(row.description||row.entry_type)+'</b><small>'+new Date(row.created_at).toLocaleString('hi-IN')+'</small></div><strong style="color:'+(Number(row.points_delta)>=0?'#176b42':'#a01828')+'">'+(Number(row.points_delta)>0?'+':'')+Number(row.points_delta).toLocaleString('en-IN')+' Coin</strong></div>').join(''):'<p class="muted">अभी कोई Coin लेन-देन नहीं है।</p>';
+}
+async function loadTeams(){
+ try{const rows=await api('/rest/v1/sbpf_team_members?select=team_id,team_role,status,sbpf_teams(name,team_code)&member_profile_id=eq.'+encodeURIComponent(user.id)+'&status=eq.active');teams=Array.isArray(rows)?rows:[];}catch(_){teams=[];}
+}
+async function loadTasks(){
+ const rows=await api('/rest/v1/sbpf_reward_tasks?select=id,title,description,task_type,points_reward,video_url,evidence_required&status=eq.published&order=created_at.desc');
+ const tasks=Array.isArray(rows)?rows:[];
+ $('tasks').innerHTML=tasks.length?tasks.map(task=>{
+  const type=task.task_type==='video_watch'?'वीडियो टास्क':task.task_type==='team_service'?'टीम सेवा कार्य':'दैनिक टास्क';
+  const teamOption=task.task_type==='team_service'&&teams.length?'<label>अपनी टीम चुनें</label><select id="team-'+esc(task.id)+'">'+teams.map(t=>'<option value="'+esc(t.team_id)+'">'+esc(t.sbpf_teams?.name||t.sbpf_teams?.team_code||'SBPF Team')+'</option>').join('')+'</select>':'';
+  const video=task.video_url?'<a class="video-link" href="'+esc(task.video_url)+'" target="_blank" rel="noopener">वीडियो खोलें ↗</a>':'';
+  const disabled=task.task_type==='team_service'&&!teams.length;
+  return '<article class="card"><div class="meta"><span class="tag">'+type+'</span><span class="tag">'+Number(task.points_reward||0)+' Coin</span></div><h3>'+esc(task.title)+'</h3><p>'+esc(task.description)+'</p>'+video+teamOption+'<button '+(disabled?'disabled':'')+' onclick="submitTask(\''+esc(task.id)+'\',\''+esc(task.task_type)+'\', '+(task.evidence_required?'true':'false')+')">कार्य जमा करें</button>'+(disabled?'<p class="muted">टीम सेवा टास्क के लिए पहले स्वीकृत टीम का सक्रिय सदस्य बनें।</p>':'')+'</article>';
+ }).join(''):'<div class="card"><h3>अभी कोई टास्क प्रकाशित नहीं है</h3><p>एडमिन द्वारा वीडियो, दैनिक और टीम सेवा टास्क प्रकाशित होने पर वे यहाँ दिखाई देंगे।</p></div>';
+}
+window.submitTask=async function(taskId,taskType,evidenceRequired){
+ const proof=window.prompt('इस कार्य को कैसे पूरा किया? संक्षिप्त विवरण लिखें:');
+ if(!proof||!proof.trim())return;
+ let evidence=null,teamId=null;
+ if(evidenceRequired){evidence=window.prompt('प्रमाण का URL दें (यदि उपलब्ध हो), अन्यथा खाली छोड़ें:');}
+ if(taskType==='team_service'){const select=$('team-'+taskId);teamId=select?.value||null;if(!teamId){say('टीम सेवा टास्क के लिए सक्रिय टीम चुनना आवश्यक है।','error');return;}}
+ try{
+  await api('/rest/v1/sbpf_reward_submissions',{method:'POST',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({task_id:taskId,member_profile_id:user.id,team_id:teamId,proof_note:proof.trim(),evidence_url:evidence?.trim()||null})});
+  say('आपका टास्क जमा हो गया है। एडमिन समीक्षा के बाद स्वीकृत Coin आपके वॉलेट में जुड़ेंगे।','ok');
+ }catch(error){say('टास्क जमा नहीं हुआ: '+error.message,'error');}
+};
+async function loadRedemptions(){
+ const rows=await api('/rest/v1/sbpf_reward_redemptions?select=points_requested,amount_inr,status,created_at,payout_reference&member_profile_id=eq.'+encodeURIComponent(user.id)+'&order=created_at.desc&limit=10');
+ const data=Array.isArray(rows)?rows:[];
+ $('redemptions').innerHTML=data.length?'<h3 style="font-size:15px;color:var(--wine)">मेरे भुगतान अनुरोध</h3>'+data.map(r=>'<div class="row"><div><b>'+Number(r.points_requested).toLocaleString('en-IN')+' Coin · ₹'+Number(r.amount_inr).toFixed(2)+'</b><small>'+new Date(r.created_at).toLocaleDateString('hi-IN')+'</small></div><span class="tag">'+esc(r.status)+'</span></div>').join(''):'<p class="muted">अभी कोई भुगतान अनुरोध नहीं है।</p>';
+}
+$('redeemForm').addEventListener('submit',async event=>{
+ event.preventDefault();const points=Number($('redeemPoints').value),method=$('payoutMethod').value,button=$('redeemButton');
+ if(!Number.isInteger(points)||points<=0||!method){say('Coin की सही संख्या और भुगतान तरीका चुनें।','error');return;}
+ button.disabled=true;
+ try{
+  await api('/rest/v1/sbpf_reward_redemptions',{method:'POST',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({member_profile_id:user.id,points_requested:points,payout_method:method})});
+  $('redeemForm').reset();say('आपका INR रिवॉर्ड अनुरोध भेज दिया गया है। भुगतान एडमिन की मैन्युअल जाँच और स्वीकृति के बाद होगा।','ok');
+  await Promise.all([loadWallet(),loadRedemptions()]);
+ }catch(error){say('रिडेम्पशन अनुरोध नहीं भेजा गया: '+error.message,'error');}
+ finally{button.disabled=false;}
+});
+load();
+})();
+</script>
 </body>
 </html>
