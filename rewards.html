@@ -32,6 +32,7 @@ form{display:grid;gap:9px}label{font-size:13px;font-weight:800}input,select,text
 .hidden{display:none!important}.muted{color:var(--muted);font-size:13px}
 footer{max-width:1060px;margin:auto;padding:0 16px 30px;text-align:center;color:var(--muted);font-size:12px}
 @media(max-width:640px){main{padding:14px 12px 36px}.hero{padding:22px 15px}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:1/-1}.grid{grid-template-columns:1fr}.section-title h2{font-size:19px}.stat,.card,.panel{padding:14px}}
+.admin-actions{display:flex;gap:8px;flex-wrap:wrap}.admin-actions button{font-size:12px;padding:8px 11px}.admin-card{border:1px solid #e8d7b8;border-radius:12px;padding:12px;margin:9px 0;background:#fffdf8}.admin-card h4{margin:0 0 5px;color:var(--wine)}.admin-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.admin-form .wide{grid-column:1/-1}@media(max-width:640px){.admin-form{grid-template-columns:1fr}.admin-form .wide{grid-column:auto}}
 </style>
 </head>
 <body>
@@ -69,6 +70,23 @@ footer{max-width:1060px;margin:auto;padding:0 16px 30px;text-align:center;color:
 <div id="redemptions" class="list" style="margin-top:12px"></div>
 </div>
 </section>
+<section id="adminPanel" class="panel hidden">
+ <div class="section-title"><h2>Admin Rewards Control</h2><span class="tag">केवल अधिकृत एडमिन</span></div>
+ <p id="adminLaunchState" class="notice">Rewards launch स्थिति जाँची जा रही है…</p>
+ <div class="admin-actions"><button id="toggleRewards" type="button" class="alt">Rewards चालू / बंद</button></div>
+ <div class="section-title"><h2>नया टास्क बनाएँ</h2></div>
+ <form id="taskForm" class="admin-form">
+  <div><label for="taskTitle">टास्क शीर्षक</label><input id="taskTitle" required maxlength="140"></div>
+  <div><label for="taskType">टास्क प्रकार</label><select id="taskType"><option value="video_watch">वीडियो टास्क</option><option value="daily_task">दैनिक टास्क</option><option value="team_service">टीम सेवा</option></select></div>
+  <div><label for="taskPoints">Coin रिवॉर्ड</label><input id="taskPoints" type="number" min="1" step="1" required></div>
+  <div><label for="taskVideo">वीडियो URL (यदि हो)</label><input id="taskVideo" type="url"></div>
+  <div class="wide"><label for="taskDescription">विवरण / निर्देश</label><textarea id="taskDescription" required></textarea></div>
+  <div class="wide"><button type="submit">टास्क ड्राफ्ट सेव करें</button></div>
+ </form>
+ <div class="section-title"><h2>टास्क प्रबंधन</h2></div><div id="adminTasks" class="list"></div>
+ <div class="section-title"><h2>टास्क समीक्षा</h2></div><div id="adminSubmissions" class="list"></div>
+ <div class="section-title"><h2>INR भुगतान अनुरोध</h2></div><div id="adminRedemptions" class="list"></div>
+</section>
 <section id="loginPrompt" class="panel hidden">
 <h2 style="color:var(--wine);margin-top:0">पहले सदस्य लॉगिन करें</h2>
 <p>Rewards Zone केवल मौजूदा SBPF सदस्य लॉगिन और सत्यापन के बाद उपलब्ध है।</p>
@@ -83,7 +101,7 @@ footer{max-width:1060px;margin:auto;padding:0 16px 30px;text-align:center;color:
 const SUPABASE_URL='https://dxowhzghrdghfzoggorx.supabase.co';
 const SUPABASE_KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
 let token=localStorage.getItem('sbpf_access_token')||'';
-let user=null, member=null, config={coin_per_inr:100,manual_payout:true,rewards_enabled:false}, teams=[];
+let user=null, member=null, isAdmin=false, config={coin_per_inr:100,manual_payout:true,rewards_enabled:false}, teams=[];
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function api(path,options){
@@ -101,25 +119,30 @@ async function load(){
  try{
   user=await api('/auth/v1/user');
   if(!user?.id)throw new Error('लॉगिन सत्र उपलब्ध नहीं है।');
-  const rows=await api('/rest/v1/members?select=member_id,status,membership_status,payment_status,kyc_status,membership_end_date&user_id=eq.'+encodeURIComponent(user.id)+'&limit=1');
-  member=Array.isArray(rows)?rows[0]:null;
-  if(!isVerified(member)){
-   $('loginPrompt').classList.remove('hidden');
-   say('आपका SBPF सदस्य रिकॉर्ड अभी पूर्ण सत्यापित नहीं है। सक्रिय सदस्यता, भुगतान, KYC और वैधता की पुष्टि के बाद Rewards Zone खुलेगा।','error');
-   return;
+  const adminResult=await api('/rest/v1/rpc/is_admin',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
+  isAdmin=adminResult===true;
+  if(!isAdmin){
+   const rows=await api('/rest/v1/members?select=member_id,status,membership_status,payment_status,kyc_status,membership_end_date&user_id=eq.'+encodeURIComponent(user.id)+'&limit=1');
+   member=Array.isArray(rows)?rows[0]:null;
+   if(!isVerified(member)){
+    $('loginPrompt').classList.remove('hidden');
+    say('आपका SBPF सदस्य रिकॉर्ड अभी पूर्ण सत्यापित नहीं है। सक्रिय सदस्यता, भुगतान, KYC और वैधता की पुष्टि के बाद Rewards Zone खुलेगा।','error');
+    return;
+   }
   }
   const settings=await api('/rest/v1/sbpf_rewards_config?select=coin_per_inr,manual_payout,rewards_enabled&id=eq.1');
   if(Array.isArray(settings)&&settings[0])config=settings[0];
-  if(!config.rewards_enabled){
-   $('dashboard').classList.remove('hidden');
-   $('memberStatus').textContent='सत्यापित';
+  $('dashboard').classList.remove('hidden');
+  $('memberStatus').textContent=isAdmin?'Admin':'सत्यापित';
+  if(isAdmin){
+   $('adminPanel').classList.remove('hidden');
+   say('Admin प्रवेश सफल। टास्क, सबमिशन और मैन्युअल INR भुगतान नियंत्रित करें।','ok');
+  }else if(!config.rewards_enabled){
    say('आपका सदस्य सत्यापन सफल है। Rewards Zone का डेटा ढाँचा तैयार है; एडमिन द्वारा रिवॉर्ड लॉन्च और टास्क प्रकाशित होने की प्रतीक्षा है।','ok');
   }else{
-   $('dashboard').classList.remove('hidden');
-   $('memberStatus').textContent='सत्यापित';
    say('स्वागत है! आपके लिए उपलब्ध SBPF Rewards टास्क नीचे दिए गए हैं।','ok');
   }
-  await Promise.all([loadWallet(),loadTasks(),loadTeams(),loadRedemptions()]);
+  await Promise.all([loadWallet(),loadTasks(),loadTeams(),loadRedemptions(),isAdmin?loadAdmin():Promise.resolve()]);
  }catch(error){
   $('loginPrompt').classList.remove('hidden');
   say('Rewards Zone अभी डेटा नहीं पढ़ सका: '+error.message,'error');
@@ -137,6 +160,7 @@ async function loadTeams(){
  try{const rows=await api('/rest/v1/sbpf_team_members?select=team_id,team_role,status,sbpf_teams(name,team_code)&member_profile_id=eq.'+encodeURIComponent(user.id)+'&status=eq.active');teams=Array.isArray(rows)?rows:[];}catch(_){teams=[];}
 }
 async function loadTasks(){
+ if(!config.rewards_enabled&&!isAdmin){$('tasks').innerHTML='<div class="card"><h3>Rewards अभी शुरू नहीं हुए</h3><p>एडमिन लॉन्च स्वीकृति के बाद टास्क उपलब्ध होंगे।</p></div>';return;}
  const rows=await api('/rest/v1/sbpf_reward_tasks?select=id,title,description,task_type,points_reward,video_url,evidence_required&status=eq.published&order=created_at.desc');
  const tasks=Array.isArray(rows)?rows:[];
  $('tasks').innerHTML=tasks.length?tasks.map(task=>{
@@ -158,6 +182,45 @@ window.submitTask=async function(taskId,taskType,evidenceRequired){
   say('आपका टास्क जमा हो गया है। एडमिन समीक्षा के बाद स्वीकृत Coin आपके वॉलेट में जुड़ेंगे।','ok');
  }catch(error){say('टास्क जमा नहीं हुआ: '+error.message,'error');}
 };
+async function loadAdmin(){
+ $('adminLaunchState').textContent='Rewards '+(config.rewards_enabled?'चालू हैं':'अभी बंद हैं')+' · 100 Coin = ₹1 · INR भुगतान मैन्युअल';
+ $('toggleRewards').textContent=config.rewards_enabled?'Rewards बंद करें':'Rewards चालू करें';
+ const [taskRows,subRows,redRows]=await Promise.all([
+  api('/rest/v1/sbpf_reward_tasks?select=id,title,task_type,points_reward,status,created_at&order=created_at.desc'),
+  api('/rest/v1/sbpf_reward_submissions?select=id,task_id,member_profile_id,proof_note,evidence_url,created_at,sbpf_reward_tasks(title,points_reward)&status=eq.pending&order=created_at.asc'),
+  api('/rest/v1/sbpf_reward_redemptions?select=id,member_profile_id,points_requested,amount_inr,status,payout_method,created_at&status=in.(pending,approved)&order=created_at.asc')
+ ]);
+ $('adminTasks').innerHTML=taskRows.length?taskRows.map(t=>'<div class="admin-card"><h4>'+esc(t.title)+'</h4><small>'+esc(t.task_type)+' · '+Number(t.points_reward)+' Coin · '+esc(t.status)+'</small><div class="admin-actions">'+(t.status==='published'?'<button type="button" onclick="adminTaskStatus(\''+t.id+'\',\'paused\')">Pause</button>':t.status==='draft'||t.status==='paused'?'<button type="button" onclick="adminTaskStatus(\''+t.id+'\',\'published\', '+Number(t.points_reward)+')">Publish</button>':'')+'</div></div>').join(''):'<p class="muted">अभी कोई टास्क नहीं।</p>';
+ $('adminSubmissions').innerHTML=subRows.length?subRows.map(x=>'<div class="admin-card"><h4>'+esc(x.sbpf_reward_tasks?.title||'SBPF Task')+'</h4><p>'+esc(x.proof_note)+'</p>'+(x.evidence_url?'<a href="'+esc(x.evidence_url)+'" target="_blank" rel="noopener">प्रमाण देखें ↗</a>':'')+'<small>Member: '+esc(x.member_profile_id)+' · '+new Date(x.created_at).toLocaleString('hi-IN')+'</small><div class="admin-actions"><button type="button" onclick="adminReviewSubmission(\''+x.id+'\',\'approved\', '+Number(x.sbpf_reward_tasks?.points_reward||0)+')">Approve & Coin दें</button><button type="button" class="alt" onclick="adminReviewSubmission(\''+x.id+'\',\'rejected\',0)">Reject</button></div></div>').join(''):'<p class="muted">कोई लंबित टास्क सबमिशन नहीं है।</p>';
+ $('adminRedemptions').innerHTML=redRows.length?redRows.map(x=>'<div class="admin-card"><h4>'+Number(x.points_requested).toLocaleString('en-IN')+' Coin · ₹'+Number(x.amount_inr).toFixed(2)+'</h4><small>'+esc(x.payout_method||'भुगतान तरीका नहीं चुना')+' · '+esc(x.status)+' · Member '+esc(x.member_profile_id)+'</small><div class="admin-actions">'+(x.status==='pending'?'<button type="button" onclick="adminRedemption(\''+x.id+'\',\'approved\')">Approve</button>':'')+'<button type="button" onclick="adminRedemption(\''+x.id+'\',\'paid\')">भुगतान करके Paid करें</button><button type="button" class="alt" onclick="adminRedemption(\''+x.id+'\',\'rejected\')">Reject</button></div></div>').join(''):'<p class="muted">कोई लंबित INR भुगतान अनुरोध नहीं है।</p>';
+}
+window.adminTaskStatus=async function(id,status,points){
+ if(status==='published'&&(!Number.isFinite(points)||points<=0)){say('Publish करने से पहले इस टास्क का Coin रिवॉर्ड 1 या अधिक सेट करें।','error');return;}
+ try{await api('/rest/v1/sbpf_reward_tasks?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({status,updated_at:new Date().toISOString()})});say('टास्क स्थिति अपडेट हो गई।','ok');await Promise.all([loadTasks(),loadAdmin()]);}catch(e){say('टास्क अपडेट नहीं हुआ: '+e.message,'error');}
+};
+window.adminReviewSubmission=async function(id,status,points){
+ if(status==='approved'&&(!Number.isInteger(points)||points<=0)){say('इस टास्क के लिए पहले सकारात्मक Coin रिवॉर्ड सेट करें।','error');return;}
+ const note=window.prompt('समीक्षा टिप्पणी (वैकल्पिक):')||'';
+ try{await api('/rest/v1/sbpf_reward_submissions?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({status,points_awarded:points,reviewed_by:user.id,reviewed_at:new Date().toISOString(),review_note:note})});say(status==='approved'?'सबमिशन स्वीकृत; Coin वॉलेट में जोड़ दिए गए।':'सबमिशन अस्वीकृत।','ok');await Promise.all([loadAdmin(),loadWallet()]);}catch(e){say('समीक्षा सेव नहीं हुई: '+e.message,'error');}
+};
+window.adminRedemption=async function(id,status){
+ let body={status,reviewed_by:user.id,reviewed_at:new Date().toISOString()};
+ if(status==='paid'){const ref=window.prompt('भुगतान वास्तव में पूरा करने के बाद UTR / Transaction Reference दर्ज करें:');if(!ref||!ref.trim())return;body.payout_reference=ref.trim();body.paid_at=new Date().toISOString();}
+ if(status==='rejected'){body.admin_note=window.prompt('अस्वीकृति का कारण लिखें:')||'अस्वीकृत';}
+ try{await api('/rest/v1/sbpf_reward_redemptions?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(body)});say(status==='paid'?'भुगतान दर्ज हुआ और Coin वॉलेट से घटाए गए।':'भुगतान अनुरोध अपडेट हुआ।','ok');await Promise.all([loadAdmin(),loadWallet()]);}catch(e){say('भुगतान अनुरोध अपडेट नहीं हुआ: '+e.message,'error');}
+};
+$('taskForm').addEventListener('submit',async event=>{
+ event.preventDefault();
+ const title=$('taskTitle').value.trim(),type=$('taskType').value,points=Number($('taskPoints').value),description=$('taskDescription').value.trim(),video=$('taskVideo').value.trim();
+ if(!title||!description||!Number.isInteger(points)||points<=0){say('टास्क शीर्षक, विवरण और 1 या अधिक Coin आवश्यक हैं।','error');return;}
+ const code='rw-'+type+'-'+Date.now();
+ try{await api('/rest/v1/sbpf_reward_tasks',{method:'POST',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({task_code:code,title,description,task_type:type,points_reward:points,video_url:video||null,evidence_required:true,created_by:user.id,status:'draft'})});$('taskForm').reset();say('नया टास्क Draft में सेव हुआ। समीक्षा के बाद Publish करें।','ok');await loadAdmin();}catch(e){say('टास्क सेव नहीं हुआ: '+e.message,'error');}
+});
+$('toggleRewards').addEventListener('click',async()=>{
+ const next=!config.rewards_enabled;
+ if(next&&!window.confirm('क्या सभी प्रकाशित टास्क, रिवॉर्ड बजट और भुगतान नियम जाँच लिए गए हैं? Rewards चालू करने की पुष्टि करें।'))return;
+ try{await api('/rest/v1/sbpf_rewards_config?id=eq.1',{method:'PATCH',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({rewards_enabled:next,updated_by:user.id,updated_at:new Date().toISOString()})});config.rewards_enabled=next;say(next?'Rewards Zone चालू कर दिया गया।':'Rewards Zone बंद कर दिया गया।','ok');await Promise.all([loadAdmin(),loadTasks()]);}catch(e){say('Rewards स्थिति नहीं बदली: '+e.message,'error');}
+});
 async function loadRedemptions(){
  const rows=await api('/rest/v1/sbpf_reward_redemptions?select=points_requested,amount_inr,status,created_at,payout_reference&member_profile_id=eq.'+encodeURIComponent(user.id)+'&order=created_at.desc&limit=10');
  const data=Array.isArray(rows)?rows:[];
