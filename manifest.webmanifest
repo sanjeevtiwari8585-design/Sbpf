@@ -11,13 +11,11 @@
   "icons": [
     {
       "src": "/public/assets/स्वर्णिम भारत परिवार फाउंडेशन प्रतीक.png",
-      "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
       "src": "/public/assets/स्वर्णिम भारत परिवार फाउंडेशन प्रतीक.png",
-      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     }
