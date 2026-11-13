@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#17613f">
+<meta name="theme-color" content="#781626">
 <title>SBPF सदस्य सत्यापन</title>
 <link rel="stylesheet" href="assets/sbpf-grid-layout.css">
 <style>
@@ -14,8 +14,7 @@ h1{text-align:center;color:var(--wine);font-size:23px;margin:0 0 2px}.sub{text-a
 label{display:block;font-size:13px;font-weight:700;margin:12px 0 5px}
 input{width:100%;padding:13px;border:1px solid #ddd6d0;border-radius:10px;font:inherit;text-transform:uppercase}
 button,.link{display:flex;align-items:center;justify-content:center;width:100%;padding:13px;border:0;border-radius:10px;background:var(--wine);color:#fff;text-decoration:none;font-weight:800;margin-top:14px;cursor:pointer}
-button:disabled{opacity:.6;cursor:wait}.note{background:#fffaf0;border:1px solid #eee2c8;border-radius:10px;padding:11px;margin-top:12px;font-size:13px;color:#51483e}
-.result{margin-top:14px;border:1px solid var(--line);border-radius:12px;padding:14px;background:#fff}.result.ok{border-color:#b8ddc6;background:#f1faf4}.result.pending{border-color:#ead9a7;background:#fffaf0}
+button:disabled{opacity:.6;cursor:wait}.result{margin-top:14px;border:1px solid var(--line);border-radius:12px;padding:14px;background:#fff}.result.ok{border-color:#b8ddc6;background:#f1faf4}.result.pending{border-color:#ead9a7;background:#fffaf0}
 .status{font-weight:800;color:var(--wine);font-size:17px}.checks{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 .check{padding:9px;border-radius:9px;background:#fff;border:1px solid var(--line);font-size:12px}.yes{color:#176b42;font-weight:800}.no{color:#a01828;font-weight:800}
 .msg{font-size:13px;margin-top:10px;color:#a01828}.hidden{display:none!important}footer{text-align:center;color:var(--muted);font-size:11px;margin:14px 8px}
@@ -31,9 +30,8 @@ button:disabled{opacity:.6;cursor:wait}.note{background:#fffaf0;border:1px solid
 </form>
 <div id="message" class="msg" role="status" aria-live="polite"></div>
 <div id="result" class="result hidden" aria-live="polite"></div>
-<div class="note">यह केवल सार्वजनिक सदस्यता सत्यापन है। इससे किसी निजी सदस्य खाते या व्यक्तिगत पैनल में प्रवेश नहीं मिलता। निजी जानकारी सुरक्षित रखी जाती है।</div>
-<a class="link" href="member-services.html" style="background:#fff;color:var(--wine);border:1px solid var(--line)">निजी सदस्य सेवाएँ</a>\n<a class="link" href="rewards-login.html" style="background:var(--wine);color:#fff">Rewards Zone में सुरक्षित प्रवेश</a>
-</section><footer>स्वर्णिम भारत परिवार फाउंडेशन • सुरक्षित सदस्य सत्यापन</footer></main>
+<a id="rewardEntry" class="link hidden" href="rewards.html">Reward Zone में प्रवेश करें</a>
+</section><footer>स्वर्णिम भारत परिवार फाउंडेशन</footer></main>
 <script>
 const API="https://dxowhzghrdghfzoggorx.supabase.co";
 const KEY="sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo";
@@ -42,7 +40,11 @@ document.getElementById("logo").src=logoPath;
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 $("verifyForm").addEventListener("submit",async e=>{
- e.preventDefault();const btn=$("verifyBtn");btn.disabled=true;btn.textContent="सत्यापन हो रहा है…";$("message").textContent="";$("result").className="result hidden";$("result").innerHTML="";
+ e.preventDefault();
+ const btn=$("verifyBtn");
+ btn.disabled=true;btn.textContent="सत्यापन हो रहा है…";
+ $("message").textContent="";$("rewardEntry").classList.add("hidden");
+ $("result").className="result hidden";$("result").innerHTML="";
  try{
   const member_id=$("memberId").value.trim().toUpperCase();
   if(!/^[A-Z0-9-]{6,40}$/.test(member_id))throw new Error("कृपया सही SBPF Member ID दर्ज करें।");
@@ -52,6 +54,7 @@ $("verifyForm").addEventListener("submit",async e=>{
   const checks=[["Member ID",data.checks.member_id_valid],["भुगतान",data.checks.payment_verified],["KYC",data.checks.kyc_verified],["सदस्यता",data.checks.membership_active],["वार्षिक सत्यापन",data.checks.annual_verification_valid]];
   $("result").className="result "+(data.fully_verified?"ok":"pending");
   $("result").innerHTML='<div class="status">'+(data.fully_verified?"✓ पूर्ण सत्यापित":"सत्यापन लंबित")+'</div><div style="font-size:13px;margin-top:4px">Member ID: <b>'+esc(data.member_id||member_id)+'</b></div><div class="checks">'+checks.map(([name,ok])=>'<div class="check">'+esc(name)+'<br><span class="'+(ok?"yes":"no")+'">'+(ok?"✓ सत्यापित":"○ लंबित")+'</span></div>').join("")+'</div><div style="font-size:11px;color:#756d70;margin-top:10px">जाँच समय: '+new Date(data.checked_at).toLocaleString("hi-IN")+'</div>';
+  if(data.fully_verified===true)$("rewardEntry").classList.remove("hidden");
  }catch(err){$("message").textContent=err.message||"सत्यापन सेवा उपलब्ध नहीं है।"}
  finally{btn.disabled=false;btn.textContent="सदस्य सत्यापित करें"}
 });
