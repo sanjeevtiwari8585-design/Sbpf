@@ -434,8 +434,17 @@ document.addEventListener('click',async event=>{
    const target=$('memberSpinPanel')||$('demoSpinWheel');target?.scrollIntoView({behavior:'smooth',block:'center'});
   }else if(slug==='coin-wallet'){
    const target=$('ledger')||$('redeemForm');target?.scrollIntoView({behavior:'smooth',block:'center'});
-  }else if(slug==='watch-earn'||slug==='daily-task'){
-   const target=$('tasks');if(target)target.scrollIntoView({behavior:'smooth',block:'center'});else say('वीडियो और दैनिक टास्क सदस्य सत्यापन के बाद उपलब्ध होंगे।');
+  }else if(slug==='watch-earn'){
+   const link=action.closest('[data-category]')?.dataset.destinationUrl;
+   if(!link){say('वीडियो लिंक उपलब्ध नहीं है।','error');return;}
+   const shareData={title:'SBPF Watch & Earn',text:'SBPF का आधिकारिक वीडियो देखें: पूरा वीडियो देखना अनिवार्य है। पात्रता और 25 Coin का दावा सत्यापन के बाद होगा।',url:link};
+   try{
+    if(navigator.share){await navigator.share(shareData);say('Watch & Earn वीडियो लिंक शेयर किया गया।','ok');}
+    else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(link);say('वीडियो लिंक कॉपी हो गया। अब इसे शेयर कर सकते हैं।','ok');}
+    else{window.prompt('वीडियो लिंक कॉपी करें:',link);}
+   }catch(e){if(e.name!=='AbortError')say('शेयर नहीं हो सका: '+e.message,'error');}
+  }else if(slug==='daily-task'){
+   const target=$('tasks');if(target)target.scrollIntoView({behavior:'smooth',block:'center'});else say('दैनिक टास्क सदस्य सत्यापन के बाद उपलब्ध होंगे।');
   }else if(slug==='google-review'){
    const link=action.closest('[data-category]')?.dataset.destinationUrl;
    if(link)window.open(link,'_blank','noopener');else say('Google Review लिंक एडमिन द्वारा जोड़ना बाकी है। समीक्षा स्वैच्छिक होगी; इसके बदले Coin नहीं मिलेंगे।');
