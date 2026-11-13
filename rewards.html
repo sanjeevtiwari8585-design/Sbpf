@@ -416,15 +416,15 @@ async function loadRewardCategories(){
  const url='/rest/v1/sbpf_reward_categories?select=id,slug,title,description,icon,reward_label,reward_mode,action_label,destination_url,is_enabled,display_order,policy_note&is_enabled=eq.true&order=display_order.asc';
  const rows=await api(url);
  const cards=Array.isArray(rows)?rows:[];
- const render=items=>items.map(item=>'<article class="card reward-category-card" data-category="'+esc(item.slug)+'"><div class="reward-category-head"><div class="reward-category-icon">'+esc(item.icon)+'</div><h3>'+esc(item.title)+'</h3></div><p>'+esc(item.description)+'</p><span class="tag">'+esc(item.reward_label)+'</span><button type="button" data-reward-action="'+esc(item.slug)+'">'+esc(item.action_label)+'</button></article>').join('');
+ const render=items=>items.map(item=>'<article class="card reward-category-card" data-category="'+esc(item.slug)+'" data-destination-url="'+esc(item.destination_url||'')+'"><div class="reward-category-head"><div class="reward-category-icon">'+esc(item.icon)+'</div><h3>'+esc(item.title)+'</h3></div><p>'+esc(item.description)+'</p><span class="tag">'+esc(item.reward_label)+'</span><button type="button" data-reward-action="'+esc(item.slug)+'">'+esc(item.action_label)+'</button></article>').join('');
  ['rewardCategoriesTestGrid','rewardCategoriesMemberGrid'].forEach(id=>{const el=$(id);if(el)el.innerHTML=cards.length?render(cards):'<p class="muted">अभी कोई Rewards कार्ड प्रकाशित नहीं है।</p>';});
  if(isAdmin)await loadAdminRewardCategories();
 }
 async function loadAdminRewardCategories(){
  const el=$('adminRewardCategories');if(!el)return;
  try{
-  const rows=await api('/rest/v1/sbpf_reward_categories?select=id,slug,title,reward_label,reward_mode,is_enabled,display_order&order=display_order.asc');
-  el.innerHTML=rows.length?rows.map(x=>'<div class="row"><div><b>'+esc(x.title)+'</b><small>'+esc(x.slug)+' · '+esc(x.reward_mode)+' · '+esc(x.reward_label)+'</small></div><div class="admin-actions"><button type="button" data-admin-category-edit="'+x.id+'">रिवॉर्ड नियम</button><button type="button" class="alt" data-admin-category-toggle="'+x.id+'" data-enabled="'+x.is_enabled+'">'+(x.is_enabled?'बंद करें':'चालू करें')+'</button></div></div>').join(''):'<p class="muted">कोई कार्ड उपलब्ध नहीं।</p>';
+  const rows=await api('/rest/v1/sbpf_reward_categories?select=id,slug,title,reward_label,reward_mode,is_enabled,display_order,destination_url&order=display_order.asc');
+  el.innerHTML=rows.length?rows.map(x=>'<div class="row"><div><b>'+esc(x.title)+'</b><small>'+esc(x.slug)+' · '+esc(x.reward_mode)+' · '+esc(x.reward_label)+' · '+(x.destination_url?'लिंक सेट':'लिंक बाकी')+'</small></div><div class="admin-actions"><button type="button" data-admin-category-edit="'+x.id+'">रिवॉर्ड नियम</button><button type="button" data-admin-category-url="'+x.id+'">लिंक सेट करें</button><button type="button" class="alt" data-admin-category-toggle="'+x.id+'" data-enabled="'+x.is_enabled+'">'+(x.is_enabled?'बंद करें':'चालू करें')+'</button></div></div>').join(''):'<p class="muted">कोई कार्ड उपलब्ध नहीं।</p>';
  }catch(e){el.textContent='कार्ड प्रबंधन लोड नहीं हुआ: '+e.message;}
 }
 document.addEventListener('click',async event=>{
@@ -442,9 +442,11 @@ document.addEventListener('click',async event=>{
   }else if(slug==='watch-earn'||slug==='daily-task'){
    const target=$('tasks');if(target)target.scrollIntoView({behavior:'smooth',block:'center'});else say('वीडियो और दैनिक टास्क सामान्य सदस्य लॉगिन के बाद उपलब्ध होंगे।');
   }else if(slug==='google-review'){
-   say('Google Review लिंक एडमिन द्वारा जोड़ना बाकी है। समीक्षा स्वैच्छिक होगी; इसके बदले Coin नहीं मिलेंगे।');
+   const link=action.closest('[data-category]')?.dataset.destinationUrl;
+   if(link)window.open(link,'_blank','noopener');else say('Google Review लिंक एडमिन द्वारा जोड़ना बाकी है। समीक्षा स्वैच्छिक होगी; इसके बदले Coin नहीं मिलेंगे।');
   }else if(slug==='social-follow'){
-   say('आधिकारिक YouTube, Facebook और Instagram लिंक एडमिन द्वारा जोड़ना बाकी है। Follow / Subscribe के बदले Coin नहीं मिलेंगे।');
+   const link=action.closest('[data-category]')?.dataset.destinationUrl;
+   if(link)window.open(link,'_blank','noopener');else say('आधिकारिक YouTube / Facebook / Instagram लिंक एडमिन द्वारा जोड़ना बाकी है। Follow / Subscribe के बदले Coin नहीं मिलेंगे।');
   }else if(slug==='daily-checkin'){
    say('दैनिक Check-in का वास्तविक रिवॉर्ड नियम एडमिन सेट करेगा। यह कार्ड अभी गतिविधि का प्रवेश बिंदु है।');
   }else if(slug==='referral-invite'){
@@ -460,6 +462,16 @@ document.addEventListener('click',async event=>{
   const id=toggle.dataset.adminCategoryToggle,next=toggle.dataset.enabled!=='true';
   try{await api('/rest/v1/sbpf_reward_categories?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({is_enabled:next,updated_at:new Date().toISOString()})});await loadRewardCategories();say('Rewards कार्ड की स्थिति अपडेट हो गई।','ok');}
   catch(e){say('कार्ड अपडेट नहीं हुआ: '+e.message,'error');}
+ }
+ const urlEdit=event.target.closest('[data-admin-category-url]');
+ if(urlEdit){
+  const id=urlEdit.dataset.adminCategoryUrl;
+  const value=window.prompt('इस Rewards कार्ड का आधिकारिक HTTPS URL डालें। खाली छोड़ने पर लिंक हट जाएगा:');
+  if(value===null)return;
+  const trimmed=value.trim();
+  if(trimmed && !/^https:\/\//i.test(trimmed)){say('सुरक्षा के लिए केवल HTTPS लिंक स्वीकार है।','error');return;}
+  try{await api('/rest/v1/sbpf_reward_categories?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({destination_url:trimmed||null,updated_at:new Date().toISOString()})});await loadRewardCategories();say('आधिकारिक लिंक सेव हो गया।','ok');}
+  catch(e){say('लिंक सेव नहीं हुआ: '+e.message,'error');}
  }
  const edit=event.target.closest('[data-admin-category-edit]');
  if(edit){
