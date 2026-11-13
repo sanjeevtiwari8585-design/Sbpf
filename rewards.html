@@ -59,6 +59,17 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
  .rewards-test-grid .spin-wheel-wrap{width:min(78vw,290px)}
 }
 
+
+/* Promotional activity cards */
+.rewards-test-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.rewards-test-grid>.card{min-height:220px;display:flex;flex-direction:column;align-items:flex-start}
+.rewards-test-grid>.card p{flex:0 0 auto}
+.rewards-test-grid>.card .muted{margin-top:8px;overflow-wrap:anywhere}
+.rewards-test-grid>.card .tag{margin:6px 0}
+.rewards-test-grid>.card button{margin-top:auto}
+@media(min-width:900px){.rewards-test-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.rewards-test-grid>.card:nth-child(3){grid-column:span 2}}
+@media(max-width:640px){.rewards-test-grid{grid-template-columns:1fr}.rewards-test-grid>.card{min-height:0}.rewards-test-grid>.card:nth-child(3){grid-column:auto}}
+
 </style>
 </head>
 <body>
@@ -142,6 +153,15 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
   <article class="card"><h3>🎁 Daily Bonus</h3><p>दैनिक बोनस सेक्शन का दृश्य परीक्षण।</p><button id="demoBonusButton" type="button">डेमो बोनस देखें</button><p id="demoBonusResult" class="muted" aria-live="polite">यह वास्तविक बोनस क्लेम नहीं करेगा।</p></article>
   <article class="card"><h3>🎡 Spin & Win</h3><p>चार सही Coin परिणामों वाला टेस्ट व्हील; हर परिणाम की समान संभावना।</p><div class="spin-demo"><div class="spin-wheel-wrap"><div class="spin-pointer"></div><div id="demoSpinWheel" class="spin-wheel eight"><div class="spin-labels eight"><span>100</span><span>50</span><span>40</span><span>10</span><span>100</span><span>50</span><span>40</span><span>10</span></div></div></div><button id="spinDemoButton" type="button">🎡 डेमो व्हील घुमाएँ</button><div id="spinDemoResult" class="spin-result" aria-live="polite">यह केवल डेमो है—वास्तविक Coin नहीं जुड़ेंगे।</div></div></article>
   <article class="card"><h3>🪙 Coin Wallet</h3><p>टेस्ट वॉलेट का नमूना। वास्तविक बैलेंस और लेनदेन में कोई बदलाव नहीं होगा।</p><div class="admin-card"><div class="row"><div><b>उपलब्ध टेस्ट Coin</b><small>डेमो बैलेंस</small></div><strong>0</strong></div><div class="row"><div><b>अनुमानित INR</b><small>केवल जानकारी</small></div><strong>₹0.00</strong></div><div class="row"><div><b>लेनदेन इतिहास</b><small>अभी कोई टेस्ट लेनदेन नहीं</small></div><span class="tag">खाली</span></div></div><p class="muted">वास्तविक वॉलेट तभी दिखेगा जब सदस्य सामान्य लॉगिन से प्रवेश करेगा।</p></article>
+  <article class="card"><h3>⭐ Google Review / Feedback</h3><p>SBPF की सेवा पर अपनी सच्ची और स्वतंत्र राय दें। सकारात्मक या नकारात्मक—किसी भी समीक्षा के बदले Coin नहीं दिए जाएँगे।</p><span class="tag">कोई रिवॉर्ड नहीं · नीति-अनुकूल</span><button type="button" data-demo-action="review">जानकारी देखें</button><p class="muted" id="demo-review">Google Business Profile का आधिकारिक लिंक एडमिन जोड़ेगा।</p></article>
+  <article class="card"><h3>📣 Social Media Subscribe & Follow</h3><p>SBPF के आधिकारिक YouTube, Facebook और Instagram चैनल खोजें और स्वेच्छा से जुड़ें। Follow / Subscribe के बदले Coin नहीं मिलेंगे।</p><span class="tag">प्रमोशन लिंक · कोई रिवॉर्ड नहीं</span><button type="button" data-demo-action="social">चैनल जानकारी देखें</button><p class="muted" id="demo-social">आधिकारिक चैनल लिंक एडमिन जोड़ेगा।</p></article>
+  <article class="card"><h3>🔗 Post Share</h3><p>SBPF की सार्वजनिक वेबसाइट या अभियान पेज का लिंक अपने परिचितों के साथ साझा करें।</p><span class="tag">स्वैच्छिक शेयर</span><button type="button" data-demo-action="share">SBPF लिंक साझा करें</button><p class="muted" id="demo-share">शेयर करने पर अपने-आप Coin नहीं जुड़ेंगे।</p></article>
+  <article class="card"><h3>👥 Referral & Invite</h3><p>किसी इच्छुक व्यक्ति को SBPF के बारे में बताएँ। रेफरल तभी मान्य होगा जब नया सदस्य अपनी सहमति से पंजीकरण और आवश्यक सत्यापन पूरा करे।</p><span class="tag">Admin नियमों के अनुसार</span><button type="button" data-demo-action="referral">रेफरल प्रक्रिया देखें</button><p class="muted" id="demo-referral">रिवॉर्ड दर और पात्रता एडमिन द्वारा तय होगी।</p></article>
+  <article class="card"><h3>📅 Daily Check-in</h3><p>सदस्य पैनल में दैनिक उपस्थिति दर्ज करें और आज के सीखने / सेवा कार्य देखें।</p><span class="tag">दैनिक गतिविधि</span><button type="button" data-demo-action="checkin">डेमो चेक-इन देखें</button><p class="muted" id="demo-checkin">यह टेस्ट केवल स्क्रीन दिखाता है; कोई Coin जारी नहीं करता।</p></article>
+  <article class="card"><h3>🎯 Campaign Participation</h3><p>Swarnim Jan Jagran, Paryavaran, Gurukulam, Seva और अन्य SBPF अभियानों में भाग लें।</p><span class="tag">प्रमाण / एडमिन समीक्षा आवश्यक</span><button type="button" data-demo-action="campaign">अभियान देखें</button><p class="muted" id="demo-campaign">स्वीकृत गतिविधियों के लिए ही रिवॉर्ड नियम लागू होंगे।</p></article>
+  <article class="card"><h3>🤝 Volunteer Service</h3><p>स्थानीय सेवा, जागरूकता, सहायता और आयोजन में किए गए वास्तविक कार्य का विवरण व प्रमाण जमा करें।</p><span class="tag">सत्यापन के बाद</span><button type="button" data-demo-action="volunteer">सेवा कार्य देखें</button><p class="muted" id="demo-volunteer">एडमिन समीक्षा के बाद ही पात्रता तय होगी।</p></article>
+  <article class="card"><h3>📲 SBPF App / Website Visit</h3><p>SBPF वेबसाइट खोलें, सदस्य सुविधाएँ समझें और आधिकारिक ऐप उपलब्ध होने पर सुरक्षित लिंक से इंस्टॉल करें।</p><span class="tag">जानकारी और सहायता</span><button type="button" data-demo-action="app">मुख्य वेबसाइट खोलें</button><p class="muted" id="demo-app">ऐप डाउनलोड लिंक उपलब्ध होने पर यहाँ दिखेगा।</p></article>
+
  </div>
  <div class="actions"><button id="exitTestMode" type="button" class="alt">टेस्ट मोड बंद करें</button></div>
 </section>
@@ -360,6 +380,32 @@ if(realSpinButton&&realSpinWheel){
   }
  });
 }
+
+
+const promoMessages={
+ review:'Google समीक्षा पूरी तरह स्वैच्छिक और ईमानदार होनी चाहिए। समीक्षा देने, उसकी रेटिंग या सकारात्मक शब्दों के बदले Coin नहीं दिए जाएँगे।',
+ social:'YouTube / Facebook / Instagram पर Follow, Subscribe, Like या View के बदले Coin नहीं दिए जाएँगे। केवल आधिकारिक चैनल लिंक दिखाए जाएँगे।',
+ referral:'रेफरल को तभी गिना जाएगा जब नया व्यक्ति अपनी सहमति से पंजीकरण करे और एडमिन पात्रता सत्यापित करे। कोई निश्चित Coin राशि अभी घोषित नहीं है।',
+ checkin:'दैनिक चेक-इन का यह केवल डेमो है। वास्तविक चेक-इन और रिवॉर्ड नियम एडमिन अनुमोदन के बाद जुड़ेंगे।',
+ campaign:'अभियान चुनें, कार्य पूरा करें और आवश्यक प्रमाण जमा करें। स्वीकृति से पहले Coin नहीं मिलेंगे।',
+ volunteer:'वास्तविक सेवा कार्य का विवरण / प्रमाण जमा करें। एडमिन समीक्षा के बाद ही कोई पात्र रिवॉर्ड दर्ज होगा।',
+ app:'SBPF मुख्य वेबसाइट नए टैब में खोलें। ऐप का आधिकारिक डाउनलोड लिंक उपलब्ध होने पर एडमिन जोड़ेगा।'
+};
+document.querySelectorAll('[data-demo-action]').forEach(btn=>btn.addEventListener('click',async()=>{
+ const action=btn.dataset.demoAction;
+ if(action==='share'){
+  const url='https://swarnimbharatclub.in/';
+  try{
+   if(navigator.share) await navigator.share({title:'Swarnim Bharat Parivar Foundation',text:'SBPF की आधिकारिक वेबसाइट देखें',url});
+   else if(navigator.clipboard){await navigator.clipboard.writeText(url);$('demo-share').textContent='वेबसाइट लिंक कॉपी हो गया: '+url;}
+   else $('demo-share').textContent='वेबसाइट लिंक: '+url;
+  }catch(e){if(e.name!=='AbortError')$('demo-share').textContent='वेबसाइट लिंक: '+url;}
+  return;
+ }
+ if(action==='app'){window.open('https://swarnimbharatclub.in/','_blank','noopener');$('demo-app').textContent=promoMessages.app;return;}
+ const target=$('demo-'+action);
+ if(target)target.textContent=promoMessages[action]||'यह डेमो विकल्प है।';
+}));
 
 const demoWatchButton=$('demoWatchButton');
 demoWatchButton?.addEventListener('click',()=>{
