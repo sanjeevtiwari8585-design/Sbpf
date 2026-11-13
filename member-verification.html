@@ -46,7 +46,7 @@ $("verifyForm").addEventListener("submit",async e=>{
  try{
   const member_id=$("memberId").value.trim().toUpperCase();
   if(!/^[A-Z0-9-]{6,40}$/.test(member_id))throw new Error("कृपया सही SBPF Member ID दर्ज करें।");
-  const response=await fetch(API+"/functions/v1/public-member-verification",{method:"POST",headers:{apikey:KEY,"Content-Type":"application/json"},body:JSON.stringify({member_id})});
+  const response=await fetch(API+"/functions/v1/member-id-verify",{method:"POST",headers:{apikey:KEY,"Content-Type":"application/json"},body:JSON.stringify({member_id})});
   let data={};try{data=await response.json()}catch{}
   if(!response.ok)throw new Error(data.error||"सत्यापन पूरा नहीं हो सका।");
   const checks=[["Member ID",data.checks.member_id_valid],["भुगतान",data.checks.payment_verified],["KYC",data.checks.kyc_verified],["सदस्यता",data.checks.membership_active],["वार्षिक सत्यापन",data.checks.annual_verification_valid]];
