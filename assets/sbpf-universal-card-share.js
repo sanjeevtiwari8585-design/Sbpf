@@ -63,6 +63,8 @@
     let ok=false;try{ok=document.execCommand('copy');}catch(e){}box.remove();return ok;}}
   function attach(card){
     if(!(card instanceof HTMLElement)||card.dataset.sbpfUniversalReady==='1')return;
+    /* Rewards cards already have one task-specific primary action; do not append extra share/WhatsApp/Facebook/PNG/QR controls. */
+    if(card.matches('.reward-category-card')){card.dataset.sbpfUniversalReady='1';return;}
     if(card.querySelector('.sbpf-card-share,.sbpf-full-card-share-holder,.sbpf-share-wrap,.sbpf-universal-share'))return;
     const heading=card.querySelector(':scope > h1,:scope > h2,:scope > h3,:scope > h4,[data-share-title]')||card.querySelector('h1,h2,h3,h4');
     const title=clean(card.dataset.shareTitle||heading?.textContent);if(!title)return;
