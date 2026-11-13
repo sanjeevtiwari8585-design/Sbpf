@@ -30,7 +30,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:14px 8px}
 <button id="resendBtn" type="button" style="background:#fff;color:var(--wine);border:1px solid var(--line)">OTP दोबारा भेजें</button>
 </div>
 <div id="message" class="msg" role="status" aria-live="polite"></div>
-<div class="note">सार्वजनिक Member ID सत्यापन से निजी वॉलेट नहीं खुलता। OTP उसी ईमेल पर भेजा जाएगा जो पहले से SBPF Auth खाते में पंजीकृत है। नया खाता यहाँ नहीं बनाया जाएगा।</div>
+<div class="note">सार्वजनिक Member ID सत्यापन से निजी वॉलेट नहीं खुलता। OTP या सुरक्षित प्रवेश लिंक उसी ईमेल पर भेजा जाएगा जो पहले से SBPF Auth खाते में पंजीकृत है। नया खाता यहाँ नहीं बनाया जाएगा।</div>
 <a class="link" href="member-verification.html" style="background:#fff;color:var(--wine);border:1px solid var(--line)">सार्वजनिक सदस्य सत्यापन</a>
 </section><footer>स्वर्णिम भारत परिवार फाउंडेशन • सुरक्षित सदस्य प्रवेश</footer></main>
 <script>
@@ -38,8 +38,8 @@ const API="https://dxowhzghrdghfzoggorx.supabase.co";
 const KEY="sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo";
 const $=id=>document.getElementById(id);
 let email="";
-async function auth(path,body){
- const r=await fetch(API+"/auth/v1/"+path,{method:"POST",headers:{apikey:KEY,"Content-Type":"application/json"},body:JSON.stringify(body)});
+async function auth(path,body,query=""){
+ const r=await fetch(API+"/auth/v1/"+path+query,{method:"POST",headers:{apikey:KEY,"Content-Type":"application/json"},body:JSON.stringify(body)});
  let d={};try{d=await r.json()}catch{}
  if(!r.ok)throw new Error(d.msg||d.message||d.error_description||d.error||"सुरक्षित प्रवेश पूरा नहीं हो सका।");
  return d;
@@ -47,12 +47,22 @@ async function auth(path,body){
 async function sendOtp(){
  email=$("email").value.trim().toLowerCase();
  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))throw new Error("कृपया सही पंजीकृत ईमेल दर्ज करें।");
- await auth("otp",{email,create_user:false});
+ const redirect=encodeURIComponent(location.origin+location.pathname);
+ await auth("otp",{email,create_user:false},"?redirect_to="+redirect);
  $("emailStep").classList.add("hidden");$("otpStep").classList.remove("hidden");
  $("message").className="msg ok";$("message").textContent="यदि यह ईमेल पंजीकृत है, तो OTP भेजा गया है। अपना Inbox और Spam फ़ोल्डर जाँचें।";
 }
 $("sendBtn").addEventListener("click",async()=>{const b=$("sendBtn");b.disabled=true;try{await sendOtp()}catch(e){$("message").textContent=e.message}finally{b.disabled=false}});
-$("resendBtn").addEventListener("click",async()=>{const b=$("resendBtn");b.disabled=true;try{await auth("otp",{email,create_user:false});$("message").textContent="नया OTP भेजने का अनुरोध पूरा हुआ।"}catch(e){$("message").textContent=e.message}finally{b.disabled=false}});
+$("resendBtn").addEventListener("click",async()=>{const b=$("resendBtn");b.disabled=true;try{const redirect=encodeURIComponent(location.origin+location.pathname);await auth("otp",{email,create_user:false},"?redirect_to="+redirect);$("message").textContent="नया OTP या सुरक्षित ईमेल लिंक भेजने का अनुरोध पूरा हुआ।"}catch(e){$("message").textContent=e.message}finally{b.disabled=false}});
+// Supabase magic-link callback support: email templates may deliver a link instead of a numeric OTP.
+const callback=new URLSearchParams(location.hash.slice(1));
+const callbackToken=callback.get("access_token");
+if(callbackToken){
+ localStorage.setItem("sbpf_access_token",callbackToken);
+ const refresh=callback.get("refresh_token");if(refresh)localStorage.setItem("sbpf_refresh_token",refresh);
+ history.replaceState(null,"",location.pathname+location.search);
+ location.replace("rewards.html");
+}
 $("verifyBtn").addEventListener("click",async()=>{
  const b=$("verifyBtn");b.disabled=true;
  try{
