@@ -32,10 +32,10 @@ form{display:grid;gap:9px}label{font-size:13px;font-weight:800}input,select,text
 .hidden{display:none!important}.muted{color:var(--muted);font-size:13px}
 footer{max-width:1060px;margin:auto;padding:0 16px 30px;text-align:center;color:var(--muted);font-size:12px}
 @media(max-width:640px){main{padding:14px 12px 36px}.hero{padding:22px 15px}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:1/-1}.grid{grid-template-columns:1fr}.section-title h2{font-size:19px}.stat,.card,.panel{padding:14px}}
-.spin-wheel.eight{background:conic-gradient(#7d1020 0deg 45deg,#e6c77b 45deg 90deg,#145a38 90deg 135deg,#f3e4bc 135deg 180deg,#a52c39 180deg 225deg,#d7b34b 225deg 270deg,#225d43 270deg 315deg,#f7e9c2 315deg 360deg)}.spin-wheel.eight:after{inset:18%}.spin-labels.eight span{width:60px;margin-left:-30px;font-size:10px}.spin-labels.eight span:nth-child(1){transform:translateY(-78px)}.spin-labels.eight span:nth-child(2){transform:rotate(45deg) translateY(-78px) rotate(-45deg)}.spin-labels.eight span:nth-child(3){transform:rotate(90deg) translateY(-78px) rotate(-90deg)}.spin-labels.eight span:nth-child(4){transform:rotate(135deg) translateY(-78px) rotate(-135deg)}.spin-labels.eight span:nth-child(5){transform:rotate(180deg) translateY(-78px) rotate(-180deg)}.spin-labels.eight span:nth-child(6){transform:rotate(225deg) translateY(-78px) rotate(-225deg)}.spin-labels.eight span:nth-child(7){transform:rotate(270deg) translateY(-78px) rotate(-270deg)}.spin-labels.eight span:nth-child(8){transform:rotate(315deg) translateY(-78px) rotate(-315deg)}.spin-info{font-size:12px;color:var(--muted);margin:6px 0}.spin-demo{margin-top:12px;padding:12px;border:1px solid #eadfd3;border-radius:13px;background:#fffaf2;text-align:center}.spin-wheel-wrap{position:relative;width:min(100%,300px);aspect-ratio:1;margin:16px auto;cursor:zoom-in;touch-action:manipulation}
+.spin-wheel.eight{background:conic-gradient(#7d1020 0deg 45deg,#e6c77b 45deg 90deg,#145a38 90deg 135deg,#f3e4bc 135deg 180deg,#a52c39 180deg 225deg,#d7b34b 225deg 270deg,#225d43 270deg 315deg,#f7e9c2 315deg 360deg)}.spin-wheel.eight:after{inset:18%}.spin-labels.eight span{width:clamp(48px,14cqw,70px);margin-left:calc(clamp(48px,14cqw,70px)/-2);font-size:clamp(10px,2.8cqw,14px);text-align:center;white-space:nowrap}.spin-wheel{container-type:inline-size}.spin-labels.eight span:nth-child(1){transform:translateY(-31cqw)}.spin-labels.eight span:nth-child(2){transform:rotate(45deg) translateY(-31cqw) rotate(-45deg)}.spin-labels.eight span:nth-child(3){transform:rotate(90deg) translateY(-31cqw) rotate(-90deg)}.spin-labels.eight span:nth-child(4){transform:rotate(135deg) translateY(-31cqw) rotate(-135deg)}.spin-labels.eight span:nth-child(5){transform:rotate(180deg) translateY(-31cqw) rotate(-180deg)}.spin-labels.eight span:nth-child(6){transform:rotate(225deg) translateY(-31cqw) rotate(-225deg)}.spin-labels.eight span:nth-child(7){transform:rotate(270deg) translateY(-31cqw) rotate(-270deg)}.spin-labels.eight span:nth-child(8){transform:rotate(315deg) translateY(-31cqw) rotate(-315deg)}.spin-info{font-size:12px;color:var(--muted);margin:6px 0}.spin-demo{margin-top:12px;padding:12px;border:1px solid #eadfd3;border-radius:13px;background:#fffaf2;text-align:center}.spin-wheel-wrap{position:relative;width:min(100%,360px);aspect-ratio:1;margin:16px auto;cursor:zoom-in;touch-action:manipulation}
 #memberSpinPanel{width:100%;max-width:100%;box-sizing:border-box;overflow:hidden}
 .spin-wheel{box-sizing:border-box}
-.spin-wheel-wrap.zoomed{position:fixed;z-index:1002;left:50%;top:50%;transform:translate(-50%,-50%);width:min(82vw,62vh,440px);max-width:calc(100vw - 36px);margin:0;padding:18px;border-radius:22px;background:#fffaf0;box-shadow:0 22px 80px #0008;cursor:default}
+.spin-wheel-wrap.zoomed{position:fixed!important;z-index:1002;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;width:min(86vw,420px)!important;max-width:calc(100vw - 32px)!important;height:auto!important;aspect-ratio:1;margin:0!important;padding:16px!important;border-radius:22px;background:#fffaf0;box-shadow:0 22px 80px #0008;cursor:default;overflow:visible}
 body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;background:rgba(20,12,15,.82);backdrop-filter:blur(5px)}
 .spin-zoom-close{display:none;position:absolute;right:2px;top:-42px;z-index:3;border:0;border-radius:50%;width:36px;height:36px;background:#fff;color:#7d1020;font-size:22px;line-height:1;box-shadow:0 3px 12px #0004}
 .spin-wheel-wrap.zoomed .spin-zoom-close{display:block}
@@ -65,8 +65,8 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
 </div>
 <div class="section-title"><h2>🎡 Spin & Win</h2><span class="tag">हर 24 घंटे में 1 मौका</span></div>
 <div class="panel" id="memberSpinPanel">
- <p class="spin-info">व्हील पर 100, 5000, 50, 10000, 40, 50000, 10 और 5 Coin दिखेंगे। जीत केवल 10, 40, 50 या 100 Coin की होगी—हर जीत की संभावना 25% है।</p>
- <div class="spin-wheel-wrap" id="memberSpinWrap"><button class="spin-zoom-close" id="spinZoomClose" type="button" aria-label="Close enlarged wheel">×</button><div class="spin-pointer"></div><div id="memberSpinWheel" class="spin-wheel eight"><div class="spin-labels eight"><span>100</span><span>5000</span><span>50</span><span>10000</span><span>40</span><span>50000</span><span>10</span><span>5</span></div></div></div>
+ <p class="spin-info">व्हील पर 10, 40, 50 और 100 Coin के चार समान परिणाम हैं। हर परिणाम की संभावना 25% है।</p>
+ <div class="spin-wheel-wrap" id="memberSpinWrap"><button class="spin-zoom-close" id="spinZoomClose" type="button" aria-label="Close enlarged wheel">×</button><div class="spin-pointer"></div><div id="memberSpinWheel" class="spin-wheel eight"><div class="spin-labels eight"><span>100</span><span>50</span><span>40</span><span>10</span><span>100</span><span>50</span><span>40</span><span>10</span></div></div></div>
  <div style="text-align:center"><button id="memberSpinButton" type="button">🎡 अभी स्पिन करें</button><div id="memberSpinResult" class="spin-result" aria-live="polite">लॉगिन और सत्यापन के बाद अपना मौका देखें।</div><div id="memberSpinCooldown" class="spin-info"></div></div>
 </div>
 <div class="section-title"><h2>आज के उपलब्ध टास्क</h2><span class="tag">Admin-approved</span></div>
@@ -124,7 +124,7 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
  <div class="grid">
   <article class="card"><h3>🎬 Watch & Earn</h3><p>वीडियो टास्क कार्ड और निर्देशों की जाँच।</p><button type="button" disabled>टेस्ट मोड में निष्क्रिय</button></article>
   <article class="card"><h3>🎁 Daily Bonus</h3><p>दैनिक बोनस सेक्शन का दृश्य परीक्षण।</p><button type="button" disabled>टेस्ट मोड में निष्क्रिय</button></article>
-  <article class="card"><h3>🎡 Spin & Win</h3><p>आठ खानों वाला टेस्ट व्हील। चार तय जीत के परिणाम।</p><div class="spin-demo"><div class="spin-wheel-wrap"><div class="spin-pointer"></div><div id="demoSpinWheel" class="spin-wheel eight"><div class="spin-labels eight"><span>100</span><span>5000</span><span>50</span><span>10000</span><span>40</span><span>50000</span><span>10</span><span>5</span></div></div></div><button id="spinDemoButton" type="button">🎡 डेमो व्हील घुमाएँ</button><div id="spinDemoResult" class="spin-result" aria-live="polite">यह केवल डेमो है—वास्तविक Coin नहीं जुड़ेंगे।</div></div></article>
+  <article class="card"><h3>🎡 Spin & Win</h3><p>चार सही Coin परिणामों वाला टेस्ट व्हील; हर परिणाम की समान संभावना।</p><div class="spin-demo"><div class="spin-wheel-wrap"><div class="spin-pointer"></div><div id="demoSpinWheel" class="spin-wheel eight"><div class="spin-labels eight"><span>100</span><span>5000</span><span>50</span><span>10000</span><span>40</span><span>50000</span><span>10</span><span>5</span></div></div></div><button id="spinDemoButton" type="button">🎡 डेमो व्हील घुमाएँ</button><div id="spinDemoResult" class="spin-result" aria-live="polite">यह केवल डेमो है—वास्तविक Coin नहीं जुड़ेंगे।</div></div></article>
   <article class="card"><h3>🪙 Coin Wallet</h3><p>वॉलेट स्क्रीन का डेमो। वास्तविक Coin नहीं जुड़ेंगे।</p><button type="button" disabled>टेस्ट मोड में निष्क्रिय</button></article>
  </div>
  <div class="actions"><button id="exitTestMode" type="button" class="alt">टेस्ट मोड बंद करें</button></div>
@@ -292,12 +292,12 @@ $('redeemForm').addEventListener('submit',async event=>{
 const spinButton=$('spinDemoButton'),spinWheel=$('demoSpinWheel'),spinResult=$('spinDemoResult');
 let spinBusy=false,spinRotation=0;
 if(spinButton&&spinWheel){
- const demoOutcomes=[{coins:100,index:0},{coins:50,index:2},{coins:40,index:4},{coins:10,index:6}];
+ const demoOutcomes=[{coins:100,indices:[0,4]},{coins:50,indices:[1,5]},{coins:40,indices:[2,6]},{coins:10,indices:[3,7]}];
  spinButton.addEventListener('click',()=>{
   if(spinBusy)return;
   spinBusy=true;spinButton.disabled=true;spinResult.textContent='डेमो व्हील घूम रहा है…';
   const result=demoOutcomes[Math.floor(Math.random()*4)];
-  spinRotation+=1440+(360-result.index*45-22.5);
+  spinRotation+=1440+(360-result.indices[Math.floor(Math.random()*2)]*45-22.5);
   spinWheel.style.transform='rotate('+spinRotation+'deg)';
   window.setTimeout(()=>{
    spinResult.textContent='डेमो परिणाम: '+result.coins+' Coin। वास्तविक वॉलेट में कोई Coin नहीं जुड़ा।';
@@ -326,8 +326,9 @@ if(realSpinButton&&realSpinWheel){
   try{
    const result=await api('/rest/v1/rpc/sbpf_spin_wheel',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
    const prize=Number(result?.prize_coins);
-   const idx=({100:0,50:2,40:4,10:6})[prize];
-   if(idx===undefined)throw new Error('अमान्य स्पिन परिणाम');
+   const prizeSlots=({100:[0,4],50:[1,5],40:[2,6],10:[3,7]})[prize];
+   if(!prizeSlots)throw new Error('अमान्य स्पिन परिणाम');
+   const idx=prizeSlots[Math.floor(Math.random()*prizeSlots.length)];
    realSpinRotation+=1800+(360-idx*45-22.5);
    realSpinWheel.style.transform='rotate('+realSpinRotation+'deg)';
    window.setTimeout(()=>{
