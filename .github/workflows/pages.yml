@@ -108,7 +108,7 @@ jobs:
               print('Missing required entry pages:', ', '.join(missing))
               sys.exit(1)
           verification_page = (root / 'member-verification.html').read_text(encoding='utf-8')
-          if 'type="password"' in verification_page.lower() or 'public-member-verification' not in verification_page:
+          if 'type="password"' in verification_page.lower() or '/functions/v1/member-id-verify' not in verification_page:
               print('Public member verification must use the public verification endpoint and must not request a password.')
               sys.exit(1)
           member_entry = (root / 'member-panel.html').read_text(encoding='utf-8')
