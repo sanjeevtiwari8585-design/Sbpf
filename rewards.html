@@ -88,9 +88,30 @@ footer{max-width:1060px;margin:auto;padding:0 16px 30px;text-align:center;color:
  <div class="section-title"><h2>INR भुगतान अनुरोध</h2></div><div id="adminRedemptions" class="list"></div>
 </section>
 <section id="loginPrompt" class="panel hidden">
-<h2 style="color:var(--wine);margin-top:0">पहले सदस्य लॉगिन करें</h2>
-<p>Rewards Zone केवल मौजूदा SBPF सदस्य लॉगिन और सत्यापन के बाद उपलब्ध है।</p>
-<a class="btn" href="member-panel.html">Member Panel में लॉगिन करें</a>
+<h2 style="color:var(--wine);margin-top:0">Rewards Zone — टेस्ट प्रवेश</h2>
+<p>केवल अधिकृत टेस्ट ID डालें। इस टेस्ट मोड में पासवर्ड नहीं माँगा जाएगा।</p>
+<form id="testLoginForm">
+ <div><label for="testMemberId">SBPF Member ID</label><input id="testMemberId" type="text" required autocapitalize="characters" autocomplete="off" placeholder="SBPF2026000050"></div>
+ <button type="submit">टेस्ट Rewards Zone खोलें</button>
+</form>
+<p class="muted">यह सुविधा केवल SBPF2026000050 की स्क्रीन/फ्लो टेस्टिंग के लिए है। यह वास्तविक सदस्य लॉगिन, वॉलेट लेन-देन, Coin जमा या INR भुगतान सक्षम नहीं करती।</p>
+<a class="btn alt" href="member-panel.html">सामान्य सदस्य लॉगिन</a>
+</section>
+<section id="testPreview" class="hidden">
+ <div class="notice ok"><b>TEST MODE सक्रिय</b> · SBPF2026000050 · यह डेमो है, वास्तविक वॉलेट नहीं।</div>
+ <div class="stats">
+  <div class="stat"><small>टेस्ट Coins</small><strong>0</strong></div>
+  <div class="stat"><small>अनुमानित INR</small><strong>₹0.00</strong></div>
+  <div class="stat"><small>टेस्ट सत्यापन</small><strong>सक्रिय</strong></div>
+ </div>
+ <div class="section-title"><h2>Rewards Zone टेस्ट विकल्प</h2></div>
+ <div class="grid">
+  <article class="card"><h3>🎬 Watch & Earn</h3><p>वीडियो टास्क कार्ड और निर्देशों की जाँच।</p><button type="button" disabled>टेस्ट मोड में निष्क्रिय</button></article>
+  <article class="card"><h3>🎁 Daily Bonus</h3><p>दैनिक बोनस सेक्शन का दृश्य परीक्षण।</p><button type="button" disabled>टेस्ट मोड में निष्क्रिय</button></article>
+  <article class="card"><h3>🎡 Spin & Win</h3><p>स्पिन फीचर के UI کی جانچ۔</p><button type="button" disabled>टेस्ट मोड में निष्क्रिय</button></article>
+  <article class="card"><h3>🪙 Coin Wallet</h3><p>वॉलेट स्क्रीन का डेमो। वास्तविक Coin नहीं जुड़ेंगे।</p><button type="button" disabled>टेस्ट मोड में निष्क्रिय</button></article>
+ </div>
+ <div class="actions"><button id="exitTestMode" type="button" class="alt">टेस्ट मोड बंद करें</button></div>
 </section>
 </main>
 <footer>SBPF Coin एक आंतरिक रिवॉर्ड पॉइंट है, बैंक जमा या निवेश उत्पाद नहीं। कॉइन केवल स्वीकृत कार्यों पर मिलेंगे। सदस्य जोड़ने मात्र पर नकद कमीशन नहीं दिया जाता।</footer>
@@ -113,6 +134,21 @@ async function api(path,options){
  return data;
 }
 function say(text,kind){const el=$('message');el.className='notice'+(kind?' '+kind:'');el.textContent=text;}
+function openTestMode(memberId){
+ if(String(memberId||'').trim().toUpperCase()!=='SBPF2026000050'){
+  say('यह ID टेस्ट मोड के लिए अधिकृत नहीं है।','error');return;
+ }
+ $('dashboard').classList.add('hidden');$('adminPanel').classList.add('hidden');$('loginPrompt').classList.add('hidden');
+ $('testPreview').classList.remove('hidden');
+ say('टेस्ट ID स्वीकार हुई। Rewards Zone का सुरक्षित डेमो खुला है।','ok');
+}
+$('testLoginForm').addEventListener('submit',event=>{
+ event.preventDefault();openTestMode($('testMemberId').value);
+});
+$('exitTestMode').addEventListener('click',()=>{
+ $('testPreview').classList.add('hidden');$('loginPrompt').classList.remove('hidden');$('testMemberId').value='';
+ say('टेस्ट मोड बंद है। सामान्य सदस्य लॉगिन के लिए Member Panel खोलें。');
+});
 function isVerified(m){return !!m&&m.status==='active'&&m.membership_status==='active'&&m.payment_status==='paid'&&m.kyc_status==='verified'&&m.membership_end_date&&m.membership_end_date>=new Date().toISOString().slice(0,10);}
 async function load(){
  if(!token){$('loginPrompt').classList.remove('hidden');say('सदस्य लॉगिन आवश्यक है।');return;}
