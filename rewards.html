@@ -177,7 +177,7 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
  <h2 style="color:var(--wine);margin-top:0">सदस्य सत्यापन आवश्यक</h2>
  <p>Rewards Zone की व्यक्तिगत सुविधाएँ केवल पात्र एवं सत्यापित सदस्य के लिए उपलब्ध हैं।</p>
  <p class="muted">अपना सदस्य सत्यापन सुरक्षित रूप से पूरा करें। आपकी व्यक्तिगत जानकारी और रिवॉर्ड विवरण सार्वजनिक रूप से प्रदर्शित नहीं किए जाते।</p>
- <a class="btn" href="member-panel.html">सदस्य सत्यापन करें</a>
+ <a class="btn" href="rewards-login.html">सुरक्षित प्रवेश करें</a>
 </section>
 </main>
 <footer>SBPF Coin एक आंतरिक रिवॉर्ड पॉइंट है, बैंक जमा या निवेश उत्पाद नहीं। कॉइन केवल स्वीकृत कार्यों पर मिलेंगे। सदस्य जोड़ने मात्र पर नकद कमीशन नहीं दिया जाता।</footer>
@@ -209,11 +209,24 @@ async function load(){
   const adminResult=await api('/rest/v1/rpc/is_admin',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
   isAdmin=adminResult===true;
   if(!isAdmin){
-   const rows=await api('/rest/v1/members?select=member_id,status,membership_status,payment_status,kyc_status,membership_end_date&user_id=eq.'+encodeURIComponent(user.id)+'&limit=1');
+   const rows=await api('/rest/v1/members?select=id,member_id,status,membership_status,payment_status,kyc_status,membership_end_date&user_id=eq.'+encodeURIComponent(user.id)+'&limit=1');
    member=Array.isArray(rows)?rows[0]:null;
    if(!isVerified(member)){
     $('loginPrompt').classList.remove('hidden');
-    say('आपका SBPF सदस्य रिकॉर्ड अभी पूर्ण सत्यापित नहीं है। सक्रिय सदस्यता, भुगतान, KYC और वैधता की पुष्टि के बाद Rewards Zone खुलेगा।','error');
+    say('आपकी सक्रिय सदस्यता, भुगतान, KYC या वैधता की पुष्टि अधूरी है।','error');
+    return;
+   }
+   const year=new Date().getFullYear();
+   const annual=await api('/rest/v1/member_annual_verifications?select=status,valid_until,verification_year&member_row_id=eq.'+encodeURIComponent(member.id)+'&verification_year=eq.'+year+'&status=eq.verified&limit=1');
+   if(!Array.isArray(annual)||!annual[0]||annual[0].valid_until<new Date().toISOString().slice(0,10)){
+    $('loginPrompt').classList.remove('hidden');
+    say('इस वर्ष का वार्षिक सदस्य सत्यापन वैध नहीं है।','error');
+    return;
+   }
+   const access=await api('/rest/v1/member_service_access?select=access_status,expires_at&member_row_id=eq.'+encodeURIComponent(member.id)+'&service_code=eq.rewards_zone&access_status=eq.active&limit=1');
+   if(!Array.isArray(access)||!access[0]||(access[0].expires_at&&new Date(access[0].expires_at)<=new Date())){
+    $('loginPrompt').classList.remove('hidden');
+    say('Rewards Zone की अनुमति सक्रिय नहीं है।','error');
     return;
    }
   }
