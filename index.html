@@ -4,6 +4,9 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SBPF Seva | स्वर्णिम भारत परिवार फाउंडेशन</title>
 <meta name="theme-color" content="#145a38">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="icon" id="sbpfFavicon" type="image/png" href="/public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png">
 <meta name="description" content="SBPF Seva — सेवा, सहयोग, स्वावलंबन और सशक्तिकरण।">
 <style>
@@ -1196,7 +1199,7 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
 <body>
 <div class="sbpf-topbar">
   <div class="sbpf-reg-details"><span><strong>CIN:</strong> U88900UP2026NPL252071</span><span><strong>NGO दर्पण ID:</strong> UP/2026/1197725</span></div>
-  <div class="sbpf-top-actions"><button type="button" class="sbpf-language-button" id="sbpfLanguageToggle" aria-expanded="false" aria-controls="sbpfTranslatePanel">🌐 भाषा परिवर्तन</button><a class="sbpf-volunteer-login" href="member.html">स्वयंसेवक लॉगिन</a></div>
+  <div class="sbpf-top-actions"><button type="button" class="sbpf-language-button" id="sbpfInstallApp" aria-label="SBPF ऐप इंस्टॉल करें">📲 ऐप डाउनलोड करें</button><button type="button" class="sbpf-language-button" id="sbpfLanguageToggle" aria-expanded="false" aria-controls="sbpfTranslatePanel">🌐 भाषा परिवर्तन</button><a class="sbpf-volunteer-login" href="member.html">स्वयंसेवक लॉगिन</a></div>
   <div id="sbpfTranslatePanel" class="sbpf-translate-panel" hidden><span>अपनी भाषा चुनें:</span><div id="google_translate_element"></div></div>
 </div>
 <header class="sbpf-brand-header"><img id="sbpfLogo" class="logo" alt="स्वर्णिम भारत परिवार फाउंडेशन का आधिकारिक लोगो" src="public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png"><div class="sbpf-brand-copy"><h1>स्वर्णिम भारत परिवार फाउंडेशन</h1><p>सेवा • सहयोग • स्वावलंबन • सशक्तिकरण</p><span class="sbpf-brand-motto">जागरूक नागरिक • आत्मनिर्भर समाज • समृद्ध भारत</span></div></header>
@@ -1927,7 +1930,24 @@ header.sbpf-brand-header .sbpf-brand-motto{font-size:clamp(11px,1.1vw,16px)!impo
   });
 })();
 </script>
-</body></html>
+<script id="sbpf-pwa-install">
+(function(){
+  "use strict";
+  var deferredPrompt=null;
+  var button=document.getElementById("sbpfInstallApp");
+  if(!button)return;
+  if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(err){console.warn("SBPF offline setup:",err);});});}
+  window.addEventListener("beforeinstallprompt",function(event){event.preventDefault();deferredPrompt=event;button.textContent="📲 ऐप इंस्टॉल करें";});
+  window.addEventListener("appinstalled",function(){deferredPrompt=null;button.textContent="✓ ऐप इंस्टॉल हो गया";button.disabled=true;});
+  button.addEventListener("click",async function(){
+    if(deferredPrompt){deferredPrompt.prompt();var choice=await deferredPrompt.userChoice;deferredPrompt=null;if(choice&&choice.outcome==="accepted")button.textContent="✓ इंस्टॉल अनुरोध भेजा";return;}
+    var ua=navigator.userAgent||"";
+    if(/iphone|ipad|ipod/i.test(ua)){alert("SBPF ऐप जोड़ने के लिए Safari में Share (शेयर) दबाएँ, फिर “Add to Home Screen” चुनें।");return;}
+    if(/android/i.test(ua)){alert("Chrome के मेन्यू (⋮) में “Install app” या “Add to Home screen” चुनें। यदि विकल्प न दिखे तो पेज दोबारा खोलें।");return;}
+    alert("अपने ब्राउज़र के मेन्यू में “Install app” या “Install SBPF Seva” चुनें।");
+  });
+})();
+</script>\n</body></html>
 
 
 /* FIX: remove duplicate front/back ID-card overlay from all SBPF work-area cards */
