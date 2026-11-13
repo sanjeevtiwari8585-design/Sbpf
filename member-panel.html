@@ -28,7 +28,8 @@ main{padding:14px}.hero{background:linear-gradient(135deg,#7d1020,#a71f31);color
 .family-form .member-row{border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0;background:#fff}
 .family-form .member-row h4{margin:0 0 8px;color:var(--maroon)}
 .family-form .add-member{width:100%;border:1px dashed #aa8d44;background:#fffdf5;border-radius:10px;padding:10px;font-weight:700;color:var(--maroon)}
-.panel{background:#fff;border:1px solid var(--line);border-radius:15px;padding:15px;margin:12px 0;box-shadow:0 4px 16px #25151008;min-width:0}.panel h3,.panel h2{color:var(--maroon)}.panel .items{margin-top:12px}.panel .notice{line-height:1.55}.primary{cursor:pointer;transition:opacity .15s,transform .15s}.primary:hover:not(:disabled){opacity:.94;transform:translateY(-1px)}.primary:disabled{opacity:.62;cursor:wait}input:focus,select:focus,textarea:focus{outline:2px solid #d4af3766;outline-offset:1px;border-color:var(--gold)}.back,.logout,.quick button,.items button,.focusAreaCard button{cursor:pointer;transition:background .15s,border-color .15s}.back:hover,.logout:hover,.quick button:hover,.items button:hover,.focusAreaCard button:hover{border-color:var(--gold);background:var(--cream)}.campaignCard{min-width:0}.campaignCard .campaignLink{font-family:inherit}.focusGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:12px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:15px;padding:15px;margin:12px 0;box-shadow:0 4px 16px #25151008;min-width:0}.panel h3,.panel h2{color:var(--maroon)}.panel .items{margin-top:12px}.panel .notice{line-height:1.55}.primary{cursor:pointer;transition:opacity .15s,transform .15s}.primary:hover:not(:disabled){opacity:.94;transform:translateY(-1px)}.primary:disabled{opacity:.62;cursor:wait}
+.walletPanel{margin:14px 0;border:1px solid #dfc47e;background:linear-gradient(135deg,#fff8e7,#fff 75%);border-radius:17px;padding:15px;box-shadow:0 5px 18px #5a37100d}.walletTop{display:flex;align-items:center;gap:10px}.walletCoin{width:43px;height:43px;border-radius:13px;background:#f4e6bf;display:grid;place-items:center;font-size:24px}.walletTop h3{margin:0;color:var(--maroon);font-size:17px}.walletTop small{color:var(--muted)}.walletBalance{font-size:30px;font-weight:850;color:var(--maroon);line-height:1.2;margin:14px 0 4px}.walletInr{font-size:14px;color:#5c4b2a;font-weight:700}.walletActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.walletActions a,.walletActions button{display:inline-block;text-decoration:none;border:1px solid var(--maroon);border-radius:9px;padding:9px 12px;background:var(--maroon);color:white;font-weight:700;font-size:12px}.walletActions .light{background:white;color:var(--maroon)}.walletHistory{margin-top:12px;border-top:1px solid #eadfcf;padding-top:9px}.walletHistoryRow{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #f0e9df;font-size:12px}.walletHistoryRow small{display:block;color:var(--muted)}.walletHistoryRow b{white-space:nowrap}.walletError{color:#a01828;font-size:12px}input:focus,select:focus,textarea:focus{outline:2px solid #d4af3766;outline-offset:1px;border-color:var(--gold)}.back,.logout,.quick button,.items button,.focusAreaCard button{cursor:pointer;transition:background .15s,border-color .15s}.back:hover,.logout:hover,.quick button:hover,.items button:hover,.focusAreaCard button:hover{border-color:var(--gold);background:var(--cream)}.campaignCard{min-width:0}.campaignCard .campaignLink{font-family:inherit}.focusGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:12px}
 .focusAreaCard{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;display:flex;flex-direction:column;align-items:flex-start;gap:7px;min-width:0}
 .focusAreaCard .focusIcon{width:38px;height:38px;border-radius:10px;background:var(--cream);display:grid;place-items:center;font-size:21px}
 .campaignPoster{display:block;width:100%;aspect-ratio:1200/630;object-fit:cover;border-radius:10px;border:1px solid #ead9c2;background:#fff8e9;margin:0 0 8px}.campaignCard{overflow:hidden}.campaignCard .campaignLink{margin-top:auto}.campaignCard{align-items:stretch}
@@ -73,6 +74,14 @@ main{padding:14px}.hero{background:linear-gradient(135deg,#7d1020,#a71f31);color
    <img id="photo" class="avatar" alt="Member">
    <div><h2 id="name">सदस्य</h2><p>Member ID: <b id="memberId">—</b></p><p>सदस्यता: <b id="status">—</b> &nbsp; <span id="validity"></span></p><p style="font-size:12px;color:#ffe9c0;margin-top:7px">एक ही SBPF पहचान: swarnimbharat.club की Member ID सभी SBPF कार्यक्षेत्रों और swarnimbharatclub.in पर मान्य सत्यापन पहचान है।</p></div>
   </div>
+  <section id="memberWallet" class="walletPanel hidden" aria-live="polite">
+   <div class="walletTop"><div class="walletCoin">🪙</div><div><h3>मेरा SBPF Coin Wallet</h3><small>सत्यापित सदस्य का व्यक्तिगत रिवॉर्ड खाता</small></div></div>
+   <div id="memberWalletBalance" class="walletBalance">— Coin</div>
+   <div id="memberWalletInr" class="walletInr">अनुमानित मूल्य: ₹—</div>
+   <div class="walletActions"><a href="rewards.html">Rewards Zone खोलें</a><button class="light" type="button" onclick="refreshMemberWallet()">Wallet Refresh</button></div>
+   <div class="walletHistory"><b style="font-size:13px;color:var(--maroon)">हाल के लेन-देन</b><div id="memberWalletHistory" class="muted" style="font-size:12px;margin-top:7px">Wallet लोड हो रहा है…</div></div>
+   <div id="memberWalletMessage" class="muted" style="margin-top:8px"></div>
+  </section>
   <div class="quick">
    <button onclick="openView('profile')">👤 प्रोफाइल</button><button onclick="openView('family')">👨‍👩‍👧 परिवार रजिस्टर</button><button onclick="location.href='swarnim-seva.html'">🤝 स्वर्णिम सेवा</button><button onclick="openView('id')">🪪 ID Card</button><button onclick="openView('education')">🎓 शिक्षा</button><button onclick="openView('network')">🔗 Referral</button><button onclick="location.href='member-verification.html'">✓ सदस्य सत्यापन</button>
   </div>
@@ -120,7 +129,7 @@ main{padding:14px}.hero{background:linear-gradient(135deg,#7d1020,#a71f31);color
 <script>
 const URL='https://dxowhzghrdghfzoggorx.supabase.co';
 const KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
-let token=localStorage.getItem('sbpf_access_token')||'', profile=null, dashboard=null;
+let token=localStorage.getItem('sbpf_access_token')||'', profile=null, dashboard=null, currentUserId=null;
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'—').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 async function api(path,opts={}){const h={apikey:KEY,...(opts.headers||{})};if(token)h.Authorization='Bearer '+token;const r=await fetch(URL+path,{...opts,headers:h});let j=null;try{j=await r.json()}catch{}if(!r.ok)throw Error(j?.error||j?.msg||j?.message||j?.error_description||'Request failed');return j}
@@ -131,6 +140,7 @@ async function login(){const b=$('loginBtn');b.disabled=true;b.textContent='प�
 async function load(){try{
  const currentUser=await api('/auth/v1/user');
  if(!currentUser?.id)throw Error('लॉगिन सत्यापित नहीं हुआ। कृपया दोबारा प्रवेश करें।');
+ currentUserId=currentUser.id;
  // New member self-registration is disabled. Only an existing member record linked to this login may enter.
  const p=await rpc('get_my_member_profile');profile=Array.isArray(p)?p[0]:p;
  if(!profile)throw Error('इस लॉगिन से जुड़ा मौजूदा सदस्य रिकॉर्ड नहीं मिला। नया पंजीकरण बंद है; कृपया अपने अधिकृत SBPF एडमिन से मौजूदा सदस्य रिकॉर्ड लिंक कराने में सहायता लें।');
@@ -140,9 +150,44 @@ async function load(){try{
  if(Array.isArray(extra)&&extra[0]&&extra[0].user_id===currentUser.id)profile={...profile,...extra[0]};
  const d=await rpc('get_my_member_dashboard');dashboard=Array.isArray(d)?d[0]:d;
  $('auth').classList.add('hidden');$('app').classList.remove('hidden');render();
- await Promise.all([loadFocusAreas(),loadCampaigns()]);
+ await Promise.all([loadMemberWallet(),loadFocusAreas(),loadCampaigns()]);
  const returnTo=new URLSearchParams(location.search).get('return_to');if(['swarnim-ai-studio.html','swarnim-creator.html','swarnim-video-editor.html'].includes(returnTo)){location.replace(returnTo);return;}
  }catch(e){token='';localStorage.removeItem('sbpf_access_token');msg(e.message,'error')}}
+function isVerifiedForRewards(row){
+ if(!row)return false;
+ const validUntil=String(row.membership_end_date||'');
+ return row.status==='active'&&row.membership_status==='active'&&row.payment_status==='paid'&&row.kyc_status==='verified'&&validUntil>=new Date().toISOString().slice(0,10);
+}
+async function loadMemberWallet(){
+ const panel=$('memberWallet');
+ if(!panel||!currentUserId)return;
+ panel.classList.add('hidden');
+ $('memberWalletMessage').textContent='सदस्य सत्यापन जाँचा जा रहा है…';
+ try{
+  const rows=await api('/rest/v1/members?select=user_id,status,membership_status,payment_status,kyc_status,membership_end_date&user_id=eq.'+encodeURIComponent(currentUserId)+'&limit=1');
+  const verified=Array.isArray(rows)&&rows.length===1&&rows[0].user_id===currentUserId&&isVerifiedForRewards(rows[0]);
+  if(!verified){$('memberWalletMessage').textContent='Wallet केवल सक्रिय सदस्यता, भुगतान, KYC और वैधता पूरी करने वाले सत्यापित सदस्यों के लिए उपलब्ध है।';return;}
+  panel.classList.remove('hidden');
+  await refreshMemberWallet();
+ }catch(e){panel.classList.remove('hidden');$('memberWalletBalance').textContent='लोड नहीं हुआ';$('memberWalletMessage').innerHTML='<span class="walletError">Wallet जानकारी नहीं मिल सकी: '+esc(e.message)+'</span>';}
+}
+async function refreshMemberWallet(){
+ if(!currentUserId)return;
+ $('memberWalletMessage').textContent='Wallet अपडेट हो रहा है…';
+ try{
+  const [entries,settings]=await Promise.all([
+   api('/rest/v1/sbpf_reward_wallet_ledger?select=points_delta,entry_type,description,created_at&member_profile_id=eq.'+encodeURIComponent(currentUserId)+'&order=created_at.desc&limit=50'),
+   api('/rest/v1/sbpf_rewards_config?select=coin_per_inr&id=eq.1')
+  ]);
+  const ledger=Array.isArray(entries)?entries:[];
+  const rate=Number(Array.isArray(settings)&&settings[0]?.coin_per_inr||100);
+  const balance=ledger.reduce((sum,item)=>sum+Number(item.points_delta||0),0);
+  $('memberWalletBalance').textContent=balance.toLocaleString('en-IN')+' Coin';
+  $('memberWalletInr').textContent='अनुमानित मूल्य: ₹'+(balance/rate).toFixed(2)+' · '+rate+' Coin = ₹1';
+  $('memberWalletHistory').innerHTML=ledger.length?ledger.slice(0,8).map(item=>'<div class="walletHistoryRow"><div>'+esc(item.description||item.entry_type)+'<small>'+new Date(item.created_at).toLocaleString('hi-IN')+'</small></div><b style="color:'+(Number(item.points_delta)>=0?'#176b42':'#a01828')+'">'+(Number(item.points_delta)>0?'+':'')+Number(item.points_delta).toLocaleString('en-IN')+'</b></div>').join(''):'अभी कोई Coin लेन-देन नहीं है।';
+  $('memberWalletMessage').textContent='आपका Wallet सुरक्षित SBPF रिकॉर्ड से अपडेट हुआ है।';
+ }catch(e){$('memberWalletMessage').innerHTML='<span class="walletError">Wallet अपडेट नहीं हुआ: '+esc(e.message)+'</span>';}
+}
 function render(){ $('name').textContent=profile.full_name||'सदस्य';$('memberId').textContent=profile.member_id||'—';$('status').textContent=profile.status||profile.membership_status||'Pending';$('validity').textContent=profile.membership_end_date?'वैधता: '+profile.membership_end_date:'';branding(); if(dashboard?.profile_photo_url)$('photo').src=dashboard.profile_photo_url;const reminder=$('profileReminder');if(reminder)reminder.classList.toggle('hidden',profile.profile_completed===true); }
 function dismissProfileReminder(){$('profileReminder')?.classList.add('hidden')}
 function completeProfileNow(){dismissProfileReminder();openView('profile-edit')}
