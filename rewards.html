@@ -411,7 +411,7 @@ async function loadRewardCategories(){
  const url='/rest/v1/sbpf_reward_categories?select=id,slug,title,description,icon,reward_label,reward_mode,action_label,destination_url,is_enabled,display_order,policy_note&is_enabled=eq.true&order=display_order.asc';
  const rows=await api(url);
  const cards=Array.isArray(rows)?rows:[];
- const render=items=>items.map(item=>'<article class="card reward-category-card" data-category="'+esc(item.slug)+'" data-destination-url="'+esc(item.destination_url||'')+'"><div class="reward-category-head"><div class="reward-category-icon">'+esc(item.icon)+'</div><h3>'+esc(item.title)+'</h3></div><p>'+esc(item.description)+'</p><span class="tag">'+esc(item.reward_label)+'</span><button type="button" data-reward-action="'+esc(item.slug)+'">'+esc(item.action_label)+'</button></article>').join('');
+ const render=items=>items.map(item=>{const watch=item.slug==='watch-earn';return '<article class="card reward-category-card" data-category="'+esc(item.slug)+'" data-destination-url="'+esc(item.destination_url||'')+'"><div class="reward-category-head"><div class="reward-category-icon">'+esc(item.icon)+'</div><h3>'+esc(item.title)+'</h3></div>'+(watch?'':'<p>'+esc(item.description)+'</p>')+'<span class="tag">'+(watch?'25 Coin':esc(item.reward_label))+'</span><button type="button" data-reward-action="'+esc(item.slug)+'">'+(watch?'Share':esc(item.action_label))+'</button></article>';}).join('');
  ['rewardCategoriesPublicGrid','rewardCategoriesTestGrid','rewardCategoriesMemberGrid'].forEach(id=>{const el=$(id);if(el)el.innerHTML=cards.length?render(cards):'<p class="muted">अभी कोई Rewards कार्ड प्रकाशित नहीं है।</p>';});
  if(isAdmin)await loadAdminRewardCategories();
 }
