@@ -139,6 +139,23 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
 <div class="section-title"><h2>आज के उपलब्ध टास्क</h2><span class="tag">Admin-approved</span></div>
 <div id="tasks" class="grid"><div class="card">टास्क लोड हो रहे हैं…</div></div>
 
+<div class="section-title"><h2>मेरा SBPF Wallet</h2><span class="tag">सुरक्षित Coin लेन-देन</span></div>
+<div class="panel" id="walletPanel">
+ <div id="walletState" class="muted">Wallet स्थिति जाँची जा रही है…</div>
+ <form id="walletPinForm" class="hidden" autocomplete="off">
+  <div><label for="walletPin">4 अंकों का Wallet PIN बनाएँ</label><input id="walletPin" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" minlength="4" autocomplete="new-password" required></div>
+  <div><label for="walletPinConfirm">PIN की पुष्टि करें</label><input id="walletPinConfirm" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" minlength="4" autocomplete="new-password" required></div>
+  <button id="walletPinButton" type="submit">Wallet PIN बनाएँ</button>
+ </form>
+ <form id="walletTransferForm" class="hidden" autocomplete="off" style="margin-top:14px">
+  <div><label for="walletRecipient">प्राप्तकर्ता का SBPF Member ID</label><input id="walletRecipient" maxlength="40" autocapitalize="characters" required placeholder="SBPF Member ID"></div>
+  <div><label for="walletAmount">कितने Coin भेजने हैं?</label><input id="walletAmount" type="number" min="1" max="100000" step="1" required placeholder="Coin की संख्या"></div>
+  <div><label for="walletTransferPin">Wallet PIN</label><input id="walletTransferPin" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" minlength="4" autocomplete="current-password" required></div>
+  <button id="walletTransferButton" type="submit">Coin Transfer करें</button>
+ </form>
+ <div id="walletTransferHistory" class="list" style="margin-top:12px"></div>
+</div>
+
 <div class="section-title"><h2>मेरी Coin History</h2></div>
 <div class="panel"><div id="ledger" class="list"><p class="muted">रिकॉर्ड लोड हो रहे हैं…</p></div></div>
 
@@ -249,13 +266,52 @@ async function load(){
  }
 }
 async function loadWallet(){
- const rows=await api('/rest/v1/sbpf_reward_wallet_ledger?select=points_delta,entry_type,description,created_at&member_profile_id=eq.'+encodeURIComponent(user.id)+'&order=created_at.desc&limit=30');
+ const [rows,wallet]=await Promise.all([
+  api('/rest/v1/sbpf_reward_wallet_ledger?select=points_delta,entry_type,reference_id,description,created_at&member_profile_id=eq.'+encodeURIComponent(user.id)+'&order=created_at.desc&limit=50'),
+  api('/rest/v1/rpc/sbpf_wallet_balance',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'})
+ ]);
  const ledger=Array.isArray(rows)?rows:[];
- const balance=ledger.reduce((sum,row)=>sum+Number(row.points_delta||0),0);
+ const balance=Number(wallet?.balance ?? ledger.reduce((sum,row)=>sum+Number(row.points_delta||0),0));
  $('coinBalance').textContent=balance.toLocaleString('en-IN');
  $('inrBalance').textContent='₹'+(balance/Number(config.coin_per_inr||100)).toFixed(2);
- $('ledger').innerHTML=ledger.length?ledger.map(row=>'<div class="row"><div><b>'+esc(row.description||row.entry_type)+'</b><small>'+new Date(row.created_at).toLocaleString('hi-IN')+'</small></div><strong style="color:'+(Number(row.points_delta)>=0?'#176b42':'#a01828')+'">'+(Number(row.points_delta)>0?'+':'')+Number(row.points_delta).toLocaleString('en-IN')+' Coin</strong></div>').join(''):'<p class="muted">अभी कोई Coin लेन-देन नहीं है।</p>';
+ $('ledger').innerHTML=ledger.length?ledger.map(row=>'<div class="row"><div><b>'+esc(row.description||row.entry_type)+'</b><small>'+new Date(row.created_at).toLocaleString('hi-IN')+(row.reference_id?' · Ref: '+esc(row.reference_id):'')+'</small></div><strong style="color:'+(Number(row.points_delta)>=0?'#176b42':'#a01828')+'">'+(Number(row.points_delta)>0?'+':'')+Number(row.points_delta).toLocaleString('en-IN')+' Coin</strong></div>').join(''):'<p class="muted">अभी कोई Coin लेन-देन नहीं है।</p>';
+ $('walletState').textContent='Wallet सक्रिय · उपलब्ध बैलेंस: '+balance.toLocaleString('en-IN')+' Coin';
+ $('walletPinForm').classList.toggle('hidden',!!wallet?.pin_set);
+ $('walletTransferForm').classList.toggle('hidden',!wallet?.pin_set);
+ $('walletTransferHistory').innerHTML='';
 }
+document.getElementById('walletPinForm')?.addEventListener('submit',async event=>{
+ event.preventDefault();
+ const pin=$('walletPin').value,confirmPin=$('walletPinConfirm').value;
+ if(!/^\\d{4}$/.test(pin)){say('4 अंकों का PIN दर्ज करें।','error');return;}
+ if(pin!==confirmPin){say('दोनों PIN एक जैसे नहीं हैं।','error');return;}
+ const button=$('walletPinButton');button.disabled=true;
+ try{
+  await api('/rest/v1/rpc/sbpf_wallet_setup_pin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_pin:pin})});
+  $('walletPin').value='';$('walletPinConfirm').value='';
+  say('Wallet बन गया और PIN सुरक्षित रूप से सेट हो गया।','ok');
+  await loadWallet();
+ }catch(error){say('Wallet PIN सेट नहीं हुआ: '+error.message,'error');}
+ finally{button.disabled=false;}
+});
+document.getElementById('walletTransferForm')?.addEventListener('submit',async event=>{
+ event.preventDefault();
+ const recipient=$('walletRecipient').value.trim().toUpperCase();
+ const amount=Number($('walletAmount').value),pin=$('walletTransferPin').value;
+ if(!recipient||!Number.isInteger(amount)||amount<=0||amount>100000||!/^\\d{4}$/.test(pin)){say('Member ID, सही Coin राशि और 4 अंकों का PIN दर्ज करें।','error');return;}
+ if(!window.confirm(recipient+' को '+amount+' Coin भेजने की पुष्टि करें?'))return;
+ const button=$('walletTransferButton');button.disabled=true;
+ try{
+  const result=await api('/rest/v1/rpc/sbpf_wallet_transfer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_recipient_member_id:recipient,p_amount:amount,p_pin:pin,p_request_id:crypto.randomUUID()})});
+  if(!result?.success)throw new Error(result?.error||'ट्रांसफर पूरा नहीं हुआ।');
+  $('walletRecipient').value='';$('walletAmount').value='';$('walletTransferPin').value='';
+  $('walletTransferHistory').innerHTML='<div class="notice ok">ट्रांसफर सफल · Transaction ID: <b>'+esc(result.transaction_id)+'</b> · '+Number(result.amount).toLocaleString('en-IN')+' Coin</div>';
+  say('Coin सुरक्षित रूप से ट्रांसफर हो गए।','ok');
+  await loadWallet();
+ }catch(error){say('Coin ट्रांसफर नहीं हुए: '+error.message,'error');}
+ finally{button.disabled=false;}
+});
+
 async function loadTeams(){
  try{const rows=await api('/rest/v1/sbpf_team_members?select=team_id,team_role,status,sbpf_teams(name,team_code)&member_profile_id=eq.'+encodeURIComponent(user.id)+'&status=eq.active');teams=Array.isArray(rows)?rows:[];}catch(_){teams=[];}
 }
