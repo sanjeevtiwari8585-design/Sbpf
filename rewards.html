@@ -112,12 +112,12 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
 <span class="pill">केवल सत्यापित SBPF सदस्य</span>
 <h1>SBPF Rewards Zone</h1>
 <p>सीखें, सेवा करें, टास्क पूरा करें और SBPF Coin अर्जित करें। स्वीकृत कॉइन को निर्धारित नियमों के अनुसार INR रिवॉर्ड के लिए अनुरोध किया जा सकता है।</p>
-<div class="actions"><a class="btn" href="member-panel.html">सदस्य लॉगिन</a><a class="btn alt" href="index.html">मुख्य वेबसाइट</a></div>
+<div class="actions"><a class="btn" href="member-panel.html">सदस्य सत्यापन</a><a class="btn alt" href="index.html">मुख्य वेबसाइट</a></div>
 </section>
 
 <section class="public-rewards-preview">
 <div class="section-title"><h2>🎁 SBPF Rewards गतिविधियाँ</h2><span class="tag">सभी के लिए जानकारी</span></div>
-<p class="muted">नीचे Rewards Zone के उपलब्ध कार्ड देखें। Coin कमाना, Spin और INR रिडेम्पशन केवल पात्र एवं सत्यापित सदस्य लॉगिन के बाद, एडमिन लॉन्च नियमों के अनुसार उपलब्ध होंगे।</p>
+<p class="muted">नीचे Rewards Zone के उपलब्ध कार्ड देखें। Coin कमाना, Spin और INR रिवॉर्ड केवल पात्र सदस्य का सत्यापन सफल होने तथा एडमिन द्वारा सुविधा सक्रिय किए जाने पर उपलब्ध होंगे।</p>
 <div id="rewardCategoriesPublicGrid" class="grid reward-categories-grid"><div class="card">Rewards कार्ड लोड हो रहे हैं…</div></div>
 </section>
 <div id="message" class="notice">Rewards Zone की स्थिति जाँची जा रही है…</div>
@@ -133,7 +133,7 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
 <div class="panel" id="memberSpinPanel">
  <p class="spin-info">व्हील पर 10, 40, 50 और 100 Coin के चार समान परिणाम हैं। हर परिणाम की संभावना 25% है।</p>
  <div class="spin-wheel-wrap" id="memberSpinWrap"><button class="spin-zoom-close" id="spinZoomClose" type="button" aria-label="Close enlarged wheel">×</button><div class="spin-pointer"></div><div id="memberSpinWheel" class="spin-wheel eight"><div class="spin-labels eight"><span>100</span><span>50</span><span>40</span><span>10</span><span>100</span><span>50</span><span>40</span><span>10</span></div></div></div>
- <div style="text-align:center"><button id="memberSpinButton" type="button">🎡 अभी स्पिन करें</button><div id="memberSpinResult" class="spin-result" aria-live="polite">लॉगिन और सत्यापन के बाद अपना मौका देखें।</div><div id="memberSpinCooldown" class="spin-info"></div></div>
+ <div style="text-align:center"><button id="memberSpinButton" type="button">🎡 अभी स्पिन करें</button><div id="memberSpinResult" class="spin-result" aria-live="polite">सदस्य सत्यापन के बाद अपना मौका देखें।</div><div id="memberSpinCooldown" class="spin-info"></div></div>
 </div>
 <div class="section-title"><h2>आज के उपलब्ध टास्क</h2><span class="tag">Admin-approved</span></div>
 <div id="tasks" class="grid"><div class="card">टास्क लोड हो रहे हैं…</div></div>
@@ -232,7 +232,7 @@ $('exitTestMode').addEventListener('click',()=>{
 });
 function isVerified(m){return !!m&&m.status==='active'&&m.membership_status==='active'&&m.payment_status==='paid'&&m.kyc_status==='verified'&&m.membership_end_date&&m.membership_end_date>=new Date().toISOString().slice(0,10);}
 async function load(){
- if(!token){$('loginPrompt').classList.remove('hidden');say('सदस्य लॉगिन आवश्यक है।');return;}
+ if(!token){$('loginPrompt').classList.remove('hidden');say('सदस्य सत्यापन आवश्यक है।');return;}
  try{
   user=await api('/auth/v1/user');
   if(!user?.id)throw new Error('लॉगिन सत्र उपलब्ध नहीं है।');
@@ -387,7 +387,7 @@ let realSpinRotation=0,realSpinBusy=false;
 if(realSpinButton&&realSpinWheel){
  realSpinButton.addEventListener('click',async()=>{
   if(realSpinBusy)return;
-  if(!token||!user?.id){$('memberSpinResult').textContent='पहले सामान्य सदस्य लॉगिन करें।';return;}
+  if(!token||!user?.id){$('memberSpinResult').textContent='पहले सदस्य सत्यापन पूरा करें।';return;}
   realSpinBusy=true;realSpinButton.disabled=true;$('memberSpinResult').textContent='आपका स्पिन सुरक्षित रूप से दर्ज किया जा रहा है…';
   try{
    const result=await api('/rest/v1/rpc/sbpf_spin_wheel',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
@@ -405,7 +405,7 @@ if(realSpinButton&&realSpinWheel){
    },4100);
   }catch(e){
    const msg=e.message||'स्पिन अभी उपलब्ध नहीं है।';
-   $('memberSpinResult').textContent=msg.includes('SPIN_COOLDOWN_ACTIVE')?'आपका आज का मौका उपयोग हो चुका है। 24 घंटे बाद फिर आएँ।':msg.includes('REWARDS_NOT_LAUNCHED')?'Rewards Zone अभी एडमिन द्वारा लॉन्च नहीं किया गया है।':msg.includes('LOGIN_REQUIRED')?'पहले लॉगिन करें।':msg.includes('VERIFIED_ACTIVE_MEMBER_REQUIRED')?'सक्रिय और भुगतान-सत्यापित सदस्य ही स्पिन कर सकते हैं।':msg.includes('ANNUAL_VERIFICATION_REQUIRED')?'इस वर्ष का सदस्य सत्यापन आवश्यक है।':msg.includes('REWARDS_ZONE_ACCESS_REQUIRED')?'आपके सदस्य ID पर Rewards Zone अनुमति सक्रिय नहीं है।':msg;
+   $('memberSpinResult').textContent=msg.includes('SPIN_COOLDOWN_ACTIVE')?'आपका आज का मौका उपयोग हो चुका है। 24 घंटे बाद फिर आएँ।':msg.includes('REWARDS_NOT_LAUNCHED')?'Rewards Zone अभी एडमिन द्वारा लॉन्च नहीं किया गया है।':msg.includes('LOGIN_REQUIRED')?'पहले सदस्य सत्यापन पूरा करें।':msg.includes('VERIFIED_ACTIVE_MEMBER_REQUIRED')?'सक्रिय और भुगतान-सत्यापित सदस्य ही स्पिन कर सकते हैं।':msg.includes('ANNUAL_VERIFICATION_REQUIRED')?'इस वर्ष का सदस्य सत्यापन आवश्यक है।':msg.includes('REWARDS_ZONE_ACCESS_REQUIRED')?'आपके सदस्य ID पर Rewards Zone अनुमति सक्रिय नहीं है।':msg;
    realSpinBusy=false;realSpinButton.disabled=false;
   }
  });
@@ -466,7 +466,7 @@ document.addEventListener('click',async event=>{
   }else if(slug==='coin-wallet'){
    const target=$('ledger')||$('redeemForm');target?.scrollIntoView({behavior:'smooth',block:'center'});
   }else if(slug==='watch-earn'||slug==='daily-task'){
-   const target=$('tasks');if(target)target.scrollIntoView({behavior:'smooth',block:'center'});else say('वीडियो और दैनिक टास्क सामान्य सदस्य लॉगिन के बाद उपलब्ध होंगे।');
+   const target=$('tasks');if(target)target.scrollIntoView({behavior:'smooth',block:'center'});else say('वीडियो और दैनिक टास्क सदस्य सत्यापन के बाद उपलब्ध होंगे।');
   }else if(slug==='google-review'){
    const link=action.closest('[data-category]')?.dataset.destinationUrl;
    if(link)window.open(link,'_blank','noopener');else say('Google Review लिंक एडमिन द्वारा जोड़ना बाकी है। समीक्षा स्वैच्छिक होगी; इसके बदले Coin नहीं मिलेंगे।');
@@ -480,7 +480,7 @@ document.addEventListener('click',async event=>{
   }else if(destinations[slug]){
    window.location.href=destinations[slug];
   }else{
-   say('यह गतिविधि सामान्य सदस्य लॉगिन और प्रकाशित टास्क के बाद उपलब्ध होगी।');
+   say('यह गतिविधि सदस्य सत्यापन और प्रकाशित टास्क के बाद उपलब्ध होगी।');
   }
  }
  const toggle=event.target.closest('[data-admin-category-toggle]');
