@@ -43,6 +43,22 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
 .spin-wheel-wrap.zoomed .spin-wheel{box-shadow:0 8px 30px #25151044}
 #memberSpinButton{min-width:min(240px,100%);font-weight:800}
 @media(max-width:480px){.spin-wheel-wrap{width:min(78vw,300px)}.spin-wheel-wrap.zoomed{width:min(84vw,62vh);padding:14px}.spin-info{text-align:center;line-height:1.55}.spin-result{overflow-wrap:anywhere;text-align:center}}.spin-wheel{width:100%;height:100%;border-radius:50%;border:7px solid #d7b34b;background:conic-gradient(#7d1020 0deg 60deg,#f1d98d 60deg 120deg,#145a38 120deg 180deg,#f7e9c2 180deg 240deg,#a52c39 240deg 300deg,#d7b34b 300deg 360deg);box-shadow:0 5px 18px #25151022;transition:transform 4s cubic-bezier(.12,.72,.12,1);position:relative}.spin-wheel:after{content:"";position:absolute;inset:15%;border-radius:50%;border:2px dashed #fff9}.spin-labels{position:absolute;inset:0;pointer-events:none;color:#fff;font-size:11px;font-weight:900;text-shadow:0 1px 3px #0008}.spin-labels span{position:absolute;left:50%;top:50%;width:70px;margin-left:-35px;margin-top:-8px}.spin-labels span:nth-child(1){transform:translateY(-77px)}.spin-labels span:nth-child(2){transform:rotate(60deg) translateY(-77px) rotate(-60deg)}.spin-labels span:nth-child(3){transform:rotate(120deg) translateY(-77px) rotate(-120deg)}.spin-labels span:nth-child(4){transform:rotate(180deg) translateY(-77px) rotate(-180deg)}.spin-labels span:nth-child(5){transform:rotate(240deg) translateY(-77px) rotate(-240deg)}.spin-labels span:nth-child(6){transform:rotate(300deg) translateY(-77px) rotate(-300deg)}.spin-pointer{position:absolute;z-index:2;left:50%;top:-5px;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:24px solid #d7b34b;filter:drop-shadow(0 2px 2px #0004)}.spin-result{min-height:22px;margin:8px 0;color:#145a38;font-weight:800;font-size:13px}.admin-actions{display:flex;gap:8px;flex-wrap:wrap}.admin-actions button{font-size:12px;padding:8px 11px}.admin-card{border:1px solid #e8d7b8;border-radius:12px;padding:12px;margin:9px 0;background:#fffdf8}.admin-card h4{margin:0 0 5px;color:var(--wine)}.admin-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.admin-form .wide{grid-column:1/-1}@media(max-width:640px){.admin-form{grid-template-columns:1fr}.admin-form .wide{grid-column:auto}}
+
+/* Rewards Zone test layout polish */
+.rewards-test-grid{align-items:stretch;gap:14px}
+.rewards-test-grid>.card{min-height:225px;display:flex;flex-direction:column;justify-content:flex-start}
+.rewards-test-grid>.card:nth-child(3){grid-column:1/-1}
+.rewards-test-grid .spin-demo{margin-top:10px}
+.rewards-test-grid .spin-wheel-wrap{width:min(100%,300px)}
+.rewards-test-grid .spin-result{min-height:26px}
+.rewards-test-grid .admin-card{margin-top:8px}
+.rewards-test-grid .card button{align-self:flex-start}
+@media(max-width:640px){
+ .rewards-test-grid>.card{min-height:0}
+ .rewards-test-grid>.card:nth-child(3){grid-column:auto}
+ .rewards-test-grid .spin-wheel-wrap{width:min(78vw,290px)}
+}
+
 </style>
 </head>
 <body>
@@ -121,11 +137,11 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
   <div class="stat"><small>टेस्ट सत्यापन</small><strong>सक्रिय</strong></div>
  </div>
  <div class="section-title"><h2>Rewards Zone टेस्ट विकल्प</h2></div>
- <div class="grid">
-  <article class="card"><h3>🎬 Watch & Earn</h3><p>वीडियो टास्क कार्ड और निर्देशों की जाँच।</p><button type="button" disabled>टेस्ट मोड में निष्क्रिय</button></article>
-  <article class="card"><h3>🎁 Daily Bonus</h3><p>दैनिक बोनस सेक्शन का दृश्य परीक्षण।</p><button type="button" disabled>टेस्ट मोड में निष्क्रिय</button></article>
-  <article class="card"><h3>🎡 Spin & Win</h3><p>चार सही Coin परिणामों वाला टेस्ट व्हील; हर परिणाम की समान संभावना।</p><div class="spin-demo"><div class="spin-wheel-wrap"><div class="spin-pointer"></div><div id="demoSpinWheel" class="spin-wheel eight"><div class="spin-labels eight"><span>100</span><span>5000</span><span>50</span><span>10000</span><span>40</span><span>50000</span><span>10</span><span>5</span></div></div></div><button id="spinDemoButton" type="button">🎡 डेमो व्हील घुमाएँ</button><div id="spinDemoResult" class="spin-result" aria-live="polite">यह केवल डेमो है—वास्तविक Coin नहीं जुड़ेंगे।</div></div></article>
-  <article class="card"><h3>🪙 Coin Wallet</h3><p>वॉलेट स्क्रीन का डेमो। वास्तविक Coin नहीं जुड़ेंगे।</p><button type="button" disabled>टेस्ट मोड में निष्क्रिय</button></article>
+ <div class="grid rewards-test-grid">
+  <article class="card"><h3>🎬 Watch & Earn</h3><p>वीडियो टास्क कार्ड और निर्देशों की जाँच।</p><button id="demoWatchButton" type="button">डेमो टास्क देखें</button><p id="demoWatchResult" class="muted" aria-live="polite">केवल स्क्रीन/फ्लो टेस्ट।</p></article>
+  <article class="card"><h3>🎁 Daily Bonus</h3><p>दैनिक बोनस सेक्शन का दृश्य परीक्षण।</p><button id="demoBonusButton" type="button">डेमो बोनस देखें</button><p id="demoBonusResult" class="muted" aria-live="polite">यह वास्तविक बोनस क्लेम नहीं करेगा।</p></article>
+  <article class="card"><h3>🎡 Spin & Win</h3><p>चार सही Coin परिणामों वाला टेस्ट व्हील; हर परिणाम की समान संभावना।</p><div class="spin-demo"><div class="spin-wheel-wrap"><div class="spin-pointer"></div><div id="demoSpinWheel" class="spin-wheel eight"><div class="spin-labels eight"><span>100</span><span>50</span><span>40</span><span>10</span><span>100</span><span>50</span><span>40</span><span>10</span></div></div></div><button id="spinDemoButton" type="button">🎡 डेमो व्हील घुमाएँ</button><div id="spinDemoResult" class="spin-result" aria-live="polite">यह केवल डेमो है—वास्तविक Coin नहीं जुड़ेंगे।</div></div></article>
+  <article class="card"><h3>🪙 Coin Wallet</h3><p>टेस्ट वॉलेट का नमूना। वास्तविक बैलेंस और लेनदेन में कोई बदलाव नहीं होगा।</p><div class="admin-card"><div class="row"><div><b>उपलब्ध टेस्ट Coin</b><small>डेमो बैलेंस</small></div><strong>0</strong></div><div class="row"><div><b>अनुमानित INR</b><small>केवल जानकारी</small></div><strong>₹0.00</strong></div><div class="row"><div><b>लेनदेन इतिहास</b><small>अभी कोई टेस्ट लेनदेन नहीं</small></div><span class="tag">खाली</span></div></div><p class="muted">वास्तविक वॉलेट तभी दिखेगा जब सदस्य सामान्य लॉगिन से प्रवेश करेगा।</p></article>
  </div>
  <div class="actions"><button id="exitTestMode" type="button" class="alt">टेस्ट मोड बंद करें</button></div>
 </section>
@@ -344,6 +360,16 @@ if(realSpinButton&&realSpinWheel){
   }
  });
 }
+
+const demoWatchButton=$('demoWatchButton');
+demoWatchButton?.addEventListener('click',()=>{
+ $('demoWatchResult').textContent='डेमो: वीडियो टास्क का विवरण/निर्देश सफलतापूर्वक खुला। कोई Coin जारी नहीं हुआ।';
+});
+const demoBonusButton=$('demoBonusButton');
+demoBonusButton?.addEventListener('click',()=>{
+ $('demoBonusResult').textContent='डेमो: दैनिक बोनस स्क्रीन सही काम कर रही है। वास्तविक बोनस या Coin क्लेम नहीं हुआ।';
+});
+
 load();
 })();
 </script>
