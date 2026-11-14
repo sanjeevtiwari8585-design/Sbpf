@@ -43,7 +43,7 @@ function startWatchHeartbeat(){stopWatchHeartbeat();furthestPlaybackTime=0;sendW
 $('videoPlayer').addEventListener('seeking',()=>{const video=$('videoPlayer');if(video.currentTime>furthestPlaybackTime+1.5)video.currentTime=furthestPlaybackTime});
 $('videoPlayer').addEventListener('timeupdate',()=>{const video=$('videoPlayer');if(video.currentTime<=furthestPlaybackTime+1.5)furthestPlaybackTime=Math.max(furthestPlaybackTime,video.currentTime)});
 $('videoPlayer').addEventListener('play',()=>sendWatchHeartbeat(false));
-$('videoPlayer').addEventListener('pause',()=>sendWatchHeartbeat(false));
+$('videoPlayer').addEventListener('pause',()=>{if(!$('videoPlayer').ended)sendWatchHeartbeat(false)});
 function closePlayer(){sendWatchHeartbeat(false);stopWatchHeartbeat();$('videoPlayer').pause();$('videoPlayer').removeAttribute('src');$('videoPlayer').load();$('player').classList.remove('open');activeSession=null;activeVideo=null}
 $('videoPlayer').addEventListener('ended',completeWatch);$('closePlayer').addEventListener('click',closePlayer);$('player').addEventListener('click',e=>{if(e.target===$('player'))closePlayer()});
 document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{filter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(x=>x.classList.toggle('active',x===b));render()}));
