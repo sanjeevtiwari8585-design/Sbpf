@@ -282,8 +282,7 @@ async function load(){
   }
   if(memberIsVerified) $('memberIdentity').textContent=(member.full_name||'SBPF सदस्य')+' · '+(member.member_id||'');
   if(isAdmin) $('memberIdentity').textContent=(member?.full_name||user.user_metadata?.full_name||'SBPF Admin')+' · Admin';
-  const settings=await api('/rest/v1/sbpf_rewards_config?select=coin_per_inr,manual_payout,rewards_enabled&id=eq.1');
-  if(Array.isArray(settings)&&settings[0])config=settings[0];
+  try{const settings=await api('/rest/v1/sbpf_rewards_config?select=coin_per_inr,manual_payout,rewards_enabled&id=eq.1');if(Array.isArray(settings)&&settings[0])config=settings[0];}catch(settingsError){console.warn('Rewards config unavailable; using safe defaults.',settingsError);}
   $('adminPanel').classList.toggle('hidden',!isAdmin);
   $('dashboard').classList.toggle('hidden',!memberIsVerified);
   if(memberIsVerified){
@@ -312,31 +311,53 @@ async function load(){
  }
 }
 async function loadWallet(){
- if(!memberIsVerified){$('walletGate').classList.add('hidden');$('rewardMainContent').classList.add('hidden');$('walletState').textContent='सत्यापित सदस्य Wallet उपलब्ध नहीं है।';return;}
- const [rows,wallet,transfers]=await Promise.all([
-  api('/rest/v1/sbpf_reward_wallet_ledger?select=points_delta,entry_type,reference_id,description,created_at&member_profile_id=eq.'+encodeURIComponent(user.id)+'&order=created_at.desc&limit=50'),
-  api('/rest/v1/rpc/sbpf_wallet_balance',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'}),
-  api('/rest/v1/sbpf_reward_wallet_transfers?select=id,sender_profile_id,recipient_profile_id,amount,status,created_at,admin_note&or=(sender_profile_id.eq.'+encodeURIComponent(user.id)+',recipient_profile_id.eq.'+encodeURIComponent(user.id)+')&order=created_at.desc&limit=20')
- ]);
- const ledger=Array.isArray(rows)?rows:[];
+ if(!memberIsVerified){
+  $('walletGate').classList.add('hidden');$('rewardMainContent').classList.add('hidden');
+  $('walletState').textContent='सत्यापित सदस्य Wallet उपलब्ध नहीं है।';return;
+ }
+ // Read the wallet state first so the setup prompt is not blocked by ledger/history queries.
+ $('walletState').textContent='Wallet की स्थिति जाँची जा रही है…';
+ let wallet;
+ try{
+  wallet=await api('/rest/v1/rpc/sbpf_wallet_balance',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
+ }catch(error){
+  $('walletGate').classList.add('hidden');$('rewardMainContent').classList.add('hidden');
+  $('walletState').textContent='Wallet की स्थिति अभी नहीं पढ़ी जा सकी। कृपया दोबारा प्रयास करें।';
+  say('Wallet status error: '+error.message,'error');return;
+ }
  const walletCreated=!!wallet?.wallet_created,pinSet=!!wallet?.pin_set;
- $('walletGate').classList.toggle('hidden',walletCreated&&pinSet);
+ const setupRequired=!(walletCreated&&pinSet);
+ $('walletGate').classList.toggle('hidden',!setupRequired);
  $('walletCreateStep').classList.toggle('hidden',walletCreated);
  $('walletPinStep').classList.toggle('hidden',!walletCreated||pinSet);
- $('rewardMainContent').classList.toggle('hidden',!(walletCreated&&pinSet));
+ $('rewardMainContent').classList.toggle('hidden',setupRequired);
  $('walletState').textContent=walletCreated?'Wallet सक्रिय · उपलब्ध बैलेंस: '+Number(wallet.balance||0).toLocaleString('en-IN')+' Coin':'Wallet अभी नहीं बना है।';
  $('createWalletButton').disabled=false;
  $('forgotWalletPinButton').classList.toggle('hidden',!pinSet);
  $('headerWalletBalance').textContent=Number(wallet.balance||0).toLocaleString('en-IN');
- const balance=Number(wallet?.balance ?? ledger.reduce((sum,row)=>sum+Number(row.points_delta||0),0));
+ const balance=Number(wallet?.balance||0);
  $('coinBalance').textContent=balance.toLocaleString('en-IN');
  $('inrBalance').textContent='₹'+(balance/Number(config.coin_per_inr||100)).toFixed(2);
  $('coinValueLabel').textContent=Number(config.coin_per_inr||100)+' SBPF Coin = ₹1.00 · Cash अनुरोध Admin मंजूरी के बाद पूरा होगा।';
+ if(setupRequired){
+  if(walletCreated)say('Wallet बन गया है। अब 4 अंकों का PIN बनाएँ और पुष्टि करें।','ok');
+  else say('सदस्य सत्यापन सफल है। अपना Wallet बनाएँ।','ok');
+  return;
+ }
+ // Optional history panels must never prevent Wallet creation or PIN setup.
+ const [ledgerResult,transferResult]=await Promise.allSettled([
+  api('/rest/v1/sbpf_reward_wallet_ledger?select=points_delta,entry_type,reference_id,description,created_at&member_profile_id=eq.'+encodeURIComponent(user.id)+'&order=created_at.desc&limit=50'),
+  api('/rest/v1/sbpf_reward_wallet_transfers?select=id,sender_profile_id,recipient_profile_id,amount,status,created_at,admin_note&or=(sender_profile_id.eq.'+encodeURIComponent(user.id)+',recipient_profile_id.eq.'+encodeURIComponent(user.id)+')&order=created_at.desc&limit=20')
+ ]);
+ const ledger=ledgerResult.status==='fulfilled'&&Array.isArray(ledgerResult.value)?ledgerResult.value:[];
  $('ledger').innerHTML=ledger.length?ledger.map(row=>'<div class="row"><div><b>'+esc(row.description||row.entry_type)+'</b><small>'+new Date(row.created_at).toLocaleString('hi-IN')+(row.reference_id?' · Ref: '+esc(row.reference_id):'')+'</small></div><strong style="color:'+(Number(row.points_delta)>=0?'#176b42':'#a01828')+'">'+(Number(row.points_delta)>0?'+':'')+Number(row.points_delta).toLocaleString('en-IN')+' Coin</strong></div>').join(''):'<p class="muted">अभी कोई Coin लेन-देन नहीं है।</p>';
- $('walletTransferForm').classList.toggle('hidden',!pinSet);
- const transferRows=Array.isArray(transfers)?transfers:[];
+ if(ledgerResult.status==='rejected')$('ledger').innerHTML='<p class="muted">Coin History अभी उपलब्ध नहीं है।</p>';
+ $('walletTransferForm').classList.remove('hidden');
+ const transferRows=transferResult.status==='fulfilled'&&Array.isArray(transferResult.value)?transferResult.value:[];
  $('walletTransferHistory').innerHTML=transferRows.length?'<h3 style="font-size:15px;color:var(--wine)">मेरे Transfer अनुरोध</h3>'+transferRows.map(t=>{const sent=t.sender_profile_id===user.id;const label=t.status==='pending'?'Admin मंजूरी लंबित':t.status==='completed'?'मंजूर · पूरा':t.status==='rejected'?'अस्वीकृत':'वापस किया गया';const color=t.status==='completed'?'#176b42':t.status==='rejected'?'#a01828':'#8a6414';return '<div class="row"><div><b>'+(sent?'भेजने का अनुरोध':'प्राप्त Coin')+' · '+Number(t.amount).toLocaleString('en-IN')+' Coin</b><small>'+new Date(t.created_at).toLocaleString('hi-IN')+' · '+esc(t.id)+(t.admin_note?' · '+esc(t.admin_note):'')+'</small></div><strong style="color:'+color+'">'+label+'</strong></div>';}).join(''):'<p class="muted">अभी कोई Transfer अनुरोध नहीं है।</p>';
+ if(transferResult.status==='rejected')$('walletTransferHistory').innerHTML='<p class="muted">Transfer History अभी उपलब्ध नहीं है।</p>';
 }
+
 document.getElementById('walletPinForm')?.addEventListener('submit',async event=>{
  event.preventDefault();
  const pin=$('walletPin').value,confirmPin=$('walletPinConfirm').value;
