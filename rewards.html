@@ -240,7 +240,7 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
 const SUPABASE_URL='https://dxowhzghrdghfzoggorx.supabase.co';
 const SUPABASE_KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
 let token=localStorage.getItem('sbpf_access_token')||'';
-let user=null, member=null, isAdmin=false, config={coin_per_inr:100,manual_payout:true,rewards_enabled:false}, teams=[];
+let user=null, member=null, isAdmin=false, memberIsVerified=false, config={coin_per_inr:100,manual_payout:true,rewards_enabled:false}, teams=[];
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function api(path,options){
@@ -260,50 +260,55 @@ async function load(){
   if(!user?.id)throw new Error('सुरक्षित सदस्य सत्र उपलब्ध नहीं है।');
   const adminResult=await api('/rest/v1/rpc/is_admin',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
   isAdmin=adminResult===true;
-  if(!isAdmin){
-   const rows=await api('/rest/v1/members?select=id,member_id,full_name,status,membership_status,payment_status,kyc_status,membership_end_date&user_id=eq.'+encodeURIComponent(user.id)+'&limit=1');
-   member=Array.isArray(rows)?rows[0]:null;
-   if(member) $('memberIdentity').textContent=(member.full_name||'SBPF सदस्य')+' · '+(member.member_id||'');
-   if(!isVerified(member)){
-    $('loginPrompt').classList.remove('hidden');
-    say('आपकी सक्रिय सदस्यता, भुगतान, KYC या वैधता की पुष्टि अधूरी है।','error');
-    return;
-   }
+  const rows=await api('/rest/v1/members?select=id,member_id,full_name,status,membership_status,payment_status,kyc_status,membership_end_date&user_id=eq.'+encodeURIComponent(user.id)+'&limit=1');
+  member=Array.isArray(rows)?rows[0]:null;
+  memberIsVerified=false;
+  if(isVerified(member)){
    const year=new Date().getFullYear();
    const annual=await api('/rest/v1/member_annual_verifications?select=status,valid_until,verification_year&member_row_id=eq.'+encodeURIComponent(member.id)+'&verification_year=eq.'+year+'&status=eq.verified&limit=1');
-   if(!Array.isArray(annual)||!annual[0]||annual[0].valid_until<new Date().toISOString().slice(0,10)){
-    $('loginPrompt').classList.remove('hidden');
-    say('इस वर्ष का वार्षिक सदस्य सत्यापन वैध नहीं है।','error');
-    return;
-   }
+   const annualOk=Array.isArray(annual)&&!!annual[0]&&annual[0].valid_until>=new Date().toISOString().slice(0,10);
    const access=await api('/rest/v1/member_service_access?select=access_status,expires_at&member_row_id=eq.'+encodeURIComponent(member.id)+'&service_code=eq.rewards_zone&access_status=eq.active&limit=1');
-   if(!Array.isArray(access)||!access[0]||(access[0].expires_at&&new Date(access[0].expires_at)<=new Date())){
-    $('loginPrompt').classList.remove('hidden');
-    say('Rewards Zone की अनुमति सक्रिय नहीं है।','error');
-    return;
-   }
+   const accessOk=Array.isArray(access)&&!!access[0]&&(!access[0].expires_at||new Date(access[0].expires_at)>new Date());
+   memberIsVerified=annualOk&&accessOk;
   }
-  if(isAdmin) $('memberIdentity').textContent=(user.user_metadata?.full_name||'SBPF Admin')+' · Admin';
+  if(!memberIsVerified&&!isAdmin){
+   $('loginPrompt').classList.remove('hidden');
+   say(!isVerified(member)?'आपकी सक्रिय सदस्यता, भुगतान, KYC या वैधता की पुष्टि अधूरी है।':'वार्षिक सत्यापन या Rewards Zone की अनुमति सक्रिय नहीं है।','error');
+   return;
+  }
+  if(memberIsVerified) $('memberIdentity').textContent=(member.full_name||'SBPF सदस्य')+' · '+(member.member_id||'');
+  if(isAdmin) $('memberIdentity').textContent=(member?.full_name||user.user_metadata?.full_name||'SBPF Admin')+' · Admin';
   const settings=await api('/rest/v1/sbpf_rewards_config?select=coin_per_inr,manual_payout,rewards_enabled&id=eq.1');
   if(Array.isArray(settings)&&settings[0])config=settings[0];
-  if(isAdmin){$('dashboard').classList.add('hidden');$('adminPanel').classList.remove('hidden');}else{$('dashboard').classList.remove('hidden');document.querySelector('.hero')?.classList.add('hidden');document.querySelector('.public-rewards-preview')?.classList.add('hidden');}
+  $('adminPanel').classList.toggle('hidden',!isAdmin);
+  $('dashboard').classList.toggle('hidden',!memberIsVerified);
+  if(memberIsVerified){
+   document.querySelector('.hero')?.classList.add('hidden');
+   document.querySelector('.public-rewards-preview')?.classList.add('hidden');
+  }
   $('memberStatus').textContent=isAdmin?'Admin':'सत्यापित';
   if(isAdmin){
-   $('adminPanel').classList.remove('hidden');
-   say('Admin प्रवेश सफल। टास्क, सबमिशन और मैन्युअल INR भुगतान नियंत्रित करें।','ok');
+   say(memberIsVerified?'Admin प्रवेश सफल। Wallet परीक्षण और Admin नियंत्रण दोनों उपलब्ध हैं।':'Admin प्रवेश सफल। सदस्य Wallet के लिए पात्र सदस्य रिकॉर्ड उपलब्ध नहीं है।','ok');
   }else if(!config.rewards_enabled){
-   say('आपका सदस्य सत्यापन सफल है। Rewards Zone का डेटा ढाँचा तैयार है; एडमिन द्वारा रिवॉर्ड लॉन्च और टास्क प्रकाशित होने की प्रतीक्षा है।','ok');
+   say('आपका सदस्य सत्यापन सफल है। Rewards Zone का डेटा ढाँचा तैयार है; रिवॉर्ड लॉन्च होने तक Coin गतिविधियाँ बंद रहेंगी।','ok');
   }else{
    say('स्वागत है! आपके लिए उपलब्ध SBPF Rewards टास्क नीचे दिए गए हैं।','ok');
   }
-  await Promise.all([loadWallet(),loadTasks(),loadTeams(),loadRedemptions(),isAdmin?loadAdmin():Promise.resolve(),isAdmin?Promise.resolve():loadReferralLevels(),isAdmin?Promise.resolve():loadProducts(),isAdmin?Promise.resolve():loadProductOrders()]);
+  await Promise.all([
+   memberIsVerified?loadWallet():Promise.resolve(),
+   loadTasks(),loadTeams(),loadRedemptions(),
+   isAdmin?loadAdmin():Promise.resolve(),
+   isAdmin||!memberIsVerified?Promise.resolve():loadReferralLevels(),
+   isAdmin||!memberIsVerified?Promise.resolve():loadProducts(),
+   isAdmin||!memberIsVerified?Promise.resolve():loadProductOrders()
+  ]);
  }catch(error){
   $('loginPrompt').classList.remove('hidden');
   say('Rewards Zone अभी डेटा नहीं पढ़ सका: '+error.message,'error');
  }
 }
 async function loadWallet(){
- if(isAdmin){$('walletGate').classList.add('hidden');$('rewardMainContent').classList.add('hidden');$('walletState').textContent='Admin Control';return;}
+ if(!memberIsVerified){$('walletGate').classList.add('hidden');$('rewardMainContent').classList.add('hidden');$('walletState').textContent='सत्यापित सदस्य Wallet उपलब्ध नहीं है।';return;}
  const [rows,wallet,transfers]=await Promise.all([
   api('/rest/v1/sbpf_reward_wallet_ledger?select=points_delta,entry_type,reference_id,description,created_at&member_profile_id=eq.'+encodeURIComponent(user.id)+'&order=created_at.desc&limit=50'),
   api('/rest/v1/rpc/sbpf_wallet_balance',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'}),
