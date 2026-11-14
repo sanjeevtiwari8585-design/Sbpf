@@ -158,22 +158,14 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
  <div class="entry-gate-card">
   <div class="entry-gate-mark">🪙</div>
   <h2 id="entryGateTitle">SBPF सदस्य सत्यापन</h2>
-  <p class="muted">Reward Zone में प्रवेश के लिए अपनी सदस्य ID सत्यापित करें।</p>
+  <p class="muted">टेस्ट प्रवेश के लिए अधिकृत सदस्य ID दर्ज करें।</p>
   <form id="entryVerifyForm">
    <label for="entryMemberId">SBPF Member ID</label>
-   <input id="entryMemberId" maxlength="40" autocomplete="off" autocapitalize="characters" placeholder="अपनी SBPF Member ID दर्ज करें" required>
+   <input id="entryMemberId" maxlength="40" autocomplete="off" autocapitalize="characters" placeholder="SBPF Member ID" required>
    <button id="entryVerifyButton" type="submit">सदस्य सत्यापित करें</button>
   </form>
-  <div id="entryPasswordStep" class="hidden">
-   <p id="entryVerifyResult" class="entry-ok" role="status">सदस्यता की जाँच सफल। सुरक्षित प्रवेश पूरा करें।</p>
-   <form id="entryPasswordForm">
-    <label for="entryPassword">सदस्य पासवर्ड</label>
-    <input id="entryPassword" type="password" autocomplete="current-password" required>
-    <button id="entryLoginButton" type="submit">आगे बढ़ें</button>
-   </form>
-  </div>
   <p id="entryGateMessage" class="entry-error" role="status" aria-live="polite"></p>
-  <p class="entry-foot">OTP या ईमेल कोड नहीं माँगा जाएगा। Wallet और Coin सुरक्षित रखने के लिए सदस्य खाते का पासवर्ड आवश्यक है।</p>
+  <p class="entry-foot">टेस्ट मोड: केवल अधिकृत टेस्ट सदस्य ID। पासवर्ड, OTP या ईमेल कोड नहीं।</p>
  </div>
 </div>
 
@@ -319,51 +311,30 @@ async function api(path,options){
 }
 
 async function initRewardEntryGate(){
- const verifyForm=$('entryVerifyForm'), passwordForm=$('entryPasswordForm');
- if(!verifyForm||!passwordForm)return;
+ const verifyForm=$('entryVerifyForm');
+ if(!verifyForm)return;
  verifyForm.addEventListener('submit',async event=>{
   event.preventDefault();
-  const button=$('entryVerifyButton');button.disabled=true;button.textContent='जाँच हो रही है…';
-  $('entryGateMessage').textContent='';$('entryPasswordStep').classList.add('hidden');
+  const button=$('entryVerifyButton');
+  button.disabled=true;button.textContent='जाँच हो रही है…';
+  $('entryGateMessage').textContent='';
   try{
    const memberId=$('entryMemberId').value.trim().toUpperCase();
-   if(!/^[A-Z0-9-]{6,40}$/.test(memberId))throw new Error('कृपया सही SBPF Member ID दर्ज करें।');
-   const response=await fetch(SUPABASE_URL+'/functions/v1/member-id-verify',{
+   if(memberId!=='SBPF2026000050')throw new Error('अभी केवल अधिकृत टेस्ट सदस्य ID स्वीकार है।');
+   const response=await fetch(SUPABASE_URL+'/functions/v1/member-id-test-access',{
     method:'POST',headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},
     body:JSON.stringify({member_id:memberId})
    });
    const data=await response.json().catch(()=>({}));
-   if(!response.ok)throw new Error(data.error||'सदस्य सत्यापन पूरा नहीं हुआ।');
-   if(data.fully_verified!==true)throw new Error('सदस्यता, भुगतान, KYC या वार्षिक सत्यापन अभी पूरा नहीं है।');
-   $('entryMemberId').value=memberId;
-   $('entryVerifyResult').textContent='सदस्य सत्यापित। अब सुरक्षित प्रवेश करें।';
-   $('entryPasswordStep').classList.remove('hidden');
-   $('entryPassword').focus();
+   if(!response.ok||!data.access_token||!data.user?.id)throw new Error(data.error||'सदस्य सत्यापन पूरा नहीं हुआ।');
+   localStorage.setItem('sbpf_access_token',data.access_token);
+   if(data.refresh_token)localStorage.setItem('sbpf_refresh_token',data.refresh_token);
+   localStorage.setItem('sbpf_test_mode','true');
+   location.replace('rewards.html');
   }catch(error){$('entryGateMessage').textContent=error.message||'सत्यापन सेवा उपलब्ध नहीं है।';}
   finally{button.disabled=false;button.textContent='सदस्य सत्यापित करें';}
  });
- passwordForm.addEventListener('submit',async event=>{
-  event.preventDefault();
-  const button=$('entryLoginButton');button.disabled=true;button.textContent='सुरक्षित प्रवेश…';
-  $('entryGateMessage').textContent='';
-  try{
-   const memberId=$('entryMemberId').value.trim().toUpperCase(),password=$('entryPassword').value;
-   if(!password)throw new Error('सदस्य पासवर्ड दर्ज करें।');
-   const response=await fetch(SUPABASE_URL+'/functions/v1/member-id-login',{
-    method:'POST',headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},
-    body:JSON.stringify({member_id:memberId,password})
-   });
-   const data=await response.json().catch(()=>({}));
-   if(!response.ok||!data.access_token||!data.user?.id)throw new Error(data.error||'Member ID या पासवर्ड सही नहीं है।');
-   localStorage.setItem('sbpf_access_token',data.access_token);
-   if(data.refresh_token)localStorage.setItem('sbpf_refresh_token',data.refresh_token);
-   $('entryPassword').value='';
-   location.replace('rewards.html');
-  }catch(error){$('entryGateMessage').textContent=error.message||'सुरक्षित प्रवेश पूरा नहीं हुआ।';}
-  finally{button.disabled=false;button.textContent='आगे बढ़ें';}
- });
 }
-
 function say(text,kind){const el=$('message');el.className='notice'+(kind?' '+kind:'');el.textContent=text;}
 function isVerified(m){return !!m&&m.status==='active'&&m.membership_status==='active'&&m.payment_status==='paid'&&m.kyc_status==='verified'&&m.membership_end_date&&m.membership_end_date>=new Date().toISOString().slice(0,10);}
 async function load(){
