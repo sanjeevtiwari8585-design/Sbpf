@@ -306,7 +306,7 @@ async function api(path,options){
   }catch(refreshError){console.warn('Session refresh unavailable.',refreshError);}
  }
  let data=null;try{data=await response.json()}catch(_){}
- if(!response.ok)throw new Error(data?.message||data?.msg||data?.error_description||data?.error||('HTTP '+response.status));
+ if(!response.ok){const error=new Error(data?.message||data?.msg||data?.error_description||data?.error||('HTTP '+response.status));error.status=response.status;throw error;}
  return data;
 }
 
@@ -342,18 +342,24 @@ function say(text,kind){const el=$('message');el.className='notice'+(kind?' '+ki
 function isVerified(m){return !!m&&m.status==='active'&&m.membership_status==='active'&&m.payment_status==='paid'&&m.kyc_status==='verified'&&m.membership_end_date&&m.membership_end_date>=new Date().toISOString().slice(0,10);}
 async function load(){
  if(!token){$('loginPrompt').classList.add('hidden');say('पहले सदस्य सत्यापन पूरा करें।');return;}
+ let currentStep='सत्र जाँच';
  try{
+  currentStep='सत्र सत्यापन';
   user=await api('/auth/v1/user');
   if(!user?.id)throw new Error('सुरक्षित सदस्य सत्र उपलब्ध नहीं है।');
+  currentStep='प्रशासन अनुमति जाँच';
   const adminResult=await api('/rest/v1/rpc/is_admin',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
   isAdmin=adminResult===true;
+  currentStep='सदस्य रिकॉर्ड जाँच';
   const rows=await api('/rest/v1/members?select=id,member_id,full_name,status,membership_status,payment_status,kyc_status,membership_end_date&user_id=eq.'+encodeURIComponent(user.id)+'&limit=1');
   member=Array.isArray(rows)?rows[0]:null;
   memberIsVerified=false;
   if(isVerified(member)){
    const year=new Date().getFullYear();
+   currentStep='वार्षिक सत्यापन जाँच';
    const annual=await api('/rest/v1/member_annual_verifications?select=status,valid_until,verification_year&member_row_id=eq.'+encodeURIComponent(member.id)+'&verification_year=eq.'+year+'&status=eq.verified&limit=1');
    const annualOk=Array.isArray(annual)&&!!annual[0]&&annual[0].valid_until>=new Date().toISOString().slice(0,10);
+   currentStep='Rewards अनुमति जाँच';
    const access=await api('/rest/v1/member_service_access?select=access_status,expires_at&member_row_id=eq.'+encodeURIComponent(member.id)+'&service_code=eq.rewards_zone&access_status=eq.active&limit=1');
    const accessOk=Array.isArray(access)&&!!access[0]&&(!access[0].expires_at||new Date(access[0].expires_at)>new Date());
    memberIsVerified=annualOk&&accessOk;
@@ -369,6 +375,7 @@ async function load(){
   if(memberIsVerified) $('memberIdentity').textContent=(member.full_name||'SBPF सदस्य')+' · '+(member.member_id||'');
   if(memberIsVerified) $('memberIdDisplay').textContent=member.member_id||'—';
   if(isAdmin) $('memberIdentity').textContent=(member?.full_name||user.user_metadata?.full_name||'SBPF Admin')+' · Admin';
+  currentStep='Rewards सेटिंग जाँच';
   try{const settings=await api('/rest/v1/sbpf_rewards_config?select=coin_per_inr,manual_payout,rewards_enabled&id=eq.1');if(Array.isArray(settings)&&settings[0])config=settings[0];}catch(settingsError){console.warn('Rewards config unavailable; using safe defaults.',settingsError);}
   $('adminPanel').classList.toggle('hidden',!isAdmin);
   $('dashboard').classList.toggle('hidden',!memberIsVerified);
@@ -384,6 +391,7 @@ async function load(){
   }else{
    say('स्वागत है! आपके लिए उपलब्ध SBPF Rewards टास्क नीचे दिए गए हैं।','ok');
   }
+  currentStep='Wallet और Rewards डेटा लोड';
   await Promise.all([
    memberIsVerified?loadWallet():Promise.resolve(),
    loadTasks(),loadTeams(),loadRedemptions(),
@@ -395,9 +403,10 @@ async function load(){
  }catch(error){
   $('entryGate').classList.remove('hidden');
   $('loginPrompt').classList.add('hidden');
-  localStorage.removeItem('sbpf_access_token');localStorage.removeItem('sbpf_refresh_token');token='';
-  $('entryGateMessage').textContent='सत्र समाप्त है। कृपया दोबारा सत्यापन करें।';
-  say('सुरक्षित प्रवेश दोबारा आवश्यक है।','error');
+  if(error?.status===401){localStorage.removeItem('sbpf_access_token');localStorage.removeItem('sbpf_refresh_token');token='';}
+  const detail=String(error?.message||'अज्ञात त्रुटि').slice(0,180);
+  $('entryGateMessage').textContent=currentStep+' में समस्या: '+detail;
+  say(currentStep+' में समस्या: '+detail,'error');
  }
 }
 async function loadWallet(){
