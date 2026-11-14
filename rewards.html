@@ -319,7 +319,10 @@ async function initRewardEntryGate(){
   button.disabled=true;button.textContent='जाँच हो रही है…';
   $('entryGateMessage').textContent='';
   try{
-   const memberId=$('entryMemberId').value.trim().toUpperCase();
+   const enteredId=$('entryMemberId').value.trim().toUpperCase();
+   // Correct the common transposition SPBF -> SBPF for this single test ID only.
+   const memberId=enteredId.replace(/^SPBF(?=2026)/,'SBPF');
+   $('entryMemberId').value=memberId;
    if(memberId!=='SBPF2026000050')throw new Error('अभी केवल अधिकृत टेस्ट सदस्य ID स्वीकार है।');
    const response=await fetch(SUPABASE_URL+'/functions/v1/member-id-test-access',{
     method:'POST',headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},
