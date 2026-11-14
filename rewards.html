@@ -32,6 +32,23 @@ form{display:grid;gap:9px}label{font-size:13px;font-weight:800}input,select,text
 .hidden{display:none!important}.muted{color:var(--muted);font-size:13px}
 footer{max-width:1060px;margin:auto;padding:0 16px 30px;text-align:center;color:var(--muted);font-size:12px}
 @media(max-width:640px){main{padding:14px 12px 36px}.hero{padding:22px 15px}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:1/-1}.grid{grid-template-columns:1fr}.section-title h2{font-size:19px}.stat,.card,.panel{padding:14px}}
+.rewards-header{position:sticky;top:0;z-index:20;min-height:64px;padding:10px max(12px,calc((100% - 1060px)/2))}
+.header-member{font-size:12px;line-height:1.35;color:#fff6dd;max-width:190px;overflow-wrap:anywhere}
+.wallet-quick{background:#fff;color:var(--wine);border:1px solid #f3d98b;border-radius:999px;padding:8px 13px;white-space:nowrap;box-shadow:0 3px 10px #0002}
+.wallet-gate{max-width:620px;margin:18px auto;border:1px solid #e5c77e;background:linear-gradient(145deg,#fffdf7,#fff7e6)}
+.wallet-gate h2{margin:0 0 8px;color:var(--wine)}
+.wallet-gate button{min-height:44px}
+.level-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.level-card{border:1px solid #eadfc9;border-radius:13px;padding:12px 8px;background:#fffaf0;text-align:center;min-width:0}
+.level-card strong{display:block;color:var(--wine);font-size:24px}
+.level-card small{display:block;color:var(--muted);font-size:11px}
+.level-card button{margin-top:8px;width:100%;padding:8px 5px;font-size:12px}
+.product-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.product-card{display:flex;flex-direction:column;gap:8px}
+.product-card img{width:100%;height:150px;object-fit:cover;border-radius:10px;background:#f5f0e9}
+.product-card button{margin-top:auto}
+@media(max-width:720px){.level-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.product-grid{grid-template-columns:1fr}.header-member{display:none}.rewards-header .brand{display:none}}
+
 .spin-wheel.eight{background:conic-gradient(#7d1020 0deg 45deg,#e6c77b 45deg 90deg,#145a38 90deg 135deg,#f3e4bc 135deg 180deg,#a52c39 180deg 225deg,#d7b34b 225deg 270deg,#225d43 270deg 315deg,#f7e9c2 315deg 360deg)}.spin-wheel.eight:after{inset:18%}.spin-labels.eight span{width:clamp(48px,14cqw,70px);margin-left:calc(clamp(48px,14cqw,70px)/-2);font-size:clamp(10px,2.8cqw,14px);text-align:center;white-space:nowrap}.spin-wheel{container-type:inline-size}.spin-labels.eight span:nth-child(1){transform:translateY(-31cqw)}.spin-labels.eight span:nth-child(2){transform:rotate(45deg) translateY(-31cqw) rotate(-45deg)}.spin-labels.eight span:nth-child(3){transform:rotate(90deg) translateY(-31cqw) rotate(-90deg)}.spin-labels.eight span:nth-child(4){transform:rotate(135deg) translateY(-31cqw) rotate(-135deg)}.spin-labels.eight span:nth-child(5){transform:rotate(180deg) translateY(-31cqw) rotate(-180deg)}.spin-labels.eight span:nth-child(6){transform:rotate(225deg) translateY(-31cqw) rotate(-225deg)}.spin-labels.eight span:nth-child(7){transform:rotate(270deg) translateY(-31cqw) rotate(-270deg)}.spin-labels.eight span:nth-child(8){transform:rotate(315deg) translateY(-31cqw) rotate(-315deg)}.spin-info{font-size:12px;color:var(--muted);margin:6px 0}.spin-demo{margin-top:12px;padding:12px;border:1px solid #eadfd3;border-radius:13px;background:#fffaf2;text-align:center}.spin-wheel-wrap{position:relative;width:min(100%,360px);aspect-ratio:1;margin:16px auto;cursor:zoom-in;touch-action:manipulation}
 #memberSpinPanel{width:100%;max-width:100%;box-sizing:border-box;overflow:hidden}
 .spin-wheel{box-sizing:border-box}
@@ -106,7 +123,7 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
 </style>
 </head>
 <body>
-<header><a href="index.html">← SBPF मुख्य वेबसाइट</a><span class="spacer"></span><span class="brand">SWARNIM BHARAT PARIVAR FOUNDATION</span></header>
+<header class="rewards-header"><a href="index.html">← SBPF मुख्य वेबसाइट</a><span class="spacer"></span><span class="brand">SWARNIM BHARAT PARIVAR FOUNDATION</span><div class="header-member" id="memberIdentity">सदस्य सत्यापन के बाद विवरण दिखेगा</div><button id="walletQuickButton" class="wallet-quick" type="button">🪙 Wallet <b id="headerWalletBalance">0</b></button></header>
 <main>
 <section class="hero">
 <div class="coin" aria-hidden="true">🪙</div>
@@ -123,6 +140,13 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
 </section>
 <div id="message" class="notice">Rewards Zone की स्थिति जाँची जा रही है…</div>
 <section id="dashboard" class="hidden">
+<div id="walletGate" class="panel wallet-gate hidden">
+ <div id="walletCreateStep"><h2>अपना SBPF Wallet बनाएँ</h2><p class="muted">आपका सदस्य सत्यापन सफल है। सबसे पहले अपना सुरक्षित Coin Wallet बनाएँ।</p><button id="createWalletButton" type="button">Create Wallet</button></div>
+ <div id="walletPinStep" class="hidden"><h2>Wallet PIN सेट करें</h2><p class="muted">Wallet की सुरक्षा के लिए 4 अंकों का PIN बनाएँ। PIN भूलने पर Admin से रीसेट अनुरोध किया जा सकेगा।</p></div>
+ <p id="walletPinResetState" class="muted" aria-live="polite"></p>
+</div>
+<div id="rewardMainContent" class="hidden">
+<section class="member-levels panel"><div class="section-title"><h2>मेरे सदस्य स्तर</h2><span class="tag">5 Level Matrix</span></div><div id="referralLevelsGrid" class="grid level-grid"><div class="muted">स्तर लोड हो रहे हैं…</div></div><div id="referralLevelMembers" class="list" aria-live="polite"><p class="muted">किसी Level पर क्लिक करके सदस्य देखें।</p></div></section>
 <div class="stats">
 <div class="stat"><small>मेरे SBPF Coins</small><strong id="coinBalance">0</strong></div>
 <div class="stat"><small>अनुमानित INR मूल्य</small><strong id="inrBalance">₹0.00</strong></div>
@@ -141,7 +165,7 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
 
 <div class="section-title"><h2>मेरा SBPF Wallet</h2><span class="tag">सुरक्षित Coin लेन-देन</span></div>
 <div class="panel" id="walletPanel">
- <div id="walletState" class="muted">Wallet स्थिति जाँची जा रही है…</div>
+ <div id="walletState" class="muted">Wallet स्थिति जाँची जा रही है…</div><button id="forgotWalletPinButton" class="alt hidden" type="button">Forgot PIN</button>
  <form id="walletPinForm" class="hidden" autocomplete="off">
   <div><label for="walletPin">4 अंकों का Wallet PIN बनाएँ</label><input id="walletPin" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" minlength="4" autocomplete="new-password" required></div>
   <div><label for="walletPinConfirm">PIN की पुष्टि करें</label><input id="walletPinConfirm" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" minlength="4" autocomplete="new-password" required></div>
@@ -161,13 +185,15 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
 
 <div class="section-title"><h2>INR रिवॉर्ड निकालने का अनुरोध</h2></div>
 <div class="panel">
-<p class="muted">100 SBPF Coin = ₹1.00। भुगतान केवल एडमिन द्वारा अनुरोध, उपलब्ध बैलेंस और भुगतान प्रमाण जाँचने के बाद मैन्युअल रूप से किया जाएगा।</p>
+<p id="coinValueLabel" class="muted">Coin की वैल्यू Admin द्वारा निर्धारित है। Cash अनुरोध मंजूरी के बाद पूरा होगा।</p>
 <form id="redeemForm">
 <div><label for="redeemPoints">कितने Coin रिडीम करने हैं?</label><input id="redeemPoints" type="number" min="100" step="100" required placeholder="उदाहरण: 1000"></div>
-<div><label for="payoutMethod">भुगतान का तरीका</label><select id="payoutMethod" required><option value="">चुनें</option><option value="upi">UPI</option><option value="bank_transfer">बैंक ट्रांसफर</option><option value="other">अन्य / एडमिन से संपर्क</option></select></div>
+<div><label for="payoutMethod">भुगतान का तरीका</label><select id="payoutMethod" required><option value="">चुनें</option><option value="upi">UPI</option><option value="bank_transfer">बैंक ट्रांसफर</option><option value="other">अन्य / एडमिन से संपर्क</option></select></div><div><label for="redeemPin">Wallet PIN</label><input id="redeemPin" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" minlength="4" autocomplete="current-password" required></div>
 <button id="redeemButton" type="submit">INR रिवॉर्ड अनुरोध भेजें</button>
 </form>
 <div id="redemptions" class="list" style="margin-top:12px"></div>
+</div>
+<section class="panel product-redeem-panel"><div class="section-title"><h2>Product Redeem</h2><span class="tag">Admin मंजूरी आवश्यक</span></div><div id="memberProducts" class="grid product-grid"><p class="muted">उपलब्ध Products लोड हो रहे हैं…</p></div><div id="memberProductOrders" class="list" style="margin-top:14px"></div></section>
 </div>
 </section>
 <section id="adminPanel" class="panel hidden">
@@ -191,6 +217,12 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
  <div class="section-title"><h2>Coin Transfer मंजूरी</h2></div>
  <p class="muted">सदस्य के Coin Transfer अनुरोध यहाँ आएँगे। मंजूरी के बाद ही Coins दोनों Wallet में दर्ज होंगे।</p>
  <div id="adminWalletTransfers" class="list"><p class="muted">लंबित अनुरोध लोड हो रहे हैं…</p></div>
+ <div class="section-title"><h2>Coin Value सेट करें</h2></div><form id="coinValueForm" class="admin-form"><div><label for="coinPerInr">₹1 के बराबर Coins</label><input id="coinPerInr" type="number" min="1" step="1" required></div><div><button type="submit">Coin Value सेव करें</button></div></form>
+ <div class="section-title"><h2>Product जोड़ें</h2></div><form id="productForm" class="admin-form"><div><label for="productTitle">Product नाम</label><input id="productTitle" required maxlength="140"></div><div><label for="productCoins">Coin कीमत</label><input id="productCoins" type="number" min="1" step="1" required></div><div><label for="productStock">Stock (खाली = असीमित)</label><input id="productStock" type="number" min="0" step="1"></div><div><label for="productImage">Image HTTPS URL (वैकल्पिक)</label><input id="productImage" type="url"></div><div class="wide"><label for="productDescription">विवरण</label><textarea id="productDescription"></textarea></div><div class="wide"><button type="submit">Product सेव करें</button></div></form>
+ <div class="section-title"><h2>Product सूची</h2></div><div id="adminProducts" class="list"></div>
+ <div class="section-title"><h2>Product Redeem मंजूरी</h2></div><div id="adminProductOrders" class="list"></div>
+ <div class="section-title"><h2>Wallet PIN Reset अनुरोध</h2></div><div id="adminPinResets" class="list"></div>
+ <div class="section-title"><h2>Fake Task / सदस्य Reward नियंत्रण</h2></div><form id="enforcementForm" class="admin-form"><div><label for="enforceMemberId">Member ID</label><input id="enforceMemberId" required maxlength="40"></div><div><label for="enforceAction">कार्रवाई</label><select id="enforceAction"><option value="suspend">अस्थायी रोक</option><option value="revoke">स्थायी Reward Zone समाप्त</option></select></div><div class="wide"><label for="enforceReason">जाँच का कारण (कम से कम 10 अक्षर)</label><textarea id="enforceReason" required minlength="10"></textarea></div><div class="wide"><button type="submit">Admin कार्रवाई दर्ज करें</button></div></form>
  <div class="section-title"><h2>INR भुगतान अनुरोध</h2></div><div id="adminRedemptions" class="list"></div>
 </section>
 <section id="loginPrompt" class="panel hidden">
@@ -229,8 +261,9 @@ async function load(){
   const adminResult=await api('/rest/v1/rpc/is_admin',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
   isAdmin=adminResult===true;
   if(!isAdmin){
-   const rows=await api('/rest/v1/members?select=id,member_id,status,membership_status,payment_status,kyc_status,membership_end_date&user_id=eq.'+encodeURIComponent(user.id)+'&limit=1');
+   const rows=await api('/rest/v1/members?select=id,member_id,full_name,status,membership_status,payment_status,kyc_status,membership_end_date&user_id=eq.'+encodeURIComponent(user.id)+'&limit=1');
    member=Array.isArray(rows)?rows[0]:null;
+   if(member) $('memberIdentity').textContent=(member.full_name||'SBPF सदस्य')+' · '+(member.member_id||'');
    if(!isVerified(member)){
     $('loginPrompt').classList.remove('hidden');
     say('आपकी सक्रिय सदस्यता, भुगतान, KYC या वैधता की पुष्टि अधूरी है।','error');
@@ -250,6 +283,7 @@ async function load(){
     return;
    }
   }
+  if(isAdmin) $('memberIdentity').textContent=(user.user_metadata?.full_name||'SBPF Admin')+' · Admin';
   const settings=await api('/rest/v1/sbpf_rewards_config?select=coin_per_inr,manual_payout,rewards_enabled&id=eq.1');
   if(Array.isArray(settings)&&settings[0])config=settings[0];
   $('dashboard').classList.remove('hidden');
@@ -262,38 +296,42 @@ async function load(){
   }else{
    say('स्वागत है! आपके लिए उपलब्ध SBPF Rewards टास्क नीचे दिए गए हैं।','ok');
   }
-  await Promise.all([loadWallet(),loadTasks(),loadTeams(),loadRedemptions(),isAdmin?loadAdmin():Promise.resolve()]);
+  await Promise.all([loadWallet(),loadTasks(),loadTeams(),loadRedemptions(),isAdmin?loadAdmin():Promise.resolve(),isAdmin?Promise.resolve():loadReferralLevels(),isAdmin?Promise.resolve():loadProducts(),isAdmin?Promise.resolve():loadProductOrders()]);
  }catch(error){
   $('loginPrompt').classList.remove('hidden');
   say('Rewards Zone अभी डेटा नहीं पढ़ सका: '+error.message,'error');
  }
 }
 async function loadWallet(){
+ if(isAdmin){$('walletGate').classList.add('hidden');$('rewardMainContent').classList.remove('hidden');$('walletState').textContent='Admin Control';return;}
  const [rows,wallet,transfers]=await Promise.all([
   api('/rest/v1/sbpf_reward_wallet_ledger?select=points_delta,entry_type,reference_id,description,created_at&member_profile_id=eq.'+encodeURIComponent(user.id)+'&order=created_at.desc&limit=50'),
   api('/rest/v1/rpc/sbpf_wallet_balance',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'}),
   api('/rest/v1/sbpf_reward_wallet_transfers?select=id,sender_profile_id,recipient_profile_id,amount,status,created_at,admin_note&or=(sender_profile_id.eq.'+encodeURIComponent(user.id)+',recipient_profile_id.eq.'+encodeURIComponent(user.id)+')&order=created_at.desc&limit=20')
  ]);
  const ledger=Array.isArray(rows)?rows:[];
+ const walletCreated=!!wallet?.wallet_created,pinSet=!!wallet?.pin_set;
+ $('walletGate').classList.toggle('hidden',walletCreated&&pinSet);
+ $('walletCreateStep').classList.toggle('hidden',walletCreated);
+ $('walletPinStep').classList.toggle('hidden',!walletCreated||pinSet);
+ $('rewardMainContent').classList.toggle('hidden',!(walletCreated&&pinSet));
+ $('walletState').textContent=walletCreated?'Wallet सक्रिय · उपलब्ध बैलेंस: '+Number(wallet.balance||0).toLocaleString('en-IN')+' Coin':'Wallet अभी नहीं बना है।';
+ $('createWalletButton').disabled=false;
+ $('forgotWalletPinButton').classList.toggle('hidden',!pinSet);
+ $('headerWalletBalance').textContent=Number(wallet.balance||0).toLocaleString('en-IN');
  const balance=Number(wallet?.balance ?? ledger.reduce((sum,row)=>sum+Number(row.points_delta||0),0));
  $('coinBalance').textContent=balance.toLocaleString('en-IN');
  $('inrBalance').textContent='₹'+(balance/Number(config.coin_per_inr||100)).toFixed(2);
+ $('coinValueLabel').textContent=Number(config.coin_per_inr||100)+' SBPF Coin = ₹1.00 · Cash अनुरोध Admin मंजूरी के बाद पूरा होगा।';
  $('ledger').innerHTML=ledger.length?ledger.map(row=>'<div class="row"><div><b>'+esc(row.description||row.entry_type)+'</b><small>'+new Date(row.created_at).toLocaleString('hi-IN')+(row.reference_id?' · Ref: '+esc(row.reference_id):'')+'</small></div><strong style="color:'+(Number(row.points_delta)>=0?'#176b42':'#a01828')+'">'+(Number(row.points_delta)>0?'+':'')+Number(row.points_delta).toLocaleString('en-IN')+' Coin</strong></div>').join(''):'<p class="muted">अभी कोई Coin लेन-देन नहीं है।</p>';
- $('walletState').textContent='Wallet सक्रिय · उपलब्ध बैलेंस: '+balance.toLocaleString('en-IN')+' Coin';
- $('walletPinForm').classList.toggle('hidden',!!wallet?.pin_set);
- $('walletTransferForm').classList.toggle('hidden',!wallet?.pin_set);
+ $('walletTransferForm').classList.toggle('hidden',!pinSet);
  const transferRows=Array.isArray(transfers)?transfers:[];
- $('walletTransferHistory').innerHTML=transferRows.length?'<h3 style="font-size:15px;color:var(--wine)">मेरे Transfer अनुरोध</h3>'+transferRows.map(t=>{
-  const sent=t.sender_profile_id===user.id;
-  const statusLabel=t.status==='pending'?'Admin मंजूरी लंबित':t.status==='completed'?'मंजूर · पूरा':t.status==='rejected'?'अस्वीकृत':'वापस किया गया';
-  const color=t.status==='completed'?'#176b42':t.status==='rejected'?'#a01828':'#8a6414';
-  return '<div class="row"><div><b>'+(sent?'भेजने का अनुरोध':'प्राप्त Coin')+' · '+Number(t.amount).toLocaleString('en-IN')+' Coin</b><small>'+new Date(t.created_at).toLocaleString('hi-IN')+' · '+esc(t.id)+(t.admin_note?' · '+esc(t.admin_note):'')+'</small></div><strong style="color:'+color+'">'+statusLabel+'</strong></div>';
- }).join(''):'<p class="muted">अभी कोई Transfer अनुरोध नहीं है।</p>';
+ $('walletTransferHistory').innerHTML=transferRows.length?'<h3 style="font-size:15px;color:var(--wine)">मेरे Transfer अनुरोध</h3>'+transferRows.map(t=>{const sent=t.sender_profile_id===user.id;const label=t.status==='pending'?'Admin मंजूरी लंबित':t.status==='completed'?'मंजूर · पूरा':t.status==='rejected'?'अस्वीकृत':'वापस किया गया';const color=t.status==='completed'?'#176b42':t.status==='rejected'?'#a01828':'#8a6414';return '<div class="row"><div><b>'+(sent?'भेजने का अनुरोध':'प्राप्त Coin')+' · '+Number(t.amount).toLocaleString('en-IN')+' Coin</b><small>'+new Date(t.created_at).toLocaleString('hi-IN')+' · '+esc(t.id)+(t.admin_note?' · '+esc(t.admin_note):'')+'</small></div><strong style="color:'+color+'">'+label+'</strong></div>';}).join(''):'<p class="muted">अभी कोई Transfer अनुरोध नहीं है।</p>';
 }
 document.getElementById('walletPinForm')?.addEventListener('submit',async event=>{
  event.preventDefault();
  const pin=$('walletPin').value,confirmPin=$('walletPinConfirm').value;
- if(!/^\\d{4}$/.test(pin)){say('4 अंकों का PIN दर्ज करें।','error');return;}
+ if(!/^[0-9]{4}$/.test(pin)){say('4 अंकों का PIN दर्ज करें।','error');return;}
  if(pin!==confirmPin){say('दोनों PIN एक जैसे नहीं हैं।','error');return;}
  const button=$('walletPinButton');button.disabled=true;
  try{
@@ -304,6 +342,9 @@ document.getElementById('walletPinForm')?.addEventListener('submit',async event=
  }catch(error){say('Wallet PIN सेट नहीं हुआ: '+error.message,'error');}
  finally{button.disabled=false;}
 });
+$('createWalletButton').addEventListener('click',async()=>{const b=$('createWalletButton');b.disabled=true;try{await api('/rest/v1/rpc/sbpf_wallet_create',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});say('Wallet सफलतापूर्वक बन गया। अब PIN सेट करें।','ok');await loadWallet();}catch(e){say('Wallet नहीं बन पाया: '+e.message,'error');}finally{b.disabled=false;}});
+$('forgotWalletPinButton').addEventListener('click',async()=>{if(!window.confirm('Forgot PIN अनुरोध Admin को भेजें? Admin की मंजूरी के बाद आप नया PIN सेट कर सकेंगे।'))return;try{await api('/rest/v1/rpc/sbpf_wallet_request_pin_reset',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});$('walletPinResetState').textContent='PIN रीसेट अनुरोध Admin के पास भेज दिया गया है। मंजूरी के बाद नया PIN सेट करें।';say('PIN रीसेट अनुरोध भेज दिया गया।','ok');}catch(e){say('PIN रीसेट अनुरोध नहीं भेजा गया: '+e.message,'error');}});
+$('walletQuickButton').addEventListener('click',()=>{const target=$('walletPanel')||$('walletGate');target?.scrollIntoView({behavior:'smooth',block:'start'});});
 document.getElementById('walletTransferForm')?.addEventListener('submit',async event=>{
  event.preventDefault();
  const recipient=$('walletRecipient').value.trim().toUpperCase();
@@ -351,16 +392,22 @@ window.submitTask=async function(taskId,taskType,evidenceRequired){
 async function loadAdmin(){
  $('adminLaunchState').textContent='Rewards '+(config.rewards_enabled?'चालू हैं':'अभी बंद हैं')+' · 100 Coin = ₹1 · INR भुगतान मैन्युअल';
  $('toggleRewards').textContent=config.rewards_enabled?'Rewards बंद करें':'Rewards चालू करें';
- const [taskRows,subRows,redRows,transferRows]=await Promise.all([
+ const [taskRows,subRows,redRows,transferRows,productRows,pinRows]=await Promise.all([
   api('/rest/v1/sbpf_reward_tasks?select=id,title,task_type,points_reward,status,created_at&order=created_at.desc'),
   api('/rest/v1/sbpf_reward_submissions?select=id,task_id,member_profile_id,proof_note,evidence_url,created_at,sbpf_reward_tasks(title,points_reward)&status=eq.pending&order=created_at.asc'),
   api('/rest/v1/sbpf_reward_redemptions?select=id,member_profile_id,points_requested,amount_inr,status,payout_method,created_at&status=in.(pending,approved)&order=created_at.asc'),
-  api('/rest/v1/sbpf_reward_wallet_transfers?select=id,sender_profile_id,recipient_profile_id,amount,status,created_at&status=eq.pending&order=created_at.asc')
+  api('/rest/v1/sbpf_reward_wallet_transfers?select=id,sender_profile_id,recipient_profile_id,amount,status,created_at&status=eq.pending&order=created_at.asc'),
+  api('/rest/v1/sbpf_reward_product_orders?select=id,member_profile_id,product_title,quantity,coins_cost,status,created_at&status=in.(pending,approved)&order=created_at.asc'),
+  api('/rest/v1/sbpf_wallet_pin_reset_requests?select=id,member_profile_id,reason,created_at&status=eq.pending&order=created_at.asc')
  ]);
  $('adminTasks').innerHTML=taskRows.length?taskRows.map(t=>'<div class="admin-card"><h4>'+esc(t.title)+'</h4><small>'+esc(t.task_type)+' · '+Number(t.points_reward)+' Coin · '+esc(t.status)+'</small><div class="admin-actions">'+(t.status==='published'?'<button type="button" onclick="adminTaskStatus(\''+t.id+'\',\'paused\')">Pause</button>':t.status==='draft'||t.status==='paused'?'<button type="button" onclick="adminTaskStatus(\''+t.id+'\',\'published\', '+Number(t.points_reward)+')">Publish</button>':'')+'</div></div>').join(''):'<p class="muted">अभी कोई टास्क नहीं।</p>';
  $('adminSubmissions').innerHTML=subRows.length?subRows.map(x=>'<div class="admin-card"><h4>'+esc(x.sbpf_reward_tasks?.title||'SBPF Task')+'</h4><p>'+esc(x.proof_note)+'</p>'+(x.evidence_url?'<a href="'+esc(x.evidence_url)+'" target="_blank" rel="noopener">प्रमाण देखें ↗</a>':'')+'<small>Member: '+esc(x.member_profile_id)+' · '+new Date(x.created_at).toLocaleString('hi-IN')+'</small><div class="admin-actions"><button type="button" onclick="adminReviewSubmission(\''+x.id+'\',\'approved\', '+Number(x.sbpf_reward_tasks?.points_reward||0)+')">Approve & Coin दें</button><button type="button" class="alt" onclick="adminReviewSubmission(\''+x.id+'\',\'rejected\',0)">Reject</button></div></div>').join(''):'<p class="muted">कोई लंबित टास्क सबमिशन नहीं है।</p>';
  $('adminWalletTransfers').innerHTML=transferRows.length?transferRows.map(t=>'<div class="admin-card"><h4>'+Number(t.amount).toLocaleString('en-IN')+' Coin · मंजूरी लंबित</h4><small>भेजने वाला: '+esc(t.sender_profile_id)+'<br>प्राप्तकर्ता: '+esc(t.recipient_profile_id)+'<br>अनुरोध: '+esc(t.id)+' · '+new Date(t.created_at).toLocaleString('hi-IN')+'</small><div class="admin-actions"><button type="button" onclick="adminReviewWalletTransfer(\''+t.id+'\',\'approve\')">Approve & Transfer</button><button type="button" class="alt" onclick="adminReviewWalletTransfer(\''+t.id+'\',\'reject\')">Reject</button></div></div>').join(''):'<p class="muted">कोई लंबित Coin Transfer अनुरोध नहीं है।</p>';
  $('adminRedemptions').innerHTML=redRows.length?redRows.map(x=>'<div class="admin-card"><h4>'+Number(x.points_requested).toLocaleString('en-IN')+' Coin · ₹'+Number(x.amount_inr).toFixed(2)+'</h4><small>'+esc(x.payout_method||'भुगतान तरीका नहीं चुना')+' · '+esc(x.status)+' · Member '+esc(x.member_profile_id)+'</small><div class="admin-actions">'+(x.status==='pending'?'<button type="button" onclick="adminRedemption(\''+x.id+'\',\'approved\')">Approve</button>':'')+'<button type="button" onclick="adminRedemption(\''+x.id+'\',\'paid\')">भुगतान करके Paid करें</button><button type="button" class="alt" onclick="adminRedemption(\''+x.id+'\',\'rejected\')">Reject</button></div></div>').join(''):'<p class="muted">कोई लंबित INR भुगतान अनुरोध नहीं है।</p>';
+ $('coinPerInr').value=String(config.coin_per_inr||100);
+ $('adminProductOrders').innerHTML=productRows.length?productRows.map(o=>'<div class="admin-card"><h4>'+esc(o.product_title)+' · '+Number(o.quantity)+' नग</h4><small>'+Number(o.coins_cost)+' Coin · Member '+esc(o.member_profile_id)+' · '+esc(o.status)+'</small><div class="admin-actions">'+(o.status==='pending'?'<button type="button" onclick="adminProductOrder(\''+o.id+'\',\'approve\')">Approve & Coin काटें</button><button type="button" class="alt" onclick="adminProductOrder(\''+o.id+'\',\'reject\')">Reject</button>':'<button type="button" onclick="adminProductOrder(\''+o.id+'\',\'fulfilled\')">Fulfilled</button>')+'</div></div>').join(''):'<p class="muted">कोई Product अनुरोध नहीं।</p>';
+ $('adminPinResets').innerHTML=pinRows.length?pinRows.map(p=>'<div class="admin-card"><h4>PIN Reset अनुरोध</h4><small>Member Profile '+esc(p.member_profile_id)+' · '+new Date(p.created_at).toLocaleString('hi-IN')+'</small><div class="admin-actions"><button type="button" onclick="adminPinReset(\''+p.id+'\',\'approve\')">Approve Reset</button><button type="button" class="alt" onclick="adminPinReset(\''+p.id+'\',\'reject\')">Reject</button></div></div>').join(''):'<p class="muted">कोई PIN Reset अनुरोध लंबित नहीं है।</p>';
+ await loadAdminProducts();
  await loadAdminRewardCategories();
 }
 window.adminTaskStatus=async function(id,status,points){
@@ -382,10 +429,8 @@ window.adminReviewWalletTransfer=async function(id,decision){
  }catch(e){say('Transfer समीक्षा पूरी नहीं हुई: '+e.message,'error');}
 };
 window.adminRedemption=async function(id,status){
- let body={status,reviewed_by:user.id,reviewed_at:new Date().toISOString()};
- if(status==='paid'){const ref=window.prompt('भुगतान वास्तव में पूरा करने के बाद UTR / Transaction Reference दर्ज करें:');if(!ref||!ref.trim())return;body.payout_reference=ref.trim();body.paid_at=new Date().toISOString();}
- if(status==='rejected'){body.admin_note=window.prompt('अस्वीकृति का कारण लिखें:')||'अस्वीकृत';}
- try{await api('/rest/v1/sbpf_reward_redemptions?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(body)});say(status==='paid'?'भुगतान दर्ज हुआ और Coin वॉलेट से घटाए गए।':'भुगतान अनुरोध अपडेट हुआ।','ok');await Promise.all([loadAdmin(),loadWallet()]);}catch(e){say('भुगतान अनुरोध अपडेट नहीं हुआ: '+e.message,'error');}
+ if(status==='approved'||status==='rejected'){const note=window.prompt(status==='approved'?'मंजूरी टिप्पणी (वैकल्पिक):':'अस्वीकृति का कारण लिखें:')||'';if(status==='rejected'&&!note.trim())return;try{await api('/rest/v1/rpc/sbpf_admin_review_cash_redemption',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_redemption_id:id,p_decision:status==='approved'?'approve':'reject',p_note:note})});say(status==='approved'?'Cash Redeem मंजूर; Coins Wallet से कट गए।':'Cash Redeem अस्वीकृत।','ok');await Promise.all([loadAdmin(),loadWallet()]);}catch(e){say('Cash Redeem समीक्षा नहीं हुई: '+e.message,'error');}return;}
+ if(status==='paid'){const ref=window.prompt('भुगतान पूरा करने के बाद UTR / Transaction Reference दर्ज करें:');if(!ref||!ref.trim())return;try{await api('/rest/v1/sbpf_reward_redemptions?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({status:'paid',payout_reference:ref.trim(),paid_at:new Date().toISOString()})});say('भुगतान पूरा दर्ज हुआ।','ok');await loadAdmin();}catch(e){say('भुगतान दर्ज नहीं हुआ: '+e.message,'error');}}
 };
 $('taskForm').addEventListener('submit',async event=>{
  event.preventDefault();
@@ -402,17 +447,14 @@ $('toggleRewards').addEventListener('click',async()=>{
 async function loadRedemptions(){
  const rows=await api('/rest/v1/sbpf_reward_redemptions?select=points_requested,amount_inr,status,created_at,payout_reference&member_profile_id=eq.'+encodeURIComponent(user.id)+'&order=created_at.desc&limit=10');
  const data=Array.isArray(rows)?rows:[];
- $('redemptions').innerHTML=data.length?'<h3 style="font-size:15px;color:var(--wine)">मेरे भुगतान अनुरोध</h3>'+data.map(r=>'<div class="row"><div><b>'+Number(r.points_requested).toLocaleString('en-IN')+' Coin · ₹'+Number(r.amount_inr).toFixed(2)+'</b><small>'+new Date(r.created_at).toLocaleDateString('hi-IN')+'</small></div><span class="tag">'+esc(r.status)+'</span></div>').join(''):'<p class="muted">अभी कोई भुगतान अनुरोध नहीं है।</p>';
+ $('redemptions').innerHTML=data.length?'<h3 style="font-size:15px;color:var(--wine)">मेरे Cash Redeem अनुरोध</h3>'+data.map(r=>'<div class="row"><div><b>'+Number(r.points_requested).toLocaleString('en-IN')+' Coin · ₹'+Number(r.amount_inr).toFixed(2)+'</b><small>'+new Date(r.created_at).toLocaleDateString('hi-IN')+'</small></div><span class="tag">'+esc(r.status)+'</span></div>').join(''):'<p class="muted">अभी कोई Cash Redeem अनुरोध नहीं है।</p>';
 }
 $('redeemForm').addEventListener('submit',async event=>{
- event.preventDefault();const points=Number($('redeemPoints').value),method=$('payoutMethod').value,button=$('redeemButton');
- if(!Number.isInteger(points)||points<=0||!method){say('Coin की सही संख्या और भुगतान तरीका चुनें।','error');return;}
+ event.preventDefault();const points=Number($('redeemPoints').value),method=$('payoutMethod').value,pin=$('redeemPin').value,button=$('redeemButton');
+ if(!Number.isInteger(points)||points<=0||!method||!/^[0-9]{4}$/.test(pin)){say('Coin की सही संख्या, भुगतान तरीका और 4 अंकों का PIN दर्ज करें।','error');return;}
  button.disabled=true;
- try{
-  await api('/rest/v1/sbpf_reward_redemptions',{method:'POST',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({member_profile_id:user.id,points_requested:points,payout_method:method})});
-  $('redeemForm').reset();say('आपका INR रिवॉर्ड अनुरोध भेज दिया गया है। भुगतान एडमिन की मैन्युअल जाँच और स्वीकृति के बाद होगा।','ok');
-  await Promise.all([loadWallet(),loadRedemptions()]);
- }catch(error){say('रिडेम्पशन अनुरोध नहीं भेजा गया: '+error.message,'error');}
+ try{await api('/rest/v1/rpc/sbpf_request_cash_redemption',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_points:points,p_payout_method:method,p_pin:pin})});$('redeemForm').reset();say('Cash Redeem अनुरोध भेज दिया गया। Admin मंजूरी पर Coins Wallet से कटेंगे।','ok');await Promise.all([loadWallet(),loadRedemptions()]);}
+ catch(error){say('Cash Redeem अनुरोध नहीं भेजा गया: '+error.message,'error');}
  finally{button.disabled=false;}
 });
 const spinButton=$('spinDemoButton'),spinWheel=$('demoSpinWheel'),spinResult=$('spinDemoResult');
@@ -579,6 +621,41 @@ const demoBonusButton=$('demoBonusButton');
 demoBonusButton?.addEventListener('click',()=>{
  $('demoBonusResult').textContent='डेमो: दैनिक बोनस स्क्रीन सही काम कर रही है। वास्तविक बोनस या Coin क्लेम नहीं हुआ।';
 });
+
+
+async function loadReferralLevels(){
+ const rows=await api('/rest/v1/rpc/get_my_referral_tree',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
+ const tree=Array.isArray(rows)?rows:[];
+ $('referralLevelsGrid').innerHTML=[1,2,3,4,5].map(n=>{const count=tree.filter(m=>Number(m.level)===n).length;return '<div class="level-card"><small>Level '+n+'</small><strong>'+count.toLocaleString('en-IN')+'</strong><button type="button" data-referral-level="'+n+'">सदस्य देखें</button></div>';}).join('');
+ $('referralLevelMembers').innerHTML='<p class="muted">किसी Level पर क्लिक करके सदस्य का नाम और Member ID देखें।</p>';
+}
+document.addEventListener('click',event=>{const btn=event.target.closest('[data-referral-level]');if(!btn)return;const level=Number(btn.dataset.referralLevel);api('/rest/v1/rpc/get_my_referral_tree',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'}).then(rows=>{const data=(Array.isArray(rows)?rows:[]).filter(m=>Number(m.level)===level);$('referralLevelMembers').innerHTML='<h3 style="color:var(--wine);font-size:16px">Level '+level+' · '+data.length+' सदस्य</h3>'+(data.length?data.map(m=>'<div class="row"><div><b>'+esc(m.full_name||'SBPF सदस्य')+'</b><small>'+esc(m.member_id||'ID उपलब्ध नहीं')+'</small></div><span class="tag">'+esc(m.status||'')+'</span></div>').join(''):'<p class="muted">इस Level में अभी कोई सदस्य नहीं जुड़ा है।</p>');}).catch(e=>say('स्तर के सदस्य नहीं खुल सके: '+e.message,'error'));});
+async function loadProducts(){
+ const rows=await api('/rest/v1/sbpf_reward_products?select=id,title,description,image_url,coins_cost,stock_quantity&is_active=eq.true&order=display_order.asc');
+ const products=Array.isArray(rows)?rows:[];
+ $('memberProducts').innerHTML=products.length?products.map(p=>'<article class="card product-card">'+(p.image_url?'<img src="'+esc(p.image_url)+'" alt="'+esc(p.title)+'" loading="lazy">':'')+'<h3>'+esc(p.title)+'</h3><p>'+esc(p.description||'')+'</p><span class="tag">'+Number(p.coins_cost)+' Coin / नग</span><label>मात्रा</label><input type="number" min="1" max="20" value="1" id="productQty-'+p.id+'"><button type="button" data-product-redeem="'+p.id+'">Product Redeem करें</button></article>').join(''):'<p class="muted">अभी कोई Product उपलब्ध नहीं है।</p>';
+}
+async function loadProductOrders(){
+ const rows=await api('/rest/v1/sbpf_reward_product_orders?select=id,product_title,quantity,coins_cost,status,created_at&member_profile_id=eq.'+encodeURIComponent(user.id)+'&order=created_at.desc&limit=20');
+ const data=Array.isArray(rows)?rows:[];
+ $('memberProductOrders').innerHTML=data.length?'<h3 style="font-size:16px;color:var(--wine)">मेरे Product अनुरोध</h3>'+data.map(o=>'<div class="row"><div><b>'+esc(o.product_title)+' × '+Number(o.quantity)+'</b><small>'+Number(o.coins_cost)+' Coin · '+new Date(o.created_at).toLocaleString('hi-IN')+'</small></div><span class="tag">'+esc(o.status)+'</span></div>').join(''):'<p class="muted">अभी कोई Product Redeem अनुरोध नहीं है।</p>';
+}
+async function loadAdminProducts(){
+ const rows=await api('/rest/v1/sbpf_reward_products?select=id,title,coins_cost,stock_quantity,is_active&order=created_at.desc');
+ const data=Array.isArray(rows)?rows:[];
+ $('adminProducts').innerHTML=data.length?data.map(p=>'<div class="row"><div><b>'+esc(p.title)+'</b><small>'+Number(p.coins_cost)+' Coin · Stock: '+(p.stock_quantity===null?'Unlimited':p.stock_quantity)+' · '+(p.is_active?'Active':'Inactive')+'</small></div><button type="button" class="alt" data-product-toggle="'+p.id+'" data-active="'+p.is_active+'">'+(p.is_active?'बंद करें':'चालू करें')+'</button></div>').join(''):'<p class="muted">अभी कोई Product नहीं जोड़ा गया।</p>';
+}
+document.addEventListener('click',async event=>{
+ const redeem=event.target.closest('[data-product-redeem]');
+ if(redeem){const id=redeem.dataset.productRedeem,qty=Number($('productQty-'+id)?.value||1),pin=window.prompt('Product Redeem की पुष्टि के लिए 4 अंकों का Wallet PIN दर्ज करें:');if(!pin)return;if(!/^[0-9]{4}$/.test(pin)){say('4 अंकों का सही PIN दर्ज करें।','error');return;}redeem.disabled=true;try{await api('/rest/v1/rpc/sbpf_request_product_redemption',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_product_id:id,p_quantity:qty,p_pin:pin})});say('Product अनुरोध भेज दिया गया। Admin मंजूरी के बाद Coins कटेंगे।','ok');await Promise.all([loadWallet(),loadProductOrders()]);}catch(e){say('Product Redeem नहीं हुआ: '+e.message,'error');}finally{redeem.disabled=false;}}
+ const toggle=event.target.closest('[data-product-toggle]');
+ if(toggle){const active=toggle.dataset.active!=='true';try{await api('/rest/v1/sbpf_reward_products?id=eq.'+encodeURIComponent(toggle.dataset.productToggle),{method:'PATCH',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({is_active:active,updated_at:new Date().toISOString()})});await Promise.all([loadAdminProducts(),loadProducts()]);}catch(e){say('Product स्थिति अपडेट नहीं हुई: '+e.message,'error');}}
+});
+$('productForm').addEventListener('submit',async event=>{event.preventDefault();const title=$('productTitle').value.trim(),coins=Number($('productCoins').value),stock=$('productStock').value===''?null:Number($('productStock').value),image=$('productImage').value.trim();if(!title||!Number.isInteger(coins)||coins<1||(stock!==null&&(!Number.isInteger(stock)||stock<0))||(image&&!image.startsWith('https://'))){say('Product नाम, Coin कीमत, Stock और HTTPS Image URL जाँचें।','error');return;}try{await api('/rest/v1/sbpf_reward_products',{method:'POST',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({title,description:$('productDescription').value.trim(),coins_cost:coins,stock_quantity:stock,image_url:image||null,created_by:user.id})});$('productForm').reset();say('Product सेव हो गया।','ok');await Promise.all([loadAdminProducts(),loadProducts()]);}catch(e){say('Product सेव नहीं हुआ: '+e.message,'error');}});
+window.adminProductOrder=async function(id,decision){const note=window.prompt(decision==='approve'?'मंजूरी / डिलीवरी टिप्पणी (वैकल्पिक):':'अस्वीकृति का कारण:')||'';if(decision==='reject'&&!note.trim())return;try{await api('/rest/v1/rpc/sbpf_admin_review_product_order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_order_id:id,p_decision:decision,p_note:note})});say('Product अनुरोध अपडेट हुआ।','ok');await Promise.all([loadAdmin(),loadAdminProducts()]);}catch(e){say('Product अनुरोध अपडेट नहीं हुआ: '+e.message,'error');}};
+window.adminPinReset=async function(id,decision){const note=window.prompt(decision==='approve'?'PIN Reset मंजूरी टिप्पणी:':'अस्वीकृति का कारण:')||'';if(decision==='reject'&&!note.trim())return;try{await api('/rest/v1/rpc/sbpf_admin_review_wallet_pin_reset',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_request_id:id,p_decision:decision,p_note:note})});say(decision==='approve'?'PIN Reset मंजूर। सदस्य अब नया PIN सेट कर सकता है।':'PIN Reset अनुरोध अस्वीकृत।','ok');await loadAdmin();}catch(e){say('PIN Reset समीक्षा नहीं हुई: '+e.message,'error');}};
+$('coinValueForm').addEventListener('submit',async event=>{event.preventDefault();const rate=Number($('coinPerInr').value);if(!Number.isInteger(rate)||rate<1){say('₹1 के लिए 1 या अधिक Coin दर्ज करें।','error');return;}try{await api('/rest/v1/sbpf_rewards_config?id=eq.1',{method:'PATCH',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({coin_per_inr:rate,updated_by:user.id,updated_at:new Date().toISOString()})});config.coin_per_inr=rate;say('Coin Value सेव हो गई।','ok');await loadWallet();}catch(e){say('Coin Value सेव नहीं हुई: '+e.message,'error');}});
+$('enforcementForm').addEventListener('submit',async event=>{event.preventDefault();const memberId=$('enforceMemberId').value.trim(),action=$('enforceAction').value,reason=$('enforceReason').value.trim();if(!memberId||reason.length<10){say('Member ID और विस्तृत कारण आवश्यक हैं।','error');return;}const label=action==='revoke'?'स्थायी रूप से Reward Zone बंद':'अस्थायी रोक';if(!window.confirm(memberId+' पर '+label+' लागू करें? यह Wallet और Rewards सुविधाओं को रोक देगा।'))return;try{await api('/rest/v1/rpc/sbpf_admin_enforce_rewards_member',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_member_id:memberId,p_action:action,p_reason:reason})});$('enforcementForm').reset();say('Admin कार्रवाई दर्ज हो गई।','ok');await loadAdmin();}catch(e){say('Admin कार्रवाई नहीं हुई: '+e.message,'error');}});
 
 loadRewardCategories().catch(e=>{const message='Rewards कार्ड लोड नहीं हुए: '+(e&&e.message?e.message:'नेटवर्क या Supabase त्रुटि');['rewardCategoriesPublicGrid','rewardCategoriesTestGrid','rewardCategoriesMemberGrid'].forEach(id=>{const el=$(id);if(el)el.innerHTML='<div class="card" role="alert">'+esc(message)+'<p class="muted">कृपया पेज Refresh करें। समस्या बनी रहे तो SBPF तकनीकी टीम को यह संदेश भेजें।</p></div>';});say(message,'error');});
 load();
