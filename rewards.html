@@ -188,6 +188,9 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
  </form>
  <div class="section-title"><h2>टास्क प्रबंधन</h2></div><div id="adminTasks" class="list"></div>
  <div class="section-title"><h2>टास्क समीक्षा</h2></div><div id="adminSubmissions" class="list"></div>
+ <div class="section-title"><h2>Coin Transfer मंजूरी</h2></div>
+ <p class="muted">सदस्य के Coin Transfer अनुरोध यहाँ आएँगे। मंजूरी के बाद ही Coins दोनों Wallet में दर्ज होंगे।</p>
+ <div id="adminWalletTransfers" class="list"><p class="muted">लंबित अनुरोध लोड हो रहे हैं…</p></div>
  <div class="section-title"><h2>INR भुगतान अनुरोध</h2></div><div id="adminRedemptions" class="list"></div>
 </section>
 <section id="loginPrompt" class="panel hidden">
@@ -266,9 +269,10 @@ async function load(){
  }
 }
 async function loadWallet(){
- const [rows,wallet]=await Promise.all([
+ const [rows,wallet,transfers]=await Promise.all([
   api('/rest/v1/sbpf_reward_wallet_ledger?select=points_delta,entry_type,reference_id,description,created_at&member_profile_id=eq.'+encodeURIComponent(user.id)+'&order=created_at.desc&limit=50'),
-  api('/rest/v1/rpc/sbpf_wallet_balance',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'})
+  api('/rest/v1/rpc/sbpf_wallet_balance',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'}),
+  api('/rest/v1/sbpf_reward_wallet_transfers?select=id,sender_profile_id,recipient_profile_id,amount,status,created_at,admin_note&or=(sender_profile_id.eq.'+encodeURIComponent(user.id)+',recipient_profile_id.eq.'+encodeURIComponent(user.id)+')&order=created_at.desc&limit=20')
  ]);
  const ledger=Array.isArray(rows)?rows:[];
  const balance=Number(wallet?.balance ?? ledger.reduce((sum,row)=>sum+Number(row.points_delta||0),0));
@@ -278,7 +282,13 @@ async function loadWallet(){
  $('walletState').textContent='Wallet सक्रिय · उपलब्ध बैलेंस: '+balance.toLocaleString('en-IN')+' Coin';
  $('walletPinForm').classList.toggle('hidden',!!wallet?.pin_set);
  $('walletTransferForm').classList.toggle('hidden',!wallet?.pin_set);
- $('walletTransferHistory').innerHTML='';
+ const transferRows=Array.isArray(transfers)?transfers:[];
+ $('walletTransferHistory').innerHTML=transferRows.length?'<h3 style="font-size:15px;color:var(--wine)">मेरे Transfer अनुरोध</h3>'+transferRows.map(t=>{
+  const sent=t.sender_profile_id===user.id;
+  const statusLabel=t.status==='pending'?'Admin मंजूरी लंबित':t.status==='completed'?'मंजूर · पूरा':t.status==='rejected'?'अस्वीकृत':'वापस किया गया';
+  const color=t.status==='completed'?'#176b42':t.status==='rejected'?'#a01828':'#8a6414';
+  return '<div class="row"><div><b>'+(sent?'भेजने का अनुरोध':'प्राप्त Coin')+' · '+Number(t.amount).toLocaleString('en-IN')+' Coin</b><small>'+new Date(t.created_at).toLocaleString('hi-IN')+' · '+esc(t.id)+(t.admin_note?' · '+esc(t.admin_note):'')+'</small></div><strong style="color:'+color+'">'+statusLabel+'</strong></div>';
+ }).join(''):'<p class="muted">अभी कोई Transfer अनुरोध नहीं है।</p>';
 }
 document.getElementById('walletPinForm')?.addEventListener('submit',async event=>{
  event.preventDefault();
@@ -305,8 +315,8 @@ document.getElementById('walletTransferForm')?.addEventListener('submit',async e
   const result=await api('/rest/v1/rpc/sbpf_wallet_transfer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_recipient_member_id:recipient,p_amount:amount,p_pin:pin,p_request_id:crypto.randomUUID()})});
   if(!result?.success)throw new Error(result?.error||'ट्रांसफर पूरा नहीं हुआ।');
   $('walletRecipient').value='';$('walletAmount').value='';$('walletTransferPin').value='';
-  $('walletTransferHistory').innerHTML='<div class="notice ok">ट्रांसफर सफल · Transaction ID: <b>'+esc(result.transaction_id)+'</b> · '+Number(result.amount).toLocaleString('en-IN')+' Coin</div>';
-  say('Coin सुरक्षित रूप से ट्रांसफर हो गए।','ok');
+  $('walletTransferHistory').innerHTML='<div class="notice">Transfer अनुरोध भेज दिया गया है। Coins Admin की मंजूरी तक आरक्षित रहेंगे। Transaction ID: <b>'+esc(result.transaction_id)+'</b> · '+Number(result.amount).toLocaleString('en-IN')+' Coin</div>';
+  say('Transfer अनुरोध SBPF Admin के पास भेज दिया गया है। मंजूरी से पहले Coins प्राप्तकर्ता को नहीं मिलेंगे।','ok');
   await loadWallet();
  }catch(error){say('Coin ट्रांसफर नहीं हुए: '+error.message,'error');}
  finally{button.disabled=false;}
@@ -341,13 +351,15 @@ window.submitTask=async function(taskId,taskType,evidenceRequired){
 async function loadAdmin(){
  $('adminLaunchState').textContent='Rewards '+(config.rewards_enabled?'चालू हैं':'अभी बंद हैं')+' · 100 Coin = ₹1 · INR भुगतान मैन्युअल';
  $('toggleRewards').textContent=config.rewards_enabled?'Rewards बंद करें':'Rewards चालू करें';
- const [taskRows,subRows,redRows]=await Promise.all([
+ const [taskRows,subRows,redRows,transferRows]=await Promise.all([
   api('/rest/v1/sbpf_reward_tasks?select=id,title,task_type,points_reward,status,created_at&order=created_at.desc'),
   api('/rest/v1/sbpf_reward_submissions?select=id,task_id,member_profile_id,proof_note,evidence_url,created_at,sbpf_reward_tasks(title,points_reward)&status=eq.pending&order=created_at.asc'),
-  api('/rest/v1/sbpf_reward_redemptions?select=id,member_profile_id,points_requested,amount_inr,status,payout_method,created_at&status=in.(pending,approved)&order=created_at.asc')
+  api('/rest/v1/sbpf_reward_redemptions?select=id,member_profile_id,points_requested,amount_inr,status,payout_method,created_at&status=in.(pending,approved)&order=created_at.asc'),
+  api('/rest/v1/sbpf_reward_wallet_transfers?select=id,sender_profile_id,recipient_profile_id,amount,status,created_at&status=eq.pending&order=created_at.asc')
  ]);
  $('adminTasks').innerHTML=taskRows.length?taskRows.map(t=>'<div class="admin-card"><h4>'+esc(t.title)+'</h4><small>'+esc(t.task_type)+' · '+Number(t.points_reward)+' Coin · '+esc(t.status)+'</small><div class="admin-actions">'+(t.status==='published'?'<button type="button" onclick="adminTaskStatus(\''+t.id+'\',\'paused\')">Pause</button>':t.status==='draft'||t.status==='paused'?'<button type="button" onclick="adminTaskStatus(\''+t.id+'\',\'published\', '+Number(t.points_reward)+')">Publish</button>':'')+'</div></div>').join(''):'<p class="muted">अभी कोई टास्क नहीं।</p>';
  $('adminSubmissions').innerHTML=subRows.length?subRows.map(x=>'<div class="admin-card"><h4>'+esc(x.sbpf_reward_tasks?.title||'SBPF Task')+'</h4><p>'+esc(x.proof_note)+'</p>'+(x.evidence_url?'<a href="'+esc(x.evidence_url)+'" target="_blank" rel="noopener">प्रमाण देखें ↗</a>':'')+'<small>Member: '+esc(x.member_profile_id)+' · '+new Date(x.created_at).toLocaleString('hi-IN')+'</small><div class="admin-actions"><button type="button" onclick="adminReviewSubmission(\''+x.id+'\',\'approved\', '+Number(x.sbpf_reward_tasks?.points_reward||0)+')">Approve & Coin दें</button><button type="button" class="alt" onclick="adminReviewSubmission(\''+x.id+'\',\'rejected\',0)">Reject</button></div></div>').join(''):'<p class="muted">कोई लंबित टास्क सबमिशन नहीं है।</p>';
+ $('adminWalletTransfers').innerHTML=transferRows.length?transferRows.map(t=>'<div class="admin-card"><h4>'+Number(t.amount).toLocaleString('en-IN')+' Coin · मंजूरी लंबित</h4><small>भेजने वाला: '+esc(t.sender_profile_id)+'<br>प्राप्तकर्ता: '+esc(t.recipient_profile_id)+'<br>अनुरोध: '+esc(t.id)+' · '+new Date(t.created_at).toLocaleString('hi-IN')+'</small><div class="admin-actions"><button type="button" onclick="adminReviewWalletTransfer(\\''+t.id+'\\',\\'approve\\')">Approve & Transfer</button><button type="button" class="alt" onclick="adminReviewWalletTransfer(\\''+t.id+'\\',\\'reject\\')">Reject</button></div></div>').join(''):'<p class="muted">कोई लंबित Coin Transfer अनुरोध नहीं है।</p>';
  $('adminRedemptions').innerHTML=redRows.length?redRows.map(x=>'<div class="admin-card"><h4>'+Number(x.points_requested).toLocaleString('en-IN')+' Coin · ₹'+Number(x.amount_inr).toFixed(2)+'</h4><small>'+esc(x.payout_method||'भुगतान तरीका नहीं चुना')+' · '+esc(x.status)+' · Member '+esc(x.member_profile_id)+'</small><div class="admin-actions">'+(x.status==='pending'?'<button type="button" onclick="adminRedemption(\''+x.id+'\',\'approved\')">Approve</button>':'')+'<button type="button" onclick="adminRedemption(\''+x.id+'\',\'paid\')">भुगतान करके Paid करें</button><button type="button" class="alt" onclick="adminRedemption(\''+x.id+'\',\'rejected\')">Reject</button></div></div>').join(''):'<p class="muted">कोई लंबित INR भुगतान अनुरोध नहीं है।</p>';
  await loadAdminRewardCategories();
 }
@@ -359,6 +371,15 @@ window.adminReviewSubmission=async function(id,status,points){
  if(status==='approved'&&(!Number.isInteger(points)||points<=0)){say('इस टास्क के लिए पहले सकारात्मक Coin रिवॉर्ड सेट करें।','error');return;}
  const note=window.prompt('समीक्षा टिप्पणी (वैकल्पिक):')||'';
  try{await api('/rest/v1/sbpf_reward_submissions?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({status,points_awarded:points,reviewed_by:user.id,reviewed_at:new Date().toISOString(),review_note:note})});say(status==='approved'?'सबमिशन स्वीकृत; Coin वॉलेट में जोड़ दिए गए।':'सबमिशन अस्वीकृत।','ok');await Promise.all([loadAdmin(),loadWallet()]);}catch(e){say('समीक्षा सेव नहीं हुई: '+e.message,'error');}
+};
+window.adminReviewWalletTransfer=async function(id,decision){
+ const note=window.prompt(decision==='approve'?'मंजूरी टिप्पणी (वैकल्पिक):':'अस्वीकृति का कारण लिखें:')||'';
+ if(decision==='reject'&&!note.trim()){say('अस्वीकृति का कारण आवश्यक है।','error');return;}
+ try{
+  await api('/rest/v1/rpc/sbpf_admin_review_wallet_transfer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_transfer_id:id,p_decision:decision,p_note:note})});
+  say(decision==='approve'?'Transfer मंजूर; Coins दोनों Wallet में दर्ज हो गए।':'Transfer अस्वीकृत; भेजने वाले के Coins उपलब्ध हो गए।','ok');
+  await Promise.all([loadAdmin(),loadWallet()]);
+ }catch(e){say('Transfer समीक्षा पूरी नहीं हुई: '+e.message,'error');}
 };
 window.adminRedemption=async function(id,status){
  let body={status,reviewed_by:user.id,reviewed_at:new Date().toISOString()};
