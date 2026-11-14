@@ -248,9 +248,20 @@ let user=null, member=null, isAdmin=false, memberIsVerified=false, config={coin_
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function api(path,options){
- const opts=options||{},headers={apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY,...(opts.headers||{})};
- if(token)headers.Authorization='Bearer '+token;
- const response=await fetch(SUPABASE_URL+path,{...opts,headers});
+ const opts=options||{};
+ const makeHeaders=()=>({apikey:SUPABASE_KEY,Authorization:token?'Bearer '+token:'Bearer '+SUPABASE_KEY,...(opts.headers||{})});
+ let response=await fetch(SUPABASE_URL+path,{...opts,headers:makeHeaders()});
+ if(response.status===401&&token&&localStorage.getItem('sbpf_refresh_token')){
+  try{
+   const refreshed=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:localStorage.getItem('sbpf_refresh_token')})});
+   const session=await refreshed.json();
+   if(refreshed.ok&&session.access_token){
+    token=session.access_token;localStorage.setItem('sbpf_access_token',token);
+    if(session.refresh_token)localStorage.setItem('sbpf_refresh_token',session.refresh_token);
+    response=await fetch(SUPABASE_URL+path,{...opts,headers:makeHeaders()});
+   }
+  }catch(refreshError){console.warn('Session refresh unavailable.',refreshError);}
+ }
  let data=null;try{data=await response.json()}catch(_){}
  if(!response.ok)throw new Error(data?.message||data?.msg||data?.error_description||data?.error||('HTTP '+response.status));
  return data;
@@ -365,15 +376,16 @@ document.getElementById('walletPinForm')?.addEventListener('submit',async event=
  if(pin!==confirmPin){say('दोनों PIN एक जैसे नहीं हैं।','error');return;}
  const button=$('walletPinButton');button.disabled=true;
  try{
-  await api('/rest/v1/rpc/sbpf_wallet_setup_pin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_pin:pin})});
+  const result=await api('/rest/v1/rpc/sbpf_wallet_setup_pin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_pin:pin})});
+  if(!result?.success||!result?.pin_set)throw new Error('Supabase ने PIN सेव होने की पुष्टि नहीं की।');
   $('walletPin').value='';$('walletPinConfirm').value='';
-  say('Wallet बन गया और PIN सुरक्षित रूप से सेट हो गया।','ok');
+  say('Wallet PIN सुरक्षित Hash के रूप में Supabase में सेव हो गया।','ok');
   await loadWallet();
   $('walletPanel')?.scrollIntoView({behavior:'smooth',block:'start'});
  }catch(error){say('Wallet PIN सेट नहीं हुआ: '+error.message,'error');}
  finally{button.disabled=false;}
 });
-$('createWalletButton').addEventListener('click',async()=>{const b=$('createWalletButton');b.disabled=true;try{await api('/rest/v1/rpc/sbpf_wallet_create',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});say('Wallet सफलतापूर्वक बन गया। अब PIN सेट करें।','ok');await loadWallet();}catch(e){say('Wallet नहीं बन पाया: '+e.message,'error');}finally{b.disabled=false;}});
+$('createWalletButton').addEventListener('click',async()=>{const b=$('createWalletButton');b.disabled=true;try{const result=await api('/rest/v1/rpc/sbpf_wallet_create',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});if(!result?.success||!result?.wallet_created)throw new Error('Supabase ने Wallet बनने की पुष्टि नहीं की।');say('Wallet उपलब्ध है। अब PIN सेट करें।','ok');await loadWallet();}catch(e){say('Wallet नहीं बन पाया: '+e.message,'error');}finally{b.disabled=false;}});
 $('forgotWalletPinButton').addEventListener('click',async()=>{if(!window.confirm('Forgot PIN अनुरोध Admin को भेजें? Admin की मंजूरी के बाद आप नया PIN सेट कर सकेंगे।'))return;try{await api('/rest/v1/rpc/sbpf_wallet_request_pin_reset',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});$('walletPinResetState').textContent='PIN रीसेट अनुरोध Admin के पास भेज दिया गया है। मंजूरी के बाद नया PIN सेट करें।';say('PIN रीसेट अनुरोध भेज दिया गया।','ok');}catch(e){say('PIN रीसेट अनुरोध नहीं भेजा गया: '+e.message,'error');}});
 $('walletQuickButton').addEventListener('click',()=>{const gate=$('walletGate'),target=gate&&!gate.classList.contains('hidden')?gate:$('walletPanel');target?.scrollIntoView({behavior:'smooth',block:'start'});});
 document.getElementById('walletTransferForm')?.addEventListener('submit',async event=>{
