@@ -36,6 +36,10 @@ footer{max-width:1060px;margin:auto;padding:0 16px 30px;text-align:center;color:
 .header-member{font-size:12px;line-height:1.35;color:#fff6dd;max-width:190px;overflow-wrap:anywhere}
 .wallet-quick{background:#fff;color:var(--wine);border:1px solid #f3d98b;border-radius:999px;padding:8px 13px;white-space:nowrap;box-shadow:0 3px 10px #0002}
 .wallet-gate{max-width:620px;margin:18px auto;border:1px solid #e5c77e;background:linear-gradient(145deg,#fffdf7,#fff7e6)}
+/* Mandatory wallet setup modal shown immediately after successful member verification */
+.wallet-gate:not(.hidden){position:fixed!important;z-index:1100!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;width:min(620px,calc(100vw - 28px))!important;max-width:620px!important;max-height:calc(100dvh - 36px)!important;overflow:auto!important;margin:0!important;padding:22px!important;border:1px solid #e5c77e!important;border-radius:20px!important;background:linear-gradient(145deg,#fffdf7,#fff7e6)!important;box-shadow:0 0 0 100vmax rgba(25,12,16,.72),0 22px 70px rgba(0,0,0,.28)!important}
+.wallet-gate h2{font-size:22px}.wallet-gate form{margin-top:14px}.wallet-gate input{min-height:48px}.wallet-gate button{width:100%;min-height:48px;margin-top:8px}
+@media(max-width:480px){.wallet-gate:not(.hidden){padding:18px!important}}
 .wallet-gate h2{margin:0 0 8px;color:var(--wine)}
 .wallet-gate button{min-height:44px}
 .level-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
@@ -140,9 +144,9 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
 </section>
 <div id="message" class="notice">Rewards Zone की स्थिति जाँची जा रही है…</div>
 <section id="dashboard" class="hidden">
-<div id="walletGate" class="panel wallet-gate hidden">
- <div id="walletCreateStep"><h2>अपना SBPF Wallet बनाएँ</h2><p class="muted">आपका सदस्य सत्यापन सफल है। सबसे पहले अपना सुरक्षित Coin Wallet बनाएँ।</p><button id="createWalletButton" type="button">Create Wallet</button></div>
- <div id="walletPinStep" class="hidden"><h2>Wallet PIN सेट करें</h2><p class="muted">Wallet की सुरक्षा के लिए 4 अंकों का PIN बनाएँ। PIN भूलने पर Admin से रीसेट अनुरोध किया जा सकेगा।</p><form id="walletPinForm" autocomplete="off">
+<div id="walletGate" class="panel wallet-gate hidden" role="dialog" aria-modal="true" aria-labelledby="walletSetupTitle">
+ <div id="walletCreateStep"><h2 id="walletSetupTitle">अपना SBPF Wallet बनाएँ</h2><p class="muted">सदस्य सत्यापन सफल है। आगे बढ़ने के लिए अपना सुरक्षित Coin Wallet बनाएँ।</p><button id="createWalletButton" type="button">Wallet बनाएँ</button></div>
+ <div id="walletPinStep" class="hidden"><h2 id="walletSetupTitle">Wallet PIN बनाएँ</h2><p class="muted">4 अंकों का PIN दर्ज करें और नीचे दोबारा डालकर पुष्टि करें।<form id="walletPinForm" autocomplete="off">
   <div><label for="walletPin">4 अंकों का Wallet PIN बनाएँ</label><input id="walletPin" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" minlength="4" autocomplete="new-password" required></div>
   <div><label for="walletPinConfirm">PIN की पुष्टि करें</label><input id="walletPinConfirm" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" minlength="4" autocomplete="new-password" required></div>
   <button id="walletPinButton" type="submit">Wallet PIN बनाएँ</button>
@@ -344,6 +348,7 @@ document.getElementById('walletPinForm')?.addEventListener('submit',async event=
   $('walletPin').value='';$('walletPinConfirm').value='';
   say('Wallet बन गया और PIN सुरक्षित रूप से सेट हो गया।','ok');
   await loadWallet();
+  $('walletPanel')?.scrollIntoView({behavior:'smooth',block:'start'});
  }catch(error){say('Wallet PIN सेट नहीं हुआ: '+error.message,'error');}
  finally{button.disabled=false;}
 });
