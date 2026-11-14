@@ -12,66 +12,46 @@ h1{text-align:center;color:var(--wine);font-size:24px;margin:0 0 4px}.sub{text-a
 label{display:block;font-size:13px;font-weight:700;margin:13px 0 5px}
 input{width:100%;padding:13px;border:1px solid #ddd6d0;border-radius:10px;font:inherit}
 button,.link{display:flex;align-items:center;justify-content:center;width:100%;padding:13px;border:0;border-radius:10px;background:var(--wine);color:#fff;text-decoration:none;font-weight:800;margin-top:14px;cursor:pointer}
-button:disabled{opacity:.6;cursor:wait}.note{background:#fffaf0;border:1px solid #eee2c8;border-radius:10px;padding:11px;margin-top:14px;font-size:13px;color:#51483e}
-.msg{font-size:13px;margin-top:12px;color:#a01828}.ok{color:#176b42}.hidden{display:none!important}
+button:disabled{opacity:.6;cursor:wait}.msg{font-size:13px;margin-top:12px;color:#a01828}.ok{color:#176b42}
 footer{text-align:center;color:var(--muted);font-size:11px;margin:14px 8px}
 </style></head>
 <body><main><section class="card">
-<h1>Rewards Zone प्रवेश</h1><p class="sub">सत्यापित सदस्य के लिए सुरक्षित OTP</p>
-<div id="emailStep">
-<label for="email">पंजीकृत ईमेल</label>
-<input id="email" type="email" autocomplete="email" placeholder="पंजीकृत ईमेल दर्ज करें" required>
-<button id="sendBtn" type="button">ईमेल पर OTP भेजें</button>
-</div>
-<div id="otpStep" class="hidden">
-<label for="otp">ईमेल पर प्राप्त 6 अंकों का OTP</label>
-<input id="otp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="6 अंकों का OTP">
-<button id="verifyBtn" type="button">OTP सत्यापित करके प्रवेश करें</button>
-<button id="resendBtn" type="button" style="background:#fff;color:var(--wine);border:1px solid var(--line)">OTP दोबारा भेजें</button>
-</div>
+<h1>Rewards Zone प्रवेश</h1><p class="sub">सत्यापित SBPF सदस्य</p>
+<form id="loginForm" autocomplete="on">
+<label for="memberId">SBPF Member ID</label>
+<input id="memberId" maxlength="40" autocomplete="username" autocapitalize="characters" placeholder="अपनी SBPF Member ID दर्ज करें" required>
+<label for="password">पासवर्ड</label>
+<input id="password" type="password" autocomplete="current-password" placeholder="अपना पासवर्ड दर्ज करें" required>
+<button id="loginBtn" type="submit">सुरक्षित प्रवेश करें</button>
+</form>
 <div id="message" class="msg" role="status" aria-live="polite"></div>
-<div class="note">सार्वजनिक Member ID सत्यापन से निजी वॉलेट नहीं खुलता। OTP या सुरक्षित प्रवेश लिंक उसी ईमेल पर भेजा जाएगा जो पहले से SBPF Auth खाते में पंजीकृत है। नया खाता यहाँ नहीं बनाया जाएगा।</div>
 <a class="link" href="member-verification.html" style="background:#fff;color:var(--wine);border:1px solid var(--line)">सार्वजनिक सदस्य सत्यापन</a>
 </section><footer>स्वर्णिम भारत परिवार फाउंडेशन • सुरक्षित सदस्य प्रवेश</footer></main>
 <script>
 const API="https://dxowhzghrdghfzoggorx.supabase.co";
 const KEY="sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo";
 const $=id=>document.getElementById(id);
-let email="";
-async function auth(path,body,query=""){
- const r=await fetch(API+"/auth/v1/"+path+query,{method:"POST",headers:{apikey:KEY,"Content-Type":"application/json"},body:JSON.stringify(body)});
- let d={};try{d=await r.json()}catch{}
- if(!r.ok)throw new Error(d.msg||d.message||d.error_description||d.error||"सुरक्षित प्रवेश पूरा नहीं हो सका।");
- return d;
-}
-async function sendOtp(){
- email=$("email").value.trim().toLowerCase();
- if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))throw new Error("कृपया सही पंजीकृत ईमेल दर्ज करें।");
- const redirect=encodeURIComponent(location.origin+location.pathname);
- await auth("otp",{email,create_user:false},"?redirect_to="+redirect);
- $("emailStep").classList.add("hidden");$("otpStep").classList.remove("hidden");
- $("message").className="msg ok";$("message").textContent="यदि यह ईमेल पंजीकृत है, तो OTP भेजा गया है। अपना Inbox और Spam फ़ोल्डर जाँचें।";
-}
-$("sendBtn").addEventListener("click",async()=>{const b=$("sendBtn");b.disabled=true;try{await sendOtp()}catch(e){$("message").textContent=e.message}finally{b.disabled=false}});
-$("resendBtn").addEventListener("click",async()=>{const b=$("resendBtn");b.disabled=true;try{const redirect=encodeURIComponent(location.origin+location.pathname);await auth("otp",{email,create_user:false},"?redirect_to="+redirect);$("message").textContent="नया OTP या सुरक्षित ईमेल लिंक भेजने का अनुरोध पूरा हुआ।"}catch(e){$("message").textContent=e.message}finally{b.disabled=false}});
-// Supabase magic-link callback support: email templates may deliver a link instead of a numeric OTP.
-const callback=new URLSearchParams(location.hash.slice(1));
-const callbackToken=callback.get("access_token");
-if(callbackToken){
- localStorage.setItem("sbpf_access_token",callbackToken);
- const refresh=callback.get("refresh_token");if(refresh)localStorage.setItem("sbpf_refresh_token",refresh);
- history.replaceState(null,"",location.pathname+location.search);
- location.replace("rewards.html");
-}
-$("verifyBtn").addEventListener("click",async()=>{
- const b=$("verifyBtn");b.disabled=true;
+$("loginForm").addEventListener("submit",async event=>{
+ event.preventDefault();
+ const button=$("loginBtn");button.disabled=true;button.textContent="सत्यापन हो रहा है…";
+ $("message").textContent="";$("message").className="msg";
  try{
-  const code=$("otp").value.trim();if(!/^\d{6}$/.test(code))throw new Error("6 अंकों का OTP दर्ज करें।");
-  const d=await auth("verify",{email,token:code,type:"email"});
-  if(!d.access_token||!d.user?.id)throw new Error("Auth Session नहीं मिला।");
-  localStorage.setItem("sbpf_access_token",d.access_token);
-  if(d.refresh_token)localStorage.setItem("sbpf_refresh_token",d.refresh_token);
+  const member_id=$("memberId").value.trim().toUpperCase();
+  const password=$("password").value;
+  if(!/^[A-Z0-9-]{6,40}$/.test(member_id))throw new Error("कृपया सही SBPF Member ID दर्ज करें।");
+  if(!password||password.length>256)throw new Error("कृपया अपना पासवर्ड दर्ज करें।");
+  const response=await fetch(API+"/functions/v1/member-id-login",{
+   method:"POST",headers:{apikey:KEY,"Content-Type":"application/json"},
+   body:JSON.stringify({member_id,password})
+  });
+  let data={};try{data=await response.json()}catch{}
+  if(!response.ok||!data.access_token||!data.user?.id)throw new Error(data.error||"Member ID या पासवर्ड सही नहीं है।");
+  localStorage.setItem("sbpf_access_token",data.access_token);
+  if(data.refresh_token)localStorage.setItem("sbpf_refresh_token",data.refresh_token);
+  $("password").value="";
   location.replace("rewards.html");
- }catch(e){$("message").textContent=e.message}finally{b.disabled=false}
+ }catch(error){
+  $("message").textContent=error.message||"सुरक्षित प्रवेश पूरा नहीं हो सका।";
+ }finally{button.disabled=false;button.textContent="सुरक्षित प्रवेश करें";}
 });
 </script></body></html>
