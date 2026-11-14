@@ -456,7 +456,7 @@ $('redeemForm').addEventListener('submit',async event=>{
  event.preventDefault();const points=Number($('redeemPoints').value),method=$('payoutMethod').value,pin=$('redeemPin').value,button=$('redeemButton');
  if(!Number.isInteger(points)||points<=0||!method||!/^[0-9]{4}$/.test(pin)){say('Coin की सही संख्या, भुगतान तरीका और 4 अंकों का PIN दर्ज करें।','error');return;}
  button.disabled=true;
- try{await api('/rest/v1/rpc/sbpf_request_cash_redemption',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_points:points,p_payout_method:method,p_pin:pin})});$('redeemForm').reset();say('Cash Redeem अनुरोध भेज दिया गया। Admin मंजूरी पर Coins Wallet से कटेंगे।','ok');await Promise.all([loadWallet(),loadRedemptions()]);}
+ try{const result=await api('/rest/v1/rpc/sbpf_request_cash_redemption',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_points:points,p_payout_method:method,p_pin:pin})});if(!result?.success)throw new Error(result?.error||'Cash Redeem अनुरोध नहीं हुआ।');$('redeemForm').reset();say('Cash Redeem अनुरोध भेज दिया गया। Admin मंजूरी पर Coins Wallet से कटेंगे।','ok');await Promise.all([loadWallet(),loadRedemptions()]);}
  catch(error){say('Cash Redeem अनुरोध नहीं भेजा गया: '+error.message,'error');}
  finally{button.disabled=false;}
 });
@@ -650,7 +650,7 @@ async function loadAdminProducts(){
 }
 document.addEventListener('click',async event=>{
  const redeem=event.target.closest('[data-product-redeem]');
- if(redeem){const id=redeem.dataset.productRedeem,qty=Number($('productQty-'+id)?.value||1),pin=window.prompt('Product Redeem की पुष्टि के लिए 4 अंकों का Wallet PIN दर्ज करें:');if(!pin)return;if(!/^[0-9]{4}$/.test(pin)){say('4 अंकों का सही PIN दर्ज करें।','error');return;}redeem.disabled=true;try{await api('/rest/v1/rpc/sbpf_request_product_redemption',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_product_id:id,p_quantity:qty,p_pin:pin})});say('Product अनुरोध भेज दिया गया। Admin मंजूरी के बाद Coins कटेंगे।','ok');await Promise.all([loadWallet(),loadProductOrders()]);}catch(e){say('Product Redeem नहीं हुआ: '+e.message,'error');}finally{redeem.disabled=false;}}
+ if(redeem){const id=redeem.dataset.productRedeem,qty=Number($('productQty-'+id)?.value||1),pin=window.prompt('Product Redeem की पुष्टि के लिए 4 अंकों का Wallet PIN दर्ज करें:');if(!pin)return;if(!/^[0-9]{4}$/.test(pin)){say('4 अंकों का सही PIN दर्ज करें।','error');return;}redeem.disabled=true;try{const result=await api('/rest/v1/rpc/sbpf_request_product_redemption',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_product_id:id,p_quantity:qty,p_pin:pin})});if(!result?.success)throw new Error(result?.error||'Product Redeem अनुरोध नहीं हुआ।');say('Product अनुरोध भेज दिया गया। Admin मंजूरी के बाद Coins कटेंगे।','ok');await Promise.all([loadWallet(),loadProductOrders()]);}catch(e){say('Product Redeem नहीं हुआ: '+e.message,'error');}finally{redeem.disabled=false;}}
  const toggle=event.target.closest('[data-product-toggle]');
  if(toggle){const active=toggle.dataset.active!=='true';try{await api('/rest/v1/sbpf_reward_products?id=eq.'+encodeURIComponent(toggle.dataset.productToggle),{method:'PATCH',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({is_active:active,updated_at:new Date().toISOString()})});await Promise.all([loadAdminProducts(),loadProducts()]);}catch(e){say('Product स्थिति अपडेट नहीं हुई: '+e.message,'error');}}
 });
