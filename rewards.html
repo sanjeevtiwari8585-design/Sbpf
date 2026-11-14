@@ -151,6 +151,47 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
  .reward-category-card button{min-height:30px!important;padding:5px 3px!important;font-size:9px!important;line-height:1.2!important;border-radius:7px!important}
 }
 </style>
+
+<style id="sbpf-reward-zone-only-12-cards">
+/* Member Reward Zone: show only the twelve activity cards */
+main>.hero,
+main>.public-rewards-preview,
+main>#message,
+#adminPanel,
+#loginPrompt,
+.rewards-header #walletQuickButton,
+footer {display:none!important}
+#rewardMainContent > :not(#rewardCategoriesMemberGrid) {display:none!important}
+#rewardCategoriesMemberGrid {
+ display:grid!important;
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:10px!important;
+ padding:8px 0 28px!important;
+}
+#rewardCategoriesMemberGrid .reward-category-card {
+ min-height:112px!important;
+ padding:14px 10px!important;
+ display:flex!important;
+ align-items:center!important;
+ justify-content:center!important;
+ text-align:center!important;
+ border:1px solid #eadfc9!important;
+ border-radius:15px!important;
+ background:#fff!important;
+ box-shadow:0 3px 12px rgba(65,42,22,.06)!important;
+}
+#rewardCategoriesMemberGrid .reward-category-head {display:flex!important;flex-direction:column!important;align-items:center!important;gap:7px!important}
+#rewardCategoriesMemberGrid .reward-category-icon {width:38px!important;height:38px!important;min-width:38px!important;margin:0!important;font-size:21px!important}
+#rewardCategoriesMemberGrid .reward-category-card h3 {margin:0!important;font-size:14px!important;line-height:1.35!important}
+#rewardCategoriesMemberGrid .reward-category-card .tag {display:none!important}
+#rewardCategoriesMemberGrid .reward-category-card button {width:100%!important;min-height:32px!important;margin-top:6px!important;padding:6px!important;font-size:11px!important}
+@media(max-width:600px){
+ #rewardCategoriesMemberGrid {grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+ #rewardCategoriesMemberGrid .reward-category-card {min-height:106px!important;padding:11px 7px!important}
+ #rewardCategoriesMemberGrid .reward-category-card h3 {font-size:13px!important}
+}
+</style>
+
 </head>
 <body>
 
@@ -687,9 +728,12 @@ document.querySelectorAll('[data-demo-action]').forEach(btn=>btn.addEventListene
 async function loadRewardCategories(){
  const url='/rest/v1/sbpf_reward_categories?select=id,slug,title,description,icon,reward_label,reward_mode,action_label,destination_url,is_enabled,display_order,policy_note&is_enabled=eq.true&order=display_order.asc';
  const rows=await api(url);
- const cards=Array.isArray(rows)?rows:[];
- const render=items=>items.map(item=>{const watch=item.slug==='watch-earn';return '<article class="card reward-category-card" data-category="'+esc(item.slug)+'" data-destination-url="'+esc(item.destination_url||'')+'"><div class="reward-category-head"><div class="reward-category-icon">'+esc(item.icon)+'</div><h3>'+esc(item.title)+'</h3></div>'+'<span class="tag">'+esc(item.reward_label)+'</span><button type="button" data-reward-action="'+esc(item.slug)+'">'+esc(item.action_label)+'</button></article>';}).join('');
- ['rewardCategoriesPublicGrid','rewardCategoriesTestGrid','rewardCategoriesMemberGrid'].forEach(id=>{const el=$(id);if(el)el.innerHTML=cards.length?render(cards):'<p class="muted">अभी कोई Rewards कार्ड प्रकाशित नहीं है।</p>';});
+ const allowed=['watch-earn','spin-wheel','google-review','social-follow','post-share','daily-task','daily-checkin','referral-invite','campaign-participation','volunteer-service','app-website-visit','coin-wallet'];
+ const bySlug=new Map((Array.isArray(rows)?rows:[]).map(item=>[item.slug,item]));
+ const cards=allowed.map(slug=>bySlug.get(slug)).filter(Boolean);
+ const render=items=>items.map(item=>'<article class="card reward-category-card" data-category="'+esc(item.slug)+'" data-destination-url="'+esc(item.destination_url||'')+'"><div class="reward-category-head"><div class="reward-category-icon">'+esc(item.icon)+'</div><h3>'+esc(item.title)+'</h3></div><button type="button" data-reward-action="'+esc(item.slug)+'">खोलें</button></article>').join('');
+ const el=$('rewardCategoriesMemberGrid');
+ if(el)el.innerHTML=cards.length?render(cards):'<p class="muted">टास्क कार्ड उपलब्ध नहीं हैं।</p>';
  if(isAdmin)await loadAdminRewardCategories();
 }
 async function loadAdminRewardCategories(){
