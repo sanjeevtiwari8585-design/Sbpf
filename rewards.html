@@ -142,7 +142,11 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
 <section id="dashboard" class="hidden">
 <div id="walletGate" class="panel wallet-gate hidden">
  <div id="walletCreateStep"><h2>अपना SBPF Wallet बनाएँ</h2><p class="muted">आपका सदस्य सत्यापन सफल है। सबसे पहले अपना सुरक्षित Coin Wallet बनाएँ।</p><button id="createWalletButton" type="button">Create Wallet</button></div>
- <div id="walletPinStep" class="hidden"><h2>Wallet PIN सेट करें</h2><p class="muted">Wallet की सुरक्षा के लिए 4 अंकों का PIN बनाएँ। PIN भूलने पर Admin से रीसेट अनुरोध किया जा सकेगा।</p></div>
+ <div id="walletPinStep" class="hidden"><h2>Wallet PIN सेट करें</h2><p class="muted">Wallet की सुरक्षा के लिए 4 अंकों का PIN बनाएँ। PIN भूलने पर Admin से रीसेट अनुरोध किया जा सकेगा।</p><form id="walletPinForm" autocomplete="off">
+  <div><label for="walletPin">4 अंकों का Wallet PIN बनाएँ</label><input id="walletPin" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" minlength="4" autocomplete="new-password" required></div>
+  <div><label for="walletPinConfirm">PIN की पुष्टि करें</label><input id="walletPinConfirm" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" minlength="4" autocomplete="new-password" required></div>
+  <button id="walletPinButton" type="submit">Wallet PIN बनाएँ</button>
+ </form></div>
  <p id="walletPinResetState" class="muted" aria-live="polite"></p>
 </div>
 <div id="rewardMainContent" class="hidden">
@@ -166,11 +170,7 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
 <div class="section-title"><h2>मेरा SBPF Wallet</h2><span class="tag">सुरक्षित Coin लेन-देन</span></div>
 <div class="panel" id="walletPanel">
  <div id="walletState" class="muted">Wallet स्थिति जाँची जा रही है…</div><button id="forgotWalletPinButton" class="alt hidden" type="button">Forgot PIN</button>
- <form id="walletPinForm" class="hidden" autocomplete="off">
-  <div><label for="walletPin">4 अंकों का Wallet PIN बनाएँ</label><input id="walletPin" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" minlength="4" autocomplete="new-password" required></div>
-  <div><label for="walletPinConfirm">PIN की पुष्टि करें</label><input id="walletPinConfirm" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" minlength="4" autocomplete="new-password" required></div>
-  <button id="walletPinButton" type="submit">Wallet PIN बनाएँ</button>
- </form>
+ 
  <form id="walletTransferForm" class="hidden" autocomplete="off" style="margin-top:14px">
   <div><label for="walletRecipient">प्राप्तकर्ता का SBPF Member ID</label><input id="walletRecipient" maxlength="40" autocapitalize="characters" required placeholder="SBPF Member ID"></div>
   <div><label for="walletAmount">कितने Coin भेजने हैं?</label><input id="walletAmount" type="number" min="1" max="100000" step="1" required placeholder="Coin की संख्या"></div>
@@ -208,7 +208,7 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
   <div><label for="taskTitle">टास्क शीर्षक</label><input id="taskTitle" required maxlength="140"></div>
   <div><label for="taskType">टास्क प्रकार</label><select id="taskType"><option value="video_watch">वीडियो टास्क</option><option value="daily_task">दैनिक टास्क</option><option value="team_service">टीम सेवा</option></select></div>
   <div><label for="taskPoints">Coin रिवॉर्ड</label><input id="taskPoints" type="number" min="1" step="1" required></div>
-  <div><label for="taskVideo">वीडियो URL (यदि हो)</label><input id="taskVideo" type="url"></div>
+  <div><label for="taskVideo">वीडियो URL (यदि हो)</label><input id="taskVideo" type="url"></div><div><label><input id="taskEvidenceRequired" type="checkbox" checked> प्रमाण / Admin समीक्षा आवश्यक</label><small class="muted">इसे हटाने पर केवल सिस्टम द्वारा सत्यापित टास्क तुरंत Coin देंगे।</small></div>
   <div class="wide"><label for="taskDescription">विवरण / निर्देश</label><textarea id="taskDescription" required></textarea></div>
   <div class="wide"><button type="submit">टास्क ड्राफ्ट सेव करें</button></div>
  </form>
@@ -344,12 +344,12 @@ document.getElementById('walletPinForm')?.addEventListener('submit',async event=
 });
 $('createWalletButton').addEventListener('click',async()=>{const b=$('createWalletButton');b.disabled=true;try{await api('/rest/v1/rpc/sbpf_wallet_create',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});say('Wallet सफलतापूर्वक बन गया। अब PIN सेट करें।','ok');await loadWallet();}catch(e){say('Wallet नहीं बन पाया: '+e.message,'error');}finally{b.disabled=false;}});
 $('forgotWalletPinButton').addEventListener('click',async()=>{if(!window.confirm('Forgot PIN अनुरोध Admin को भेजें? Admin की मंजूरी के बाद आप नया PIN सेट कर सकेंगे।'))return;try{await api('/rest/v1/rpc/sbpf_wallet_request_pin_reset',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});$('walletPinResetState').textContent='PIN रीसेट अनुरोध Admin के पास भेज दिया गया है। मंजूरी के बाद नया PIN सेट करें।';say('PIN रीसेट अनुरोध भेज दिया गया।','ok');}catch(e){say('PIN रीसेट अनुरोध नहीं भेजा गया: '+e.message,'error');}});
-$('walletQuickButton').addEventListener('click',()=>{const target=$('walletPanel')||$('walletGate');target?.scrollIntoView({behavior:'smooth',block:'start'});});
+$('walletQuickButton').addEventListener('click',()=>{const gate=$('walletGate'),target=gate&&!gate.classList.contains('hidden')?gate:$('walletPanel');target?.scrollIntoView({behavior:'smooth',block:'start'});});
 document.getElementById('walletTransferForm')?.addEventListener('submit',async event=>{
  event.preventDefault();
  const recipient=$('walletRecipient').value.trim().toUpperCase();
  const amount=Number($('walletAmount').value),pin=$('walletTransferPin').value;
- if(!recipient||!Number.isInteger(amount)||amount<=0||amount>100000||!/^\\d{4}$/.test(pin)){say('Member ID, सही Coin राशि और 4 अंकों का PIN दर्ज करें।','error');return;}
+ if(!recipient||!Number.isInteger(amount)||amount<=0||amount>100000||!/^[0-9]{4}$/.test(pin)){say('Member ID, सही Coin राशि और 4 अंकों का PIN दर्ज करें।','error');return;}
  if(!window.confirm(recipient+' को '+amount+' Coin भेजने की पुष्टि करें?'))return;
  const button=$('walletTransferButton');button.disabled=true;
  try{
@@ -379,18 +379,21 @@ async function loadTasks(){
  }).join(''):'<div class="card"><h3>अभी कोई टास्क प्रकाशित नहीं है</h3><p>एडमिन द्वारा वीडियो, दैनिक और टीम सेवा टास्क प्रकाशित होने पर वे यहाँ दिखाई देंगे।</p></div>';
 }
 window.submitTask=async function(taskId,taskType,evidenceRequired){
- const proof=window.prompt('इस कार्य को कैसे पूरा किया? संक्षिप्त विवरण लिखें:');
- if(!proof||!proof.trim())return;
- let evidence=null,teamId=null;
- if(evidenceRequired){evidence=window.prompt('प्रमाण का URL दें (यदि उपलब्ध हो), अन्यथा खाली छोड़ें:');}
+ let teamId=null;
  if(taskType==='team_service'){const select=$('team-'+taskId);teamId=select?.value||null;if(!teamId){say('टीम सेवा टास्क के लिए सक्रिय टीम चुनना आवश्यक है।','error');return;}}
  try{
+  if(!evidenceRequired){
+   const result=await api('/rest/v1/rpc/sbpf_claim_reward_task',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_task_id:taskId,p_team_id:teamId})});
+   say('टास्क सिस्टम द्वारा सत्यापित हुआ। '+Number(result.coins_awarded||0)+' Coin तुरंत Wallet में जोड़ दिए गए।','ok');await loadWallet();return;
+  }
+  const proof=window.prompt('इस कार्य को कैसे पूरा किया? संक्षिप्त विवरण लिखें:');if(!proof||!proof.trim())return;
+  const evidence=window.prompt('प्रमाण का URL दें (यदि उपलब्ध हो), अन्यथा खाली छोड़ें:');
   await api('/rest/v1/sbpf_reward_submissions',{method:'POST',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({task_id:taskId,member_profile_id:user.id,team_id:teamId,proof_note:proof.trim(),evidence_url:evidence?.trim()||null})});
-  say('आपका टास्क जमा हो गया है। एडमिन समीक्षा के बाद स्वीकृत Coin आपके वॉलेट में जुड़ेंगे।','ok');
- }catch(error){say('टास्क जमा नहीं हुआ: '+error.message,'error');}
+  say('टास्क जमा हो गया। Admin समीक्षा के बाद स्वीकृत Coin Wallet में जुड़ेंगे।','ok');
+ }catch(error){say('टास्क पूरा नहीं हुआ: '+error.message,'error');}
 };
 async function loadAdmin(){
- $('adminLaunchState').textContent='Rewards '+(config.rewards_enabled?'चालू हैं':'अभी बंद हैं')+' · 100 Coin = ₹1 · INR भुगतान मैन्युअल';
+ $('adminLaunchState').textContent='Rewards '+(config.rewards_enabled?'चालू हैं':'अभी बंद हैं')+' · '+Number(config.coin_per_inr||100)+' Coin = ₹1 · Cash भुगतान मैन्युअल';
  $('toggleRewards').textContent=config.rewards_enabled?'Rewards बंद करें':'Rewards चालू करें';
  const [taskRows,subRows,redRows,transferRows,productRows,pinRows]=await Promise.all([
   api('/rest/v1/sbpf_reward_tasks?select=id,title,task_type,points_reward,status,created_at&order=created_at.desc'),
@@ -437,7 +440,7 @@ $('taskForm').addEventListener('submit',async event=>{
  const title=$('taskTitle').value.trim(),type=$('taskType').value,points=Number($('taskPoints').value),description=$('taskDescription').value.trim(),video=$('taskVideo').value.trim();
  if(!title||!description||!Number.isInteger(points)||points<=0){say('टास्क शीर्षक, विवरण और 1 या अधिक Coin आवश्यक हैं।','error');return;}
  const code='rw-'+type+'-'+Date.now();
- try{await api('/rest/v1/sbpf_reward_tasks',{method:'POST',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({task_code:code,title,description,task_type:type,points_reward:points,video_url:video||null,evidence_required:true,created_by:user.id,status:'draft'})});$('taskForm').reset();say('नया टास्क Draft में सेव हुआ। समीक्षा के बाद Publish करें।','ok');await loadAdmin();}catch(e){say('टास्क सेव नहीं हुआ: '+e.message,'error');}
+ try{await api('/rest/v1/sbpf_reward_tasks',{method:'POST',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({task_code:code,title,description,task_type:type,points_reward:points,video_url:video||null,evidence_required:$('taskEvidenceRequired').checked,created_by:user.id,status:'draft'})});$('taskForm').reset();say('नया टास्क Draft में सेव हुआ। समीक्षा के बाद Publish करें।','ok');await loadAdmin();}catch(e){say('टास्क सेव नहीं हुआ: '+e.message,'error');}
 });
 $('toggleRewards').addEventListener('click',async()=>{
  const next=!config.rewards_enabled;
