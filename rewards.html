@@ -358,7 +358,6 @@ async function load(){
  try{
   user=await api('/auth/v1/user');
   if(!user?.id)throw new Error('सुरक्षित सदस्य सत्र उपलब्ध नहीं है।');
-  $('entryGate').classList.add('hidden');
   const adminResult=await api('/rest/v1/rpc/is_admin',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
   isAdmin=adminResult===true;
   const rows=await api('/rest/v1/members?select=id,member_id,full_name,status,membership_status,payment_status,kyc_status,membership_end_date&user_id=eq.'+encodeURIComponent(user.id)+'&limit=1');
@@ -374,9 +373,12 @@ async function load(){
   }
   if(!memberIsVerified&&!isAdmin){
    $('loginPrompt').classList.remove('hidden');
+   $('entryGate').classList.remove('hidden');
+   $('entryGateMessage').textContent=!isVerified(member)?'सक्रिय सदस्यता, भुगतान और KYC आवश्यक है।':'वार्षिक सत्यापन या Rewards Zone की अनुमति सक्रिय नहीं है।';
    say(!isVerified(member)?'आपकी सक्रिय सदस्यता, भुगतान, KYC या वैधता की पुष्टि अधूरी है।':'वार्षिक सत्यापन या Rewards Zone की अनुमति सक्रिय नहीं है।','error');
    return;
   }
+  $('entryGate').classList.add('hidden');
   if(memberIsVerified) $('memberIdentity').textContent=(member.full_name||'SBPF सदस्य')+' · '+(member.member_id||'');
   if(isAdmin) $('memberIdentity').textContent=(member?.full_name||user.user_metadata?.full_name||'SBPF Admin')+' · Admin';
   try{const settings=await api('/rest/v1/sbpf_rewards_config?select=coin_per_inr,manual_payout,rewards_enabled&id=eq.1');if(Array.isArray(settings)&&settings[0])config=settings[0];}catch(settingsError){console.warn('Rewards config unavailable; using safe defaults.',settingsError);}
