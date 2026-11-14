@@ -20,7 +20,7 @@ main{max-width:1060px;margin:auto;padding:24px 16px 48px}
 .btn.alt,button.alt{background:var(--green)}button:disabled{opacity:.55;cursor:wait}
 .notice{margin:16px 0;padding:13px 15px;border:1px solid #ead9a1;border-left:4px solid var(--gold);border-radius:12px;background:var(--cream);font-size:14px}
 .notice.error{border-color:#e9c6c9;background:#fff1f2;color:#8b1d2b}.notice.ok{border-color:#c9e4d1;background:#eff9f1;color:#155d35}
-.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}
 .stat,.card,.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px;box-shadow:0 4px 16px #25151008;min-width:0}
 .stat small{display:block;color:var(--muted);font-weight:700}.stat strong{display:block;color:var(--wine);font-size:clamp(22px,4vw,30px);line-height:1.25;margin-top:5px}
 .section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:26px 0 12px}.section-title h2{margin:0;color:var(--wine);font-size:21px}
@@ -31,7 +31,7 @@ main{max-width:1060px;margin:auto;padding:24px 16px 48px}
 form{display:grid;gap:9px}label{font-size:13px;font-weight:800}input,select,textarea{width:100%;padding:11px 12px;border:1px solid #d8cfc7;border-radius:10px;background:#fff;color:var(--ink);font:inherit}textarea{min-height:78px;resize:vertical}
 .hidden{display:none!important}.muted{color:var(--muted);font-size:13px}
 footer{max-width:1060px;margin:auto;padding:0 16px 30px;text-align:center;color:var(--muted);font-size:12px}
-@media(max-width:640px){main{padding:14px 12px 36px}.hero{padding:22px 15px}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:1/-1}.grid{grid-template-columns:1fr}.section-title h2{font-size:19px}.stat,.card,.panel{padding:14px}}
+@media(max-width:640px){main{padding:14px 12px 36px}.hero{padding:22px 15px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stats .stat:last-child{grid-column:auto}.grid{grid-template-columns:1fr}.section-title h2{font-size:19px}.stat,.card,.panel{padding:14px}}
 .rewards-header{position:sticky;top:0;z-index:20;min-height:64px;padding:10px max(12px,calc((100% - 1060px)/2))}
 .header-member{font-size:12px;line-height:1.35;color:#fff6dd;max-width:190px;overflow-wrap:anywhere}
 .wallet-quick{background:#fff;color:var(--wine);border:1px solid #f3d98b;border-radius:999px;padding:8px 13px;white-space:nowrap;box-shadow:0 3px 10px #0002}
@@ -192,14 +192,15 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
  <p id="walletPinResetState" class="muted" aria-live="polite"></p>
 </div>
 <div id="rewardMainContent" class="hidden">
-<section class="member-levels panel"><div class="section-title"><h2>मेरे सदस्य स्तर</h2><span class="tag">5 Level Matrix</span></div><div id="referralLevelsGrid" class="grid level-grid"><div class="muted">स्तर लोड हो रहे हैं…</div></div><div id="referralLevelMembers" class="list" aria-live="polite"><p class="muted">किसी Level पर क्लिक करके सदस्य देखें।</p></div></section>
+
 <div class="stats">
-<div class="stat"><small>मेरे SBPF Coins</small><strong id="coinBalance">0</strong></div>
-<div class="stat"><small>अनुमानित INR मूल्य</small><strong id="inrBalance">₹0.00</strong></div>
-<div class="stat"><small>सदस्य सत्यापन</small><strong id="memberStatus">—</strong></div>
+<div class="stat"><small>Coin</small><strong id="coinBalance">0</strong></div>
+<div class="stat"><small>INR</small><strong id="inrBalance">₹0.00</strong></div>
+<div class="stat"><small>Member ID</small><strong id="memberIdDisplay">—</strong></div>
+<div class="stat"><small>Level 1</small><strong id="levelOneCount">0</strong></div>
 </div>
-<div class="section-title"><h2>🎯 Rewards गतिविधियाँ</h2><span class="tag">Supabase से लाइव</span></div>
- <div id="rewardCategoriesMemberGrid" class="grid reward-categories-grid"><div class="card">Rewards कार्ड लोड हो रहे हैं…</div></div>
+<div class="section-title"><h2>कार्य</h2></div>
+ <div id="rewardCategoriesMemberGrid" class="grid reward-categories-grid"><div class="card">लोड हो रहा है…</div></div>
 <div class="section-title"><h2>🎡 Spin & Win</h2><span class="tag">हर 24 घंटे में 1 मौका</span></div>
 <div class="panel" id="memberSpinPanel">
  <p class="spin-info">व्हील पर 10, 40, 50 और 100 Coin के चार समान परिणाम हैं। हर परिणाम की संभावना 25% है।</p>
@@ -380,6 +381,7 @@ async function load(){
   }
   $('entryGate').classList.add('hidden');
   if(memberIsVerified) $('memberIdentity').textContent=(member.full_name||'SBPF सदस्य')+' · '+(member.member_id||'');
+  if(memberIsVerified) $('memberIdDisplay').textContent=member.member_id||'—';
   if(isAdmin) $('memberIdentity').textContent=(member?.full_name||user.user_metadata?.full_name||'SBPF Admin')+' · Admin';
   try{const settings=await api('/rest/v1/sbpf_rewards_config?select=coin_per_inr,manual_payout,rewards_enabled&id=eq.1');if(Array.isArray(settings)&&settings[0])config=settings[0];}catch(settingsError){console.warn('Rewards config unavailable; using safe defaults.',settingsError);}
   $('adminPanel').classList.toggle('hidden',!isAdmin);
@@ -684,7 +686,7 @@ async function loadRewardCategories(){
  const url='/rest/v1/sbpf_reward_categories?select=id,slug,title,description,icon,reward_label,reward_mode,action_label,destination_url,is_enabled,display_order,policy_note&is_enabled=eq.true&order=display_order.asc';
  const rows=await api(url);
  const cards=Array.isArray(rows)?rows:[];
- const render=items=>items.map(item=>{const watch=item.slug==='watch-earn';return '<article class="card reward-category-card" data-category="'+esc(item.slug)+'" data-destination-url="'+esc(item.destination_url||'')+'"><div class="reward-category-head"><div class="reward-category-icon">'+esc(item.icon)+'</div><h3>'+esc(item.title)+'</h3></div>'+'<p>'+esc(item.description)+'</p><span class="tag">'+esc(item.reward_label)+'</span><button type="button" data-reward-action="'+esc(item.slug)+'">'+esc(item.action_label)+'</button></article>';}).join('');
+ const render=items=>items.map(item=>{const watch=item.slug==='watch-earn';return '<article class="card reward-category-card" data-category="'+esc(item.slug)+'" data-destination-url="'+esc(item.destination_url||'')+'"><div class="reward-category-head"><div class="reward-category-icon">'+esc(item.icon)+'</div><h3>'+esc(item.title)+'</h3></div>'+'<span class="tag">'+esc(item.reward_label)+'</span><button type="button" data-reward-action="'+esc(item.slug)+'">'+esc(item.action_label)+'</button></article>';}).join('');
  ['rewardCategoriesPublicGrid','rewardCategoriesTestGrid','rewardCategoriesMemberGrid'].forEach(id=>{const el=$(id);if(el)el.innerHTML=cards.length?render(cards):'<p class="muted">अभी कोई Rewards कार्ड प्रकाशित नहीं है।</p>';});
  if(isAdmin)await loadAdminRewardCategories();
 }
@@ -766,10 +768,10 @@ demoBonusButton?.addEventListener('click',()=>{
 async function loadReferralLevels(){
  const rows=await api('/rest/v1/rpc/get_my_referral_tree',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
  const tree=Array.isArray(rows)?rows:[];
- $('referralLevelsGrid').innerHTML=[1,2,3,4,5].map(n=>{const count=tree.filter(m=>Number(m.level)===n).length;return '<div class="level-card"><small>Level '+n+'</small><strong>'+count.toLocaleString('en-IN')+'</strong><button type="button" data-referral-level="'+n+'">सदस्य देखें</button></div>';}).join('');
- $('referralLevelMembers').innerHTML='<p class="muted">किसी Level पर क्लिक करके सदस्य का नाम और Member ID देखें।</p>';
+ const count=tree.filter(m=>Number(m.level)===1).length;
+ $('levelOneCount').textContent=count.toLocaleString('en-IN');
 }
-document.addEventListener('click',event=>{const btn=event.target.closest('[data-referral-level]');if(!btn)return;const level=Number(btn.dataset.referralLevel);api('/rest/v1/rpc/get_my_referral_tree',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'}).then(rows=>{const data=(Array.isArray(rows)?rows:[]).filter(m=>Number(m.level)===level);$('referralLevelMembers').innerHTML='<h3 style="color:var(--wine);font-size:16px">Level '+level+' · '+data.length+' सदस्य</h3>'+(data.length?data.map(m=>'<div class="row"><div><b>'+esc(m.full_name||'SBPF सदस्य')+'</b><small>'+esc(m.member_id||'ID उपलब्ध नहीं')+'</small></div><span class="tag">'+esc(m.status||'')+'</span></div>').join(''):'<p class="muted">इस Level में अभी कोई सदस्य नहीं जुड़ा है।</p>');}).catch(e=>say('स्तर के सदस्य नहीं खुल सके: '+e.message,'error'));});
+
 async function loadProducts(){
  const rows=await api('/rest/v1/sbpf_reward_products?select=id,title,description,image_url,coins_cost,stock_quantity&is_active=eq.true&order=display_order.asc');
  const products=Array.isArray(rows)?rows:[];
