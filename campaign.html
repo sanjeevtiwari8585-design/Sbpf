@@ -51,6 +51,13 @@ footer{background:#241d20;color:#f9f3ec;text-align:center;padding:25px 16px}foot
   <p id="campaignDescription">Supabase से अभियान की जानकारी लोड हो रही है।</p>
   <div class="stats"><span id="categoryCount" class="chip">श्रेणियाँ…</span><span id="contentCount" class="chip">सामग्री…</span></div>
  </section>
+ <section id="campaignWorkflowEntry" class="hero" style="display:none;margin-top:16px;border:2px solid #d7b34b">
+  <div class="eyebrow">MEMBER WORKFLOW • EXISTING SBPF SUPABASE</div>
+  <h2 id="workflowEntryTitle">अभियान में भाग लें</h2>
+  <p id="workflowEntryDescription">सदस्य लॉगिन के बाद संबंधित अभियान की सुविधा खोलें।</p>
+  <div class="stats" id="workflowEntryLinks"></div>
+  <p class="seva-note">शिकायत/अनुरोध और निजी स्थिति केवल सदस्य लॉगिन के बाद दिखाई जाएगी। अधिकारी नियुक्ति केवल अधिकृत Admin करेगा।</p>
+ </section>
  <section id="bvsEntry" class="hero" style="display:none;margin-top:16px;border:2px solid #d7b34b">
   <div class="eyebrow">SWARNIM VYAPAR SPECIAL SERVICE</div>
   <h2>Bhumi Vyapar System (BVS)</h2>
@@ -155,6 +162,22 @@ async function init(){
   $('campaignName').textContent=campaign.name;
   $('campaignDescription').textContent=campaign.description||'स्वर्णिम भारत परिवार फाउंडेशन का अभियान।';
   $('breadcrumbCampaign').textContent=campaign.name;
+  const workflowConfig={
+   'swarnim-samvad':{title:'स्वर्णिम संवाद — शिकायत और समाधान',description:'नागरिक शिकायत दर्ज करें, शिकायत संख्या और टीम की कार्रवाई की स्थिति सदस्य पैनल में देखें।',action:'शिकायत दर्ज करें / स्थिति देखें'},
+   'swarnim-prahar':{title:'स्वर्णिम प्रहार — जनहित गतिविधि',description:'जागरूकता गतिविधि या जनहित रिपोर्ट जमा करें और समीक्षा की स्थिति देखें।',action:'गतिविधि रिपोर्ट जमा करें'},
+   'swarnim-sipahi':{title:'स्वर्णिम सिपाही — स्वयंसेवक सेवा',description:'स्वयंसेवक बनने का अनुरोध, कौशल और उपलब्धता सदस्य पैनल से जमा करें। नियुक्ति Admin की स्वीकृति के बाद होगी।',action:'स्वयंसेवक अनुरोध भेजें'}
+  };
+  const workflow=workflowConfig[campaign.slug];
+  if(workflow){
+   $('campaignWorkflowEntry').style.display='block';
+   $('workflowEntryTitle').textContent=workflow.title;
+   $('workflowEntryDescription').textContent=workflow.description;
+   $('workflowEntryLinks').innerHTML='<a class="chip" href="member-services.html?campaign='+encodeURIComponent(campaign.slug)+'">'+workflow.action+'</a>'+
+    '<a class="chip" href="admin-samvad-workflow.html">Admin अधिकारी प्रबंधन</a>'+
+    '<a class="chip" href="campaign.html?slug=swarnim-samvad">स्वर्णिम संवाद</a>'+
+    '<a class="chip" href="campaign.html?slug=swarnim-prahar">स्वर्णिम प्रहार</a>'+
+    '<a class="chip" href="campaign.html?slug=swarnim-sipahi">स्वर्णिम सिपाही</a>';
+  }
   const [catRows,contentRows]=await Promise.all([
    getRows('/rest/v1/campaign_categories?campaign_id=eq.'+encodeURIComponent(campaign.id)+'&is_active=eq.true&select=id,name,slug,description,sort_order&order=sort_order.asc'),
    getRows('/rest/v1/campaign_content?campaign_id=eq.'+encodeURIComponent(campaign.id)+'&is_active=eq.true&select=id,title,slug,summary,content,image_url,source_url,video_url,category_id,sort_order&order=sort_order.asc')
