@@ -151,6 +151,11 @@ async function load(){try{
  const d=await rpc('get_my_member_dashboard');dashboard=Array.isArray(d)?d[0]:d;
  $('auth').classList.add('hidden');$('app').classList.remove('hidden');render();
  await Promise.all([loadMemberWallet(),loadFocusAreas(),loadCampaigns()]);
+ const requestedCampaign=new URLSearchParams(location.search).get('campaign');
+ if(requestedCampaign&&['swarnim-samvad','swarnim-prahar','swarnim-sipahi'].includes(requestedCampaign)){
+  const target=activeCampaigns.find(x=>x.slug===requestedCampaign);
+  if(target)await openView('campaign-'+Number(target.id));
+ }
  const returnTo=new URLSearchParams(location.search).get('return_to');if(['swarnim-ai-studio.html','swarnim-creator.html','swarnim-video-editor.html'].includes(returnTo)){location.replace(returnTo);return;}
  }catch(e){token='';localStorage.removeItem('sbpf_access_token');msg(e.message,'error')}}
 function isVerifiedForRewards(row){
