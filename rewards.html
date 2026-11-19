@@ -306,14 +306,14 @@ footer {display:none!important}
 </div>
 <div class="section-title"><h2>कार्य</h2></div>
  <div id="rewardCategoriesMemberGrid" class="grid reward-categories-grid"><div class="card">लोड हो रहा है…</div></div>
-<div class="section-title"><h2>🎡 SBPF Spin & Win</h2><span class="tag">हर 3 घंटे में 1 मौका · 24 घंटे में अधिकतम 8</span></div>
+<div class="section-title"><h2>🎡 SBPF Spin & Win</h2><span class="tag">हर 3 घंटे में 1 निःशुल्क Spin</span></div>
 <div class="panel" id="memberSpinPanel">
  <p class="spin-info">एक ही SBPF Spin Wheel में 12 अलग-अलग Coin इनाम हैं। हर खंड में एक इनाम है। इनाम मिलने की संभावना नीचे स्पष्ट दी गई है।</p>
  <div class="spin-wheel-grid single-spin-wheel-grid">
   <article class="spin-wheel-card single-spin-wheel-card"><div class="spin-wheel-heading"><b>🎡 SBPF Spin & Win</b><span>12 Coin खंड</span></div><div class="spin-wheel-wrap" id="memberSpinWrap1"><button class="spin-zoom-close" data-spin-close="1" type="button" aria-label="बंद करें">×</button><div class="spin-pointer"></div><div id="memberSpinWheel1" class="spin-wheel twelve wheel-theme-1"></div></div><button class="spin-action" type="button" data-spin-wheel="1">🎡 Spin करें</button><div class="spin-result" id="memberSpinResult1" aria-live="polite">Spin के लिए तैयार</div><div class="spin-prize-odds" id="memberSpinPrizeOdds"></div></article>
  </div>
- <div class="spin-timer-panel"><b>⏳ अगला Spin कब मिलेगा?</b><strong id="memberSpinCountdown">सदस्य सत्यापन के बाद समय दिखेगा</strong><span id="memberSpinCountLeft">आज के बाकी मौके: 8 / 8</span></div>
- <p class="spin-info" id="memberSpinStatus">हर सदस्य को 24 घंटे में अधिकतम 8 Spin मिलेंगे। सभी तीन Wheels के Spin एक ही सीमा में गिने जाएँगे।</p>
+ <div class="spin-timer-panel"><b>⏳ अगला Spin कब मिलेगा?</b><strong id="memberSpinCountdown">सदस्य सत्यापन के बाद समय दिखेगा</strong><span id="memberSpinCountLeft">अगला Spin: उपलब्धता जाँच रहे हैं</span></div>
+ <p class="spin-info" id="memberSpinStatus">हर 3 घंटे में एक निःशुल्क Spin मिलेगा। छूटा हुआ मौका आगे नहीं जुड़ेगा।</p>
 </div>
 <div class="section-title"><h2>आज के उपलब्ध टास्क</h2><span class="tag">Admin-approved</span></div>
 <div id="tasks" class="grid"><div class="card">टास्क लोड हो रहे हैं…</div></div>
@@ -739,8 +739,8 @@ if(spinButton&&spinWheel){
   },4100);
  });
 }
-const spinPrizeList=[11,21,51,101,251,551,1100,2100,5100,11000,21000,51000];
-const spinPrizeOdds=[30,25,20,10,7,4,2,1,.5,.3,.15,.05];
+const spinPrizeList=[10,20,30,40,50,100,200,300,500,1000,2000,5000];
+const spinPrizeOdds=[6,6,6,6,6,16.75,16.75,16.75,16.75,1,1,1];
 const spinButtons=[...document.querySelectorAll('[data-spin-wheel]')];
 const spinTimers={busy:false,rotation:{1:0},countdown:null};
 {
@@ -766,21 +766,18 @@ function fmtSpinTime(ms){if(ms<=0)return 'अभी उपलब्ध';const to
 let spinRefreshTimer=null,spinCountdownTarget=null,spinCountToday=0;
 async function refreshSpinStatus(){
  if(!user?.id||!token)return;
- const since=new Date(Date.now()-24*60*60*1000).toISOString();
- const rows=await api('/rest/v1/sbpf_reward_spins?select=created_at,wheel_number&member_profile_id=eq.'+encodeURIComponent(user.id)+'&created_at=gte.'+encodeURIComponent(since)+'&order=created_at.desc&limit=8');
- spinCountToday=Array.isArray(rows)?rows.length:0;
- const last=rows?.[0]?.created_at?new Date(rows[0].created_at).getTime():0;
- const earliest=rows?.length>=8?new Date(rows[rows.length-1].created_at).getTime()+24*60*60*1000:0;
- spinCountdownTarget=earliest|| (last?last+3*60*60*1000:0);
- $('memberSpinCountLeft').textContent='आज के बाकी मौके: '+Math.max(0,8-spinCountToday)+' / 8';
- spinButtons.forEach(b=>b.disabled=!config?.rewards_enabled||spinTimers.busy||spinCountToday>=8||(spinCountdownTarget>Date.now()));
- $('memberSpinStatus').textContent=spinCountToday>=8?'आज के सभी 8 मौके पूरे हो गए। सबसे पुराना Spin 24 घंटे पुराना होने पर अगला मौका खुलेगा।':'एक ही Spin Wheel पर 24 घंटे में अधिकतम 8 मौके। हर Spin के बीच 3 घंटे का अंतर।';
- if(!config?.rewards_enabled){$('memberSpinStatus').textContent='Spin Wheel तैयार है। वास्तविक Coin Spin अभी Rewards Zone लॉन्च होने तक बंद है।';$('memberSpinCountdown').textContent='Rewards लॉन्च की प्रतीक्षा';}
+ const rows=await api('/rest/v1/sbpf_reward_spins?select=created_at&member_profile_id=eq.'+encodeURIComponent(user.id)+'&order=created_at.desc&limit=1');
+ const last=Array.isArray(rows)&&rows[0]?.created_at?new Date(rows[0].created_at).getTime():0;
+ spinCountdownTarget=last?last+3*60*60*1000:0;
+ const left=spinCountdownTarget-Date.now();
+ $('memberSpinCountLeft').textContent=left>0?'अगला Spin '+fmtSpinTime(left)+' में':'अगला Spin: उपलब्ध';
+ spinButtons.forEach(b=>b.disabled=spinTimers.busy||left>0);
+ $('memberSpinStatus').textContent=left>0?'आपका अगला निःशुल्क Spin 3 घंटे पूरे होने पर मिलेगा।':'आपका निःशुल्क Spin उपलब्ध है।';
  if(!spinRefreshTimer)spinRefreshTimer=window.setInterval(()=>{
-  const left=spinCountdownTarget?spinCountdownTarget-Date.now():0;
-  $('memberSpinCountdown').textContent=fmtSpinTime(left);
-  spinButtons.forEach(b=>b.disabled=!config?.rewards_enabled||spinTimers.busy||spinCountToday>=8||left>0);
-  if(left<=0){spinButtons.forEach(b=>b.disabled=!config?.rewards_enabled||spinTimers.busy);$('memberSpinCountLeft').textContent='आज के बाकी मौके: '+Math.max(0,8-spinCountToday)+' / 8';}
+  const remaining=spinCountdownTarget?spinCountdownTarget-Date.now():0;
+  $('memberSpinCountdown').textContent=fmtSpinTime(remaining);
+  $('memberSpinCountLeft').textContent=remaining>0?'अगला Spin '+fmtSpinTime(remaining)+' में':'अगला Spin: उपलब्ध';
+  spinButtons.forEach(b=>b.disabled=spinTimers.busy||remaining>0);
  },1000);
 }
 spinButtons.forEach(button=>button.addEventListener('click',async()=>{
@@ -808,7 +805,7 @@ spinButtons.forEach(button=>button.addEventListener('click',async()=>{
  }catch(e){
   spinTimers.busy=false;
   const msg=e.message||'Spin अभी उपलब्ध नहीं है।';
-  $('memberSpinResult'+wheelNo).textContent=msg.includes('SPIN_COOLDOWN_ACTIVE')?'अगला Spin 3 घंटे बाद मिलेगा।':msg.includes('DAILY_SPIN_LIMIT_REACHED')?'24 घंटे के 8 Spin पूरे हो चुके हैं।':msg.includes('REWARDS_NOT_LAUNCHED')?'Rewards Zone अभी Admin द्वारा लॉन्च नहीं किया गया है।':msg.includes('LOGIN_REQUIRED')?'पहले सदस्य सत्यापन पूरा करें।':msg.includes('VERIFIED_ACTIVE_MEMBER_REQUIRED')?'सक्रिय और सत्यापित सदस्य ही Spin कर सकते हैं।':msg.includes('ANNUAL_VERIFICATION_REQUIRED')?'इस वर्ष का सदस्य सत्यापन आवश्यक है।':msg.includes('REWARDS_ZONE_ACCESS_REQUIRED')?'आपके सदस्य ID पर Rewards Zone अनुमति सक्रिय नहीं है।':msg;
+  $('memberSpinResult'+wheelNo).textContent=msg.includes('SPIN_COOLDOWN_ACTIVE')?'अगला Spin 3 घंटे बाद मिलेगा।':msg.includes('DAILY_SPIN_LIMIT_REACHED')?'अगला Spin 3 घंटे बाद मिलेगा।':msg.includes('LOGIN_REQUIRED')?'पहले सदस्य सत्यापन पूरा करें।':msg.includes('VERIFIED_ACTIVE_MEMBER_REQUIRED')?'सक्रिय और सत्यापित सदस्य ही Spin कर सकते हैं।':msg.includes('ANNUAL_VERIFICATION_REQUIRED')?'इस वर्ष का सदस्य सत्यापन आवश्यक है।':msg.includes('REWARDS_ZONE_ACCESS_REQUIRED')?'आपके सदस्य ID पर Rewards Zone अनुमति सक्रिय नहीं है।':msg;
   await refreshSpinStatus().catch(()=>{});
  }
 }));
