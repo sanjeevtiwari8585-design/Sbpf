@@ -750,7 +750,7 @@ const spinTimers={busy:false,rotation:{1:0},countdown:null};
   let cursor=0;const stops=spinPrizeOdds.map(v=>{const start=cursor;cursor+=v*3.6;return start.toFixed(4)+'deg '+cursor.toFixed(4)+'deg';});
   face.style.background='conic-gradient('+spinPrizeOdds.map((v,i)=>palette[i]+' '+stops[i]).join(',')+')';
   const labels=document.createElement('div');labels.className='spin-wheel-labels spin-wheel-labels-12';
-  spinPrizeList.forEach((prize,index)=>{const label=document.createElement('span');label.textContent=prize.toLocaleString('en-IN');const angle=index*30+15;label.style.transform='rotate('+angle+'deg) translateY(-'+(wrap.clientWidth*.355)+'px) rotate(-'+angle+'deg)';labels.appendChild(label)});
+  let prizeAngle=0;spinPrizeList.forEach((prize,index)=>{const label=document.createElement('span');label.textContent=prize.toLocaleString('en-IN');const angle=prizeAngle+(spinPrizeOdds[index]*3.6/2);prizeAngle+=spinPrizeOdds[index]*3.6;label.style.transform='rotate('+angle+'deg) translateY(-'+(wrap.clientWidth*.355)+'px) rotate(-'+angle+'deg)';labels.appendChild(label)});
   face.appendChild(labels);
   const odds=$('memberSpinPrizeOdds');if(odds){odds.innerHTML=spinPrizeList.map((p,i)=>'<span><b>'+p.toLocaleString('en-IN')+'</b><small>'+spinPrizeOdds[i]+'%</small></span>').join('');}
   const open=()=>{if(spinTimers.busy)return;document.body.classList.add('spin-zoom-open');wrap.classList.add('zoomed');};
