@@ -719,7 +719,39 @@ async function loadAdmin(){
  $('adminTasks').innerHTML=taskRows.length?taskRows.map(t=>'<div class="admin-card"><h4>'+esc(t.title)+'</h4><small>'+esc(t.task_type)+' · '+Number(t.points_reward)+' Coin · '+esc(t.status)+'</small><div class="admin-actions">'+(t.status==='published'?'<button type="button" onclick="adminTaskStatus(\''+t.id+'\',\'paused\')">Pause</button>':t.status==='draft'||t.status==='paused'?'<button type="button" onclick="adminTaskStatus(\''+t.id+'\',\'published\', '+Number(t.points_reward)+')">Publish</button>':'')+'</div></div>').join(''):'<p class="muted">अभी कोई टास्क नहीं।</p>';
  $('adminSubmissions').innerHTML=subRows.length?subRows.map(x=>'<div class="admin-card"><h4>'+esc(x.sbpf_reward_tasks?.title||'SBPF Task')+'</h4><p>'+esc(x.proof_note)+'</p>'+(x.evidence_url?'<a href="'+esc(x.evidence_url)+'" target="_blank" rel="noopener">प्रमाण देखें ↗</a>':'')+'<small>Member: '+esc(memberLabel(x.member_profile_id))+' · '+new Date(x.created_at).toLocaleString('hi-IN')+'</small><div class="admin-actions"><button type="button" onclick="adminReviewSubmission(\''+x.id+'\',\'approved\', '+Number(x.sbpf_reward_tasks?.points_reward||0)+')">Approve & Coin दें</button><button type="button" class="alt" onclick="adminReviewSubmission(\''+x.id+'\',\'rejected\',0)">Reject</button></div></div>').join(''):'<p class="muted">कोई लंबित टास्क सबमिशन नहीं है।</p>';
  $('adminWalletTransfers').innerHTML=transferRows.length?transferRows.map(t=>'<div class="admin-card"><h4>'+Number(t.amount).toLocaleString('en-IN')+' Coin · मंजूरी लंबित</h4><small>भेजने वाला: '+esc(memberLabel(t.sender_profile_id))+'<br>प्राप्तकर्ता: '+esc(memberLabel(t.recipient_profile_id))+'<br>अनुरोध: '+esc(t.id)+' · '+new Date(t.created_at).toLocaleString('hi-IN')+'</small><div class="admin-actions"><button type="button" onclick="adminReviewWalletTransfer(\''+t.id+'\',\'approve\')">Approve & Transfer</button><button type="button" class="alt" onclick="adminReviewWalletTransfer(\''+t.id+'\',\'reject\')">Reject</button></div></div>').join(''):'<p class="muted">कोई लंबित Coin Transfer अनुरोध नहीं है।</p>';
- $('adminRedemptions').innerHTML=redRows.length?redRows.map(x=>'<div class="admin-card"><h4>'+(x.withdrawal_tier_inr?'₹'+Number(x.withdrawal_tier_inr).toLocaleString('en-IN')+' निकासी':'Legacy Redeem')+' · '+Number(x.points_requested).toLocaleString('en-IN')+' Coin</h4><small>शुल्क: ₹'+Number(x.fee_amount_inr||0).toFixed(2)+' ('+esc(x.fee_percent??'—')+'%) · शुद्ध भुगतान: ₹'+Number(x.net_amount_inr??x.amount_inr??0).toFixed(2)+'<br>Fee: '+esc(x.fee_payment_status||'legacy')+' · Finance: '+esc(x.finance_decision||'—')+'<br>'+esc(x.payout_method||'Bank Transfer')+' · '+esc(x.status)+' · '+esc(x.bank_account_last4?'A/C ****'+x.bank_account_last4:'')+' · IFSC '+esc(x.bank_ifsc||'')+'<br>Member '+esc(memberLabel(x.member_profile_id))+'</small><div class="admin-actions">'+(x.withdrawal_tier_inr?((x.status==='pending'&&x.finance_decision?((x.finance_decision==='recommend'?'<button type="button" onclick="adminFinalWithdrawal(\\''+x.id+'\\',\\'approve\\')">Final Approve</button>':'')+'<button type="button" class="alt" onclick="adminFinalWithdrawal(\\''+x.id+'\\',\\'reject\\')">Final Reject</button>'):'')+(x.status==='approved'?'<button type="button" onclick="adminFinalWithdrawal(\\''+x.id+'\\',\\'mark_paid\\')">भुगतान दर्ज करें</button>':'')+'<button type="button" class="alt" onclick="adminCancelCashWithdrawal(\\''+x.id+'\\')">कारण सहित Cancel</button>'):(x.status==='pending'?'<button type="button" onclick="adminRedemption(\\''+x.id+'\\',\\'approved\\')">Approve</button><button type="button" class="alt" onclick="adminRedemption(\\''+x.id+'\\',\\'rejected\\')">Reject</button>':(x.status==='approved'?'<button type="button" onclick="adminRedemption(\\''+x.id+'\\',\\'paid\\')">भुगतान दर्ज करें</button>':'')))+'</div></div>').join(''):'<p class="muted">कोई लंबित INR भुगतान अनुरोध नहीं है।</p>';
+  const redemptionContainer=$('adminRedemptions');
+  redemptionContainer.replaceChildren();
+  if(!redRows.length){
+   const empty=document.createElement('p');empty.className='muted';empty.textContent='कोई लंबित INR भुगतान अनुरोध नहीं है।';redemptionContainer.append(empty);
+  }else{
+   redRows.forEach(x=>{
+    const card=document.createElement('div');card.className='admin-card';
+    const heading=document.createElement('h4');
+    heading.textContent=(x.withdrawal_tier_inr?'₹'+Number(x.withdrawal_tier_inr).toLocaleString('en-IN')+' निकासी':'Legacy Redeem')+' · '+Number(x.points_requested).toLocaleString('en-IN')+' Coin';
+    card.append(heading);
+    const details=document.createElement('small');
+    details.textContent='शुल्क: ₹'+Number(x.fee_amount_inr||0).toFixed(2)+' ('+String(x.fee_percent??'—')+'%) · शुद्ध भुगतान: ₹'+Number(x.net_amount_inr??x.amount_inr??0).toFixed(2)+' | Fee: '+String(x.fee_payment_status||'legacy')+' · Finance: '+String(x.finance_decision||'—')+' | '+String(x.payout_method||'Bank Transfer')+' · '+String(x.status)+' · '+(x.bank_account_last4?'A/C ****'+String(x.bank_account_last4):'')+' · IFSC '+String(x.bank_ifsc||'')+' | Member '+String(memberLabel(x.member_profile_id));
+    card.append(details);
+    const actions=document.createElement('div');actions.className='admin-actions';
+    const addAction=(label,handler,isAlt=false)=>{const button=document.createElement('button');button.type='button';button.textContent=label;if(isAlt)button.className='alt';button.addEventListener('click',handler);actions.append(button);};
+    if(x.withdrawal_tier_inr){
+     if(x.status==='pending'&&x.finance_decision){
+      if(x.finance_decision==='recommend')addAction('Final Approve',()=>window.adminFinalWithdrawal(String(x.id),'approve'));
+      addAction('Final Reject',()=>window.adminFinalWithdrawal(String(x.id),'reject'),true);
+     }
+     if(x.status==='approved')addAction('भुगतान दर्ज करें',()=>window.adminFinalWithdrawal(String(x.id),'mark_paid'));
+     addAction('कारण सहित Cancel',()=>window.adminCancelCashWithdrawal(String(x.id)),true);
+    }else{
+     if(x.status==='pending'){
+      addAction('Approve',()=>window.adminRedemption(String(x.id),'approved'));
+      addAction('Reject',()=>window.adminRedemption(String(x.id),'rejected'),true);
+     }else if(x.status==='approved'){
+      addAction('भुगतान दर्ज करें',()=>window.adminRedemption(String(x.id),'paid'));
+     }
+    }
+    card.append(actions);redemptionContainer.append(card);
+   });
+  }
  $('coinPerInr').value=String(config.coin_per_inr||100);
  await loadFinanceTeamList();
  $('adminProductOrders').innerHTML=productRows.length?productRows.map(o=>'<div class="admin-card"><h4>'+esc(o.product_title)+' · '+Number(o.quantity)+' नग</h4><small>'+Number(o.coins_cost)+' Coin · Member '+esc(memberLabel(o.member_profile_id))+' · '+esc(o.status)+'</small><div class="admin-actions">'+(o.status==='pending'?'<button type="button" onclick="adminProductOrder(\''+o.id+'\',\'approve\')">Approve & Coin काटें</button><button type="button" class="alt" onclick="adminProductOrder(\''+o.id+'\',\'reject\')">Reject</button>':'<button type="button" onclick="adminProductOrder(\''+o.id+'\',\'fulfilled\')">Fulfilled</button>')+'</div></div>').join(''):'<p class="muted">कोई Product अनुरोध नहीं।</p>';
