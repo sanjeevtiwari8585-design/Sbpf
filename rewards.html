@@ -224,7 +224,8 @@ footer {display:none!important}
 .spin-wheel-card .spin-action{width:100%;font-size:12px;padding:10px 6px}
 .spin-timer-panel{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:16px 0 4px;padding:13px;border-radius:13px;background:linear-gradient(120deg,#fff4d5,#f8ebc9);border:1px solid #e8d29a;color:#6d4a12;text-align:center}
 .spin-timer-panel strong{font-size:20px;color:#781626;font-variant-numeric:tabular-nums}.spin-timer-panel span{font-size:12px}
- .spin-wheel-card .spin-result{min-height:38px;font-size:12px}\n.spin-prize-odds{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin:8px 0 10px}.spin-prize-odds span{padding:4px 2px;border-radius:7px;background:#f8f0df;color:#76511a;font-size:10px;font-weight:850}.spin-prize-odds small{display:block;font-size:9px;color:#6d6268}
+ .spin-wheel-card .spin-result{min-height:38px;font-size:12px}
+.spin-prize-odds{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin:8px 0 10px}.spin-prize-odds span{padding:4px 2px;border-radius:7px;background:#f8f0df;color:#76511a;font-size:10px;font-weight:850}.spin-prize-odds small{display:block;font-size:9px;color:#6d6268}
 .wheel-theme-2{filter:saturate(1.2) hue-rotate(28deg)}.wheel-theme-3{filter:saturate(1.25) hue-rotate(75deg)}
 @media(max-width:760px){.spin-wheel-grid{grid-template-columns:1fr}.spin-wheel-card{padding:12px}.spin-wheel-wrap{width:min(72vw,270px)}.spin-wheel-wrap.zoomed{width:min(84vw,62vh)!important}}
 </style></head>
@@ -510,7 +511,8 @@ async function load(){
    isAdmin?loadAdmin():Promise.resolve(),
    isAdmin||!memberIsVerified?Promise.resolve():loadReferralLevels(),
    isAdmin||!memberIsVerified?Promise.resolve():loadProducts(),
-   isAdmin||!memberIsVerified?Promise.resolve():loadProductOrders(),\n   memberIsVerified?refreshSpinStatus():Promise.resolve()
+   isAdmin||!memberIsVerified?Promise.resolve():loadProductOrders(),
+   memberIsVerified?refreshSpinStatus():Promise.resolve()
   ]);
  }catch(error){
   $('entryGate').classList.remove('hidden');
@@ -740,7 +742,8 @@ for(let wheelNo=1;wheelNo<=3;wheelNo++){
  if(!face||!wrap)continue;
  const labels=document.createElement('div');labels.className='spin-wheel-labels';
  spinPrizeList.slice(0,4).forEach((prize,index)=>{const label=document.createElement('span');label.textContent=prize.toLocaleString('en-IN');const centers=[54,153,234,288];const angle=centers[index];label.style.transform='rotate('+angle+'deg) translateY(-'+(wrap.clientWidth*.355)+'px) rotate(-'+angle+'deg)';labels.appendChild(label)});
- face.appendChild(labels);\n const odds=document.createElement('div');odds.className='spin-prize-odds';odds.innerHTML=spinPrizeList.map((p,i)=>'<span>'+p.toLocaleString('en-IN')+' <small>'+[30,25,20,10,7,4,2,1,.5,.3,.15,.05][i]+'%</small></span>').join('');wrap.parentElement.appendChild(odds);
+ face.appendChild(labels);
+ const odds=document.createElement('div');odds.className='spin-prize-odds';odds.innerHTML=spinPrizeList.map((p,i)=>'<span>'+p.toLocaleString('en-IN')+' <small>'+[30,25,20,10,7,4,2,1,.5,.3,.15,.05][i]+'%</small></span>').join('');wrap.parentElement.appendChild(odds);
  const open=()=>{if(spinTimers.busy)return;document.body.classList.add('spin-zoom-open');wrap.classList.add('zoomed');};
  face.setAttribute('role','button');face.setAttribute('tabindex','0');face.setAttribute('aria-label','Wheel को बड़ा करके देखें');
  face.addEventListener('click',open);face.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
@@ -762,7 +765,8 @@ async function refreshSpinStatus(){
  $('memberSpinCountLeft').textContent='आज के बाकी मौके: '+Math.max(0,8-spinCountToday)+' / 8';
  spinButtons.forEach(b=>b.disabled=!config?.rewards_enabled||spinTimers.busy||spinCountToday>=8||(spinCountdownTarget>Date.now()));
  $('memberSpinStatus').textContent=spinCountToday>=8?'आज के सभी 8 मौके पूरे हो गए। सबसे पुराना Spin 24 घंटे पुराना होने पर अगला मौका खुलेगा।':'तीनों Wheels के Spin मिलाकर 24 घंटे में अधिकतम 8 मौके। हर Spin के बीच 3 घंटे का अंतर।';
- if(!config?.rewards_enabled){$('memberSpinStatus').textContent='Spin Wheel तैयार है। वास्तविक Coin Spin अभी Rewards Zone लॉन्च होने तक बंद है।';$('memberSpinCountdown').textContent='Rewards लॉन्च की प्रतीक्षा';}\n if(!spinRefreshTimer)spinRefreshTimer=window.setInterval(()=>{
+ if(!config?.rewards_enabled){$('memberSpinStatus').textContent='Spin Wheel तैयार है। वास्तविक Coin Spin अभी Rewards Zone लॉन्च होने तक बंद है।';$('memberSpinCountdown').textContent='Rewards लॉन्च की प्रतीक्षा';}
+ if(!spinRefreshTimer)spinRefreshTimer=window.setInterval(()=>{
   const left=spinCountdownTarget?spinCountdownTarget-Date.now():0;
   $('memberSpinCountdown').textContent=fmtSpinTime(left);
   spinButtons.forEach(b=>b.disabled=!config?.rewards_enabled||spinTimers.busy||spinCountToday>=8||left>0);
@@ -780,7 +784,10 @@ spinButtons.forEach(button=>button.addEventListener('click',async()=>{
   const prize=Number(result?.prize_coins),idx=spinPrizeList.indexOf(prize);
   if(idx<0)throw new Error('अमान्य Spin परिणाम');
   const face=$('memberSpinWheel'+wheelNo);
-  const prizeCenters=[54,153,234,288,318.6,338.4,349.2,354.6,357.3,358.74,359.505,359.91];\n  const targetAngle=(360-prizeCenters[idx]+360)%360;\n  const currentAngle=((spinTimers.rotation[wheelNo]%360)+360)%360;\n  spinTimers.rotation[wheelNo]+=1800+((targetAngle-currentAngle+360)%360);
+  const prizeCenters=[54,153,234,288,318.6,338.4,349.2,354.6,357.3,358.74,359.505,359.91];
+  const targetAngle=(360-prizeCenters[idx]+360)%360;
+  const currentAngle=((spinTimers.rotation[wheelNo]%360)+360)%360;
+  spinTimers.rotation[wheelNo]+=1800+((targetAngle-currentAngle+360)%360);
   face.style.transform='rotate('+spinTimers.rotation[wheelNo]+'deg)';
   $('memberSpinResult'+wheelNo).textContent='व्हील घूम रहा है…';
   window.setTimeout(async()=>{
@@ -942,7 +949,8 @@ $('coinValueForm').addEventListener('submit',async event=>{event.preventDefault(
 $('walletAdjustForm').addEventListener('submit',async event=>{event.preventDefault();const memberId=$('adjustMemberId').value.trim(),delta=Number($('adjustCoinDelta').value),reason=$('adjustReason').value.trim();if(!memberId||!Number.isInteger(delta)||delta===0||reason.length<5){say('Member ID, गैर-शून्य Coin संख्या और कारण आवश्यक हैं।','error');return;}if(!window.confirm(memberId+' के Wallet में '+(delta>0?'+':'')+delta+' Coin Adjustment दर्ज करें?'))return;try{const result=await api('/rest/v1/rpc/sbpf_admin_adjust_reward_wallet_by_member_id',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_member_id:memberId,p_points_delta:delta,p_description:reason,p_request_id:crypto.randomUUID()})});if(!result?.success)throw new Error('Adjustment पूरा नहीं हुआ।');$('walletAdjustForm').reset();say('Wallet Adjustment Ledger में दर्ज हो गया।','ok');await loadAdmin();}catch(e){say('Wallet Adjustment नहीं हुआ: '+e.message,'error');}});
 $('enforcementForm').addEventListener('submit',async event=>{event.preventDefault();const memberId=$('enforceMemberId').value.trim(),action=$('enforceAction').value,reason=$('enforceReason').value.trim();if(!memberId||reason.length<10){say('Member ID और विस्तृत कारण आवश्यक हैं।','error');return;}const label=action==='revoke'?'स्थायी रूप से Reward Zone बंद':'अस्थायी रोक';if(!window.confirm(memberId+' पर '+label+' लागू करें? यह Wallet और Rewards सुविधाओं को रोक देगा।'))return;try{await api('/rest/v1/rpc/sbpf_admin_enforce_rewards_member',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_member_id:memberId,p_action:action,p_reason:reason})});$('enforcementForm').reset();say('Admin कार्रवाई दर्ज हो गई।','ok');await loadAdmin();}catch(e){say('Admin कार्रवाई नहीं हुई: '+e.message,'error');}});
 
-refreshSpinStatus().catch(()=>{});\nloadRewardCategories().catch(e=>{const message='Rewards कार्ड लोड नहीं हुए: '+(e&&e.message?e.message:'नेटवर्क या Supabase त्रुटि');['rewardCategoriesPublicGrid','rewardCategoriesTestGrid','rewardCategoriesMemberGrid'].forEach(id=>{const el=$(id);if(el)el.innerHTML='<div class="card" role="alert">'+esc(message)+'<p class="muted">कृपया पेज Refresh करें। समस्या बनी रहे तो SBPF तकनीकी टीम को यह संदेश भेजें।</p></div>';});say(message,'error');});
+refreshSpinStatus().catch(()=>{});
+loadRewardCategories().catch(e=>{const message='Rewards कार्ड लोड नहीं हुए: '+(e&&e.message?e.message:'नेटवर्क या Supabase त्रुटि');['rewardCategoriesPublicGrid','rewardCategoriesTestGrid','rewardCategoriesMemberGrid'].forEach(id=>{const el=$(id);if(el)el.innerHTML='<div class="card" role="alert">'+esc(message)+'<p class="muted">कृपया पेज Refresh करें। समस्या बनी रहे तो SBPF तकनीकी टीम को यह संदेश भेजें।</p></div>';});say(message,'error');});
 initRewardEntryGate();
 load();
 })();
