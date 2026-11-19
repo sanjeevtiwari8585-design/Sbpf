@@ -24,6 +24,7 @@ begin
     left join public.members m on m.user_id=r.member_profile_id
     where r.withdrawal_tier_inr is not null and r.status='pending'
       and r.finance_reviewed_at is null
+      and r.fee_payment_status='paid'
     order by r.created_at asc;
 end;
 $$;
