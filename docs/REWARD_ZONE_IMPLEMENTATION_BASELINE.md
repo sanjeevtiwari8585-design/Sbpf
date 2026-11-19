@@ -126,3 +126,31 @@ Status: requirements baseline and audit only. No production database changes or 
 - Finance review still does not make the final payout decision. Main Admin/delegated approver remains responsible for final approval/rejection; payout marking remains Main Admin only.
 - Database inspection did not find a canonical member-family relationship table or family-member user mapping. Existing member_family_* tables contain family data but do not expose an identified authenticated-member relationship in the inspected schema. Therefore Finance family-conflict checks are not implemented and Finance must not review a request if they know it belongs to their family; server-side enforcement awaits a verified relation model.
 - No migration has been applied to Supabase and no real money/Wallet changes have occurred. Changes remain in the draft GitHub PR.
+
+
+## Required sandbox QA before any migration is approved (2026-11-19)
+The following is a release gate, not a claim that tests have already passed. Run only against a disposable Supabase project cloned from the current schema with synthetic members/wallets and fake bank ciphertext. Do not use production balances, real bank data, or live payment rails.
+
+### Spin wheel tests
+1. Reject unauthenticated calls, non-member, expired membership, missing annual verification, inactive Rewards access, inactive wallet, missing PIN, and non-wheel-1 requests.
+2. First valid spin succeeds; immediate second spin is rejected; spin succeeds after exactly 3 hours. No daily cap and no accumulated missed spins.
+3. Prize must be one of 12 configured values; one ledger credit and one history row per successful spin; repeated/parallel calls cannot bypass cooldown.
+4. Admin prize save requires all 12 unique values and probability total exactly 10,000 basis points; reject malformed odds; verify distribution by high-volume statistical simulation in disposable DB only.
+5. Member spin disable/enable is enforced server-side; admin changes and history deletion create audit rows.
+
+### Cash withdrawal tests
+1. Only ₹500/₹1,000/₹5,000/₹10,000 accepted; assert fees ₹150/₹200/₹500/₹500 and net ₹350/₹800/₹4,500/₹9,500.
+2. Reject insufficient available Coins, invalid IFSC, invalid last four, malformed ciphertext, invalid PIN, inactive/expired member, no annual verification, no Rewards access, and locked wallet.
+3. One open request per member across pending and approved states; concurrent requests serialize and only one succeeds.
+4. Fee pending/failed never permits Finance review or final approval. Retry count caps at three and then moves to manual_review; successful verified fee record unlocks review.
+5. Finance user can read only queue RPC fields; cannot read raw bank ciphertext, audit table, or unrelated member data. Finance self-review must fail.
+6. Finance recommend permits Main Admin/delegate final approve; Finance reject permits final reject but never approve. Missing Finance review blocks final decision.
+7. Approval debits Coins once; mark-paid requires Main Admin and bank transaction ID; cancel pending has no refund; cancel approved creates exactly one reversal; paid/rejected/cancelled cannot be cancelled again.
+8. Verify delegated approver appointment/revocation audit and Main Admin-only restrictions. Verify Finance Team appointment/removal reason and audit.
+9. Verify no member-family conflict check is enabled until a canonical authenticated family relationship mapping has been identified and independently tested.
+
+### Release blockers / not implemented
+- Bank account public-key encryption and private-key custody/recovery are not implemented. The request RPC accepts ciphertext only, but the UI is intentionally disabled; do not collect or send bank data until an audited key-management design is implemented.
+- Fee payment gateway callbacks, actual payout integration, receipts, and notifications are not connected. Current fee recording RPC is a Main Admin manual reconciliation tool, not a gateway.
+- Family relationship enforcement is not implemented because the inspected schema did not expose a canonical authenticated family-member mapping.
+- No sandbox instance is currently provisioned or tested. All SQL migrations remain unapplied; do not run on production without explicit approval.
