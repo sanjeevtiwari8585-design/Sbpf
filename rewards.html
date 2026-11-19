@@ -794,7 +794,7 @@ spinButtons.forEach(button=>button.addEventListener('click',async()=>{
   const prize=Number(result?.prize_coins),idx=spinPrizeList.indexOf(prize);
   if(idx<0)throw new Error('अमान्य Spin परिणाम');
   const face=$('memberSpinWheel'+wheelNo);
-  const prizeCenters=spinPrizeList.map((_,i)=>i*30+15);
+  let prizeCursor=0;const prizeCenters=spinPrizeOdds.map(odds=>{const center=prizeCursor+(odds*3.6/2);prizeCursor+=odds*3.6;return center;});
   const targetAngle=(360-prizeCenters[idx]+360)%360;
   const currentAngle=((spinTimers.rotation[wheelNo]%360)+360)%360;
   spinTimers.rotation[wheelNo]+=1800+((targetAngle-currentAngle+360)%360);
