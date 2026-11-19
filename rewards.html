@@ -240,14 +240,22 @@ footer {display:none!important}
  <div class="entry-gate-card">
   <div class="entry-gate-mark">🪙</div>
   <h2 id="entryGateTitle">SBPF सदस्य सत्यापन</h2>
-  <p class="muted">टेस्ट प्रवेश के लिए अधिकृत सदस्य ID दर्ज करें।</p>
-  <form id="entryVerifyForm">
+  <p class="muted">अपनी Admin-पंजीकृत जानकारी से सदस्यता सत्यापित करें। पहली बार PIN सेट होगा; अगली बार इसी PIN से प्रवेश होगा।</p>
+  <form id="entryVerifyForm" autocomplete="off">
    <label for="entryMemberId">SBPF Member ID</label>
    <input id="entryMemberId" maxlength="40" autocomplete="off" autocapitalize="characters" placeholder="SBPF Member ID" required>
-   <button id="entryVerifyButton" type="submit">सदस्य सत्यापित करें</button>
+   <label for="entryMobile">पंजीकृत मोबाइल नंबर</label>
+   <input id="entryMobile" type="tel" inputmode="numeric" maxlength="13" autocomplete="tel" placeholder="10 अंकों का मोबाइल नंबर" required>
+   <label for="entryFullName">Admin रिकॉर्ड के अनुसार पूरा नाम</label>
+   <input id="entryFullName" maxlength="120" autocomplete="name" placeholder="पूरा नाम" required>
+   <label for="entryPin">4 अंकों का Login PIN</label>
+   <input id="entryPin" type="password" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" autocomplete="new-password" required>
+   <label for="entryPinConfirm">PIN की पुष्टि करें (पहली बार)</label>
+   <input id="entryPinConfirm" type="password" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" autocomplete="new-password" required>
+   <button id="entryVerifyButton" type="submit">सुरक्षित प्रवेश करें</button>
   </form>
   <p id="entryGateMessage" class="entry-error" role="status" aria-live="polite"></p>
-  <p class="entry-foot">टेस्ट मोड: केवल अधिकृत टेस्ट सदस्य ID। पासवर्ड, OTP या ईमेल कोड नहीं।</p>
+  <p class="entry-foot">सुरक्षा: गलत PIN के 5 प्रयासों पर 15 मिनट का लॉक। Wallet PIN इससे अलग रहेगा।</p>
  </div>
 </div>
 
@@ -425,29 +433,32 @@ async function initRewardEntryGate(){
  verifyForm.addEventListener('submit',async event=>{
   event.preventDefault();
   const button=$('entryVerifyButton');
-  button.disabled=true;button.textContent='जाँच हो रही है…';
+  button.disabled=true;button.textContent='सुरक्षित जाँच हो रही है…';
   $('entryGateMessage').textContent='';
   try{
-   const enteredId=$('entryMemberId').value.trim().toUpperCase();
-   // Correct the common transposition SPBF -> SBPF for this single test ID only.
-   const memberId=enteredId.replace(/^SPBF(?=2026)/,'SBPF');
-   $('entryMemberId').value=memberId;
-   if(memberId!=='SBPF2026000050')throw new Error('अभी केवल अधिकृत टेस्ट सदस्य ID स्वीकार है।');
-   const response=await fetch(SUPABASE_URL+'/functions/v1/member-id-test-access',{
+   const memberId=$('entryMemberId').value.trim().toUpperCase();
+   const mobile=$('entryMobile').value.trim();
+   const fullName=$('entryFullName').value.trim();
+   const pin=$('entryPin').value;
+   const confirmPin=$('entryPinConfirm').value;
+   if(!/^[A-Z0-9-]{6,40}$/.test(memberId))throw new Error('सही SBPF Member ID दर्ज करें।');
+   if(!/^[0-9]{10,13}$/.test(mobile.replace(/\\D/g,'')))throw new Error('सही पंजीकृत मोबाइल नंबर दर्ज करें।');
+   if(fullName.length<2)throw new Error('Admin रिकॉर्ड वाला पूरा नाम दर्ज करें।');
+   if(!/^[0-9]{4}$/.test(pin)||!/^[0-9]{4}$/.test(confirmPin))throw new Error('4 अंकों का PIN दर्ज करें।');
+   const response=await fetch(SUPABASE_URL+'/functions/v1/member-id-pin-login',{
     method:'POST',headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},
-    body:JSON.stringify({member_id:memberId})
+    body:JSON.stringify({member_id:memberId,mobile,full_name:fullName,pin,confirm_pin:confirmPin})
    });
    const data=await response.json().catch(()=>({}));
    if(!response.ok||!data.access_token||!data.user?.id)throw new Error(data.error||'सदस्य सत्यापन पूरा नहीं हुआ।');
-   // Apply the newly issued Supabase session in this page immediately.
-   // Avoid a reload racing with an older/expired token cached by the browser.
    token=data.access_token;
    localStorage.setItem('sbpf_access_token',data.access_token);
    if(data.refresh_token)localStorage.setItem('sbpf_refresh_token',data.refresh_token);
-   localStorage.setItem('sbpf_test_mode','true');
+   localStorage.removeItem('sbpf_test_mode');
+   $('entryPin').value='';$('entryPinConfirm').value='';
    await load();
   }catch(error){$('entryGateMessage').textContent=error.message||'सत्यापन सेवा उपलब्ध नहीं है।';}
-  finally{button.disabled=false;button.textContent='सदस्य सत्यापित करें';}
+  finally{button.disabled=false;button.textContent='सुरक्षित प्रवेश करें';}
  });
 }
 function say(text,kind){const el=$('message');el.className='notice'+(kind?' '+kind:'');el.textContent=text;}
