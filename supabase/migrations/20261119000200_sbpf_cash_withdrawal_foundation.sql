@@ -15,6 +15,7 @@ alter table public.sbpf_reward_redemptions
   add column if not exists fee_payment_status text not null default 'not_applicable',
   add column if not exists fee_payment_reference text,
   add column if not exists fee_payment_attempts smallint not null default 0,
+  add column if not exists finance_decision text,
   add column if not exists finance_reviewed_by uuid references auth.users(id),
   add column if not exists finance_reviewed_at timestamptz,
   add column if not exists finance_note text,
