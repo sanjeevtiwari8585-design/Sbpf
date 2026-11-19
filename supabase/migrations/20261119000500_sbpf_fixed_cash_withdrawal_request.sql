@@ -68,7 +68,9 @@ begin
           pin_locked_until=case when failed_pin_attempts+1>=3 then now()+interval '30 minutes' else pin_locked_until end,
           updated_at=now()
       where member_profile_id=v_uid;
-    return jsonb_build_object('success',false,'error','INVALID_WALLET_PIN',\n      'attempts_remaining',greatest(0,3-(select failed_pin_attempts from public.sbpf_reward_wallets where member_profile_id=v_uid)),\n      'locked_until',(select pin_locked_until from public.sbpf_reward_wallets where member_profile_id=v_uid));
+    return jsonb_build_object('success',false,'error','INVALID_WALLET_PIN',
+      'attempts_remaining',greatest(0,3-(select failed_pin_attempts from public.sbpf_reward_wallets where member_profile_id=v_uid)),
+      'locked_until',(select pin_locked_until from public.sbpf_reward_wallets where member_profile_id=v_uid));
   end if;
   update public.sbpf_reward_wallets set failed_pin_attempts=0,pin_locked_until=null,updated_at=now()
     where member_profile_id=v_uid;
