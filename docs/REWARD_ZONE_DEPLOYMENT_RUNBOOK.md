@@ -102,6 +102,6 @@ Only after all disposable-database tests and security review pass:
 - The nine staged migrations have not been executed in any sandbox.
 - Bank public-key encryption/private-key custody is not implemented.
 - Payment gateway, bank payout, notifications, and receipts are not connected.
-- No end-to-end authenticated UI test has been completed.
+- No end-to-end authenticated UI test has been completed.\n- Current Rewards entry gate still hard-codes the single test member ID `SBPF2026000050`; it is not a production member login. The existing `member-id-login` Edge Function authenticates with Member ID + account password, which does not match the approved Member ID + 4-digit PIN login rule. Do not open the page to all members until this mismatch is resolved with a reviewed authentication design.\n- Added `supabase/tests/reward_zone_static_contract.sql`; run it only after migrations are applied to a disposable sandbox. It checks static prize, odds, cooldown, Finance queue, and fixed-tier contracts; it does not replace behavioral/auth/RLS tests.
 
 This runbook is a release control document, not evidence that the listed tests have passed.
