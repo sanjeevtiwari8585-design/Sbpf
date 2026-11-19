@@ -101,5 +101,20 @@ begin
     raise exception 'MEMBER_PIN_CHECK_RPC_EXPOSED_TO_CLIENT_ROLES';
   end if;
 
+  if not exists (
+    select 1 from pg_trigger t
+    join pg_class c on c.oid=t.tgrelid
+    join pg_namespace n on n.oid=c.relnamespace
+    where n.nspname='public' and c.relname='sbpf_reward_redemptions'
+      and t.tgname='sbpf_guard_cash_redemption_status' and not t.tgisinternal
+  ) then raise exception 'CASH_REDEMPTION_STATUS_GUARD_TRIGGER_MISSING'; end if;
+  if not exists (
+    select 1 from pg_trigger t
+    join pg_class c on c.oid=t.tgrelid
+    join pg_namespace n on n.oid=c.relnamespace
+    where n.nspname='public' and c.relname='sbpf_reward_redemptions'
+      and t.tgname='sbpf_rewards_on_redemption_paid' and not t.tgisinternal
+  ) then raise exception 'CASH_REDEMPTION_COIN_HANDLER_TRIGGER_MISSING'; end if;
+
   raise notice 'SBPF Reward Zone static contract checks passed. Behavioral/auth/RLS tests are still required.';
 end $$;
