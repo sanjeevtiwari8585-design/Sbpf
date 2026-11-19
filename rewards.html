@@ -805,7 +805,7 @@ spinButtons.forEach(button=>button.addEventListener('click',async()=>{
  }catch(e){
   spinTimers.busy=false;
   const msg=e.message||'Spin अभी उपलब्ध नहीं है।';
-  $('memberSpinResult'+wheelNo).textContent=msg.includes('SPIN_COOLDOWN_ACTIVE')?'अगला Spin 3 घंटे बाद मिलेगा।':msg.includes('DAILY_SPIN_LIMIT_REACHED')?'अगला Spin 3 घंटे बाद मिलेगा।':msg.includes('LOGIN_REQUIRED')?'पहले सदस्य सत्यापन पूरा करें।':msg.includes('VERIFIED_ACTIVE_MEMBER_REQUIRED')?'सक्रिय और सत्यापित सदस्य ही Spin कर सकते हैं।':msg.includes('ANNUAL_VERIFICATION_REQUIRED')?'इस वर्ष का सदस्य सत्यापन आवश्यक है।':msg.includes('REWARDS_ZONE_ACCESS_REQUIRED')?'आपके सदस्य ID पर Rewards Zone अनुमति सक्रिय नहीं है।':msg;
+  $('memberSpinResult'+wheelNo).textContent=msg.includes('SPIN_COOLDOWN_ACTIVE')?'अगला Spin 3 घंटे बाद मिलेगा।':msg.includes('LOGIN_REQUIRED')?'पहले सदस्य सत्यापन पूरा करें।':msg.includes('VERIFIED_ACTIVE_MEMBER_REQUIRED')?'सक्रिय और सत्यापित सदस्य ही Spin कर सकते हैं।':msg.includes('ANNUAL_VERIFICATION_REQUIRED')?'इस वर्ष का सदस्य सत्यापन आवश्यक है।':msg.includes('REWARDS_ZONE_ACCESS_REQUIRED')?'आपके सदस्य ID पर Rewards Zone अनुमति सक्रिय नहीं है।':msg;
   await refreshSpinStatus().catch(()=>{});
  }
 }));
