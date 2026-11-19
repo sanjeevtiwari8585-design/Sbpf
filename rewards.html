@@ -216,7 +216,7 @@ footer {display:none!important}
 .spin-wheel-card{min-width:0;padding:13px;border:1px solid #eadfc9;border-radius:16px;background:linear-gradient(155deg,#fff,#fff9ed);text-align:center;box-shadow:0 7px 20px #2515100c}
 .spin-wheel-heading{display:flex;justify-content:space-between;align-items:center;gap:5px;color:#781626;font-size:13px}.spin-wheel-heading span{font-size:10px;color:#8a6a27}
 .spin-wheel-wrap{width:min(100%,240px);margin:14px auto 10px}
-.spin-wheel.twelve{border-width:6px;background:conic-gradient(#7d1020 0deg 30deg,#f1d98d 30deg 60deg,#145a38 60deg 90deg,#f7e9c2 90deg 120deg,#a52c39 120deg 150deg,#d7b34b 150deg 180deg,#225d43 180deg 210deg,#f6e7bd 210deg 240deg,#8b1930 240deg 270deg,#e8c56f 270deg 300deg,#17603c 300deg 330deg,#fff0c8 330deg 360deg)}
+.spin-wheel.twelve{border-width:6px;background:conic-gradient(#7d1020 0deg 108deg,#f1d98d 108deg 198deg,#145a38 198deg 270deg,#f7e9c2 270deg 306deg,#a52c39 306deg 331.2deg,#d7b34b 331.2deg 345.6deg,#225d43 345.6deg 352.8deg,#f6e7bd 352.8deg 356.4deg,#8b1930 356.4deg 358.2deg,#e8c56f 358.2deg 359.28deg,#17603c 359.28deg 359.82deg,#fff0c8 359.82deg 360deg)}
 .spin-wheel.twelve:after{inset:20%;border:3px solid #fff8}
 .spin-wheel-labels{position:absolute;inset:0;pointer-events:none;color:#fff;font-size:clamp(8px,2vw,11px);font-weight:950;text-shadow:0 1px 3px #000a}
 .spin-wheel-labels span{position:absolute;left:50%;top:50%;width:44px;margin-left:-22px;margin-top:-7px;text-align:center;transform-origin:50% 50%;white-space:nowrap}
@@ -224,7 +224,7 @@ footer {display:none!important}
 .spin-wheel-card .spin-action{width:100%;font-size:12px;padding:10px 6px}
 .spin-timer-panel{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:16px 0 4px;padding:13px;border-radius:13px;background:linear-gradient(120deg,#fff4d5,#f8ebc9);border:1px solid #e8d29a;color:#6d4a12;text-align:center}
 .spin-timer-panel strong{font-size:20px;color:#781626;font-variant-numeric:tabular-nums}.spin-timer-panel span{font-size:12px}
-.spin-wheel-card .spin-result{min-height:38px;font-size:12px}
+ .spin-wheel-card .spin-result{min-height:38px;font-size:12px}\n.spin-prize-odds{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin:8px 0 10px}.spin-prize-odds span{padding:4px 2px;border-radius:7px;background:#f8f0df;color:#76511a;font-size:10px;font-weight:850}.spin-prize-odds small{display:block;font-size:9px;color:#6d6268}
 .wheel-theme-2{filter:saturate(1.2) hue-rotate(28deg)}.wheel-theme-3{filter:saturate(1.25) hue-rotate(75deg)}
 @media(max-width:760px){.spin-wheel-grid{grid-template-columns:1fr}.spin-wheel-card{padding:12px}.spin-wheel-wrap{width:min(72vw,270px)}.spin-wheel-wrap.zoomed{width:min(84vw,62vh)!important}}
 </style></head>
@@ -739,8 +739,8 @@ for(let wheelNo=1;wheelNo<=3;wheelNo++){
  const face=$('memberSpinWheel'+wheelNo),wrap=$('memberSpinWrap'+wheelNo);
  if(!face||!wrap)continue;
  const labels=document.createElement('div');labels.className='spin-wheel-labels';
- spinPrizeList.forEach((prize,index)=>{const label=document.createElement('span');label.textContent=prize.toLocaleString('en-IN');const angle=index*30+15;label.style.transform='rotate('+angle+'deg) translateY(-'+(wrap.clientWidth*.355)+'px) rotate(-'+angle+'deg)';labels.appendChild(label)});
- face.appendChild(labels);
+ spinPrizeList.slice(0,4).forEach((prize,index)=>{const label=document.createElement('span');label.textContent=prize.toLocaleString('en-IN');const centers=[54,153,234,288];const angle=centers[index];label.style.transform='rotate('+angle+'deg) translateY(-'+(wrap.clientWidth*.355)+'px) rotate(-'+angle+'deg)';labels.appendChild(label)});
+ face.appendChild(labels);\n const odds=document.createElement('div');odds.className='spin-prize-odds';odds.innerHTML=spinPrizeList.map((p,i)=>'<span>'+p.toLocaleString('en-IN')+' <small>'+[30,25,20,10,7,4,2,1,.5,.3,.15,.05][i]+'%</small></span>').join('');wrap.parentElement.appendChild(odds);
  const open=()=>{if(spinTimers.busy)return;document.body.classList.add('spin-zoom-open');wrap.classList.add('zoomed');};
  face.setAttribute('role','button');face.setAttribute('tabindex','0');face.setAttribute('aria-label','Wheel को बड़ा करके देखें');
  face.addEventListener('click',open);face.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
@@ -780,7 +780,7 @@ spinButtons.forEach(button=>button.addEventListener('click',async()=>{
   const prize=Number(result?.prize_coins),idx=spinPrizeList.indexOf(prize);
   if(idx<0)throw new Error('अमान्य Spin परिणाम');
   const face=$('memberSpinWheel'+wheelNo);
-  spinTimers.rotation[wheelNo]+=1800+(360-idx*30-15);
+  const prizeCenters=[54,153,234,288,318.6,338.4,349.2,354.6,357.3,358.74,359.505,359.91];\n  spinTimers.rotation[wheelNo]+=1800+(360-prizeCenters[idx]);
   face.style.transform='rotate('+spinTimers.rotation[wheelNo]+'deg)';
   $('memberSpinResult'+wheelNo).textContent='व्हील घूम रहा है…';
   window.setTimeout(async()=>{
