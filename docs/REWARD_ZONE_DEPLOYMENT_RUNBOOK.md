@@ -30,7 +30,7 @@ Provision a disposable non-production Supabase project from a current schema sna
 
 ### 2. Migration validation
 
-Run migrations `20261119000100` through `20261119000900` sequentially in the disposable database only. Stop on the first error. Verify:
+Run migrations `20261119000100` through `20261119001000` sequentially in the disposable database only. Stop on the first error. Verify:
 
 - Legacy redemption records remain readable and unchanged.
 - Spin prize constraint supports exactly the configured 12 prize values.
@@ -102,6 +102,6 @@ Only after all disposable-database tests and security review pass:
 - The nine staged migrations have not been executed in any sandbox.
 - Bank public-key encryption/private-key custody is not implemented.
 - Payment gateway, bank payout, notifications, and receipts are not connected.
-- No end-to-end authenticated UI test has been completed.\n- Current Rewards entry gate still hard-codes the single test member ID `SBPF2026000050`; it is not a production member login. The existing `member-id-login` Edge Function authenticates with Member ID + account password, which does not match the approved Member ID + 4-digit PIN login rule. Do not open the page to all members until this mismatch is resolved with a reviewed authentication design.\n- Added `supabase/tests/reward_zone_static_contract.sql`; run it only after migrations are applied to a disposable sandbox. It checks static prize, odds, cooldown, Finance queue, and fixed-tier contracts; it does not replace behavioral/auth/RLS tests.
+- No end-to-end authenticated UI test has been completed.\n- The single hard-coded test-member gate has been replaced in the branch by a Member ID + registered mobile + full name + 4-digit PIN flow calling `member-id-pin-login`. First use enrolls the PIN after identity fields match the Admin member record; subsequent use verifies the bcrypt hash. The Edge Function rate-limits by hashed IP/member identifier and mints a Supabase Auth session only after the service-role-only database check succeeds.\n- The login PIN is stored separately from the existing wallet PIN. Confirm whether product policy intends them to remain separate before launch; do not silently reuse one credential for both.\n- One-device-at-a-time session enforcement is not yet implemented. Do not claim this requirement is complete. Avoid global sign-out as a shortcut because it could sign the member out of unrelated SBPF modules.\n- Added `supabase/tests/reward_zone_static_contract.sql`; run it only after all ten migrations are applied to a disposable SBPF sandbox. It checks spin prize/odds/cooldown, Finance queue, fixed withdrawal tiers, and PIN credential table/RPC access contracts; it does not replace behavioral/auth/RLS tests.\n- Read-only schema inspection of the existing SBPF project confirms the required `members`, `member_annual_verifications`, `member_service_access`, and existing Reward Zone wallet/spin/redemption tables exist. The new PIN credentials table and staged functions are not installed in production.
 
 This runbook is a release control document, not evidence that the listed tests have passed.
