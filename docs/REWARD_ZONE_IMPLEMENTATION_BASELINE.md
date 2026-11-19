@@ -107,3 +107,13 @@ Status: requirements baseline and audit only. No production database changes or 
 - Family-member conflict-of-interest detection is not implemented: the live schema inspection did not yet identify a canonical member-family-to-auth-user relationship suitable for a reliable server-side check. Do not enable Finance approvals until this mapping is established.
 - The SQL files are staged on reward-zone-rules-180; they have not been applied to Supabase. No production data, wallet balance, payment, or payout was changed.
 - Static review only so far. A disposable non-production database and SQL/RPC tests are required before merge. The new migration sequence also needs an end-to-end review for legacy redemption compatibility and status-trigger interactions.
+
+
+## Cancellation/refund and admin UI progress (development branch only; 2026-11-19)
+- Migration 20261119000600 allows an approved fixed-tier withdrawal to transition to cancelled only through the authorized cancellation RPC. Pending requests cancel without a Coin debit; approved requests atomically receive a positive `reversal` ledger entry for the exact original debit. Existing paid/rejected/cancelled requests remain final.
+- The one-open-withdrawal index now covers both pending and approved fixed-tier requests, preventing a second request while an approved payout is still outstanding.
+- Admin cancellation RPC requires Main Admin or an active delegated final approver, a reason of at least five characters, and writes an audit entry. Trigger-level checks ensure approved cancellation cannot refund unless the original redemption debit exists.
+- Rewards page no longer offers the legacy arbitrary-Coin/UPI/other cash form. It shows the four agreed fixed tiers and a clear disabled notice until bank encryption and sandbox tests are complete.
+- Admin queue displays fixed-tier gross/fee/net, fee status, finance decision, masked bank suffix and IFSC. It exposes cancellation, final approval after a positive Finance recommendation, rejection, and payout marking via the new RPCs. Legacy redemption UI remains separate for old requests.
+- UI and RPC changes are staged only on `reward-zone-rules-180`; no Supabase migration was applied and no wallet balance, payment, or payout was changed.
+- Outstanding blockers: Finance Team needs its own authenticated queue/review UI; family-member conflict checks need a verified member-family identity relationship; bank-account encryption/public-key lifecycle needs design; notification/receipt generation and a disposable sandbox end-to-end test are not yet done. Do not launch real cash withdrawal before these are complete and legal/payment-provider review is obtained.
