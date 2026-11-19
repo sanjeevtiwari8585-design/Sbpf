@@ -674,7 +674,22 @@ window.submitTask=async function(taskId,taskType,evidenceRequired){
 async function loadFinanceQueue(){
  const rows=await api('/rest/v1/rpc/sbpf_finance_cash_withdrawal_queue',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
  const data=Array.isArray(rows)?rows:[];
- $('financeQueue').innerHTML=data.length?data.map(x=>'<div class="admin-card"><h4>₹'+Number(x.tier_inr).toLocaleString('en-IN')+' निकासी · '+esc(x.member_name)+' ('+esc(x.member_code)+')</h4><small>Coin: '+Number(x.points_requested).toLocaleString('en-IN')+'<br>शुल्क: ₹'+Number(x.fee_amount_inr||0).toFixed(2)+' ('+esc(x.fee_percent)+'%) · शुद्ध भुगतान: ₹'+Number(x.net_amount_inr||0).toFixed(2)+'<br>Fee स्थिति: '+esc(x.fee_payment_status)+' · प्रयास: '+esc(x.fee_payment_attempts)+'<br>बैंक: ****'+esc(x.bank_account_last4||'')+' · IFSC: '+esc(x.bank_ifsc||'')+'<br>अनुरोध: '+new Date(x.created_at).toLocaleString('hi-IN')+'</small><div class="admin-actions"><button type="button" onclick="financeReviewWithdrawal(\\''+x.id+'\\',\\'recommend\\')">Finance Recommend</button><button type="button" class="alt" onclick="financeReviewWithdrawal(\\''+x.id+'\\',\\'reject\\')">Finance Reject</button></div></div>').join(''):'<p class="muted">अभी कोई Pending निकासी अनुरोध नहीं है।</p>';
+ const container=$('financeQueue');
+ container.replaceChildren();
+ if(!data.length){const empty=document.createElement('p');empty.className='muted';empty.textContent='अभी कोई Pending निकासी अनुरोध नहीं है।';container.append(empty);return;}
+ data.forEach(x=>{
+  const card=document.createElement('div');card.className='admin-card';
+  const heading=document.createElement('h4');heading.textContent='₹'+Number(x.tier_inr).toLocaleString('en-IN')+' निकासी · '+String(x.member_name||'')+' ('+String(x.member_code||'')+')';card.append(heading);
+  const details=document.createElement('small');
+  details.textContent='Coin: '+Number(x.points_requested).toLocaleString('en-IN')+' | शुल्क: ₹'+Number(x.fee_amount_inr||0).toFixed(2)+' ('+String(x.fee_percent)+'%) | शुद्ध भुगतान: ₹'+Number(x.net_amount_inr||0).toFixed(2)+' | Fee स्थिति: '+String(x.fee_payment_status)+' | प्रयास: '+String(x.fee_payment_attempts)+' | बैंक: ****'+String(x.bank_account_last4||'')+' | IFSC: '+String(x.bank_ifsc||'')+' | अनुरोध: '+new Date(x.created_at).toLocaleString('hi-IN');
+  card.append(details);
+  const actions=document.createElement('div');actions.className='admin-actions';
+  [['Finance Recommend','recommend',false],['Finance Reject','reject',true]].forEach(([label,decision,isAlt])=>{
+   const button=document.createElement('button');button.type='button';button.textContent=label;if(isAlt)button.className='alt';
+   button.addEventListener('click',()=>window.financeReviewWithdrawal(String(x.id),decision));actions.append(button);
+  });
+  card.append(actions);container.append(card);
+ });
 }
 window.financeReviewWithdrawal=async function(id,decision){
  let note='';
