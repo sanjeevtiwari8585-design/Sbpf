@@ -370,7 +370,16 @@ footer {display:none!important}
  <div class="section-title"><h2>Product Redeem मंजूरी</h2></div><div id="adminProductOrders" class="list"></div>
  <div class="section-title"><h2>Wallet PIN Reset अनुरोध</h2></div><div id="adminPinResets" class="list"></div>
  <div class="section-title"><h2>Wallet Coin Adjustment</h2></div><form id="walletAdjustForm" class="admin-form"><div><label for="adjustMemberId">Member ID</label><input id="adjustMemberId" required maxlength="40"></div><div><label for="adjustCoinDelta">Coin जोड़ें (+) / घटाएँ (−)</label><input id="adjustCoinDelta" type="number" step="1" required></div><div class="wide"><label for="adjustReason">कारण (कम से कम 5 अक्षर)</label><textarea id="adjustReason" required minlength="5"></textarea></div><div class="wide"><button type="submit">Wallet Adjustment सेव करें</button></div></form><div class="section-title"><h2>Fake Task / सदस्य Reward नियंत्रण</h2></div><form id="enforcementForm" class="admin-form"><div><label for="enforceMemberId">Member ID</label><input id="enforceMemberId" required maxlength="40"></div><div><label for="enforceAction">कार्रवाई</label><select id="enforceAction"><option value="suspend">अस्थायी रोक</option><option value="revoke">स्थायी Reward Zone समाप्त</option></select></div><div class="wide"><label for="enforceReason">जाँच का कारण (कम से कम 10 अक्षर)</label><textarea id="enforceReason" required minlength="10"></textarea></div><div class="wide"><button type="submit">Admin कार्रवाई दर्ज करें</button></div></form>
+ <div class="section-title"><h2>Finance Team नियुक्ति / हटाना</h2></div>
+ <p class="muted">केवल Main Admin, Auth User UUID के आधार पर Finance सदस्य नियुक्त या निष्क्रिय कर सकता है। हर कार्रवाई का कारण दर्ज होगा।</p>
+ <form id="financeTeamForm" class="admin-form"><div><label for="financeUserId">Finance सदस्य का Auth User UUID</label><input id="financeUserId" required maxlength="36" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"></div><div><label for="financeTeamAction">कार्रवाई</label><select id="financeTeamAction"><option value="true">Finance Team में नियुक्त करें</option><option value="false">Finance Team से हटाएँ</option></select></div><div class="wide"><label for="financeTeamReason">कारण (कम से कम 5 अक्षर)</label><input id="financeTeamReason" required minlength="5"></div><div class="wide"><button type="submit">Finance Team अपडेट करें</button></div></form>
+ <div id="financeTeamList" class="list"></div>
  <div class="section-title"><h2>INR भुगतान अनुरोध</h2></div><div id="adminRedemptions" class="list"></div>
+</section>
+<section id="financePanel" class="panel hidden">
+ <div class="section-title"><h2>Finance Team · Cash Withdrawal Review</h2><span class="tag">केवल नियुक्त Finance सदस्य</span></div>
+ <p class="muted">यहाँ केवल Pending निकासी अनुरोधों का सीमित विवरण दिखेगा। पूरा बैंक खाता नंबर प्रदर्शित नहीं होगा।</p>
+ <div id="financeQueue" class="list"><p class="muted">Finance Queue लोड हो रही है…</p></div>
 </section>
 <section id="loginPrompt" class="panel hidden">
  <h2 style="color:var(--wine);margin-top:0">सदस्य सत्यापन आवश्यक</h2>
@@ -387,7 +396,7 @@ footer {display:none!important}
 const SUPABASE_URL='https://dxowhzghrdghfzoggorx.supabase.co';
 const SUPABASE_KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
 let token=localStorage.getItem('sbpf_access_token')||'';
-let user=null, member=null, isAdmin=false, memberIsVerified=false, config={coin_per_inr:100,manual_payout:true,rewards_enabled:false}, teams=[];
+let user=null, member=null, isAdmin=false, isFinanceTeam=false, memberIsVerified=false, config={coin_per_inr:100,manual_payout:true,rewards_enabled:false}, teams=[];
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function api(path,options){
@@ -492,12 +501,14 @@ async function load(){
   currentStep='Rewards सेटिंग जाँच';
   try{const settings=await api('/rest/v1/sbpf_rewards_config?select=coin_per_inr,manual_payout,rewards_enabled&id=eq.1');if(Array.isArray(settings)&&settings[0])config=settings[0];}catch(settingsError){console.warn('Rewards config unavailable; using safe defaults.',settingsError);}
   $('adminPanel').classList.toggle('hidden',!isAdmin);
-  $('dashboard').classList.toggle('hidden',!memberIsVerified);
+  try{await api('/rest/v1/rpc/sbpf_finance_cash_withdrawal_queue',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});isFinanceTeam=true;}catch(_){isFinanceTeam=false;}
+  $('financePanel').classList.toggle('hidden',!isFinanceTeam);
+  $('dashboard').classList.toggle('hidden',!memberIsVerified&&!isFinanceTeam);
   if(memberIsVerified){
    document.querySelector('.hero')?.classList.add('hidden');
    document.querySelector('.public-rewards-preview')?.classList.add('hidden');
   }
-  $('memberStatus').textContent=isAdmin?'Admin':'सत्यापित';
+  $('memberStatus').textContent=isAdmin?'Admin':(isFinanceTeam?'Finance Team':'सत्यापित');
   if(isAdmin){
    say(memberIsVerified?'Admin प्रवेश सफल। Wallet परीक्षण और Admin नियंत्रण दोनों उपलब्ध हैं।':'Admin प्रवेश सफल। सदस्य Wallet के लिए पात्र सदस्य रिकॉर्ड उपलब्ध नहीं है।','ok');
   }else if(!config.rewards_enabled){
@@ -510,6 +521,7 @@ async function load(){
    memberIsVerified?loadWallet():Promise.resolve(),
    loadTasks(),loadTeams(),loadRedemptions(),
    isAdmin?loadAdmin():Promise.resolve(),
+   isFinanceTeam?loadFinanceQueue():Promise.resolve(),
    isAdmin||!memberIsVerified?Promise.resolve():loadReferralLevels(),
    isAdmin||!memberIsVerified?Promise.resolve():loadProducts(),
    isAdmin||!memberIsVerified?Promise.resolve():loadProductOrders(),
@@ -648,6 +660,22 @@ window.submitTask=async function(taskId,taskType,evidenceRequired){
   say('टास्क जमा हो गया। Admin समीक्षा के बाद स्वीकृत Coin Wallet में जुड़ेंगे।','ok');
  }catch(error){say('टास्क पूरा नहीं हुआ: '+error.message,'error');}
 };
+async function loadFinanceQueue(){
+ const rows=await api('/rest/v1/rpc/sbpf_finance_cash_withdrawal_queue',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
+ const data=Array.isArray(rows)?rows:[];
+ $('financeQueue').innerHTML=data.length?data.map(x=>'<div class="admin-card"><h4>₹'+Number(x.tier_inr).toLocaleString('en-IN')+' निकासी · '+esc(x.member_name)+' ('+esc(x.member_code)+')</h4><small>Coin: '+Number(x.points_requested).toLocaleString('en-IN')+'<br>शुल्क: ₹'+Number(x.fee_amount_inr||0).toFixed(2)+' ('+esc(x.fee_percent)+'%) · शुद्ध भुगतान: ₹'+Number(x.net_amount_inr||0).toFixed(2)+'<br>Fee स्थिति: '+esc(x.fee_payment_status)+' · प्रयास: '+esc(x.fee_payment_attempts)+'<br>बैंक: ****'+esc(x.bank_account_last4||'')+' · IFSC: '+esc(x.bank_ifsc||'')+'<br>अनुरोध: '+new Date(x.created_at).toLocaleString('hi-IN')+'</small><div class="admin-actions"><button type="button" onclick="financeReviewWithdrawal(\\''+x.id+'\\',\\'recommend\\')">Finance Recommend</button><button type="button" class="alt" onclick="financeReviewWithdrawal(\\''+x.id+'\\',\\'reject\\')">Finance Reject</button></div></div>').join(''):'<p class="muted">अभी कोई Pending निकासी अनुरोध नहीं है।</p>';
+}
+window.financeReviewWithdrawal=async function(id,decision){
+ let note='';
+ if(decision==='reject'){note=window.prompt('Finance द्वारा Reject करने का कारण (कम से कम 5 अक्षर):')||'';if(note.trim().length<5)return;}
+ if(decision==='recommend'&&!window.confirm('क्या आपने बैंक विवरण और Fee भुगतान जाँच लिया है?'))return;
+ try{
+  const result=await api('/rest/v1/rpc/sbpf_finance_review_cash_withdrawal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_redemption_id:id,p_decision:decision,p_note:note||null})});
+  if(!result?.success)throw new Error(result?.error||'Finance review पूरा नहीं हुआ।');
+  say('Finance Review दर्ज हुआ। अंतिम निर्णय Main Admin के पास जाएगा।','ok');
+  await Promise.all([loadFinanceQueue(),isAdmin?loadAdmin():Promise.resolve()]);
+ }catch(e){say('Finance Review नहीं हुआ: '+e.message,'error');}
+};
 async function loadAdmin(){
  $('adminLaunchState').textContent='Rewards '+(config.rewards_enabled?'चालू हैं':'अभी बंद हैं')+' · '+Number(config.coin_per_inr||100)+' Coin = ₹1 · Cash भुगतान मैन्युअल';
  $('toggleRewards').textContent=config.rewards_enabled?'Rewards बंद करें':'Rewards चालू करें';
@@ -667,6 +695,7 @@ async function loadAdmin(){
  $('adminWalletTransfers').innerHTML=transferRows.length?transferRows.map(t=>'<div class="admin-card"><h4>'+Number(t.amount).toLocaleString('en-IN')+' Coin · मंजूरी लंबित</h4><small>भेजने वाला: '+esc(memberLabel(t.sender_profile_id))+'<br>प्राप्तकर्ता: '+esc(memberLabel(t.recipient_profile_id))+'<br>अनुरोध: '+esc(t.id)+' · '+new Date(t.created_at).toLocaleString('hi-IN')+'</small><div class="admin-actions"><button type="button" onclick="adminReviewWalletTransfer(\''+t.id+'\',\'approve\')">Approve & Transfer</button><button type="button" class="alt" onclick="adminReviewWalletTransfer(\''+t.id+'\',\'reject\')">Reject</button></div></div>').join(''):'<p class="muted">कोई लंबित Coin Transfer अनुरोध नहीं है।</p>';
  $('adminRedemptions').innerHTML=redRows.length?redRows.map(x=>'<div class="admin-card"><h4>'+(x.withdrawal_tier_inr?'₹'+Number(x.withdrawal_tier_inr).toLocaleString('en-IN')+' निकासी':'Legacy Redeem')+' · '+Number(x.points_requested).toLocaleString('en-IN')+' Coin</h4><small>शुल्क: ₹'+Number(x.fee_amount_inr||0).toFixed(2)+' ('+esc(x.fee_percent??'—')+'%) · शुद्ध भुगतान: ₹'+Number(x.net_amount_inr??x.amount_inr??0).toFixed(2)+'<br>Fee: '+esc(x.fee_payment_status||'legacy')+' · Finance: '+esc(x.finance_decision||'—')+'<br>'+esc(x.payout_method||'Bank Transfer')+' · '+esc(x.status)+' · '+esc(x.bank_account_last4?'A/C ****'+x.bank_account_last4:'')+' · IFSC '+esc(x.bank_ifsc||'')+'<br>Member '+esc(memberLabel(x.member_profile_id))+'</small><div class="admin-actions">'+(x.withdrawal_tier_inr?((x.status==='pending'&&x.finance_decision==='recommend'?'<button type="button" onclick="adminFinalWithdrawal(\\''+x.id+'\\',\\'approve\\')">Final Approve</button><button type="button" class="alt" onclick="adminFinalWithdrawal(\\''+x.id+'\\',\\'reject\\')">Reject</button>':'')+(x.status==='approved'?'<button type="button" onclick="adminFinalWithdrawal(\\''+x.id+'\\',\\'mark_paid\\')">भुगतान दर्ज करें</button>':'')+'<button type="button" class="alt" onclick="adminCancelCashWithdrawal(\\''+x.id+'\\')">कारण सहित Cancel</button>'):(x.status==='pending'?'<button type="button" onclick="adminRedemption(\\''+x.id+'\\',\\'approved\\')">Approve</button><button type="button" class="alt" onclick="adminRedemption(\\''+x.id+'\\',\\'rejected\\')">Reject</button>':(x.status==='approved'?'<button type="button" onclick="adminRedemption(\\''+x.id+'\\',\\'paid\\')">भुगतान दर्ज करें</button>':'')))+'</div></div>').join(''):'<p class="muted">कोई लंबित INR भुगतान अनुरोध नहीं है।</p>';
  $('coinPerInr').value=String(config.coin_per_inr||100);
+ await loadFinanceTeamList();
  $('adminProductOrders').innerHTML=productRows.length?productRows.map(o=>'<div class="admin-card"><h4>'+esc(o.product_title)+' · '+Number(o.quantity)+' नग</h4><small>'+Number(o.coins_cost)+' Coin · Member '+esc(memberLabel(o.member_profile_id))+' · '+esc(o.status)+'</small><div class="admin-actions">'+(o.status==='pending'?'<button type="button" onclick="adminProductOrder(\''+o.id+'\',\'approve\')">Approve & Coin काटें</button><button type="button" class="alt" onclick="adminProductOrder(\''+o.id+'\',\'reject\')">Reject</button>':'<button type="button" onclick="adminProductOrder(\''+o.id+'\',\'fulfilled\')">Fulfilled</button>')+'</div></div>').join(''):'<p class="muted">कोई Product अनुरोध नहीं।</p>';
  $('adminPinResets').innerHTML=pinRows.length?pinRows.map(p=>'<div class="admin-card"><h4>PIN Reset अनुरोध</h4><small>Member '+esc(memberLabel(p.member_profile_id))+' · '+new Date(p.created_at).toLocaleString('hi-IN')+'</small><div class="admin-actions"><button type="button" onclick="adminPinReset(\''+p.id+'\',\'approve\')">Approve Reset</button><button type="button" class="alt" onclick="adminPinReset(\''+p.id+'\',\'reject\')">Reject</button></div></div>').join(''):'<p class="muted">कोई PIN Reset अनुरोध लंबित नहीं है।</p>';
  await loadAdminProducts();
@@ -717,6 +746,24 @@ window.adminRedemption=async function(id,status){
  if(status==='approved'||status==='rejected'){const note=window.prompt(status==='approved'?'मंजूरी टिप्पणी (वैकल्पिक):':'अस्वीकृति का कारण लिखें:')||'';if(status==='rejected'&&!note.trim())return;try{await api('/rest/v1/rpc/sbpf_admin_review_cash_redemption',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_redemption_id:id,p_decision:status==='approved'?'approve':'reject',p_note:note})});say(status==='approved'?'Cash Redeem मंजूर; Coins Wallet से कट गए।':'Cash Redeem अस्वीकृत।','ok');await Promise.all([loadAdmin(),loadWallet()]);}catch(e){say('Cash Redeem समीक्षा नहीं हुई: '+e.message,'error');}return;}
  if(status==='paid'){const ref=window.prompt('भुगतान पूरा करने के बाद UTR / Transaction Reference दर्ज करें:');if(!ref||!ref.trim())return;try{await api('/rest/v1/sbpf_reward_redemptions?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({status:'paid',payout_reference:ref.trim(),paid_at:new Date().toISOString()})});say('भुगतान पूरा दर्ज हुआ।','ok');await loadAdmin();}catch(e){say('भुगतान दर्ज नहीं हुआ: '+e.message,'error');}}
 };
+$('financeTeamForm').addEventListener('submit',async event=>{
+ event.preventDefault();
+ const userId=$('financeUserId').value.trim(),enabled=$('financeTeamAction').value==='true',reason=$('financeTeamReason').value.trim();
+ if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(userId)||reason.length<5){say('सही Auth User UUID और कारण दर्ज करें।','error');return;}
+ if(!window.confirm('क्या आप इस Auth User को '+(enabled?'Finance Team में नियुक्त':'Finance Team से हटाना')+' चाहते हैं?'))return;
+ try{
+  const result=await api('/rest/v1/rpc/sbpf_admin_set_cash_withdrawal_finance_member',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_user_id:userId,p_enabled:enabled,p_reason:reason})});
+  if(!result?.success)throw new Error('Finance Team अपडेट नहीं हुआ।');
+  $('financeTeamForm').reset();say('Finance Team अपडेट हुआ।','ok');await loadFinanceTeamList();
+ }catch(e){say('Finance Team अपडेट नहीं हुआ: '+e.message,'error');}
+});
+async function loadFinanceTeamList(){
+ if(!isAdmin)return;
+ try{
+  const rows=await api('/rest/v1/sbpf_cash_withdrawal_finance_team?select=user_id,is_active,appointed_at,removed_at&order=appointed_at.desc');
+  $('financeTeamList').innerHTML=rows.length?rows.map(x=>'<div class="row"><div><b>'+esc(x.user_id)+'</b><small>'+(x.is_active?'Active':'Inactive')+' · '+new Date(x.appointed_at).toLocaleDateString('hi-IN')+'</small></div><span class="tag">'+(x.is_active?'नियुक्त':'हटाया गया')+'</span></div>').join(''):'<p class="muted">अभी Finance Team नियुक्त नहीं है।</p>';
+ }catch(e){$('financeTeamList').textContent='Finance Team सूची उपलब्ध नहीं है: '+e.message;}
+}
 $('taskForm').addEventListener('submit',async event=>{
  event.preventDefault();
  const title=$('taskTitle').value.trim(),type=$('taskType').value,points=Number($('taskPoints').value),description=$('taskDescription').value.trim(),video=$('taskVideo').value.trim();
