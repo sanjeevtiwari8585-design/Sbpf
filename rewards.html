@@ -503,7 +503,7 @@ async function load(){
   $('adminPanel').classList.toggle('hidden',!isAdmin);
   try{await api('/rest/v1/rpc/sbpf_finance_cash_withdrawal_queue',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});isFinanceTeam=true;}catch(_){isFinanceTeam=false;}
   $('financePanel').classList.toggle('hidden',!isFinanceTeam);
-  $('dashboard').classList.toggle('hidden',!memberIsVerified&&!isFinanceTeam);
+  $('dashboard').classList.toggle('hidden',!memberIsVerified);
   if(memberIsVerified){
    document.querySelector('.hero')?.classList.add('hidden');
    document.querySelector('.public-rewards-preview')?.classList.add('hidden');
