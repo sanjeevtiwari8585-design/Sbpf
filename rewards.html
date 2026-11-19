@@ -801,7 +801,7 @@ spinButtons.forEach(button=>button.addEventListener('click',async()=>{
   $('memberSpinResult'+wheelNo).textContent=msg.includes('SPIN_COOLDOWN_ACTIVE')?'अगला Spin 3 घंटे बाद मिलेगा।':msg.includes('DAILY_SPIN_LIMIT_REACHED')?'24 घंटे के 8 Spin पूरे हो चुके हैं।':msg.includes('REWARDS_NOT_LAUNCHED')?'Rewards Zone अभी Admin द्वारा लॉन्च नहीं किया गया है।':msg.includes('LOGIN_REQUIRED')?'पहले सदस्य सत्यापन पूरा करें।':msg.includes('VERIFIED_ACTIVE_MEMBER_REQUIRED')?'सक्रिय और सत्यापित सदस्य ही Spin कर सकते हैं।':msg.includes('ANNUAL_VERIFICATION_REQUIRED')?'इस वर्ष का सदस्य सत्यापन आवश्यक है।':msg.includes('REWARDS_ZONE_ACCESS_REQUIRED')?'आपके सदस्य ID पर Rewards Zone अनुमति सक्रिय नहीं है।':msg;
   await refreshSpinStatus().catch(()=>{});
  }
-});
+}));
 const promoMessages={
  review:'Google समीक्षा पूरी तरह स्वैच्छिक और ईमानदार होनी चाहिए। समीक्षा देने, उसकी रेटिंग या सकारात्मक शब्दों के बदले Coin नहीं दिए जाएँगे।',
  social:'YouTube / Facebook / Instagram पर Follow, Subscribe, Like या View के बदले Coin नहीं दिए जाएँगे। केवल आधिकारिक चैनल लिंक दिखाए जाएँगे।',
