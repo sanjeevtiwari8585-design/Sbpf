@@ -31,6 +31,7 @@ begin
   if not found then raise exception 'WITHDRAWAL_NOT_FOUND'; end if;
   if v_row.withdrawal_tier_inr is null then raise exception 'NOT_A_FIXED_TIER_WITHDRAWAL'; end if;
   if v_row.status<>'pending' then raise exception 'WITHDRAWAL_NOT_PENDING'; end if;
+  if v_row.finance_reviewed_at is not null then raise exception 'FINANCE_REVIEW_ALREADY_COMPLETED'; end if;
   if v_row.fee_payment_status<>'paid' then raise exception 'FEE_NOT_CONFIRMED'; end if;
 
   select m.id into v_reviewer_member_id from public.members m where m.user_id=auth.uid() limit 1;
