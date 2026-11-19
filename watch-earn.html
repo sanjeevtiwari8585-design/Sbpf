@@ -49,9 +49,12 @@ async function playVideo(id){
    activeSession=started.session_id;
   }
   $('playerTitle').textContent=v.title;$('playerContent').innerHTML='';$('player').classList.add('open');
-  if(v.storage_path){
-   const signed=await api('/storage/v1/object/sign/sbpf-watch-videos/'+v.storage_path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({expiresIn:3600})});
-   const src=signed.signedURL?.startsWith('http')?signed.signedURL:SUPABASE_URL+(signed.signedURL||'');
+  if(v.storage_path||(platform==='uploaded'&&v.video_url)){
+   let src=v.video_url;
+   if(v.storage_path){
+    const signed=await api('/storage/v1/object/sign/sbpf-watch-videos/'+v.storage_path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({expiresIn:3600})});
+    src=signed.signedURL?.startsWith('http')?signed.signedURL:SUPABASE_URL+(signed.signedURL||'');
+   }
    const video=document.createElement('video');video.id='videoPlayer';video.controls=true;video.playsInline=true;video.controlsList='nodownload';video.src=src;
    video.addEventListener('play',()=>{playerIsPlaying=true});video.addEventListener('pause',()=>{playerIsPlaying=false;sendWatchHeartbeat(false)});video.addEventListener('ended',()=>{playerIsPlaying=false;completeWatch()});
    $('playerContent').appendChild(video);if(canEarn)startWatchHeartbeat();await video.play();
