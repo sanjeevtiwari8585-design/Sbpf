@@ -89,6 +89,18 @@ begin
 end;
 $$;
 
+
+-- Attach the transition guard and atomic Coin debit/refund handlers.
+drop trigger if exists sbpf_guard_cash_redemption_status on public.sbpf_reward_redemptions;
+create trigger sbpf_guard_cash_redemption_status
+  before update of status on public.sbpf_reward_redemptions
+  for each row execute function public.sbpf_guard_cash_redemption_status();
+
+drop trigger if exists sbpf_rewards_on_redemption_paid on public.sbpf_reward_redemptions;
+create trigger sbpf_rewards_on_redemption_paid
+  after update of status on public.sbpf_reward_redemptions
+  for each row execute function public.sbpf_rewards_on_redemption_paid();
+
 create or replace function public.sbpf_admin_cancel_cash_withdrawal(
   p_redemption_id uuid,
   p_reason text
