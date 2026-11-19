@@ -74,5 +74,32 @@ begin
     raise exception 'ENCRYPTED_BANK_ACCOUNT_INPUT_MISSING';
   end if;
 
+  if to_regclass('public.sbpf_member_login_credentials') is null then
+    raise exception 'MISSING_TABLE_sbpf_member_login_credentials';
+  end if;
+  if not exists (
+    select 1 from pg_class c join pg_namespace n on n.oid=c.relnamespace
+    where n.nspname='public' and c.relname='sbpf_member_login_credentials' and c.relrowsecurity
+  ) then raise exception 'MEMBER_LOGIN_CREDENTIALS_RLS_NOT_ENABLED'; end if;
+  if has_table_privilege('anon','public.sbpf_member_login_credentials','SELECT')
+     or has_table_privilege('authenticated','public.sbpf_member_login_credentials','SELECT')
+     or has_table_privilege('anon','public.sbpf_member_login_credentials','INSERT')
+     or has_table_privilege('authenticated','public.sbpf_member_login_credentials','INSERT') then
+    raise exception 'MEMBER_LOGIN_CREDENTIALS_EXPOSED_TO_CLIENT_ROLES';
+  end if;
+
+  select pg_get_functiondef('public.sbpf_member_login_pin_check(text,text,text,text,text)'::regprocedure)
+    into v_request_def;
+  if position('service_role_only' in lower(v_request_def))=0
+     or position('extensions.crypt' in lower(v_request_def))=0
+     or position('for update' in lower(v_request_def))=0
+     or position('15 minutes' in lower(v_request_def))=0 then
+    raise exception 'MEMBER_PIN_LOGIN_SECURITY_CONTRACT_MISSING';
+  end if;
+  if has_function_privilege('anon','public.sbpf_member_login_pin_check(text,text,text,text,text)','EXECUTE')
+     or has_function_privilege('authenticated','public.sbpf_member_login_pin_check(text,text,text,text,text)','EXECUTE') then
+    raise exception 'MEMBER_PIN_CHECK_RPC_EXPOSED_TO_CLIENT_ROLES';
+  end if;
+
   raise notice 'SBPF Reward Zone static contract checks passed. Behavioral/auth/RLS tests are still required.';
 end $$;
