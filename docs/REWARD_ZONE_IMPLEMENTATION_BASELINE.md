@@ -117,3 +117,12 @@ Status: requirements baseline and audit only. No production database changes or 
 - Admin queue displays fixed-tier gross/fee/net, fee status, finance decision, masked bank suffix and IFSC. It exposes cancellation, final approval after a positive Finance recommendation, rejection, and payout marking via the new RPCs. Legacy redemption UI remains separate for old requests.
 - UI and RPC changes are staged only on `reward-zone-rules-180`; no Supabase migration was applied and no wallet balance, payment, or payout was changed.
 - Outstanding blockers: Finance Team needs its own authenticated queue/review UI; family-member conflict checks need a verified member-family identity relationship; bank-account encryption/public-key lifecycle needs design; notification/receipt generation and a disposable sandbox end-to-end test are not yet done. Do not launch real cash withdrawal before these are complete and legal/payment-provider review is obtained.
+
+
+## Finance Team panel and appointment progress (development branch only; 2026-11-19)
+- Migration 20261119000700 adds a Main Admin-only RPC to appoint/remove Finance Team users by Supabase Auth UUID, with a required reason and appointment/removal timestamps.
+- Adds `sbpf_finance_cash_withdrawal_queue()` for active Finance Team users and Main Admin. It returns only pending fixed-tier withdrawal details needed for review: member name/code, tier, Coin amount, fee/net, fee status/attempt count, bank last four digits and IFSC. It never returns bank account ciphertext/plaintext.
+- `rewards.html` now has a Finance Team review panel with Recommend / Reject actions calling the Finance review RPC. Main Admin has Finance Team appointment/removal form and current team list. Finance-only users do not see the member Wallet dashboard.
+- Finance review still does not make the final payout decision. Main Admin/delegated approver remains responsible for final approval/rejection; payout marking remains Main Admin only.
+- Database inspection did not find a canonical member-family relationship table or family-member user mapping. Existing member_family_* tables contain family data but do not expose an identified authenticated-member relationship in the inspected schema. Therefore Finance family-conflict checks are not implemented and Finance must not review a request if they know it belongs to their family; server-side enforcement awaits a verified relation model.
+- No migration has been applied to Supabase and no real money/Wallet changes have occurred. Changes remain in the draft GitHub PR.
