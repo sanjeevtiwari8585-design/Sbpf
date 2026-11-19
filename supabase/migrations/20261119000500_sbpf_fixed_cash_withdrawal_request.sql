@@ -29,7 +29,7 @@ declare
   v_id uuid;
 begin
   if v_uid is null then raise exception 'LOGIN_REQUIRED'; end if;
-  if p_tier_inr not in (500,1000,5000,10000) then raise exception 'INVALID_WITHDRAWAL_TIER'; end if;
+  if p_tier_inr is null or p_tier_inr not in (500,1000,5000,10000) then raise exception 'INVALID_WITHDRAWAL_TIER'; end if;
   if p_bank_account_ciphertext is null or length(p_bank_account_ciphertext)<24 then raise exception 'ENCRYPTED_BANK_ACCOUNT_REQUIRED'; end if;
   if p_bank_account_last4 !~ '^[0-9]{4}$' then raise exception 'INVALID_BANK_ACCOUNT_LAST4'; end if;
   if p_bank_ifsc !~ '^[A-Z]{4}0[A-Z0-9]{6}$' then raise exception 'INVALID_IFSC'; end if;
@@ -68,7 +68,7 @@ begin
           pin_locked_until=case when failed_pin_attempts+1>=3 then now()+interval '30 minutes' else pin_locked_until end,
           updated_at=now()
       where member_profile_id=v_uid;
-    raise exception 'INVALID_WALLET_PIN';
+    return jsonb_build_object('success',false,'error','INVALID_WALLET_PIN',\n      'attempts_remaining',greatest(0,3-(select failed_pin_attempts from public.sbpf_reward_wallets where member_profile_id=v_uid)),\n      'locked_until',(select pin_locked_until from public.sbpf_reward_wallets where member_profile_id=v_uid));
   end if;
   update public.sbpf_reward_wallets set failed_pin_attempts=0,pin_locked_until=null,updated_at=now()
     where member_profile_id=v_uid;
