@@ -95,3 +95,15 @@ Status: requirements baseline and audit only. No production database changes or 
 ## Open implementation checks
 - Confirm exact per-prize probabilities within each of the three probability groups if the Admin's initial values are not already specified in the existing rules history. Group totals alone do not determine a unique prize distribution.
 - Reconcile the final withdrawal approver rule with the earlier Finance-review/Main-Admin-final-approval rule before enabling payouts.
+
+
+## Cash withdrawal implementation progress (development branch only; 2026-11-19)
+- Staged migrations 20261119000200 through 20261119000500 add workflow fields, Finance Team and delegated final approver registries, audit table, and RPCs for fixed-tier member requests, Finance review, final approval/rejection, payout marking, and fee-attempt reconciliation.
+- Final approval is restricted to the single existing admin_users.role='admin' Main Admin or a currently active delegated approver appointed by that Admin. Finance Team review is separate; a Finance review timestamp is required before final decision.
+- Fixed-tier request RPC accepts only ₹500/₹1,000/₹5,000/₹10,000, calculates the configured Coin amount from the existing sbpf_rewards_config.coin_per_inr, and records the agreed fee/net amounts. One pending fixed-tier request per member is protected by a unique partial index.
+- The bank account field accepts ciphertext only, plus last four digits and IFSC. A reviewed client-side encryption/public-key scheme is still required before enabling the UI; never send plaintext bank account numbers to this RPC.
+- Fee attempt status and payout status are administrative workflow placeholders only. No payment gateway, real fee collection, bank payout, SMS/email notification, or receipt generation has been connected.
+- Existing approval trigger debits Coins when the redemption transitions to approved; therefore this staged workflow preserves the existing atomic ledger debit on final approval. Cancellation/refund handling still needs a dedicated safe transition and test.
+- Family-member conflict-of-interest detection is not implemented: the live schema inspection did not yet identify a canonical member-family-to-auth-user relationship suitable for a reliable server-side check. Do not enable Finance approvals until this mapping is established.
+- The SQL files are staged on reward-zone-rules-180; they have not been applied to Supabase. No production data, wallet balance, payment, or payout was changed.
+- Static review only so far. A disposable non-production database and SQL/RPC tests are required before merge. The new migration sequence also needs an end-to-end review for legacy redemption compatibility and status-trigger interactions.
