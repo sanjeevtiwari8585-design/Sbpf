@@ -780,7 +780,7 @@ spinButtons.forEach(button=>button.addEventListener('click',async()=>{
   const prize=Number(result?.prize_coins),idx=spinPrizeList.indexOf(prize);
   if(idx<0)throw new Error('अमान्य Spin परिणाम');
   const face=$('memberSpinWheel'+wheelNo);
-  const prizeCenters=[54,153,234,288,318.6,338.4,349.2,354.6,357.3,358.74,359.505,359.91];\n  spinTimers.rotation[wheelNo]+=1800+(360-prizeCenters[idx]);
+  const prizeCenters=[54,153,234,288,318.6,338.4,349.2,354.6,357.3,358.74,359.505,359.91];\n  const targetAngle=(360-prizeCenters[idx]+360)%360;\n  const currentAngle=((spinTimers.rotation[wheelNo]%360)+360)%360;\n  spinTimers.rotation[wheelNo]+=1800+((targetAngle-currentAngle+360)%360);
   face.style.transform='rotate('+spinTimers.rotation[wheelNo]+'deg)';
   $('memberSpinResult'+wheelNo).textContent='व्हील घूम रहा है…';
   window.setTimeout(async()=>{
