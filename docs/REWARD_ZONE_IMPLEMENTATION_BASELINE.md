@@ -154,3 +154,16 @@ The following is a release gate, not a claim that tests have already passed. Run
 - Fee payment gateway callbacks, actual payout integration, receipts, and notifications are not connected. Current fee recording RPC is a Main Admin manual reconciliation tool, not a gateway.
 - Family relationship enforcement is not implemented because the inspected schema did not expose a canonical authenticated family-member mapping.
 - No sandbox instance is currently provisioned or tested. All SQL migrations remain unapplied; do not run on production without explicit approval.
+
+
+## Finance family-conflict guard discovered and staged (2026-11-19)
+- Further read-only schema inspection identified the existing family model: `member_pariwar_register` (created_by, member_row_id, head_member_row_id) and `member_pariwar_members` (family_id, member_row_id, linked_member_row_id). Existing family RLS policies already use `member_family_can_access(family_id)`.
+- Migration `20261119000800_sbpf_finance_family_conflict_guard.sql` replaces the Finance review RPC to find overlapping registered family IDs for the reviewer and the withdrawal owner. An active Finance Team member is blocked from reviewing their own family request; Main Admin remains the escalation reviewer. Self-review remains blocked.
+- This logic is based on existing explicit family register/link records only; it does not infer family from name, phone, or address.
+- It is staged only and has not been executed. Sandbox test cases must include family head, linked member, family creator, unrelated family, missing member profile, and Main Admin escalation.
+
+## Live project advisor snapshot (read-only, 2026-11-19)
+- Only one Supabase project is currently available in the connected account: existing SBPF project `dxowhzghrdghfzoggorx`. No separate disposable sandbox project is available, and no new database/project was created.
+- Existing project Security Advisor reports pre-existing issues including 4 RLS-enabled tables with no policies, 1 SECURITY DEFINER view, pg_trgm installed in public, 12 anon-executable SECURITY DEFINER functions, and 172 authenticated-executable SECURITY DEFINER functions. The advisor output also includes many multiple-permissive-policy notices. These are baseline project-wide findings, not proof that this branch caused them.
+- New branch migrations are not yet advisor-tested because they are not applied. Before release, review all new SECURITY DEFINER RPCs, ensure their auth/role checks are correct, and move non-client functions out of exposed schemas where appropriate. Do not treat the advisor output as a clean bill of health.
+- The Supabase Edge Function secrets and public-key crypto approach still requires a documented key-owner, offline backup/recovery, rotation and revocation plan. Do not collect real bank details until the public key is provisioned and the private-key custody process is approved.
