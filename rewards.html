@@ -211,7 +211,23 @@ footer {display:none!important}
 }
 </style>
 
-</head>
+<style id="sbpf-three-spin-wheels">
+.spin-wheel-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-top:14px}
+.spin-wheel-card{min-width:0;padding:13px;border:1px solid #eadfc9;border-radius:16px;background:linear-gradient(155deg,#fff,#fff9ed);text-align:center;box-shadow:0 7px 20px #2515100c}
+.spin-wheel-heading{display:flex;justify-content:space-between;align-items:center;gap:5px;color:#781626;font-size:13px}.spin-wheel-heading span{font-size:10px;color:#8a6a27}
+.spin-wheel-wrap{width:min(100%,240px);margin:14px auto 10px}
+.spin-wheel.twelve{border-width:6px;background:conic-gradient(#7d1020 0deg 30deg,#f1d98d 30deg 60deg,#145a38 60deg 90deg,#f7e9c2 90deg 120deg,#a52c39 120deg 150deg,#d7b34b 150deg 180deg,#225d43 180deg 210deg,#f6e7bd 210deg 240deg,#8b1930 240deg 270deg,#e8c56f 270deg 300deg,#17603c 300deg 330deg,#fff0c8 330deg 360deg)}
+.spin-wheel.twelve:after{inset:20%;border:3px solid #fff8}
+.spin-wheel-labels{position:absolute;inset:0;pointer-events:none;color:#fff;font-size:clamp(8px,2vw,11px);font-weight:950;text-shadow:0 1px 3px #000a}
+.spin-wheel-labels span{position:absolute;left:50%;top:50%;width:44px;margin-left:-22px;margin-top:-7px;text-align:center;transform-origin:50% 50%;white-space:nowrap}
+.spin-wheel-wrap.zoomed{width:min(84vw,62vh,430px)!important}
+.spin-wheel-card .spin-action{width:100%;font-size:12px;padding:10px 6px}
+.spin-timer-panel{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:16px 0 4px;padding:13px;border-radius:13px;background:linear-gradient(120deg,#fff4d5,#f8ebc9);border:1px solid #e8d29a;color:#6d4a12;text-align:center}
+.spin-timer-panel strong{font-size:20px;color:#781626;font-variant-numeric:tabular-nums}.spin-timer-panel span{font-size:12px}
+.spin-wheel-card .spin-result{min-height:38px;font-size:12px}
+.wheel-theme-2{filter:saturate(1.2) hue-rotate(28deg)}.wheel-theme-3{filter:saturate(1.25) hue-rotate(75deg)}
+@media(max-width:760px){.spin-wheel-grid{grid-template-columns:1fr}.spin-wheel-card{padding:12px}.spin-wheel-wrap{width:min(72vw,270px)}.spin-wheel-wrap.zoomed{width:min(84vw,62vh)!important}}
+</style></head>
 <body>
 
 <div id="entryGate" class="entry-gate" role="dialog" aria-modal="true" aria-labelledby="entryGateTitle">
@@ -284,11 +300,14 @@ footer {display:none!important}
 </div>
 <div class="section-title"><h2>कार्य</h2></div>
  <div id="rewardCategoriesMemberGrid" class="grid reward-categories-grid"><div class="card">लोड हो रहा है…</div></div>
-<div class="section-title"><h2>🎡 Spin & Win</h2><span class="tag">हर 24 घंटे में 1 मौका</span></div>
+<div class="section-title"><h2>🎡 SBPF Spin & Win</h2><span class="tag">हर 3 घंटे में 1 मौका · 24 घंटे में अधिकतम 8</span></div>
 <div class="panel" id="memberSpinPanel">
- <p class="spin-info">व्हील पर 10, 40, 50 और 100 Coin के चार समान परिणाम हैं। हर परिणाम की संभावना 25% है।</p>
- <div class="spin-wheel-wrap" id="memberSpinWrap"><button class="spin-zoom-close" id="spinZoomClose" type="button" aria-label="Close enlarged wheel">×</button><div class="spin-pointer"></div><div id="memberSpinWheel" class="spin-wheel eight"><div class="spin-labels eight"><span>100</span><span>50</span><span>40</span><span>10</span><span>100</span><span>50</span><span>40</span><span>10</span></div></div></div>
- <div style="text-align:center"><button id="memberSpinButton" type="button">🎡 अभी स्पिन करें</button><div id="memberSpinResult" class="spin-result" aria-live="polite">सदस्य सत्यापन के बाद अपना मौका देखें।</div><div id="memberSpinCooldown" class="spin-info"></div></div>
+ <p class="spin-info">तीन शानदार Wheels में से किसी एक को चुनें। हर Wheel में 12 इनाम हैं। 11, 21 और 51 Coin सबसे अधिक आने वाले इनाम हैं। एक बार Spin करने के बाद अगला मौका 3 घंटे में मिलेगा।</p>
+ <div class="spin-wheel-grid">
+  <article class="spin-wheel-card"><div class="spin-wheel-heading"><b>🥇 गोल्ड व्हील</b><span>12 इनाम</span></div><div class="spin-wheel-wrap" id="memberSpinWrap1"><button class="spin-zoom-close" data-spin-close="1" type="button" aria-label="बंद करें">×</button><div class="spin-pointer"></div><div id="memberSpinWheel1" class="spin-wheel twelve wheel-theme-1"></div></div><button class="spin-action" type="button" data-spin-wheel="1">🎡 इस Wheel को Spin करें</button><div class="spin-result" id="memberSpinResult1" aria-live="polite">Spin के लिए तैयार</div></article><article class="spin-wheel-card"><div class="spin-wheel-heading"><b>💎 डायमंड व्हील</b><span>12 इनाम</span></div><div class="spin-wheel-wrap" id="memberSpinWrap2"><button class="spin-zoom-close" data-spin-close="2" type="button" aria-label="बंद करें">×</button><div class="spin-pointer"></div><div id="memberSpinWheel2" class="spin-wheel twelve wheel-theme-2"></div></div><button class="spin-action" type="button" data-spin-wheel="2">🎡 इस Wheel को Spin करें</button><div class="spin-result" id="memberSpinResult2" aria-live="polite">Spin के लिए तैयार</div></article><article class="spin-wheel-card"><div class="spin-wheel-heading"><b>👑 रॉयल व्हील</b><span>12 इनाम</span></div><div class="spin-wheel-wrap" id="memberSpinWrap3"><button class="spin-zoom-close" data-spin-close="3" type="button" aria-label="बंद करें">×</button><div class="spin-pointer"></div><div id="memberSpinWheel3" class="spin-wheel twelve wheel-theme-3"></div></div><button class="spin-action" type="button" data-spin-wheel="3">🎡 इस Wheel को Spin करें</button><div class="spin-result" id="memberSpinResult3" aria-live="polite">Spin के लिए तैयार</div></article>
+ </div>
+ <div class="spin-timer-panel"><b>⏳ अगला Spin कब मिलेगा?</b><strong id="memberSpinCountdown">सदस्य सत्यापन के बाद समय दिखेगा</strong><span id="memberSpinCountLeft">आज के बाकी मौके: 8 / 8</span></div>
+ <p class="spin-info" id="memberSpinStatus">हर सदस्य को 24 घंटे में अधिकतम 8 Spin मिलेंगे। सभी तीन Wheels के Spin एक ही सीमा में गिने जाएँगे।</p>
 </div>
 <div class="section-title"><h2>आज के उपलब्ध टास्क</h2><span class="tag">Admin-approved</span></div>
 <div id="tasks" class="grid"><div class="card">टास्क लोड हो रहे हैं…</div></div>
@@ -713,47 +732,69 @@ if(spinButton&&spinWheel){
   },4100);
  });
 }
-const realSpinButton=$('memberSpinButton'),realSpinWheel=$('memberSpinWheel');
-const realSpinWrap=$('memberSpinWrap'),zoomClose=$('spinZoomClose');
-const closeSpinZoom=()=>{document.body.classList.remove('spin-zoom-open');realSpinWrap?.classList.remove('zoomed');};
-if(realSpinWheel&&realSpinWrap){
- realSpinWheel.setAttribute('role','button');realSpinWheel.setAttribute('tabindex','0');realSpinWheel.setAttribute('aria-label','व्हील बड़ा करके देखें');
- const openSpinZoom=()=>{if(realSpinBusy)return;document.body.classList.add('spin-zoom-open');realSpinWrap.classList.add('zoomed');};
- realSpinWheel.addEventListener('click',openSpinZoom);
- realSpinWheel.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openSpinZoom();}});
- zoomClose?.addEventListener('click',closeSpinZoom);
- document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSpinZoom();});
- document.addEventListener('pointerdown',e=>{if(document.body.classList.contains('spin-zoom-open')&&!realSpinWrap.contains(e.target))closeSpinZoom();});
+const spinPrizeList=[11,21,51,101,251,551,1100,2100,5100,11000,21000,51000];
+const spinButtons=[...document.querySelectorAll('[data-spin-wheel]')];
+const spinTimers={busy:false,rotation:{1:0,2:0,3:0},countdown:null};
+for(let wheelNo=1;wheelNo<=3;wheelNo++){
+ const face=$('memberSpinWheel'+wheelNo),wrap=$('memberSpinWrap'+wheelNo);
+ if(!face||!wrap)continue;
+ const labels=document.createElement('div');labels.className='spin-wheel-labels';
+ spinPrizeList.forEach((prize,index)=>{const label=document.createElement('span');label.textContent=prize.toLocaleString('en-IN');const angle=index*30+15;label.style.transform='rotate('+angle+'deg) translateY(-'+(wrap.clientWidth*.355)+'px) rotate(-'+angle+'deg)';labels.appendChild(label)});
+ face.appendChild(labels);
+ const open=()=>{if(spinTimers.busy)return;document.body.classList.add('spin-zoom-open');wrap.classList.add('zoomed');};
+ face.setAttribute('role','button');face.setAttribute('tabindex','0');face.setAttribute('aria-label','Wheel को बड़ा करके देखें');
+ face.addEventListener('click',open);face.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
 }
-let realSpinRotation=0,realSpinBusy=false;
-if(realSpinButton&&realSpinWheel){
- realSpinButton.addEventListener('click',async()=>{
-  if(realSpinBusy)return;
-  if(!token||!user?.id){$('memberSpinResult').textContent='पहले सदस्य सत्यापन पूरा करें।';return;}
-  realSpinBusy=true;realSpinButton.disabled=true;$('memberSpinResult').textContent='आपका स्पिन सुरक्षित रूप से दर्ज किया जा रहा है…';
-  try{
-   const result=await api('/rest/v1/rpc/sbpf_spin_wheel',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
-   const prize=Number(result?.prize_coins);
-   const prizeSlots=({100:[0,4],50:[1,5],40:[2,6],10:[3,7]})[prize];
-   if(!prizeSlots)throw new Error('अमान्य स्पिन परिणाम');
-   const idx=prizeSlots[Math.floor(Math.random()*prizeSlots.length)];
-   realSpinRotation+=1800+(360-idx*45-22.5);
-   realSpinWheel.style.transform='rotate('+realSpinRotation+'deg)';
-   window.setTimeout(()=>{
-    $('memberSpinResult').textContent='बधाई! आपने '+prize+' SBPF Coin जीते। Coin आपके वॉलेट में जोड़ दिए गए।';
-    $('memberSpinCooldown').textContent='अगला मौका: '+new Date(result.next_spin_at).toLocaleString('hi-IN');
-    loadWallet();
-    realSpinBusy=false;realSpinButton.disabled=false;
-   },4100);
-  }catch(e){
-   const msg=e.message||'स्पिन अभी उपलब्ध नहीं है।';
-   $('memberSpinResult').textContent=msg.includes('SPIN_COOLDOWN_ACTIVE')?'आपका आज का मौका उपयोग हो चुका है। 24 घंटे बाद फिर आएँ।':msg.includes('REWARDS_NOT_LAUNCHED')?'Rewards Zone अभी एडमिन द्वारा लॉन्च नहीं किया गया है।':msg.includes('LOGIN_REQUIRED')?'पहले सदस्य सत्यापन पूरा करें।':msg.includes('VERIFIED_ACTIVE_MEMBER_REQUIRED')?'सक्रिय और भुगतान-सत्यापित सदस्य ही स्पिन कर सकते हैं।':msg.includes('ANNUAL_VERIFICATION_REQUIRED')?'इस वर्ष का सदस्य सत्यापन आवश्यक है।':msg.includes('REWARDS_ZONE_ACCESS_REQUIRED')?'आपके सदस्य ID पर Rewards Zone अनुमति सक्रिय नहीं है।':msg;
-   realSpinBusy=false;realSpinButton.disabled=false;
-  }
- });
+const closeAllSpinZoom=()=>{document.body.classList.remove('spin-zoom-open');for(let n=1;n<=3;n++)$('memberSpinWrap'+n)?.classList.remove('zoomed')};
+document.querySelectorAll('[data-spin-close]').forEach(b=>b.addEventListener('click',closeAllSpinZoom));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAllSpinZoom()});
+document.addEventListener('pointerdown',e=>{if(document.body.classList.contains('spin-zoom-open')&&!e.target.closest('.spin-wheel-wrap'))closeAllSpinZoom()});
+function fmtSpinTime(ms){if(ms<=0)return 'अभी उपलब्ध';const total=Math.ceil(ms/1000),h=Math.floor(total/3600),m=Math.floor((total%3600)/60),s=total%60;return [h,m,s].map(v=>String(v).padStart(2,'0')).join(':')}
+let spinRefreshTimer=null,spinCountdownTarget=null,spinCountToday=0;
+async function refreshSpinStatus(){
+ if(!user?.id||!token)return;
+ const since=new Date(Date.now()-24*60*60*1000).toISOString();
+ const rows=await api('/rest/v1/sbpf_reward_spins?select=created_at,wheel_number&member_profile_id=eq.'+encodeURIComponent(user.id)+'&created_at=gte.'+encodeURIComponent(since)+'&order=created_at.desc&limit=8');
+ spinCountToday=Array.isArray(rows)?rows.length:0;
+ const last=rows?.[0]?.created_at?new Date(rows[0].created_at).getTime():0;
+ const earliest=rows?.length>=8?new Date(rows[rows.length-1].created_at).getTime()+24*60*60*1000:0;
+ spinCountdownTarget=earliest|| (last?last+3*60*60*1000:0);
+ $('memberSpinCountLeft').textContent='आज के बाकी मौके: '+Math.max(0,8-spinCountToday)+' / 8';
+ spinButtons.forEach(b=>b.disabled=spinTimers.busy||spinCountToday>=8||(spinCountdownTarget>Date.now()));
+ $('memberSpinStatus').textContent=spinCountToday>=8?'आज के सभी 8 मौके पूरे हो गए। सबसे पुराना Spin 24 घंटे पुराना होने पर अगला मौका खुलेगा।':'तीनों Wheels के Spin मिलाकर 24 घंटे में अधिकतम 8 मौके। हर Spin के बीच 3 घंटे का अंतर।';
+ if(!spinRefreshTimer)spinRefreshTimer=window.setInterval(()=>{
+  const left=spinCountdownTarget?spinCountdownTarget-Date.now():0;
+  $('memberSpinCountdown').textContent=fmtSpinTime(left);
+  spinButtons.forEach(b=>b.disabled=spinTimers.busy||spinCountToday>=8||left>0);
+  if(left<=0){spinButtons.forEach(b=>b.disabled=spinTimers.busy);$('memberSpinCountLeft').textContent='आज के बाकी मौके: '+Math.max(0,8-spinCountToday)+' / 8';}
+ },1000);
 }
-
-
+spinButtons.forEach(button=>button.addEventListener('click',async()=>{
+ if(spinTimers.busy)return;
+ if(!token||!user?.id){$('memberSpinStatus').textContent='पहले सदस्य सत्यापन पूरा करें।';return;}
+ const wheelNo=Number(button.dataset.spinWheel);
+ spinTimers.busy=true;spinButtons.forEach(b=>b.disabled=true);
+ $('memberSpinResult'+wheelNo).textContent='आपका Spin सुरक्षित रूप से दर्ज हो रहा है…';
+ try{
+  const result=await api('/rest/v1/rpc/sbpf_spin_wheel',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_wheel_no:wheelNo})});
+  const prize=Number(result?.prize_coins),idx=spinPrizeList.indexOf(prize);
+  if(idx<0)throw new Error('अमान्य Spin परिणाम');
+  const face=$('memberSpinWheel'+wheelNo);
+  spinTimers.rotation[wheelNo]+=1800+(360-idx*30-15);
+  face.style.transform='rotate('+spinTimers.rotation[wheelNo]+'deg)';
+  $('memberSpinResult'+wheelNo).textContent='व्हील घूम रहा है…';
+  window.setTimeout(async()=>{
+   $('memberSpinResult'+wheelNo).textContent='🎉 बधाई! '+prize.toLocaleString('en-IN')+' SBPF Coin जीते।';
+   $('memberSpinStatus').textContent='इनाम आपके SBPF Wallet Ledger में दर्ज हुआ। अगला Spin 3 घंटे बाद।';
+   spinTimers.busy=false;await Promise.all([loadWallet(),refreshSpinStatus()]);
+  },4200);
+ }catch(e){
+  spinTimers.busy=false;
+  const msg=e.message||'Spin अभी उपलब्ध नहीं है।';
+  $('memberSpinResult'+wheelNo).textContent=msg.includes('SPIN_COOLDOWN_ACTIVE')?'अगला Spin 3 घंटे बाद मिलेगा।':msg.includes('DAILY_SPIN_LIMIT_REACHED')?'24 घंटे के 8 Spin पूरे हो चुके हैं।':msg.includes('REWARDS_NOT_LAUNCHED')?'Rewards Zone अभी Admin द्वारा लॉन्च नहीं किया गया है।':msg.includes('LOGIN_REQUIRED')?'पहले सदस्य सत्यापन पूरा करें।':msg.includes('VERIFIED_ACTIVE_MEMBER_REQUIRED')?'सक्रिय और सत्यापित सदस्य ही Spin कर सकते हैं।':msg.includes('ANNUAL_VERIFICATION_REQUIRED')?'इस वर्ष का सदस्य सत्यापन आवश्यक है।':msg.includes('REWARDS_ZONE_ACCESS_REQUIRED')?'आपके सदस्य ID पर Rewards Zone अनुमति सक्रिय नहीं है।':msg;
+  await refreshSpinStatus().catch(()=>{});
+ }
+});
 const promoMessages={
  review:'Google समीक्षा पूरी तरह स्वैच्छिक और ईमानदार होनी चाहिए। समीक्षा देने, उसकी रेटिंग या सकारात्मक शब्दों के बदले Coin नहीं दिए जाएँगे।',
  social:'YouTube / Facebook / Instagram पर Follow, Subscribe, Like या View के बदले Coin नहीं दिए जाएँगे। केवल आधिकारिक चैनल लिंक दिखाए जाएँगे।',
@@ -901,7 +942,7 @@ $('coinValueForm').addEventListener('submit',async event=>{event.preventDefault(
 $('walletAdjustForm').addEventListener('submit',async event=>{event.preventDefault();const memberId=$('adjustMemberId').value.trim(),delta=Number($('adjustCoinDelta').value),reason=$('adjustReason').value.trim();if(!memberId||!Number.isInteger(delta)||delta===0||reason.length<5){say('Member ID, गैर-शून्य Coin संख्या और कारण आवश्यक हैं।','error');return;}if(!window.confirm(memberId+' के Wallet में '+(delta>0?'+':'')+delta+' Coin Adjustment दर्ज करें?'))return;try{const result=await api('/rest/v1/rpc/sbpf_admin_adjust_reward_wallet_by_member_id',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_member_id:memberId,p_points_delta:delta,p_description:reason,p_request_id:crypto.randomUUID()})});if(!result?.success)throw new Error('Adjustment पूरा नहीं हुआ।');$('walletAdjustForm').reset();say('Wallet Adjustment Ledger में दर्ज हो गया।','ok');await loadAdmin();}catch(e){say('Wallet Adjustment नहीं हुआ: '+e.message,'error');}});
 $('enforcementForm').addEventListener('submit',async event=>{event.preventDefault();const memberId=$('enforceMemberId').value.trim(),action=$('enforceAction').value,reason=$('enforceReason').value.trim();if(!memberId||reason.length<10){say('Member ID और विस्तृत कारण आवश्यक हैं।','error');return;}const label=action==='revoke'?'स्थायी रूप से Reward Zone बंद':'अस्थायी रोक';if(!window.confirm(memberId+' पर '+label+' लागू करें? यह Wallet और Rewards सुविधाओं को रोक देगा।'))return;try{await api('/rest/v1/rpc/sbpf_admin_enforce_rewards_member',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_member_id:memberId,p_action:action,p_reason:reason})});$('enforcementForm').reset();say('Admin कार्रवाई दर्ज हो गई।','ok');await loadAdmin();}catch(e){say('Admin कार्रवाई नहीं हुई: '+e.message,'error');}});
 
-loadRewardCategories().catch(e=>{const message='Rewards कार्ड लोड नहीं हुए: '+(e&&e.message?e.message:'नेटवर्क या Supabase त्रुटि');['rewardCategoriesPublicGrid','rewardCategoriesTestGrid','rewardCategoriesMemberGrid'].forEach(id=>{const el=$(id);if(el)el.innerHTML='<div class="card" role="alert">'+esc(message)+'<p class="muted">कृपया पेज Refresh करें। समस्या बनी रहे तो SBPF तकनीकी टीम को यह संदेश भेजें।</p></div>';});say(message,'error');});
+refreshSpinStatus().catch(()=>{});\nloadRewardCategories().catch(e=>{const message='Rewards कार्ड लोड नहीं हुए: '+(e&&e.message?e.message:'नेटवर्क या Supabase त्रुटि');['rewardCategoriesPublicGrid','rewardCategoriesTestGrid','rewardCategoriesMemberGrid'].forEach(id=>{const el=$(id);if(el)el.innerHTML='<div class="card" role="alert">'+esc(message)+'<p class="muted">कृपया पेज Refresh करें। समस्या बनी रहे तो SBPF तकनीकी टीम को यह संदेश भेजें।</p></div>';});say(message,'error');});
 initRewardEntryGate();
 load();
 })();
