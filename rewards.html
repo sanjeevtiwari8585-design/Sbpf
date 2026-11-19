@@ -58,7 +58,8 @@ footer{max-width:1060px;margin:auto;padding:0 16px 30px;text-align:center;color:
 #memberSpinPanel.spin-panel-modal{position:fixed!important;z-index:1102!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;width:min(960px,calc(100vw - 24px))!important;max-height:88dvh!important;overflow:auto!important;margin:0!important;padding:16px!important;background:#fffdf8!important;border:2px solid #d6ad45!important;border-radius:18px!important;box-shadow:0 24px 90px #0008!important;scrollbar-width:thin}
 body.spin-panel-modal-open:before{content:'';position:fixed;inset:0;z-index:1101;background:rgba(20,12,15,.78);backdrop-filter:blur(4px)}
 #memberSpinPanel .spin-panel-close{position:sticky;top:0;float:right;z-index:5;border:0;border-radius:999px;background:#781626;color:#fff;padding:8px 14px;font-weight:800;cursor:pointer}
-@media(max-width:600px){#memberSpinPanel.spin-panel-modal{width:calc(100vw - 16px)!important;max-height:88dvh!important;padding:12px!important}.spin-wheel-grid{grid-template-columns:1fr!important;gap:12px!important}.spin-wheel-card{max-width:100%!important}}#memberSpinPanel.spin-panel-focus{animation:sbpfSpinPanelFocus 1.4s ease-out}@keyframes sbpfSpinPanelFocus{0%,35%{outline:4px solid #d6ad45;outline-offset:3px;box-shadow:0 0 0 8px #d6ad4533}100%{outline:0 solid transparent;outline-offset:8px;box-shadow:none}}
+@media(max-width:600px){#memberSpinPanel.spin-panel-modal{width:calc(100vw - 16px)!important;max-height:88dvh!important;padding:12px!important}.spin-wheel-grid{grid-template-columns:1fr!important;gap:12px!important}.spin-wheel-card{max-width:100%!important}}
+.single-spin-wheel-grid{grid-template-columns:minmax(0,620px)!important;justify-content:center!important}.single-spin-wheel-card{width:100%;box-sizing:border-box}.single-spin-wheel-card .spin-wheel-wrap{width:min(76vw,420px);max-width:100%}.spin-wheel-labels-12 span{width:54px;margin-left:-27px;margin-top:-9px;text-align:center;font-size:10px;line-height:1.1;font-weight:900;white-space:nowrap;color:#fff;text-shadow:0 1px 3px #000,0 0 4px #000}.spin-prize-odds{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:12px auto 0;max-width:520px}.spin-prize-odds span{display:flex;flex-direction:column;align-items:center;padding:7px 3px;border:1px solid #eadfc9;border-radius:9px;background:#fff9eb;font-size:12px}.spin-prize-odds small{font-size:10px;color:#71645a}.single-spin-wheel-card .spin-action{width:min(100%,360px);margin:10px auto}.single-spin-wheel-card .spin-result{text-align:center}#memberSpinPanel.spin-panel-focus{animation:sbpfSpinPanelFocus 1.4s ease-out}@keyframes sbpfSpinPanelFocus{0%,35%{outline:4px solid #d6ad45;outline-offset:3px;box-shadow:0 0 0 8px #d6ad4533}100%{outline:0 solid transparent;outline-offset:8px;box-shadow:none}}
 .spin-wheel{box-sizing:border-box}
 .spin-wheel-wrap.zoomed{position:fixed!important;z-index:1002;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;width:min(86vw,420px)!important;max-width:calc(100vw - 32px)!important;height:auto!important;aspect-ratio:1;margin:0!important;padding:16px!important;border-radius:22px;background:#fffaf0;box-shadow:0 22px 80px #0008;cursor:default;overflow:visible}
 body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;background:rgba(20,12,15,.82);backdrop-filter:blur(5px)}
@@ -307,9 +308,9 @@ footer {display:none!important}
  <div id="rewardCategoriesMemberGrid" class="grid reward-categories-grid"><div class="card">लोड हो रहा है…</div></div>
 <div class="section-title"><h2>🎡 SBPF Spin & Win</h2><span class="tag">हर 3 घंटे में 1 मौका · 24 घंटे में अधिकतम 8</span></div>
 <div class="panel" id="memberSpinPanel">
- <p class="spin-info">तीन शानदार Wheels में से किसी एक को चुनें। हर Wheel में 12 इनाम हैं। संभावना: 11=30%, 21=25%, 51=20%, 101=10%, 251=7%, 551=4%, 1100=2%, 2100=1%, 5100=0.5%, 11000=0.3%, 21000=0.15%, 51000=0.05%। 11, 21 और 51 Coin सबसे अधिक आने वाले इनाम हैं।</p>
- <div class="spin-wheel-grid">
-  <article class="spin-wheel-card"><div class="spin-wheel-heading"><b>🥇 गोल्ड व्हील</b><span>12 इनाम</span></div><div class="spin-wheel-wrap" id="memberSpinWrap1"><button class="spin-zoom-close" data-spin-close="1" type="button" aria-label="बंद करें">×</button><div class="spin-pointer"></div><div id="memberSpinWheel1" class="spin-wheel twelve wheel-theme-1"></div></div><button class="spin-action" type="button" data-spin-wheel="1">🎡 इस Wheel को Spin करें</button><div class="spin-result" id="memberSpinResult1" aria-live="polite">Spin के लिए तैयार</div></article><article class="spin-wheel-card"><div class="spin-wheel-heading"><b>💎 डायमंड व्हील</b><span>12 इनाम</span></div><div class="spin-wheel-wrap" id="memberSpinWrap2"><button class="spin-zoom-close" data-spin-close="2" type="button" aria-label="बंद करें">×</button><div class="spin-pointer"></div><div id="memberSpinWheel2" class="spin-wheel twelve wheel-theme-2"></div></div><button class="spin-action" type="button" data-spin-wheel="2">🎡 इस Wheel को Spin करें</button><div class="spin-result" id="memberSpinResult2" aria-live="polite">Spin के लिए तैयार</div></article><article class="spin-wheel-card"><div class="spin-wheel-heading"><b>👑 रॉयल व्हील</b><span>12 इनाम</span></div><div class="spin-wheel-wrap" id="memberSpinWrap3"><button class="spin-zoom-close" data-spin-close="3" type="button" aria-label="बंद करें">×</button><div class="spin-pointer"></div><div id="memberSpinWheel3" class="spin-wheel twelve wheel-theme-3"></div></div><button class="spin-action" type="button" data-spin-wheel="3">🎡 इस Wheel को Spin करें</button><div class="spin-result" id="memberSpinResult3" aria-live="polite">Spin के लिए तैयार</div></article>
+ <p class="spin-info">एक ही SBPF Spin Wheel में 12 अलग-अलग Coin इनाम हैं। हर खंड में एक इनाम है। इनाम मिलने की संभावना नीचे स्पष्ट दी गई है।</p>
+ <div class="spin-wheel-grid single-spin-wheel-grid">
+  <article class="spin-wheel-card single-spin-wheel-card"><div class="spin-wheel-heading"><b>🎡 SBPF Spin & Win</b><span>12 Coin खंड</span></div><div class="spin-wheel-wrap" id="memberSpinWrap1"><button class="spin-zoom-close" data-spin-close="1" type="button" aria-label="बंद करें">×</button><div class="spin-pointer"></div><div id="memberSpinWheel1" class="spin-wheel twelve wheel-theme-1"></div></div><button class="spin-action" type="button" data-spin-wheel="1">🎡 Spin करें</button><div class="spin-result" id="memberSpinResult1" aria-live="polite">Spin के लिए तैयार</div><div class="spin-prize-odds" id="memberSpinPrizeOdds"></div></article>
  </div>
  <div class="spin-timer-panel"><b>⏳ अगला Spin कब मिलेगा?</b><strong id="memberSpinCountdown">सदस्य सत्यापन के बाद समय दिखेगा</strong><span id="memberSpinCountLeft">आज के बाकी मौके: 8 / 8</span></div>
  <p class="spin-info" id="memberSpinStatus">हर सदस्य को 24 घंटे में अधिकतम 8 Spin मिलेंगे। सभी तीन Wheels के Spin एक ही सीमा में गिने जाएँगे।</p>
@@ -739,20 +740,25 @@ if(spinButton&&spinWheel){
  });
 }
 const spinPrizeList=[11,21,51,101,251,551,1100,2100,5100,11000,21000,51000];
+const spinPrizeOdds=[30,25,20,10,7,4,2,1,.5,.3,.15,.05];
 const spinButtons=[...document.querySelectorAll('[data-spin-wheel]')];
-const spinTimers={busy:false,rotation:{1:0,2:0,3:0},countdown:null};
-for(let wheelNo=1;wheelNo<=3;wheelNo++){
- const face=$('memberSpinWheel'+wheelNo),wrap=$('memberSpinWrap'+wheelNo);
- if(!face||!wrap)continue;
- const labels=document.createElement('div');labels.className='spin-wheel-labels';
- spinPrizeList.slice(0,4).forEach((prize,index)=>{const label=document.createElement('span');label.textContent=prize.toLocaleString('en-IN');const centers=[54,153,234,288];const angle=centers[index];label.style.transform='rotate('+angle+'deg) translateY(-'+(wrap.clientWidth*.355)+'px) rotate(-'+angle+'deg)';labels.appendChild(label)});
- face.appendChild(labels);
- const odds=document.createElement('div');odds.className='spin-prize-odds';odds.innerHTML=spinPrizeList.map((p,i)=>'<span>'+p.toLocaleString('en-IN')+' <small>'+[30,25,20,10,7,4,2,1,.5,.3,.15,.05][i]+'%</small></span>').join('');wrap.parentElement.appendChild(odds);
- const open=()=>{if(spinTimers.busy)return;document.body.classList.add('spin-zoom-open');wrap.classList.add('zoomed');};
- face.setAttribute('role','button');face.setAttribute('tabindex','0');face.setAttribute('aria-label','Wheel को बड़ा करके देखें');
- face.addEventListener('click',open);face.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
+const spinTimers={busy:false,rotation:{1:0},countdown:null};
+{
+ const face=$('memberSpinWheel1'),wrap=$('memberSpinWrap1');
+ if(face&&wrap){
+  const palette=['#8d1728','#e7c66f','#145a3b','#f3e5b8','#a92c3d','#d9ae45','#235f91','#9b3b16','#6d8c2e','#f2d68a','#542a70','#c65a36'];
+  let cursor=0;const stops=spinPrizeOdds.map(v=>{const start=cursor;cursor+=v*3.6;return start.toFixed(4)+'deg '+cursor.toFixed(4)+'deg';});
+  face.style.background='conic-gradient('+spinPrizeOdds.map((v,i)=>palette[i]+' '+stops[i]).join(',')+')';
+  const labels=document.createElement('div');labels.className='spin-wheel-labels spin-wheel-labels-12';
+  spinPrizeList.forEach((prize,index)=>{const label=document.createElement('span');label.textContent=prize.toLocaleString('en-IN');const angle=index*30+15;label.style.transform='rotate('+angle+'deg) translateY(-'+(wrap.clientWidth*.355)+'px) rotate(-'+angle+'deg)';labels.appendChild(label)});
+  face.appendChild(labels);
+  const odds=$('memberSpinPrizeOdds');if(odds){odds.innerHTML=spinPrizeList.map((p,i)=>'<span><b>'+p.toLocaleString('en-IN')+'</b><small>'+spinPrizeOdds[i]+'%</small></span>').join('');}
+  const open=()=>{if(spinTimers.busy)return;document.body.classList.add('spin-zoom-open');wrap.classList.add('zoomed');};
+  face.setAttribute('role','button');face.setAttribute('tabindex','0');face.setAttribute('aria-label','12 Coin खंड वाला Spin Wheel बड़ा करके देखें');
+  face.addEventListener('click',open);face.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
+ }
 }
-const closeAllSpinZoom=()=>{document.body.classList.remove('spin-zoom-open');for(let n=1;n<=3;n++)$('memberSpinWrap'+n)?.classList.remove('zoomed')};
+const closeAllSpinZoom=()=>{document.body.classList.remove('spin-zoom-open');$('memberSpinWrap1')?.classList.remove('zoomed')};
 document.querySelectorAll('[data-spin-close]').forEach(b=>b.addEventListener('click',closeAllSpinZoom));
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAllSpinZoom()});
 document.addEventListener('pointerdown',e=>{if(document.body.classList.contains('spin-zoom-open')&&!e.target.closest('.spin-wheel-wrap'))closeAllSpinZoom()});
@@ -768,7 +774,7 @@ async function refreshSpinStatus(){
  spinCountdownTarget=earliest|| (last?last+3*60*60*1000:0);
  $('memberSpinCountLeft').textContent='आज के बाकी मौके: '+Math.max(0,8-spinCountToday)+' / 8';
  spinButtons.forEach(b=>b.disabled=!config?.rewards_enabled||spinTimers.busy||spinCountToday>=8||(spinCountdownTarget>Date.now()));
- $('memberSpinStatus').textContent=spinCountToday>=8?'आज के सभी 8 मौके पूरे हो गए। सबसे पुराना Spin 24 घंटे पुराना होने पर अगला मौका खुलेगा।':'तीनों Wheels के Spin मिलाकर 24 घंटे में अधिकतम 8 मौके। हर Spin के बीच 3 घंटे का अंतर।';
+ $('memberSpinStatus').textContent=spinCountToday>=8?'आज के सभी 8 मौके पूरे हो गए। सबसे पुराना Spin 24 घंटे पुराना होने पर अगला मौका खुलेगा।':'एक ही Spin Wheel पर 24 घंटे में अधिकतम 8 मौके। हर Spin के बीच 3 घंटे का अंतर।';
  if(!config?.rewards_enabled){$('memberSpinStatus').textContent='Spin Wheel तैयार है। वास्तविक Coin Spin अभी Rewards Zone लॉन्च होने तक बंद है।';$('memberSpinCountdown').textContent='Rewards लॉन्च की प्रतीक्षा';}
  if(!spinRefreshTimer)spinRefreshTimer=window.setInterval(()=>{
   const left=spinCountdownTarget?spinCountdownTarget-Date.now():0;
@@ -780,7 +786,7 @@ async function refreshSpinStatus(){
 spinButtons.forEach(button=>button.addEventListener('click',async()=>{
  if(spinTimers.busy)return;
  if(!token||!user?.id){$('memberSpinStatus').textContent='पहले सदस्य सत्यापन पूरा करें।';return;}
- const wheelNo=Number(button.dataset.spinWheel);
+ const wheelNo=1;
  spinTimers.busy=true;spinButtons.forEach(b=>b.disabled=true);
  $('memberSpinResult'+wheelNo).textContent='आपका Spin सुरक्षित रूप से दर्ज हो रहा है…';
  try{
@@ -788,7 +794,7 @@ spinButtons.forEach(button=>button.addEventListener('click',async()=>{
   const prize=Number(result?.prize_coins),idx=spinPrizeList.indexOf(prize);
   if(idx<0)throw new Error('अमान्य Spin परिणाम');
   const face=$('memberSpinWheel'+wheelNo);
-  const prizeCenters=[54,153,234,288,318.6,338.4,349.2,354.6,357.3,358.74,359.505,359.91];
+  const prizeCenters=spinPrizeList.map((_,i)=>i*30+15);
   const targetAngle=(360-prizeCenters[idx]+360)%360;
   const currentAngle=((spinTimers.rotation[wheelNo]%360)+360)%360;
   spinTimers.rotation[wheelNo]+=1800+((targetAngle-currentAngle+360)%360);
