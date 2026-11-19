@@ -35,7 +35,7 @@ begin
   end if;
 
   update public.sbpf_reward_redemptions
-    set finance_reviewed_by=auth.uid(), finance_reviewed_at=now(),
+    set finance_decision=p_decision, finance_reviewed_by=auth.uid(), finance_reviewed_at=now(),
         finance_note=case when p_decision='reject' then btrim(p_note) else 'Finance review recommended' end
     where id=p_redemption_id;
 
@@ -75,7 +75,8 @@ begin
   if p_decision in ('approve','reject') then
     if v_row.status<>'pending' then raise exception 'WITHDRAWAL_NOT_PENDING'; end if;
     if v_row.fee_payment_status<>'paid' then raise exception 'FEE_NOT_CONFIRMED'; end if;
-    if v_row.finance_reviewed_at is null then raise exception 'FINANCE_REVIEW_REQUIRED'; end if;
+    if v_row.finance_reviewed_at is null or v_row.finance_decision is null then raise exception 'FINANCE_REVIEW_REQUIRED'; end if;
+    if p_decision='approve' and v_row.finance_decision<>'recommend' then raise exception 'FINANCE_DID_NOT_RECOMMEND_APPROVAL'; end if;
     if p_decision='approve' then
       update public.sbpf_reward_redemptions
         set status='approved', final_approved_by=auth.uid(), final_approved_at=now(),
