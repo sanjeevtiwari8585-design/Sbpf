@@ -856,7 +856,7 @@ document.addEventListener('click',async event=>{
    try{if(navigator.share)await navigator.share(shareData);else if(navigator.clipboard){await navigator.clipboard.writeText(shareData.url);say('SBPF वेबसाइट लिंक कॉपी हो गया।','ok');}else say(shareData.url,'ok');}catch(e){if(e.name!=='AbortError')say('शेयर नहीं हो सका: '+e.message,'error');}
   }else if(slug==='spin-wheel'){
    const target=$('memberSpinPanel')||$('demoSpinWheel');
-   if(target){target.classList.remove('spin-panel-focus');void target.offsetWidth;target.classList.add('spin-panel-focus');target.scrollIntoView({behavior:'smooth',block:'start'});target.setAttribute('tabindex','-1');target.focus({preventScroll:true});const status=$('memberSpinStatus');if(status)status.textContent='आपका Spin Wheel यहाँ है। Gold, Diamond या Royal Wheel चुनें। वास्तविक Coin Spin Rewards लॉन्च होने तक बंद है।setTimeout(()=>target.classList.remove('spin-panel-focus'),1600);}
+   if(target){target.classList.remove('spin-panel-focus');void target.offsetWidth;target.classList.add('spin-panel-focus');target.scrollIntoView({behavior:'smooth',block:'start'});target.setAttribute('tabindex','-1');target.focus({preventScroll:true});const status=$('memberSpinStatus');if(status)status.textContent='आपका Spin Wheel यहाँ है। Gold, Diamond या Royal Wheel चुनें। वास्तविक Coin Spin Rewards लॉन्च होने तक बंद है।';setTimeout(()=>target.classList.remove('spin-panel-focus'),1600);}
    else say('Spin Wheel अभी लोड हो रहा है। कृपया कुछ क्षण बाद फिर खोलें।');
   }else if(slug==='coin-wallet'){
    const target=$('ledger')||$('redeemForm');target?.scrollIntoView({behavior:'smooth',block:'center'});
