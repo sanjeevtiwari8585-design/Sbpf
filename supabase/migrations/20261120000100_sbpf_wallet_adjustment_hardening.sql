@@ -75,7 +75,7 @@ begin
       where member_profile_id=p_member_profile_id and status='pending'),0)
     into v_reserved;
 
-  if p_points_delta < 0 and v_balance-v_reserved < abs(p_points_delta)::bigint then
+  if p_points_delta < 0 and v_balance-v_reserved < abs(p_points_delta::bigint) then
     raise exception 'ADJUSTMENT_EXCEEDS_AVAILABLE_COIN_BALANCE';
   end if;
 
