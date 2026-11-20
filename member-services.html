@@ -278,9 +278,9 @@ async function saveProfileEdit(event){
   const completed=await rpc('complete_my_member_profile');
   if(completed!==true)throw new Error('जानकारी सेव हुई, लेकिन प्रोफ़ाइल पूरी होने की पुष्टि नहीं मिली।');
   await load();
-  await openView('profile');
+  await openView('kyc');
   const box=$('viewBody');
-  if(box)box.insertAdjacentHTML('afterbegin','<div class="notice success">आपकी सदस्य जानकारी सफलतापूर्वक सुरक्षित हो गई है।</div>');
+  if(box)box.insertAdjacentHTML('afterbegin','<div class="notice success"><b>स्टेप 1 पूरा हुआ।</b> अब स्टेप 2 में फोटो, आधार और PAN अपलोड करें।</div>');
  }catch(error){
   message.innerHTML='<div class="notice error">जानकारी सुरक्षित नहीं हुई: '+esc(error.message)+'</div>';
  }finally{
@@ -458,15 +458,48 @@ async function saveFamily(event){
 function kv(a,b){return '<div class="kv"><b>'+esc(a)+'</b><span>'+esc(b)+'</span></div>'}
 async function kycView(){
  const status=String(profile.kyc_status||'pending');
- $('viewBody').innerHTML='<div class="panel"><div class="notice">KYC स्थिति: <b>'+esc(status)+'</b> • दस्तावेज़ अपलोड होने के बाद एडमिन द्वारा सत्यापन होगा।</div>'+
- '<div class="row">'+kv('Aadhaar दस्तावेज़',profile.aadhaar_document_path?'जमा है':'अभी जमा नहीं')+kv('PAN दस्तावेज़',profile.pan_document_path?'जमा है':'अभी जमा नहीं')+'</div>'+
- '<form id="kycUploadForm" class="family-form" style="margin-top:14px"><fieldset><legend>पहचान दस्तावेज़ सुरक्षित रूप से अपलोड करें</legend>'+
+ $('viewBody').innerHTML='<div class="panel"><div class="notice"><b>स्टेप 2 / 2 — फोटो और दस्तावेज़ अपलोड</b><br>KYC स्थिति: <b>'+esc(status)+'</b> • दस्तावेज़ अपलोड होने के बाद एडमिन द्वारा सत्यापन होगा।</div>'+
+ '<div class="row">'+kv('सदस्य फोटो',profile.profile_photo_path?'जमा है':'अभी जमा नहीं')+kv('Aadhaar दस्तावेज़',profile.aadhaar_document_path?'जमा है':'अभी जमा नहीं')+kv('PAN दस्तावेज़',profile.pan_document_path?'जमा है':'अभी जमा नहीं')+'</div>'+
+ '<form id="memberPhotoForm" class="family-form" style="margin-top:14px"><fieldset><legend>1. सदस्य की फोटो</legend>'+
+ '<label>फोटो चुनें (JPG, PNG या WEBP; अधिकतम 5 MB) *</label><input id="memberPhotoFile" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" required>'+
+ '<button id="memberPhotoBtn" class="primary" type="submit">फोटो अपलोड करें</button><div id="memberPhotoMsg" aria-live="polite"></div></fieldset></form>'+
+ '<form id="kycUploadForm" class="family-form" style="margin-top:14px"><fieldset><legend>2. पहचान दस्तावेज़</legend>'+
  '<label>दस्तावेज़ का प्रकार *</label><select name="document_type" id="kycDocumentType" required><option value="aadhaar">Aadhaar कार्ड की प्रति</option><option value="pan">PAN कार्ड की प्रति</option></select>'+
  '<label>फ़ाइल चुनें (JPG, PNG या PDF; अधिकतम 5 MB) *</label><input id="kycFile" type="file" accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf" required>'+
- '<p style="font-size:12px;color:var(--muted)">केवल दस्तावेज़ की प्रति अपलोड करें। यहाँ Aadhaar/PAN नंबर या OTP अलग से न लिखें। आपकी फ़ाइल Supabase के सुरक्षित KYC upload endpoint से भेजी जाएगी।</p>'+
+ '<p style="font-size:12px;color:var(--muted)">यहाँ Aadhaar/PAN नंबर या OTP अलग से न लिखें। केवल दस्तावेज़ की प्रति अपलोड करें।</p>'+
  '<button id="kycUploadBtn" class="primary" type="submit">दस्तावेज़ जमा करें</button><div id="kycUploadMsg" aria-live="polite"></div></fieldset></form>'+
- '<div class="notice">स्थिति “submitted” का अर्थ दस्तावेज़ मिला है; यह सरकारी पहचान सत्यापन या SBPF एडमिन की मंज़ूरी का प्रमाण नहीं है।</div></div>';
+ '<div class="notice">दस्तावेज़ निजी Supabase Storage में सुरक्षित रहेंगे। “submitted” का अर्थ दस्तावेज़ मिला है; यह सरकारी पहचान सत्यापन या SBPF एडमिन की मंज़ूरी का प्रमाण नहीं है।</div></div>';
+ $('memberPhotoForm').addEventListener('submit',uploadMemberPhoto);
  $('kycUploadForm').addEventListener('submit',uploadKycDocument);
+}
+async function uploadMemberPhoto(event){
+ event.preventDefault();
+ const file=$('memberPhotoFile').files?.[0],button=$('memberPhotoBtn'),message=$('memberPhotoMsg');
+ if(!file){message.innerHTML='<div class="notice error">पहले फोटो चुनें।</div>';return}
+ if(file.size>5*1024*1024){message.innerHTML='<div class="notice error">फोटो 5 MB से बड़ी है।</div>';return}
+ const mimeExt={'image/jpeg':'jpg','image/png':'png','image/webp':'webp'};
+ const ext=mimeExt[file.type];
+ if(!ext){message.innerHTML='<div class="notice error">केवल JPG, PNG या WEBP फोटो स्वीकार होगी।</div>';return}
+ if(!token||!profile?.member_id){message.innerHTML='<div class="notice error">लॉगिन या सदस्य जानकारी उपलब्ध नहीं है। दोबारा प्रवेश करें।</div>';return}
+ const path=profile.member_id+'/profile-'+Date.now()+'.'+ext;
+ button.disabled=true;button.textContent='फोटो सुरक्षित अपलोड हो रही है…';
+ try{
+  const response=await fetch(URL+'/storage/v1/object/profile-photos/'+path,{
+   method:'POST',
+   headers:{apikey:KEY,Authorization:'Bearer '+token,'Content-Type':file.type,'x-upsert':'false'},
+   body:file
+  });
+  const raw=await response.text();let result={};try{result=JSON.parse(raw)}catch{}
+  if(!response.ok)throw new Error(result.message||result.error||raw||'फोटो अपलोड नहीं हुई।');
+  const saved=await rpc('update_my_member_profile_photo',{p_path:path});
+  if(saved!==true)throw new Error('फोटो अपलोड हुई, लेकिन प्रोफ़ाइल में पथ सुरक्षित होने की पुष्टि नहीं मिली।');
+  await load();await openView('kyc');
+  const box=$('viewBody');if(box)box.insertAdjacentHTML('afterbegin','<div class="notice success">सदस्य की फोटो सुरक्षित अपलोड हो गई।</div>');
+ }catch(error){
+  message.innerHTML='<div class="notice error">फोटो अपलोड नहीं हुई: '+esc(error.message)+'</div>';
+ }finally{
+  if($('memberPhotoBtn')){$('memberPhotoBtn').disabled=false;$('memberPhotoBtn').textContent='फोटो अपलोड करें';}
+ }
 }
 async function uploadKycDocument(event){
  event.preventDefault();
