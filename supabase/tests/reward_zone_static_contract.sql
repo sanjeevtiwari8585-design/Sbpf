@@ -10,6 +10,7 @@ declare
   v_spin_def text;
   v_queue_def text;
   v_request_def text;
+  v_adjust_def text;
 begin
   if to_regclass('public.sbpf_spin_prize_options') is null then
     raise exception 'MISSING_TABLE_sbpf_spin_prize_options';
@@ -35,6 +36,25 @@ begin
     raise exception 'SPIN_ODDS_MUST_BE_25_PERCENT_EACH';
   end if;
 
+
+  select pg_get_functiondef('public.sbpf_admin_adjust_reward_wallet(uuid,integer,text,uuid)'::regprocedure)
+    into v_adjust_def;
+  if position('for update' in lower(v_adjust_def))=0
+     or position('wallet_not_active' in lower(v_adjust_def))=0
+     or position('adjustment_exceeds_available_coin_balance' in lower(v_adjust_def))=0
+     or position('sbpf_reward_wallet_transfers' in lower(v_adjust_def))=0
+     or position('sbpf_reward_redemptions' in lower(v_adjust_def))=0
+     or position('sbpf_reward_product_orders' in lower(v_adjust_def))=0
+     or position('insert into public.sbpf_reward_wallets' in lower(v_adjust_def))>0 then
+    raise exception 'ADMIN_WALLET_ADJUSTMENT_GUARDS_MISSING';
+  end if;
+  if not has_function_privilege('anon','public.sbpf_admin_adjust_reward_wallet(uuid,integer,text,uuid)','EXECUTE')
+     and has_function_privilege('authenticated','public.sbpf_admin_adjust_reward_wallet(uuid,integer,text,uuid)','EXECUTE') then
+    -- Expected: authenticated admins call the guarded RPC; anon must never execute it.
+    null;
+  else
+    raise exception 'ADMIN_WALLET_ADJUSTMENT_EXECUTE_ACL_INVALID';
+  end if;
 
   select pg_get_functiondef('public.sbpf_spin_wheel(smallint)'::regprocedure) into v_spin_def;
   if position('24 hours' in lower(v_spin_def))=0 then
