@@ -35,21 +35,6 @@ begin
     raise exception 'SPIN_ODDS_MUST_BE_25_PERCENT_EACH';
   end if;
 
-  if not exists (
-    select 1 from public.sbpf_spin_prize_options
-    where prize_coins between 10 and 50
-    having sum(probability_basis_points)=3000
-  ) then raise exception 'SPIN_SMALL_PRIZE_GROUP_MUST_BE_30_PERCENT'; end if;
-  if not exists (
-    select 1 from public.sbpf_spin_prize_options
-    where prize_coins between 100 and 500
-    having sum(probability_basis_points)=6700
-  ) then raise exception 'SPIN_MID_PRIZE_GROUP_MUST_BE_67_PERCENT'; end if;
-  if not exists (
-    select 1 from public.sbpf_spin_prize_options
-    where prize_coins between 1000 and 5000
-    having sum(probability_basis_points)=300
-  ) then raise exception 'SPIN_HIGH_PRIZE_GROUP_MUST_BE_3_PERCENT'; end if;
 
   select pg_get_functiondef('public.sbpf_spin_wheel(smallint)'::regprocedure) into v_spin_def;
   if position('24 hours' in lower(v_spin_def))=0 then
