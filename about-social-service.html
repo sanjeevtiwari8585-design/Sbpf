@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#781626"><title>Social Service & Public Welfare | SBPF Official</title><link rel="icon" href="public/assets/sbpf-logo.svg"><style>
+:root{--maroon:#781626;--gold:#d7b34b;--cream:#fff9ed;--ink:#282126;--muted:#675e62;--line:#eee2d1}
+*{box-sizing:border-box}body{margin:0;background:#fbfaf8;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.75}
+.top{background:#241d20;color:#f9f3ec;text-align:center;padding:8px 14px;font-size:12px;letter-spacing:.5px}
+header{background:linear-gradient(120deg,#711222,#9b2634 62%,#c59b36);color:#fff;padding:18px max(18px,calc((100% - 1160px)/2));display:flex;align-items:center;gap:15px}
+.logo{width:72px;height:72px;object-fit:contain;background:#fff;border:3px solid #f2cf73;border-radius:50%;padding:4px}
+header h1{margin:0;font-size:clamp(20px,3vw,29px);line-height:1.25}header p{margin:5px 0 0;color:#ffedc4;font-size:14px}
+nav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:10px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:4}
+nav a{padding:7px 13px;text-decoration:none;border-radius:9px;font-weight:650;font-size:14px;color:var(--maroon)}nav a:hover{background:var(--cream)}
+.hero{padding:34px 18px;text-align:center;background:linear-gradient(130deg,#fffaf0,#fff);border-bottom:1px solid var(--line)}
+.hero small{color:var(--maroon);font-weight:800;letter-spacing:1.2px}.hero h2{color:var(--maroon);font-size:clamp(25px,4vw,36px);line-height:1.3;margin:8px auto;max-width:950px}
+.layout{max-width:1160px;margin:28px auto 55px;padding:0 18px;display:grid;grid-template-columns:300px minmax(0,1fr);gap:22px;align-items:start}
+.sidebar{position:sticky;top:75px;display:grid;gap:16px}.visual{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 5px 20px #3d1b1207;text-align:center}.visual img{width:100%;height:auto;object-fit:contain;display:block}.visual .emblem{max-height:205px}.visual h3{margin:5px 0 10px;color:var(--maroon);font-size:16px}
+.content{background:#fff;border:1px solid var(--line);border-radius:17px;padding:clamp(20px,3vw,34px);box-shadow:0 5px 20px #3d1b1207;min-width:0}
+.content h2{color:var(--maroon);font-size:clamp(22px,3vw,29px);line-height:1.35;margin:0 0 20px;padding-bottom:14px;border-bottom:2px solid var(--gold)}
+.content p{margin:0 0 15px;white-space:pre-wrap}.content ul{padding-left:23px;margin:0 0 17px}.content li{margin:6px 0}
+.detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:15px 0}.detail{background:#fffaf1;border:1px solid var(--line);border-radius:10px;padding:12px;overflow-wrap:anywhere}.detail b{display:block;color:#805b1a;font-size:12px;letter-spacing:.3px;margin-bottom:4px}
+.loading,.error{padding:22px;text-align:center;background:#fffaf1;border:1px solid var(--line);border-radius:12px}
+footer{background:#241d20;color:#f9f3ec;padding:25px 18px;text-align:center;font-size:13px}footer a{color:#e9d7a2;text-decoration:none}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.sidebar{position:static;grid-template-columns:repeat(2,minmax(0,1fr))}.visual{padding:10px}.visual .emblem{max-height:150px}}
+@media(max-width:520px){header{padding:14px 12px}.logo{width:58px;height:58px}.layout{padding:0 12px;margin:18px auto 35px;gap:14px}.sidebar{grid-template-columns:1fr 1fr}.visual h3{font-size:13px}.content{padding:19px 16px}.detail-grid{grid-template-columns:1fr}}
+</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head>
+<body><div class="top">SWARNIM BHARAT PARIWAR FOUNDATION (SBPF) · OFFICIAL ORGANIZATIONAL PROFILE</div>
+<header><img class="logo" src="public/assets/sbpf-logo.svg" alt="SBPF Official Logo"><div><h1>Swarnim Bharat Parivar Foundation</h1><p>Service · Cooperation · Self-Reliance · Empowerment</p></div></header>
+<nav><a href="index.html">Home</a><a href="about-us.html">About Us – All Headings</a><a href="index.html#campaigns">Campaigns</a></nav>
+<section class="hero"><small>OFFICIAL SBPF INFORMATION</small><h2>Social Service & Public Welfare</h2></section>
+<main class="layout"><aside class="sidebar"><div class="visual"><h3>Official SBPF Emblem</h3><img class="emblem" src="public/assets/sbpf-logo.svg" alt="Swarnim Bharat Parivar Foundation official logo"></div><div class="visual"><h3>SBPF Purpose & Commitment</h3><img src="public/assets/sbpf-purpose-poster.svg" alt="Official SBPF purpose poster"></div></aside>
+<article class="content" id="detail"><div class="loading">Loading official information…</div></article></main>
+<footer>© 2026 Swarnim Bharat Parivar Foundation (SBPF) · <a href="about-us.html">Back to About Us</a></footer>
+<script>
+(async function(){
+ const client=window.supabase.createClient("https://dxowhzghrdghfzoggorx.supabase.co","sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo");
+ const root=document.getElementById("detail");
+ const labels={legal_name:"Legal Name",common_name:"Common Name",abbreviation:"Abbreviation",legal_form:"Legal Form",cin:"CIN",date_of_incorporation:"Date of Incorporation",section_8_licence_number:"Section 8 Licence Number",registration_authority:"Registration Authority",operational_scope:"Operational Scope",ngo_darpan_id:"NGO Darpan ID","e_anuदान_id":"e-Anudaan Enrolment ID",website:"Official Website"};
+ function paragraph(parent,value){const p=document.createElement("p");p.textContent=value;parent.appendChild(p)}
+ function body(parent,value){String(value||"").split(/\n\s*\n/).forEach(block=>{const t=block.trim();if(!t)return;const lines=t.split("\n");if(lines.every(x=>/^\s*[•-]\s+/.test(x))){const ul=document.createElement("ul");lines.forEach(x=>{const li=document.createElement("li");li.textContent=x.replace(/^\s*[•-]\s+/,"");ul.appendChild(li)});parent.appendChild(ul)}else paragraph(parent,t)})}
+ try{
+  const {data,error}=await client.from("sbpf_organization_profile").select("content,is_published").eq("slug","official-introduction").eq("is_published",true).single();
+  if(error||!data)throw error||new Error("No published profile");
+  const section=(data.content.sections||[])[6];if(!section)throw new Error("Section unavailable");
+  root.innerHTML="";const h=document.createElement("h2");h.textContent=section.heading||"Social Service & Public Welfare";root.appendChild(h);
+  if(section.body)body(root,section.body);
+  if(6===7){
+   const grid=document.createElement("div");grid.className="detail-grid";
+   Object.entries(labels).forEach(([key,name])=>{if(!section[key])return;const box=document.createElement("div");box.className="detail";const b=document.createElement("b");b.textContent=name;const v=document.createElement("span");v.textContent=section[key];box.append(b,v);grid.appendChild(box)});
+   root.appendChild(grid);
+   ["contact_note","tax_status_note","privacy_notice","public_disclaimer","closing_statement"].forEach(k=>{if(section[k])paragraph(root,section[k])});
+  }
+ }catch(e){root.innerHTML="";const box=document.createElement("div");box.className="error";box.textContent="Official information is temporarily unavailable. Please try again later.";root.appendChild(box)}
+})();
+</script></body></html>
