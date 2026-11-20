@@ -59,7 +59,7 @@ footer{max-width:1060px;margin:auto;padding:0 16px 30px;text-align:center;color:
 body.spin-panel-modal-open:before{content:'';position:fixed;inset:0;z-index:1101;background:rgba(20,12,15,.78);backdrop-filter:blur(4px)}
 #memberSpinPanel .spin-panel-close{position:sticky;top:0;float:right;z-index:5;border:0;border-radius:999px;background:#781626;color:#fff;padding:8px 14px;font-weight:800;cursor:pointer}
 @media(max-width:600px){#memberSpinPanel.spin-panel-modal{width:calc(100vw - 16px)!important;max-height:88dvh!important;padding:12px!important}.spin-wheel-grid{grid-template-columns:1fr!important;gap:12px!important}.spin-wheel-card{max-width:100%!important}}
-.single-spin-wheel-grid{grid-template-columns:minmax(0,620px)!important;justify-content:center!important}.single-spin-wheel-card{width:100%;box-sizing:border-box}.single-spin-wheel-card .spin-wheel-wrap{width:min(76vw,420px);max-width:100%}.spin-wheel-labels-4 span{width:54px;margin-left:-27px;margin-top:-9px;text-align:center;font-size:10px;line-height:1.1;font-weight:900;white-space:nowrap;color:#fff;text-shadow:0 1px 3px #000,0 0 4px #000}.spin-prize-odds{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:12px auto 0;max-width:520px}.spin-prize-odds span{display:flex;flex-direction:column;align-items:center;padding:7px 3px;border:1px solid #eadfc9;border-radius:9px;background:#fff9eb;font-size:12px}.spin-prize-odds small{font-size:10px;color:#71645a}.single-spin-wheel-card .spin-action{width:min(100%,360px);margin:10px auto}.single-spin-wheel-card .spin-result{text-align:center}#memberSpinPanel.spin-panel-focus{animation:sbpfSpinPanelFocus 1.4s ease-out}@keyframes sbpfSpinPanelFocus{0%,35%{outline:4px solid #d6ad45;outline-offset:3px;box-shadow:0 0 0 8px #d6ad4533}100%{outline:0 solid transparent;outline-offset:8px;box-shadow:none}}
+.single-spin-wheel-grid{grid-template-columns:minmax(0,620px)!important;justify-content:center!important}.single-spin-wheel-card{width:100%;box-sizing:border-box}.single-spin-wheel-card .spin-wheel-wrap{width:min(76vw,420px);max-width:100%}.spin-wheel-labels-4 span{position:absolute;left:50%;top:50%;width:58px;margin-left:-29px;margin-top:-9px;text-align:center;font-size:12px;line-height:1.1;font-weight:900;white-space:nowrap;color:#fff;text-shadow:0 1px 3px #000,0 0 4px #000;}width:54px;margin-left:-27px;margin-top:-9px;text-align:center;font-size:10px;line-height:1.1;font-weight:900;white-space:nowrap;color:#fff;text-shadow:0 1px 3px #000,0 0 4px #000}.spin-prize-odds{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:12px auto 0;max-width:520px}.spin-prize-odds span{display:flex;flex-direction:column;align-items:center;padding:7px 3px;border:1px solid #eadfc9;border-radius:9px;background:#fff9eb;font-size:12px}.spin-prize-odds small{font-size:10px;color:#71645a}.single-spin-wheel-card .spin-action{width:min(100%,360px);margin:10px auto}.single-spin-wheel-card .spin-result{text-align:center}#memberSpinPanel.spin-panel-focus{animation:sbpfSpinPanelFocus 1.4s ease-out}@keyframes sbpfSpinPanelFocus{0%,35%{outline:4px solid #d6ad45;outline-offset:3px;box-shadow:0 0 0 8px #d6ad4533}100%{outline:0 solid transparent;outline-offset:8px;box-shadow:none}}
 .spin-wheel{box-sizing:border-box}
 .spin-wheel-wrap.zoomed{position:fixed!important;z-index:1002;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;width:min(86vw,420px)!important;max-width:calc(100vw - 32px)!important;height:auto!important;aspect-ratio:1;margin:0!important;padding:16px!important;border-radius:22px;background:#fffaf0;box-shadow:0 22px 80px #0008;cursor:default;overflow:visible}
 body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;background:rgba(20,12,15,.82);backdrop-filter:blur(5px)}
@@ -313,14 +313,14 @@ footer {display:none!important}
 </div>
 <div class="section-title"><h2>कार्य</h2></div>
  <div id="rewardCategoriesMemberGrid" class="grid reward-categories-grid"><div class="card">लोड हो रहा है…</div></div>
-<div class="section-title"><h2>🎡 SBPF Spin & Win</h2><span class="tag">हर 3 घंटे में 1 निःशुल्क Spin</span></div>
+<div class="section-title"><h2>🎡 SBPF Spin & Win</h2><span class="tag">हर 24 घंटे में 1 निःशुल्क Spin</span></div>
 <div class="panel" id="memberSpinPanel">
  <p class="spin-info">एक ही SBPF Spin Wheel में 12 अलग-अलग Coin इनाम हैं। हर खंड में एक इनाम है। इनाम मिलने की संभावना नीचे स्पष्ट दी गई है।</p>
  <div class="spin-wheel-grid single-spin-wheel-grid">
-  <article class="spin-wheel-card single-spin-wheel-card"><div class="spin-wheel-heading"><b>🎡 SBPF Spin & Win</b><span>12 Coin खंड</span></div><div class="spin-wheel-wrap" id="memberSpinWrap1"><button class="spin-zoom-close" data-spin-close="1" type="button" aria-label="बंद करें">×</button><div class="spin-pointer"></div><div id="memberSpinWheel1" class="spin-wheel twelve wheel-theme-1"></div></div><button class="spin-action" type="button" data-spin-wheel="1">🎡 Spin करें</button><div class="spin-result" id="memberSpinResult1" aria-live="polite">Spin के लिए तैयार</div><div class="spin-prize-odds" id="memberSpinPrizeOdds"></div></article>
+  <article class="spin-wheel-card single-spin-wheel-card"><div class="spin-wheel-heading"><b>🎡 SBPF Spin & Win</b><span>4 Coin खंड</span></div><div class="spin-wheel-wrap" id="memberSpinWrap1"><button class="spin-zoom-close" data-spin-close="1" type="button" aria-label="बंद करें">×</button><div class="spin-pointer"></div><div id="memberSpinWheel1" class="spin-wheel twelve wheel-theme-1"></div></div><button class="spin-action" type="button" data-spin-wheel="1">🎡 Spin करें</button><div class="spin-result" id="memberSpinResult1" aria-live="polite">Spin के लिए तैयार</div><div class="spin-prize-odds" id="memberSpinPrizeOdds"></div></article>
  </div>
  <div class="spin-timer-panel"><b>⏳ अगला Spin कब मिलेगा?</b><strong id="memberSpinCountdown">सदस्य सत्यापन के बाद समय दिखेगा</strong><span id="memberSpinCountLeft">अगला Spin: उपलब्धता जाँच रहे हैं</span></div>
- <p class="spin-info" id="memberSpinStatus">हर 3 घंटे में एक निःशुल्क Spin मिलेगा। छूटा हुआ मौका आगे नहीं जुड़ेगा।</p>
+ <p class="spin-info" id="memberSpinStatus">हर 24 घंटे में एक निःशुल्क Spin मिलेगा। छूटा हुआ मौका आगे नहीं जुड़ेगा।</p>
 </div>
 <div class="section-title"><h2>आज के उपलब्ध टास्क</h2><span class="tag">Admin-approved</span></div>
 <div id="tasks" class="grid"><div class="card">टास्क लोड हो रहे हैं…</div></div>
@@ -889,7 +889,7 @@ async function refreshSpinStatus(){
  const left=spinCountdownTarget-Date.now();
  $('memberSpinCountLeft').textContent=left>0?'अगला Spin '+fmtSpinTime(left)+' में':'अगला Spin: उपलब्ध';
  spinButtons.forEach(b=>b.disabled=spinTimers.busy||left>0);
- $('memberSpinStatus').textContent=left>0?'आपका अगला निःशुल्क Spin 3 घंटे पूरे होने पर मिलेगा।':'आपका निःशुल्क Spin उपलब्ध है।';
+ $('memberSpinStatus').textContent=left>0?'आपका अगला निःशुल्क Spin 24 घंटे पूरे होने पर मिलेगा।':'आपका निःशुल्क Spin उपलब्ध है।';
  if(!spinRefreshTimer)spinRefreshTimer=window.setInterval(()=>{
   const remaining=spinCountdownTarget?spinCountdownTarget-Date.now():0;
   $('memberSpinCountdown').textContent=fmtSpinTime(remaining);
