@@ -56,6 +56,19 @@ begin
     raise exception 'ADMIN_WALLET_ADJUSTMENT_EXECUTE_ACL_INVALID';
   end if;
 
+  select pg_get_functiondef('public.sbpf_admin_review_reward_submission(uuid,text,text)'::regprocedure)
+    into v_adjust_def;
+  if position('auth.uid()' in lower(v_adjust_def))=0
+     or position('public.is_admin()' in lower(v_adjust_def))=0
+     or position('for update' in lower(v_adjust_def))=0
+     or position('reviewed_by=v_actor' in lower(v_adjust_def))=0
+     or position('sbpf_audit_log' in lower(v_adjust_def))=0
+     or position('points_reward' in lower(v_adjust_def))=0 then
+    raise exception 'TASK_SUBMISSION_ADMIN_REVIEW_RPC_GUARDS_MISSING';
+  end if;
+  if has_table_privilege('authenticated','public.sbpf_reward_submissions','UPDATE') then
+    raise exception 'DIRECT_CLIENT_SUBMISSION_UPDATE_MUST_BE_REVOKED';
+  end if;
   select pg_get_functiondef('public.sbpf_spin_wheel(smallint)'::regprocedure) into v_spin_def;
   if position('24 hours' in lower(v_spin_def))=0 then
     raise exception 'SPIN_FUNCTION_DOES_NOT_ENFORCE_24_HOUR_COOLDOWN';
