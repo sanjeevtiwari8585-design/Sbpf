@@ -26,10 +26,13 @@ begin
     into v_count,v_total,v_values
   from public.sbpf_spin_prize_options;
 
-  if v_count <> 12 then raise exception 'SPIN_PRIZE_COUNT_EXPECTED_12_GOT_%',v_count; end if;
+  if v_count <> 4 then raise exception 'SPIN_PRIZE_COUNT_EXPECTED_4_GOT_%',v_count; end if;
   if v_total <> 10000 then raise exception 'SPIN_ODDS_EXPECTED_10000_BPS_GOT_%',v_total; end if;
-  if v_values <> array[10,20,30,40,50,100,200,300,500,1000,2000,5000] then
+  if v_values <> array[10,40,50,100] then
     raise exception 'SPIN_PRIZE_VALUES_DO_NOT_MATCH_APPROVED_SET';
+  end if;
+  if exists(select 1 from public.sbpf_spin_prize_options where probability_basis_points<>2500) then
+    raise exception 'SPIN_ODDS_MUST_BE_25_PERCENT_EACH';
   end if;
 
   if not exists (
@@ -49,8 +52,8 @@ begin
   ) then raise exception 'SPIN_HIGH_PRIZE_GROUP_MUST_BE_3_PERCENT'; end if;
 
   select pg_get_functiondef('public.sbpf_spin_wheel(smallint)'::regprocedure) into v_spin_def;
-  if position('3 hours' in lower(v_spin_def))=0 then
-    raise exception 'SPIN_FUNCTION_DOES_NOT_ENFORCE_THREE_HOUR_COOLDOWN';
+  if position('24 hours' in lower(v_spin_def))=0 then
+    raise exception 'SPIN_FUNCTION_DOES_NOT_ENFORCE_24_HOUR_COOLDOWN';
   end if;
   if position('sbpf_member_spin_permissions' in lower(v_spin_def))=0 then
     raise exception 'SPIN_FUNCTION_DOES_NOT_CHECK_MEMBER_PERMISSION';
