@@ -172,6 +172,7 @@ async function verifyPhoneOtp(){
   if(data.session.refresh_token)localStorage.setItem('sbpf_refresh_token',data.session.refresh_token);
   otpMessage('मोबाइल सत्यापित। सदस्य रिकॉर्ड खोला जा रहा है…');
   await load();
+  if(profile)await openView('profile-edit');
  }catch(e){otpMessage(e.message||'OTP सत्यापन विफल।',true)}
  finally{b.disabled=false;b.textContent='OTP सत्यापित करके प्रवेश करें'}
 }
@@ -244,22 +245,21 @@ function profileView(){$('viewBody').innerHTML='<div class="panel"><div class="n
 
 
 async function profileEditView(){
- const areas=await api('/rest/v1/focus_areas?is_active=eq.true&select=id,name&order=name.asc');
- const rows=Array.isArray(areas)?areas:[];
- const options='<option value="">कार्यक्षेत्र चुनें</option>'+rows.map(a=>'<option value="'+esc(a.id)+'" '+(String(profile.work_area_id||'')===String(a.id)?'selected':'')+'>'+esc(a.name)+'</option>').join('');
  const val=k=>esc(profile?.[k]??'');
- $('viewBody').innerHTML='<div class="panel"><div class="notice">अपना नाम, संपर्क, पता और कार्यक्षेत्र सही रखें। सदस्यता स्थिति इस फ़ॉर्म से नहीं बदली जा सकती।</div>'+
- '<form id="profileEditForm" class="family-form"><fieldset><legend>मूल जानकारी</legend><div class="form-grid">'+
+ const dob=profile?.dob?String(profile.dob).slice(0,10):'';
+ $('viewBody').innerHTML='<div class="panel"><div class="notice">कृपया अपनी व्यक्तिगत जानकारी भरें। दस्तावेज़ अपलोड, कार्यक्षेत्र और पद इस फॉर्म में नहीं हैं। आपका सत्यापित मोबाइल नंबर बदला नहीं जा सकता।</div>'+
+ '<form id="profileEditForm" class="family-form"><fieldset><legend>सदस्य व्यक्तिगत विवरण</legend><div class="form-grid">'+
  '<div><label>पूरा नाम *</label><input name="full_name" required minlength="2" maxlength="120" value="'+val('full_name')+'"></div>'+
- '<div><label>मोबाइल नंबर</label><input name="mobile" inputmode="tel" maxlength="15" value="'+val('mobile')+'"></div>'+
- '<div><label>पूरा पता</label><input name="address" maxlength="250" value="'+val('address')+'"></div>'+
- '<div><label>देश</label><input name="country" maxlength="80" value="'+(val('country')||'India')+'"></div>'+
- '<div><label>राज्य</label><input name="state" maxlength="100" value="'+(val('state')||'Uttar Pradesh')+'"></div>'+
- '<div><label>जिला</label><input name="district" maxlength="100" value="'+val('district')+'"></div>'+
- '<div><label>पिनकोड</label><input name="pincode" maxlength="12" value="'+val('pincode')+'"></div>'+
- '<div><label>पद / भूमिका</label><input name="designation" maxlength="100" value="'+val('designation')+'"></div>'+
- '<div><label>कार्यक्षेत्र</label><select name="work_area_id">'+options+'</select></div>'+
- '</div></fieldset><button id="profileSaveBtn" class="primary" type="submit">प्रोफ़ाइल सुरक्षित करें</button><div id="profileEditMsg" aria-live="polite"></div></form></div>';
+ '<div><label>पिता का नाम *</label><input name="father_name" required minlength="2" maxlength="120" value="'+val('father_name')+'"></div>'+
+ '<div><label>जन्मतिथि *</label><input name="dob" type="date" required max="'+new Date().toISOString().slice(0,10)+'" value="'+esc(dob)+'"></div>'+
+ '<div><label>लिंग *</label><select name="gender" required><option value="">लिंग चुनें</option><option value="पुरुष" '+(profile?.gender==='पुरुष'?'selected':'')+'>पुरुष</option><option value="महिला" '+(profile?.gender==='महिला'?'selected':'')+'>महिला</option><option value="अन्य" '+(profile?.gender==='अन्य'?'selected':'')+'>अन्य</option></select></div>'+
+ '<div><label>सत्यापित मोबाइल नंबर</label><input value="'+val('mobile')+'" readonly aria-readonly="true"></div>'+
+ '<div><label>ईमेल (वैकल्पिक)</label><input name="email" type="email" maxlength="160" value="'+val('email')+'"></div>'+
+ '<div class="full"><label>पूरा पता *</label><textarea name="address" required maxlength="250" rows="3">'+val('address')+'</textarea></div>'+
+ '<div><label>जिला *</label><input name="district" required maxlength="100" value="'+val('district')+'"></div>'+
+ '<div><label>राज्य *</label><input name="state" required maxlength="100" value="'+(val('state')||'Uttar Pradesh')+'"></div>'+
+ '<div><label>पिनकोड *</label><input name="pincode" required inputmode="numeric" pattern="[0-9]{6}" maxlength="6" value="'+val('pincode')+'"></div>'+
+ '</div></fieldset><button id="profileSaveBtn" class="primary" type="submit">जानकारी सुरक्षित करें</button><div id="profileEditMsg" aria-live="polite"></div></form></div>';
  $('profileEditForm').addEventListener('submit',saveProfileEdit);
 }
 async function saveProfileEdit(event){
@@ -267,36 +267,24 @@ async function saveProfileEdit(event){
  const form=$('profileEditForm'),button=$('profileSaveBtn'),message=$('profileEditMsg');
  if(!form||!form.reportValidity())return;
  const value=n=>form.elements[n]?.value?.trim()||'';
- const mobile=value('mobile');
- if(mobile&&mobile.replace(/\D/g,'').length<10){message.innerHTML='<div class="notice error">मोबाइल नंबर 10 से 15 अंकों का होना चाहिए।</div>';return}
- button.disabled=true;button.textContent='सुपाबेस में सहेजा जा रहा है…';
+ button.disabled=true;button.textContent='Supabase में सुरक्षित हो रहा है…';
  try{
-  const ok=await rpc('update_my_member_profile_v2',{
-   p_full_name:value('full_name'),p_mobile:mobile||null,p_address:value('address')||null,
-   p_country:value('country')||'India',p_state:value('state')||'Uttar Pradesh',
-   p_district:value('district')||null,p_pincode:value('pincode')||null,
-   p_designation:value('designation')||null,p_work_area_id:value('work_area_id')?Number(value('work_area_id')):null
+  const ok=await rpc('update_my_member_personal_details',{
+   p_full_name:value('full_name'),p_father_name:value('father_name'),p_email:value('email')||null,
+   p_dob:value('dob'),p_gender:value('gender'),p_address:value('address'),
+   p_district:value('district'),p_state:value('state'),p_pincode:value('pincode')
   });
-  if(ok!==true)throw new Error('प्रोफ़ाइल अपडेट की पुष्टि नहीं मिली।');
-  let profileComplete=false,completionError='';
-  try{
-   const completed=await rpc('complete_my_member_profile');
-   profileComplete=completed===true;
-   if(!profileComplete)completionError='प्रोफ़ाइल पूरी होने की पुष्टि नहीं मिली।';
-  }catch(e){completionError=e.message||'कुछ आवश्यक जानकारी बाकी है।'}
+  if(ok!==true)throw new Error('जानकारी सेव होने की पुष्टि नहीं मिली।');
+  const completed=await rpc('complete_my_member_profile');
+  if(completed!==true)throw new Error('जानकारी सेव हुई, लेकिन प्रोफ़ाइल पूरी होने की पुष्टि नहीं मिली।');
   await load();
-  if(profileComplete){
-   await openView('profile');
-  }else{
-   dismissProfileReminder();
-   await openView('profile-edit');
-   const statusBox=$('profileEditMsg');
-   if(statusBox)statusBox.innerHTML='<div class="notice error"><b>आपकी जानकारी सेव हो गई है, लेकिन प्रोफ़ाइल अभी अधूरी है।</b><br>'+esc(completionError)+'<br>ऊपर की जानकारी पूरी करके फिर सुरक्षित करें।</div>';
-  }
+  await openView('profile');
+  const box=$('viewBody');
+  if(box)box.insertAdjacentHTML('afterbegin','<div class="notice success">आपकी सदस्य जानकारी सफलतापूर्वक सुरक्षित हो गई है।</div>');
  }catch(error){
-  message.innerHTML='<div class="notice error">प्रोफ़ाइल अपडेट नहीं हुई: '+esc(error.message)+'</div>';
+  message.innerHTML='<div class="notice error">जानकारी सुरक्षित नहीं हुई: '+esc(error.message)+'</div>';
  }finally{
-  if($('profileSaveBtn')){ $('profileSaveBtn').disabled=false;$('profileSaveBtn').textContent='प्रोफ़ाइल सुरक्षित करें';}
+  if($('profileSaveBtn')){$('profileSaveBtn').disabled=false;$('profileSaveBtn').textContent='जानकारी सुरक्षित करें';}
  }
 }
 
