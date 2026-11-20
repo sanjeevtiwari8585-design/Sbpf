@@ -144,7 +144,7 @@ async function branding(){const src='/public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%
 function msg(t,c=''){ $('authMsg').innerHTML='<div class="notice '+c+'">'+esc(t)+'</div>'}
 let otpPhoneE164='';
 function otpMessage(text,isError=false){const el=$('otpMsg');if(el){el.textContent=text;el.style.color=isError?'#a01828':'#176b42'}}
-function normalizeIndianPhone(raw){let digits=String(raw||'').replace(/\\D/g,'');if(digits.length===10)digits='91'+digits;if(digits.length===12&&digits.startsWith('91'))return '+'+digits;throw Error('कृपया सही 10 अंकों का भारतीय मोबाइल नंबर दर्ज करें।')}
+function normalizeIndianPhone(raw){let digits=String(raw||'').replace(/\D/g,'');if(digits.length===10)digits='91'+digits;if(digits.length===12&&digits.startsWith('91'))return '+'+digits;throw Error('कृपया सही 10 अंकों का भारतीय मोबाइल नंबर दर्ज करें।')}
 async function sendPhoneOtp(){
  const b=$('sendOtpBtn');b.disabled=true;b.textContent='OTP भेजा जा रहा है…';
  try{
@@ -162,7 +162,7 @@ async function verifyPhoneOtp(){
  try{
   if(!otpPhoneE164)otpPhoneE164=normalizeIndianPhone($('otpPhone').value);
   const code=$('otpCode').value.trim();
-  if(!/^\\d{6}$/.test(code))throw Error('6 अंकों का OTP दर्ज करें।');
+  if(!/^\d{6}$/.test(code))throw Error('6 अंकों का OTP दर्ज करें।');
   const client=window.supabase.createClient(URL,KEY);
   const {data,error}=await client.auth.verifyOtp({phone:otpPhoneE164,token:code,type:'sms'});
   if(error)throw error;
