@@ -59,7 +59,7 @@ footer{max-width:1060px;margin:auto;padding:0 16px 30px;text-align:center;color:
 body.spin-panel-modal-open:before{content:'';position:fixed;inset:0;z-index:1101;background:rgba(20,12,15,.78);backdrop-filter:blur(4px)}
 #memberSpinPanel .spin-panel-close{position:sticky;top:0;float:right;z-index:5;border:0;border-radius:999px;background:#781626;color:#fff;padding:8px 14px;font-weight:800;cursor:pointer}
 @media(max-width:600px){#memberSpinPanel.spin-panel-modal{width:calc(100vw - 16px)!important;max-height:88dvh!important;padding:12px!important}.spin-wheel-grid{grid-template-columns:1fr!important;gap:12px!important}.spin-wheel-card{max-width:100%!important}}
-.single-spin-wheel-grid{grid-template-columns:minmax(0,620px)!important;justify-content:center!important}.single-spin-wheel-card{width:100%;box-sizing:border-box}.single-spin-wheel-card .spin-wheel-wrap{width:min(76vw,420px);max-width:100%}.spin-wheel-labels-12 span{width:54px;margin-left:-27px;margin-top:-9px;text-align:center;font-size:10px;line-height:1.1;font-weight:900;white-space:nowrap;color:#fff;text-shadow:0 1px 3px #000,0 0 4px #000}.spin-prize-odds{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:12px auto 0;max-width:520px}.spin-prize-odds span{display:flex;flex-direction:column;align-items:center;padding:7px 3px;border:1px solid #eadfc9;border-radius:9px;background:#fff9eb;font-size:12px}.spin-prize-odds small{font-size:10px;color:#71645a}.single-spin-wheel-card .spin-action{width:min(100%,360px);margin:10px auto}.single-spin-wheel-card .spin-result{text-align:center}#memberSpinPanel.spin-panel-focus{animation:sbpfSpinPanelFocus 1.4s ease-out}@keyframes sbpfSpinPanelFocus{0%,35%{outline:4px solid #d6ad45;outline-offset:3px;box-shadow:0 0 0 8px #d6ad4533}100%{outline:0 solid transparent;outline-offset:8px;box-shadow:none}}
+.single-spin-wheel-grid{grid-template-columns:minmax(0,620px)!important;justify-content:center!important}.single-spin-wheel-card{width:100%;box-sizing:border-box}.single-spin-wheel-card .spin-wheel-wrap{width:min(76vw,420px);max-width:100%}.spin-wheel-labels-4 span{position:absolute;left:50%;top:50%;width:58px;margin-left:-29px;margin-top:-9px;text-align:center;font-size:12px;line-height:1.1;font-weight:900;white-space:nowrap;color:#fff;text-shadow:0 1px 3px #000,0 0 4px #000}.spin-prize-odds{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:12px auto 0;max-width:520px}.spin-prize-odds span{display:flex;flex-direction:column;align-items:center;padding:7px 3px;border:1px solid #eadfc9;border-radius:9px;background:#fff9eb;font-size:12px}.spin-prize-odds small{font-size:10px;color:#71645a}.single-spin-wheel-card .spin-action{width:min(100%,360px);margin:10px auto}.single-spin-wheel-card .spin-result{text-align:center}#memberSpinPanel.spin-panel-focus{animation:sbpfSpinPanelFocus 1.4s ease-out}@keyframes sbpfSpinPanelFocus{0%,35%{outline:4px solid #d6ad45;outline-offset:3px;box-shadow:0 0 0 8px #d6ad4533}100%{outline:0 solid transparent;outline-offset:8px;box-shadow:none}}
 .spin-wheel{box-sizing:border-box}
 .spin-wheel-wrap.zoomed{position:fixed!important;z-index:1002;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;width:min(86vw,420px)!important;max-width:calc(100vw - 32px)!important;height:auto!important;aspect-ratio:1;margin:0!important;padding:16px!important;border-radius:22px;background:#fffaf0;box-shadow:0 22px 80px #0008;cursor:default;overflow:visible}
 body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;background:rgba(20,12,15,.82);backdrop-filter:blur(5px)}
@@ -162,7 +162,6 @@ body.spin-zoom-open:before{content:"";position:fixed;inset:0;z-index:1001;backgr
 main>.hero,
 main>.public-rewards-preview,
 main>#message,
-#adminPanel,
 #loginPrompt,
 .rewards-header #walletQuickButton,
 footer {display:none!important}
@@ -240,14 +239,22 @@ footer {display:none!important}
  <div class="entry-gate-card">
   <div class="entry-gate-mark">🪙</div>
   <h2 id="entryGateTitle">SBPF सदस्य सत्यापन</h2>
-  <p class="muted">टेस्ट प्रवेश के लिए अधिकृत सदस्य ID दर्ज करें।</p>
-  <form id="entryVerifyForm">
+  <p class="muted">अपनी Admin-पंजीकृत जानकारी से सदस्यता सत्यापित करें। पहली बार PIN सेट होगा; अगली बार इसी PIN से प्रवेश होगा।</p>
+  <form id="entryVerifyForm" autocomplete="off">
    <label for="entryMemberId">SBPF Member ID</label>
    <input id="entryMemberId" maxlength="40" autocomplete="off" autocapitalize="characters" placeholder="SBPF Member ID" required>
-   <button id="entryVerifyButton" type="submit">सदस्य सत्यापित करें</button>
+   <label for="entryMobile">पंजीकृत मोबाइल नंबर</label>
+   <input id="entryMobile" type="tel" inputmode="numeric" maxlength="13" autocomplete="tel" placeholder="10 अंकों का मोबाइल नंबर" required>
+   <label for="entryFullName">Admin रिकॉर्ड के अनुसार पूरा नाम</label>
+   <input id="entryFullName" maxlength="120" autocomplete="name" placeholder="पूरा नाम" required>
+   <label for="entryPin">4 अंकों का Login PIN</label>
+   <input id="entryPin" type="password" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" autocomplete="new-password" required>
+   <label for="entryPinConfirm">PIN की पुष्टि करें (पहली बार)</label>
+   <input id="entryPinConfirm" type="password" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" autocomplete="new-password" required>
+   <button id="entryVerifyButton" type="submit">सुरक्षित प्रवेश करें</button>
   </form>
   <p id="entryGateMessage" class="entry-error" role="status" aria-live="polite"></p>
-  <p class="entry-foot">टेस्ट मोड: केवल अधिकृत टेस्ट सदस्य ID। पासवर्ड, OTP या ईमेल कोड नहीं।</p>
+  <p class="entry-foot">सुरक्षा: गलत PIN के 5 प्रयासों पर 15 मिनट का लॉक। Wallet PIN इससे अलग रहेगा।</p>
  </div>
 </div>
 
@@ -306,14 +313,14 @@ footer {display:none!important}
 </div>
 <div class="section-title"><h2>कार्य</h2></div>
  <div id="rewardCategoriesMemberGrid" class="grid reward-categories-grid"><div class="card">लोड हो रहा है…</div></div>
-<div class="section-title"><h2>🎡 SBPF Spin & Win</h2><span class="tag">हर 3 घंटे में 1 मौका · 24 घंटे में अधिकतम 8</span></div>
+<div class="section-title"><h2>🎡 SBPF Spin & Win</h2><span class="tag">हर 24 घंटे में 1 निःशुल्क Spin</span></div>
 <div class="panel" id="memberSpinPanel">
  <p class="spin-info">एक ही SBPF Spin Wheel में 12 अलग-अलग Coin इनाम हैं। हर खंड में एक इनाम है। इनाम मिलने की संभावना नीचे स्पष्ट दी गई है।</p>
  <div class="spin-wheel-grid single-spin-wheel-grid">
-  <article class="spin-wheel-card single-spin-wheel-card"><div class="spin-wheel-heading"><b>🎡 SBPF Spin & Win</b><span>12 Coin खंड</span></div><div class="spin-wheel-wrap" id="memberSpinWrap1"><button class="spin-zoom-close" data-spin-close="1" type="button" aria-label="बंद करें">×</button><div class="spin-pointer"></div><div id="memberSpinWheel1" class="spin-wheel twelve wheel-theme-1"></div></div><button class="spin-action" type="button" data-spin-wheel="1">🎡 Spin करें</button><div class="spin-result" id="memberSpinResult1" aria-live="polite">Spin के लिए तैयार</div><div class="spin-prize-odds" id="memberSpinPrizeOdds"></div></article>
+  <article class="spin-wheel-card single-spin-wheel-card"><div class="spin-wheel-heading"><b>🎡 SBPF Spin & Win</b><span>4 Coin खंड</span></div><div class="spin-wheel-wrap" id="memberSpinWrap1"><button class="spin-zoom-close" data-spin-close="1" type="button" aria-label="बंद करें">×</button><div class="spin-pointer"></div><div id="memberSpinWheel1" class="spin-wheel twelve wheel-theme-1"></div></div><button class="spin-action" type="button" data-spin-wheel="1">🎡 Spin करें</button><div class="spin-result" id="memberSpinResult1" aria-live="polite">Spin के लिए तैयार</div><div class="spin-prize-odds" id="memberSpinPrizeOdds"></div></article>
  </div>
- <div class="spin-timer-panel"><b>⏳ अगला Spin कब मिलेगा?</b><strong id="memberSpinCountdown">सदस्य सत्यापन के बाद समय दिखेगा</strong><span id="memberSpinCountLeft">आज के बाकी मौके: 8 / 8</span></div>
- <p class="spin-info" id="memberSpinStatus">हर सदस्य को 24 घंटे में अधिकतम 8 Spin मिलेंगे। सभी तीन Wheels के Spin एक ही सीमा में गिने जाएँगे।</p>
+ <div class="spin-timer-panel"><b>⏳ अगला Spin कब मिलेगा?</b><strong id="memberSpinCountdown">सदस्य सत्यापन के बाद समय दिखेगा</strong><span id="memberSpinCountLeft">अगला Spin: उपलब्धता जाँच रहे हैं</span></div>
+ <p class="spin-info" id="memberSpinStatus">हर 24 घंटे में एक निःशुल्क Spin मिलेगा। छूटा हुआ मौका आगे नहीं जुड़ेगा।</p>
 </div>
 <div class="section-title"><h2>आज के उपलब्ध टास्क</h2><span class="tag">Admin-approved</span></div>
 <div id="tasks" class="grid"><div class="card">टास्क लोड हो रहे हैं…</div></div>
@@ -336,12 +343,8 @@ footer {display:none!important}
 
 <div class="section-title"><h2>INR रिवॉर्ड निकालने का अनुरोध</h2></div>
 <div class="panel">
-<p id="coinValueLabel" class="muted">Coin की वैल्यू Admin द्वारा निर्धारित है। Cash अनुरोध मंजूरी के बाद पूरा होगा।</p>
-<form id="redeemForm">
-<div><label for="redeemPoints">कितने Coin रिडीम करने हैं?</label><input id="redeemPoints" type="number" min="100" step="100" required placeholder="उदाहरण: 1000"></div>
-<div><label for="payoutMethod">भुगतान का तरीका</label><select id="payoutMethod" required><option value="">चुनें</option><option value="upi">UPI</option><option value="bank_transfer">बैंक ट्रांसफर</option><option value="other">अन्य / एडमिन से संपर्क</option></select></div><div><label for="redeemPin">Wallet PIN</label><input id="redeemPin" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" minlength="4" autocomplete="current-password" required></div>
-<button id="redeemButton" type="submit">INR रिवॉर्ड अनुरोध भेजें</button>
-</form>
+<p id="coinValueLabel" class="muted">निश्चित निकासी विकल्प: ₹500 (30% शुल्क), ₹1,000 (20%), ₹5,000 (10%), ₹10,000 (5%)।</p>
+<div class="notice">Cash Withdrawal आवेदन सुरक्षित बैंक खाता Encryption और Sandbox परीक्षण पूरा होने तक बंद है। अभी कोई वास्तविक शुल्क या भुगतान नहीं लिया जाएगा।</div>
 <div id="redemptions" class="list" style="margin-top:12px"></div>
 </div>
 <section class="panel product-redeem-panel"><div class="section-title"><h2>Product Redeem</h2><span class="tag">Admin मंजूरी आवश्यक</span></div><div id="memberProducts" class="grid product-grid"><p class="muted">उपलब्ध Products लोड हो रहे हैं…</p></div><div id="memberProductOrders" class="list" style="margin-top:14px"></div></section>
@@ -374,7 +377,16 @@ footer {display:none!important}
  <div class="section-title"><h2>Product Redeem मंजूरी</h2></div><div id="adminProductOrders" class="list"></div>
  <div class="section-title"><h2>Wallet PIN Reset अनुरोध</h2></div><div id="adminPinResets" class="list"></div>
  <div class="section-title"><h2>Wallet Coin Adjustment</h2></div><form id="walletAdjustForm" class="admin-form"><div><label for="adjustMemberId">Member ID</label><input id="adjustMemberId" required maxlength="40"></div><div><label for="adjustCoinDelta">Coin जोड़ें (+) / घटाएँ (−)</label><input id="adjustCoinDelta" type="number" step="1" required></div><div class="wide"><label for="adjustReason">कारण (कम से कम 5 अक्षर)</label><textarea id="adjustReason" required minlength="5"></textarea></div><div class="wide"><button type="submit">Wallet Adjustment सेव करें</button></div></form><div class="section-title"><h2>Fake Task / सदस्य Reward नियंत्रण</h2></div><form id="enforcementForm" class="admin-form"><div><label for="enforceMemberId">Member ID</label><input id="enforceMemberId" required maxlength="40"></div><div><label for="enforceAction">कार्रवाई</label><select id="enforceAction"><option value="suspend">अस्थायी रोक</option><option value="revoke">स्थायी Reward Zone समाप्त</option></select></div><div class="wide"><label for="enforceReason">जाँच का कारण (कम से कम 10 अक्षर)</label><textarea id="enforceReason" required minlength="10"></textarea></div><div class="wide"><button type="submit">Admin कार्रवाई दर्ज करें</button></div></form>
+ <div class="section-title"><h2>Finance Team नियुक्ति / हटाना</h2></div>
+ <p class="muted">केवल Main Admin, Auth User UUID के आधार पर Finance सदस्य नियुक्त या निष्क्रिय कर सकता है। हर कार्रवाई का कारण दर्ज होगा।</p>
+ <form id="financeTeamForm" class="admin-form"><div><label for="financeUserId">Finance सदस्य का Auth User UUID</label><input id="financeUserId" required maxlength="36" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"></div><div><label for="financeTeamAction">कार्रवाई</label><select id="financeTeamAction"><option value="true">Finance Team में नियुक्त करें</option><option value="false">Finance Team से हटाएँ</option></select></div><div class="wide"><label for="financeTeamReason">कारण (कम से कम 5 अक्षर)</label><input id="financeTeamReason" required minlength="5"></div><div class="wide"><button type="submit">Finance Team अपडेट करें</button></div></form>
+ <div id="financeTeamList" class="list"></div>
  <div class="section-title"><h2>INR भुगतान अनुरोध</h2></div><div id="adminRedemptions" class="list"></div>
+</section>
+<section id="financePanel" class="panel hidden">
+ <div class="section-title"><h2>Finance Team · Cash Withdrawal Review</h2><span class="tag">केवल नियुक्त Finance सदस्य</span></div>
+ <p class="muted">यहाँ केवल Pending निकासी अनुरोधों का सीमित विवरण दिखेगा। पूरा बैंक खाता नंबर प्रदर्शित नहीं होगा।</p>
+ <div id="financeQueue" class="list"><p class="muted">Finance Queue लोड हो रही है…</p></div>
 </section>
 <section id="loginPrompt" class="panel hidden">
  <h2 style="color:var(--wine);margin-top:0">सदस्य सत्यापन आवश्यक</h2>
@@ -391,7 +403,7 @@ footer {display:none!important}
 const SUPABASE_URL='https://dxowhzghrdghfzoggorx.supabase.co';
 const SUPABASE_KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
 let token=localStorage.getItem('sbpf_access_token')||'';
-let user=null, member=null, isAdmin=false, memberIsVerified=false, config={coin_per_inr:100,manual_payout:true,rewards_enabled:false}, teams=[];
+let user=null, member=null, isAdmin=false, isFinanceTeam=false, memberIsVerified=false, config={coin_per_inr:100,manual_payout:true,rewards_enabled:false}, teams=[];
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function api(path,options){
@@ -420,29 +432,32 @@ async function initRewardEntryGate(){
  verifyForm.addEventListener('submit',async event=>{
   event.preventDefault();
   const button=$('entryVerifyButton');
-  button.disabled=true;button.textContent='जाँच हो रही है…';
+  button.disabled=true;button.textContent='सुरक्षित जाँच हो रही है…';
   $('entryGateMessage').textContent='';
   try{
-   const enteredId=$('entryMemberId').value.trim().toUpperCase();
-   // Correct the common transposition SPBF -> SBPF for this single test ID only.
-   const memberId=enteredId.replace(/^SPBF(?=2026)/,'SBPF');
-   $('entryMemberId').value=memberId;
-   if(memberId!=='SBPF2026000050')throw new Error('अभी केवल अधिकृत टेस्ट सदस्य ID स्वीकार है।');
-   const response=await fetch(SUPABASE_URL+'/functions/v1/member-id-test-access',{
+   const memberId=$('entryMemberId').value.trim().toUpperCase();
+   const mobile=$('entryMobile').value.trim();
+   const fullName=$('entryFullName').value.trim();
+   const pin=$('entryPin').value;
+   const confirmPin=$('entryPinConfirm').value;
+   if(!/^[A-Z0-9-]{6,40}$/.test(memberId))throw new Error('सही SBPF Member ID दर्ज करें।');
+   if(!/^[0-9]{10,13}$/.test(mobile.replace(/\\D/g,'')))throw new Error('सही पंजीकृत मोबाइल नंबर दर्ज करें।');
+   if(fullName.length<2)throw new Error('Admin रिकॉर्ड वाला पूरा नाम दर्ज करें।');
+   if(!/^[0-9]{4}$/.test(pin)||!/^[0-9]{4}$/.test(confirmPin))throw new Error('4 अंकों का PIN दर्ज करें।');
+   const response=await fetch(SUPABASE_URL+'/functions/v1/member-id-pin-login',{
     method:'POST',headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},
-    body:JSON.stringify({member_id:memberId})
+    body:JSON.stringify({member_id:memberId,mobile,full_name:fullName,pin,confirm_pin:confirmPin})
    });
    const data=await response.json().catch(()=>({}));
    if(!response.ok||!data.access_token||!data.user?.id)throw new Error(data.error||'सदस्य सत्यापन पूरा नहीं हुआ।');
-   // Apply the newly issued Supabase session in this page immediately.
-   // Avoid a reload racing with an older/expired token cached by the browser.
    token=data.access_token;
    localStorage.setItem('sbpf_access_token',data.access_token);
    if(data.refresh_token)localStorage.setItem('sbpf_refresh_token',data.refresh_token);
-   localStorage.setItem('sbpf_test_mode','true');
+   localStorage.removeItem('sbpf_test_mode');
+   $('entryPin').value='';$('entryPinConfirm').value='';
    await load();
   }catch(error){$('entryGateMessage').textContent=error.message||'सत्यापन सेवा उपलब्ध नहीं है।';}
-  finally{button.disabled=false;button.textContent='सदस्य सत्यापित करें';}
+  finally{button.disabled=false;button.textContent='सुरक्षित प्रवेश करें';}
  });
 }
 function say(text,kind){const el=$('message');el.className='notice'+(kind?' '+kind:'');el.textContent=text;}
@@ -496,12 +511,14 @@ async function load(){
   currentStep='Rewards सेटिंग जाँच';
   try{const settings=await api('/rest/v1/sbpf_rewards_config?select=coin_per_inr,manual_payout,rewards_enabled&id=eq.1');if(Array.isArray(settings)&&settings[0])config=settings[0];}catch(settingsError){console.warn('Rewards config unavailable; using safe defaults.',settingsError);}
   $('adminPanel').classList.toggle('hidden',!isAdmin);
+  try{await api('/rest/v1/rpc/sbpf_finance_cash_withdrawal_queue',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});isFinanceTeam=true;}catch(_){isFinanceTeam=false;}
+  $('financePanel').classList.toggle('hidden',!isFinanceTeam);
   $('dashboard').classList.toggle('hidden',!memberIsVerified);
   if(memberIsVerified){
    document.querySelector('.hero')?.classList.add('hidden');
    document.querySelector('.public-rewards-preview')?.classList.add('hidden');
   }
-  $('memberStatus').textContent=isAdmin?'Admin':'सत्यापित';
+  $('memberStatus').textContent=isAdmin?'Admin':(isFinanceTeam?'Finance Team':'सत्यापित');
   if(isAdmin){
    say(memberIsVerified?'Admin प्रवेश सफल। Wallet परीक्षण और Admin नियंत्रण दोनों उपलब्ध हैं।':'Admin प्रवेश सफल। सदस्य Wallet के लिए पात्र सदस्य रिकॉर्ड उपलब्ध नहीं है।','ok');
   }else if(!config.rewards_enabled){
@@ -514,6 +531,7 @@ async function load(){
    memberIsVerified?loadWallet():Promise.resolve(),
    loadTasks(),loadTeams(),loadRedemptions(),
    isAdmin?loadAdmin():Promise.resolve(),
+   isFinanceTeam?loadFinanceQueue():Promise.resolve(),
    isAdmin||!memberIsVerified?Promise.resolve():loadReferralLevels(),
    isAdmin||!memberIsVerified?Promise.resolve():loadProducts(),
    isAdmin||!memberIsVerified?Promise.resolve():loadProductOrders(),
@@ -652,13 +670,44 @@ window.submitTask=async function(taskId,taskType,evidenceRequired){
   say('टास्क जमा हो गया। Admin समीक्षा के बाद स्वीकृत Coin Wallet में जुड़ेंगे।','ok');
  }catch(error){say('टास्क पूरा नहीं हुआ: '+error.message,'error');}
 };
+async function loadFinanceQueue(){
+ const rows=await api('/rest/v1/rpc/sbpf_finance_cash_withdrawal_queue',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
+ const data=Array.isArray(rows)?rows:[];
+ const container=$('financeQueue');
+ container.replaceChildren();
+ if(!data.length){const empty=document.createElement('p');empty.className='muted';empty.textContent='अभी कोई Pending निकासी अनुरोध नहीं है।';container.append(empty);return;}
+ data.forEach(x=>{
+  const card=document.createElement('div');card.className='admin-card';
+  const heading=document.createElement('h4');heading.textContent='₹'+Number(x.tier_inr).toLocaleString('en-IN')+' निकासी · '+String(x.member_name||'')+' ('+String(x.member_code||'')+')';card.append(heading);
+  const details=document.createElement('small');
+  details.textContent='Coin: '+Number(x.points_requested).toLocaleString('en-IN')+' | शुल्क: ₹'+Number(x.fee_amount_inr||0).toFixed(2)+' ('+String(x.fee_percent)+'%) | शुद्ध भुगतान: ₹'+Number(x.net_amount_inr||0).toFixed(2)+' | Fee स्थिति: '+String(x.fee_payment_status)+' | प्रयास: '+String(x.fee_payment_attempts)+' | बैंक: ****'+String(x.bank_account_last4||'')+' | IFSC: '+String(x.bank_ifsc||'')+' | अनुरोध: '+new Date(x.created_at).toLocaleString('hi-IN');
+  card.append(details);
+  const actions=document.createElement('div');actions.className='admin-actions';
+  [['Finance Recommend','recommend',false],['Finance Reject','reject',true]].forEach(([label,decision,isAlt])=>{
+   const button=document.createElement('button');button.type='button';button.textContent=label;if(isAlt)button.className='alt';
+   button.addEventListener('click',()=>window.financeReviewWithdrawal(String(x.id),decision));actions.append(button);
+  });
+  card.append(actions);container.append(card);
+ });
+}
+window.financeReviewWithdrawal=async function(id,decision){
+ let note='';
+ if(decision==='reject'){note=window.prompt('Finance द्वारा Reject करने का कारण (कम से कम 5 अक्षर):')||'';if(note.trim().length<5)return;}
+ if(decision==='recommend'&&!window.confirm('क्या आपने बैंक विवरण और Fee भुगतान जाँच लिया है?'))return;
+ try{
+  const result=await api('/rest/v1/rpc/sbpf_finance_review_cash_withdrawal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_redemption_id:id,p_decision:decision,p_note:note||null})});
+  if(!result?.success)throw new Error(result?.error||'Finance review पूरा नहीं हुआ।');
+  say('Finance Review दर्ज हुआ। अंतिम निर्णय Main Admin के पास जाएगा।','ok');
+  await Promise.all([loadFinanceQueue(),isAdmin?loadAdmin():Promise.resolve()]);
+ }catch(e){say('Finance Review नहीं हुआ: '+e.message,'error');}
+};
 async function loadAdmin(){
  $('adminLaunchState').textContent='Rewards '+(config.rewards_enabled?'चालू हैं':'अभी बंद हैं')+' · '+Number(config.coin_per_inr||100)+' Coin = ₹1 · Cash भुगतान मैन्युअल';
  $('toggleRewards').textContent=config.rewards_enabled?'Rewards बंद करें':'Rewards चालू करें';
  const [taskRows,subRows,redRows,transferRows,productRows,pinRows]=await Promise.all([
   api('/rest/v1/sbpf_reward_tasks?select=id,title,task_type,points_reward,status,created_at&order=created_at.desc'),
   api('/rest/v1/sbpf_reward_submissions?select=id,task_id,member_profile_id,proof_note,evidence_url,created_at,sbpf_reward_tasks(title,points_reward)&status=eq.pending&order=created_at.asc'),
-  api('/rest/v1/sbpf_reward_redemptions?select=id,member_profile_id,points_requested,amount_inr,status,payout_method,created_at&status=in.(pending,approved)&order=created_at.asc'),
+  api('/rest/v1/sbpf_reward_redemptions?select=id,member_profile_id,points_requested,amount_inr,status,payout_method,created_at,withdrawal_tier_inr,fee_percent,fee_amount_inr,net_amount_inr,fee_payment_status,fee_payment_attempts,finance_decision,bank_account_last4,bank_ifsc&status=in.(pending,approved)&order=created_at.asc'),
   api('/rest/v1/sbpf_reward_wallet_transfers?select=id,sender_profile_id,recipient_profile_id,amount,status,created_at&status=eq.pending&order=created_at.asc'),
   api('/rest/v1/sbpf_reward_product_orders?select=id,member_profile_id,product_title,quantity,coins_cost,status,created_at&status=in.(pending,approved)&order=created_at.asc'),
   api('/rest/v1/sbpf_wallet_pin_reset_requests?select=id,member_profile_id,reason,created_at&status=eq.pending&order=created_at.asc')
@@ -669,8 +718,41 @@ async function loadAdmin(){
  $('adminTasks').innerHTML=taskRows.length?taskRows.map(t=>'<div class="admin-card"><h4>'+esc(t.title)+'</h4><small>'+esc(t.task_type)+' · '+Number(t.points_reward)+' Coin · '+esc(t.status)+'</small><div class="admin-actions">'+(t.status==='published'?'<button type="button" onclick="adminTaskStatus(\''+t.id+'\',\'paused\')">Pause</button>':t.status==='draft'||t.status==='paused'?'<button type="button" onclick="adminTaskStatus(\''+t.id+'\',\'published\', '+Number(t.points_reward)+')">Publish</button>':'')+'</div></div>').join(''):'<p class="muted">अभी कोई टास्क नहीं।</p>';
  $('adminSubmissions').innerHTML=subRows.length?subRows.map(x=>'<div class="admin-card"><h4>'+esc(x.sbpf_reward_tasks?.title||'SBPF Task')+'</h4><p>'+esc(x.proof_note)+'</p>'+(x.evidence_url?'<a href="'+esc(x.evidence_url)+'" target="_blank" rel="noopener">प्रमाण देखें ↗</a>':'')+'<small>Member: '+esc(memberLabel(x.member_profile_id))+' · '+new Date(x.created_at).toLocaleString('hi-IN')+'</small><div class="admin-actions"><button type="button" onclick="adminReviewSubmission(\''+x.id+'\',\'approved\', '+Number(x.sbpf_reward_tasks?.points_reward||0)+')">Approve & Coin दें</button><button type="button" class="alt" onclick="adminReviewSubmission(\''+x.id+'\',\'rejected\',0)">Reject</button></div></div>').join(''):'<p class="muted">कोई लंबित टास्क सबमिशन नहीं है।</p>';
  $('adminWalletTransfers').innerHTML=transferRows.length?transferRows.map(t=>'<div class="admin-card"><h4>'+Number(t.amount).toLocaleString('en-IN')+' Coin · मंजूरी लंबित</h4><small>भेजने वाला: '+esc(memberLabel(t.sender_profile_id))+'<br>प्राप्तकर्ता: '+esc(memberLabel(t.recipient_profile_id))+'<br>अनुरोध: '+esc(t.id)+' · '+new Date(t.created_at).toLocaleString('hi-IN')+'</small><div class="admin-actions"><button type="button" onclick="adminReviewWalletTransfer(\''+t.id+'\',\'approve\')">Approve & Transfer</button><button type="button" class="alt" onclick="adminReviewWalletTransfer(\''+t.id+'\',\'reject\')">Reject</button></div></div>').join(''):'<p class="muted">कोई लंबित Coin Transfer अनुरोध नहीं है।</p>';
- $('adminRedemptions').innerHTML=redRows.length?redRows.map(x=>'<div class="admin-card"><h4>'+Number(x.points_requested).toLocaleString('en-IN')+' Coin · ₹'+Number(x.amount_inr).toFixed(2)+'</h4><small>'+esc(x.payout_method||'भुगतान तरीका नहीं चुना')+' · '+esc(x.status)+' · Member '+esc(memberLabel(x.member_profile_id))+'</small><div class="admin-actions">'+(x.status==='pending'?'<button type="button" onclick="adminRedemption(\''+x.id+'\',\'approved\')">Approve</button><button type="button" class="alt" onclick="adminRedemption(\''+x.id+'\',\'rejected\')">Reject</button>':(x.status==='approved'?'<button type="button" onclick="adminRedemption(\''+x.id+'\',\'paid\')">भुगतान दर्ज करें</button>':''))+'</div></div>').join(''):'<p class="muted">कोई लंबित INR भुगतान अनुरोध नहीं है।</p>';
+  const redemptionContainer=$('adminRedemptions');
+  redemptionContainer.replaceChildren();
+  if(!redRows.length){
+   const empty=document.createElement('p');empty.className='muted';empty.textContent='कोई लंबित INR भुगतान अनुरोध नहीं है।';redemptionContainer.append(empty);
+  }else{
+   redRows.forEach(x=>{
+    const card=document.createElement('div');card.className='admin-card';
+    const heading=document.createElement('h4');
+    heading.textContent=(x.withdrawal_tier_inr?'₹'+Number(x.withdrawal_tier_inr).toLocaleString('en-IN')+' निकासी':'Legacy Redeem')+' · '+Number(x.points_requested).toLocaleString('en-IN')+' Coin';
+    card.append(heading);
+    const details=document.createElement('small');
+    details.textContent='शुल्क: ₹'+Number(x.fee_amount_inr||0).toFixed(2)+' ('+String(x.fee_percent??'—')+'%) · शुद्ध भुगतान: ₹'+Number(x.net_amount_inr??x.amount_inr??0).toFixed(2)+' | Fee: '+String(x.fee_payment_status||'legacy')+' · Finance: '+String(x.finance_decision||'—')+' | '+String(x.payout_method||'Bank Transfer')+' · '+String(x.status)+' · '+(x.bank_account_last4?'A/C ****'+String(x.bank_account_last4):'')+' · IFSC '+String(x.bank_ifsc||'')+' | Member '+String(memberLabel(x.member_profile_id));
+    card.append(details);
+    const actions=document.createElement('div');actions.className='admin-actions';
+    const addAction=(label,handler,isAlt=false)=>{const button=document.createElement('button');button.type='button';button.textContent=label;if(isAlt)button.className='alt';button.addEventListener('click',handler);actions.append(button);};
+    if(x.withdrawal_tier_inr){
+     if(x.status==='pending'&&x.finance_decision){
+      if(x.finance_decision==='recommend')addAction('Final Approve',()=>window.adminFinalWithdrawal(String(x.id),'approve'));
+      addAction('Final Reject',()=>window.adminFinalWithdrawal(String(x.id),'reject'),true);
+     }
+     if(x.status==='approved')addAction('भुगतान दर्ज करें',()=>window.adminFinalWithdrawal(String(x.id),'mark_paid'));
+     addAction('कारण सहित Cancel',()=>window.adminCancelCashWithdrawal(String(x.id)),true);
+    }else{
+     if(x.status==='pending'){
+      addAction('Approve',()=>window.adminRedemption(String(x.id),'approved'));
+      addAction('Reject',()=>window.adminRedemption(String(x.id),'rejected'),true);
+     }else if(x.status==='approved'){
+      addAction('भुगतान दर्ज करें',()=>window.adminRedemption(String(x.id),'paid'));
+     }
+    }
+    card.append(actions);redemptionContainer.append(card);
+   });
+  }
  $('coinPerInr').value=String(config.coin_per_inr||100);
+ await loadFinanceTeamList();
  $('adminProductOrders').innerHTML=productRows.length?productRows.map(o=>'<div class="admin-card"><h4>'+esc(o.product_title)+' · '+Number(o.quantity)+' नग</h4><small>'+Number(o.coins_cost)+' Coin · Member '+esc(memberLabel(o.member_profile_id))+' · '+esc(o.status)+'</small><div class="admin-actions">'+(o.status==='pending'?'<button type="button" onclick="adminProductOrder(\''+o.id+'\',\'approve\')">Approve & Coin काटें</button><button type="button" class="alt" onclick="adminProductOrder(\''+o.id+'\',\'reject\')">Reject</button>':'<button type="button" onclick="adminProductOrder(\''+o.id+'\',\'fulfilled\')">Fulfilled</button>')+'</div></div>').join(''):'<p class="muted">कोई Product अनुरोध नहीं।</p>';
  $('adminPinResets').innerHTML=pinRows.length?pinRows.map(p=>'<div class="admin-card"><h4>PIN Reset अनुरोध</h4><small>Member '+esc(memberLabel(p.member_profile_id))+' · '+new Date(p.created_at).toLocaleString('hi-IN')+'</small><div class="admin-actions"><button type="button" onclick="adminPinReset(\''+p.id+'\',\'approve\')">Approve Reset</button><button type="button" class="alt" onclick="adminPinReset(\''+p.id+'\',\'reject\')">Reject</button></div></div>').join(''):'<p class="muted">कोई PIN Reset अनुरोध लंबित नहीं है।</p>';
  await loadAdminProducts();
@@ -681,9 +763,13 @@ window.adminTaskStatus=async function(id,status,points){
  try{await api('/rest/v1/sbpf_reward_tasks?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({status,updated_at:new Date().toISOString()})});say('टास्क स्थिति अपडेट हो गई।','ok');await Promise.all([loadTasks(),loadAdmin()]);}catch(e){say('टास्क अपडेट नहीं हुआ: '+e.message,'error');}
 };
 window.adminReviewSubmission=async function(id,status,points){
- if(status==='approved'&&(!Number.isInteger(points)||points<=0)){say('इस टास्क के लिए पहले सकारात्मक Coin रिवॉर्ड सेट करें।','error');return;}
- const note=window.prompt('समीक्षा टिप्पणी (वैकल्पिक):')||'';
- try{await api('/rest/v1/sbpf_reward_submissions?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({status,points_awarded:points,reviewed_by:user.id,reviewed_at:new Date().toISOString(),review_note:note})});say(status==='approved'?'सबमिशन स्वीकृत; Coin वॉलेट में जोड़ दिए गए।':'सबमिशन अस्वीकृत।','ok');await Promise.all([loadAdmin(),loadWallet()]);}catch(e){say('समीक्षा सेव नहीं हुई: '+e.message,'error');}
+ const note=window.prompt(status==='rejected'?'अस्वीकृति का कारण लिखें:':'समीक्षा टिप्पणी (वैकल्पिक):')||'';
+ if(status==='rejected'&&note.trim().length<5){say('अस्वीकृति का कारण कम से कम 5 अक्षरों का होना चाहिए।','error');return;}
+ try{
+  const result=await api('/rest/v1/rpc/sbpf_admin_review_reward_submission',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_submission_id:id,p_decision:status,p_note:note})});
+  say(status==='approved'?'सबमिशन स्वीकृत; निर्धारित Coin वॉलेट में जोड़ दिए गए।':'सबमिशन अस्वीकृत।','ok');
+  await Promise.all([loadAdmin(),loadWallet()]);
+ }catch(e){say('समीक्षा सेव नहीं हुई: '+e.message,'error');}
 };
 window.adminReviewWalletTransfer=async function(id,decision){
  const note=window.prompt(decision==='approve'?'मंजूरी टिप्पणी (वैकल्पिक):':'अस्वीकृति का कारण लिखें:')||'';
@@ -694,10 +780,51 @@ window.adminReviewWalletTransfer=async function(id,decision){
   await Promise.all([loadAdmin(),loadWallet()]);
  }catch(e){say('Transfer समीक्षा पूरी नहीं हुई: '+e.message,'error');}
 };
+window.adminFinalWithdrawal=async function(id,decision){
+ let note='',bankRef=null;
+ if(decision==='reject'){note=window.prompt('अस्वीकृति का कारण (कम से कम 5 अक्षर):')||'';if(note.trim().length<5)return;}
+ if(decision==='approve'&&!window.confirm('Finance की Recommend मंजूरी के बाद अंतिम मंजूरी दें?'))return;
+ if(decision==='mark_paid'){bankRef=window.prompt('वास्तविक बैंक भुगतान के बाद UTR / Transaction ID दर्ज करें:')||'';if(bankRef.trim().length<4)return;}
+ try{
+  const result=await api('/rest/v1/rpc/sbpf_final_review_cash_withdrawal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_redemption_id:id,p_decision:decision,p_note:note||null,p_bank_transaction_id:bankRef})});
+  if(!result?.success)throw new Error(result?.error||'Final review पूरा नहीं हुआ।');
+  say(decision==='approve'?'अंतिम मंजूरी दर्ज हुई।':'भुगतान स्थिति अपडेट हुई।','ok');
+  await Promise.all([loadAdmin(),loadWallet()]);
+ }catch(e){say('Final review नहीं हुआ: '+e.message,'error');}
+};
+window.adminCancelCashWithdrawal=async function(id){
+ const reason=window.prompt('निकासी रद्द करने का कारण (कम से कम 5 अक्षर):')||'';
+ if(reason.trim().length<5){say('रद्द करने का स्पष्ट कारण आवश्यक है।','error');return;}
+ if(!window.confirm('क्या आप इस निकासी अनुरोध को रद्द करना चाहते हैं? मंजूर अनुरोध के Coins Ledger में वापस जोड़े जाएँगे।'))return;
+ try{
+  const result=await api('/rest/v1/rpc/sbpf_admin_cancel_cash_withdrawal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_redemption_id:id,p_reason:reason.trim()})});
+  if(!result?.success)throw new Error(result?.error||'Cancellation पूरा नहीं हुआ।');
+  say('निकासी रद्द हुई। Coin वापसी: '+Number(result.coins_refunded||0),'ok');
+  await Promise.all([loadAdmin(),loadWallet()]);
+ }catch(e){say('निकासी रद्द नहीं हुई: '+e.message,'error');}
+};
 window.adminRedemption=async function(id,status){
  if(status==='approved'||status==='rejected'){const note=window.prompt(status==='approved'?'मंजूरी टिप्पणी (वैकल्पिक):':'अस्वीकृति का कारण लिखें:')||'';if(status==='rejected'&&!note.trim())return;try{await api('/rest/v1/rpc/sbpf_admin_review_cash_redemption',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_redemption_id:id,p_decision:status==='approved'?'approve':'reject',p_note:note})});say(status==='approved'?'Cash Redeem मंजूर; Coins Wallet से कट गए।':'Cash Redeem अस्वीकृत।','ok');await Promise.all([loadAdmin(),loadWallet()]);}catch(e){say('Cash Redeem समीक्षा नहीं हुई: '+e.message,'error');}return;}
  if(status==='paid'){const ref=window.prompt('भुगतान पूरा करने के बाद UTR / Transaction Reference दर्ज करें:');if(!ref||!ref.trim())return;try{await api('/rest/v1/sbpf_reward_redemptions?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({status:'paid',payout_reference:ref.trim(),paid_at:new Date().toISOString()})});say('भुगतान पूरा दर्ज हुआ।','ok');await loadAdmin();}catch(e){say('भुगतान दर्ज नहीं हुआ: '+e.message,'error');}}
 };
+$('financeTeamForm').addEventListener('submit',async event=>{
+ event.preventDefault();
+ const userId=$('financeUserId').value.trim(),enabled=$('financeTeamAction').value==='true',reason=$('financeTeamReason').value.trim();
+ if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(userId)||reason.length<5){say('सही Auth User UUID और कारण दर्ज करें।','error');return;}
+ if(!window.confirm('क्या आप इस Auth User को '+(enabled?'Finance Team में नियुक्त':'Finance Team से हटाना')+' चाहते हैं?'))return;
+ try{
+  const result=await api('/rest/v1/rpc/sbpf_admin_set_cash_withdrawal_finance_member',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_user_id:userId,p_enabled:enabled,p_reason:reason})});
+  if(!result?.success)throw new Error('Finance Team अपडेट नहीं हुआ।');
+  $('financeTeamForm').reset();say('Finance Team अपडेट हुआ।','ok');await loadFinanceTeamList();
+ }catch(e){say('Finance Team अपडेट नहीं हुआ: '+e.message,'error');}
+});
+async function loadFinanceTeamList(){
+ if(!isAdmin)return;
+ try{
+  const rows=await api('/rest/v1/sbpf_cash_withdrawal_finance_team?select=user_id,is_active,appointed_at,removed_at&order=appointed_at.desc');
+  $('financeTeamList').innerHTML=rows.length?rows.map(x=>'<div class="row"><div><b>'+esc(x.user_id)+'</b><small>'+(x.is_active?'Active':'Inactive')+' · '+new Date(x.appointed_at).toLocaleDateString('hi-IN')+'</small></div><span class="tag">'+(x.is_active?'नियुक्त':'हटाया गया')+'</span></div>').join(''):'<p class="muted">अभी Finance Team नियुक्त नहीं है।</p>';
+ }catch(e){$('financeTeamList').textContent='Finance Team सूची उपलब्ध नहीं है: '+e.message;}
+}
 $('taskForm').addEventListener('submit',async event=>{
  event.preventDefault();
  const title=$('taskTitle').value.trim(),type=$('taskType').value,points=Number($('taskPoints').value),description=$('taskDescription').value.trim(),video=$('taskVideo').value.trim();
@@ -711,18 +838,12 @@ $('toggleRewards').addEventListener('click',async()=>{
  try{await api('/rest/v1/sbpf_rewards_config?id=eq.1',{method:'PATCH',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({rewards_enabled:next,updated_by:user.id,updated_at:new Date().toISOString()})});config.rewards_enabled=next;say(next?'Rewards Zone चालू कर दिया गया।':'Rewards Zone बंद कर दिया गया।','ok');await Promise.all([loadAdmin(),loadTasks()]);}catch(e){say('Rewards स्थिति नहीं बदली: '+e.message,'error');}
 });
 async function loadRedemptions(){
- const rows=await api('/rest/v1/sbpf_reward_redemptions?select=points_requested,amount_inr,status,created_at,payout_reference&member_profile_id=eq.'+encodeURIComponent(user.id)+'&order=created_at.desc&limit=10');
+ const rows=await api('/rest/v1/sbpf_reward_redemptions?select=points_requested,amount_inr,status,created_at,payout_reference,withdrawal_tier_inr,fee_percent,fee_amount_inr,net_amount_inr,fee_payment_status,bank_account_last4,bank_ifsc,bank_transaction_id,payment_date,cancellation_reason&member_profile_id=eq.'+encodeURIComponent(user.id)+'&order=created_at.desc&limit=10');
  const data=Array.isArray(rows)?rows:[];
- $('redemptions').innerHTML=data.length?'<h3 style="font-size:15px;color:var(--wine)">मेरे Cash Redeem अनुरोध</h3>'+data.map(r=>'<div class="row"><div><b>'+Number(r.points_requested).toLocaleString('en-IN')+' Coin · ₹'+Number(r.amount_inr).toFixed(2)+'</b><small>'+new Date(r.created_at).toLocaleDateString('hi-IN')+'</small></div><span class="tag">'+esc(r.status)+'</span></div>').join(''):'<p class="muted">अभी कोई Cash Redeem अनुरोध नहीं है।</p>';
+ $('redemptions').innerHTML=data.length?'<h3 style="font-size:15px;color:var(--wine)">मेरे Cash Withdrawal अनुरोध</h3>'+data.map(r=>'<div class="admin-card"><b>'+(r.withdrawal_tier_inr?'₹'+Number(r.withdrawal_tier_inr).toLocaleString('en-IN')+' निकासी':Number(r.points_requested).toLocaleString('en-IN')+' Coin · ₹'+Number(r.amount_inr).toFixed(2))+'</b><small>Coin: '+Number(r.points_requested).toLocaleString('en-IN')+' · शुल्क: ₹'+Number(r.fee_amount_inr||0).toFixed(2)+' ('+esc(r.fee_percent??'—')+'%) · शुद्ध राशि: ₹'+Number(r.net_amount_inr??r.amount_inr??0).toFixed(2)+'<br>Fee स्थिति: '+esc(r.fee_payment_status||'—')+' · बैंक: '+(r.bank_account_last4?'****'+esc(r.bank_account_last4):'—')+' · IFSC: '+esc(r.bank_ifsc||'—')+'<br>'+new Date(r.created_at).toLocaleString('hi-IN')+(r.bank_transaction_id?'<br>Bank Transaction ID: '+esc(r.bank_transaction_id):'')+(r.payment_date?'<br>भुगतान तिथि: '+new Date(r.payment_date).toLocaleDateString('hi-IN'):'')+(r.cancellation_reason?'<br>रद्द करने का कारण: '+esc(r.cancellation_reason):'')+'</small><span class="tag">'+esc(r.status)+'</span></div>').join(''):'<p class="muted">अभी कोई Cash Withdrawal अनुरोध नहीं है।</p>';
 }
-$('redeemForm').addEventListener('submit',async event=>{
- event.preventDefault();const points=Number($('redeemPoints').value),method=$('payoutMethod').value,pin=$('redeemPin').value,button=$('redeemButton');
- if(!Number.isInteger(points)||points<=0||!method||!/^[0-9]{4}$/.test(pin)){say('Coin की सही संख्या, भुगतान तरीका और 4 अंकों का PIN दर्ज करें।','error');return;}
- button.disabled=true;
- try{const result=await api('/rest/v1/rpc/sbpf_request_cash_redemption',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_points:points,p_payout_method:method,p_pin:pin})});if(!result?.success)throw new Error(result?.error||'Cash Redeem अनुरोध नहीं हुआ।');$('redeemForm').reset();say('Cash Redeem अनुरोध भेज दिया गया। Admin मंजूरी पर Coins Wallet से कटेंगे।','ok');await Promise.all([loadWallet(),loadRedemptions()]);}
- catch(error){say('Cash Redeem अनुरोध नहीं भेजा गया: '+error.message,'error');}
- finally{button.disabled=false;}
-});
+// Legacy custom-amount withdrawal submission disabled until secure bank encryption is integrated.
+
 const spinButton=$('spinDemoButton'),spinWheel=$('demoSpinWheel'),spinResult=$('spinDemoResult');
 let spinBusy=false,spinRotation=0;
 if(spinButton&&spinWheel){
@@ -739,8 +860,8 @@ if(spinButton&&spinWheel){
   },4100);
  });
 }
-const spinPrizeList=[11,21,51,101,251,551,1100,2100,5100,11000,21000,51000];
-const spinPrizeOdds=[30,25,20,10,7,4,2,1,.5,.3,.15,.05];
+const spinPrizeList=[10,40,50,100];
+const spinPrizeOdds=[25,25,25,25];
 const spinButtons=[...document.querySelectorAll('[data-spin-wheel]')];
 const spinTimers={busy:false,rotation:{1:0},countdown:null};
 {
@@ -754,7 +875,7 @@ const spinTimers={busy:false,rotation:{1:0},countdown:null};
   face.appendChild(labels);
   const odds=$('memberSpinPrizeOdds');if(odds){odds.innerHTML=spinPrizeList.map((p,i)=>'<span><b>'+p.toLocaleString('en-IN')+'</b><small>'+spinPrizeOdds[i]+'%</small></span>').join('');}
   const open=()=>{if(spinTimers.busy)return;document.body.classList.add('spin-zoom-open');wrap.classList.add('zoomed');};
-  face.setAttribute('role','button');face.setAttribute('tabindex','0');face.setAttribute('aria-label','12 Coin खंड वाला Spin Wheel बड़ा करके देखें');
+  face.setAttribute('role','button');face.setAttribute('tabindex','0');face.setAttribute('aria-label','4 समान अवसर वाला Spin Wheel बड़ा करके देखें');
   face.addEventListener('click',open);face.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
  }
 }
@@ -766,21 +887,18 @@ function fmtSpinTime(ms){if(ms<=0)return 'अभी उपलब्ध';const to
 let spinRefreshTimer=null,spinCountdownTarget=null,spinCountToday=0;
 async function refreshSpinStatus(){
  if(!user?.id||!token)return;
- const since=new Date(Date.now()-24*60*60*1000).toISOString();
- const rows=await api('/rest/v1/sbpf_reward_spins?select=created_at,wheel_number&member_profile_id=eq.'+encodeURIComponent(user.id)+'&created_at=gte.'+encodeURIComponent(since)+'&order=created_at.desc&limit=8');
- spinCountToday=Array.isArray(rows)?rows.length:0;
- const last=rows?.[0]?.created_at?new Date(rows[0].created_at).getTime():0;
- const earliest=rows?.length>=8?new Date(rows[rows.length-1].created_at).getTime()+24*60*60*1000:0;
- spinCountdownTarget=earliest|| (last?last+3*60*60*1000:0);
- $('memberSpinCountLeft').textContent='आज के बाकी मौके: '+Math.max(0,8-spinCountToday)+' / 8';
- spinButtons.forEach(b=>b.disabled=!config?.rewards_enabled||spinTimers.busy||spinCountToday>=8||(spinCountdownTarget>Date.now()));
- $('memberSpinStatus').textContent=spinCountToday>=8?'आज के सभी 8 मौके पूरे हो गए। सबसे पुराना Spin 24 घंटे पुराना होने पर अगला मौका खुलेगा।':'एक ही Spin Wheel पर 24 घंटे में अधिकतम 8 मौके। हर Spin के बीच 3 घंटे का अंतर।';
- if(!config?.rewards_enabled){$('memberSpinStatus').textContent='Spin Wheel तैयार है। वास्तविक Coin Spin अभी Rewards Zone लॉन्च होने तक बंद है।';$('memberSpinCountdown').textContent='Rewards लॉन्च की प्रतीक्षा';}
+ const rows=await api('/rest/v1/sbpf_reward_spins?select=created_at&member_profile_id=eq.'+encodeURIComponent(user.id)+'&order=created_at.desc&limit=1');
+ const last=Array.isArray(rows)&&rows[0]?.created_at?new Date(rows[0].created_at).getTime():0;
+ spinCountdownTarget=last?last+3*60*60*1000:0;
+ const left=spinCountdownTarget-Date.now();
+ $('memberSpinCountLeft').textContent=left>0?'अगला Spin '+fmtSpinTime(left)+' में':'अगला Spin: उपलब्ध';
+ spinButtons.forEach(b=>b.disabled=spinTimers.busy||left>0);
+ $('memberSpinStatus').textContent=left>0?'आपका अगला निःशुल्क Spin 24 घंटे पूरे होने पर मिलेगा।':'आपका निःशुल्क Spin उपलब्ध है।';
  if(!spinRefreshTimer)spinRefreshTimer=window.setInterval(()=>{
-  const left=spinCountdownTarget?spinCountdownTarget-Date.now():0;
-  $('memberSpinCountdown').textContent=fmtSpinTime(left);
-  spinButtons.forEach(b=>b.disabled=!config?.rewards_enabled||spinTimers.busy||spinCountToday>=8||left>0);
-  if(left<=0){spinButtons.forEach(b=>b.disabled=!config?.rewards_enabled||spinTimers.busy);$('memberSpinCountLeft').textContent='आज के बाकी मौके: '+Math.max(0,8-spinCountToday)+' / 8';}
+  const remaining=spinCountdownTarget?spinCountdownTarget-Date.now():0;
+  $('memberSpinCountdown').textContent=fmtSpinTime(remaining);
+  $('memberSpinCountLeft').textContent=remaining>0?'अगला Spin '+fmtSpinTime(remaining)+' में':'अगला Spin: उपलब्ध';
+  spinButtons.forEach(b=>b.disabled=spinTimers.busy||remaining>0);
  },1000);
 }
 spinButtons.forEach(button=>button.addEventListener('click',async()=>{
@@ -802,13 +920,13 @@ spinButtons.forEach(button=>button.addEventListener('click',async()=>{
   $('memberSpinResult'+wheelNo).textContent='व्हील घूम रहा है…';
   window.setTimeout(async()=>{
    $('memberSpinResult'+wheelNo).textContent='🎉 बधाई! '+prize.toLocaleString('en-IN')+' SBPF Coin जीते।';
-   $('memberSpinStatus').textContent='इनाम आपके SBPF Wallet Ledger में दर्ज हुआ। अगला Spin 3 घंटे बाद।';
+   $('memberSpinStatus').textContent='इनाम आपके SBPF Wallet Ledger में दर्ज हुआ। अगला Spin 24 घंटे बाद।';
    spinTimers.busy=false;await Promise.all([loadWallet(),refreshSpinStatus()]);
   },4200);
  }catch(e){
   spinTimers.busy=false;
   const msg=e.message||'Spin अभी उपलब्ध नहीं है।';
-  $('memberSpinResult'+wheelNo).textContent=msg.includes('SPIN_COOLDOWN_ACTIVE')?'अगला Spin 3 घंटे बाद मिलेगा।':msg.includes('DAILY_SPIN_LIMIT_REACHED')?'24 घंटे के 8 Spin पूरे हो चुके हैं।':msg.includes('REWARDS_NOT_LAUNCHED')?'Rewards Zone अभी Admin द्वारा लॉन्च नहीं किया गया है।':msg.includes('LOGIN_REQUIRED')?'पहले सदस्य सत्यापन पूरा करें।':msg.includes('VERIFIED_ACTIVE_MEMBER_REQUIRED')?'सक्रिय और सत्यापित सदस्य ही Spin कर सकते हैं।':msg.includes('ANNUAL_VERIFICATION_REQUIRED')?'इस वर्ष का सदस्य सत्यापन आवश्यक है।':msg.includes('REWARDS_ZONE_ACCESS_REQUIRED')?'आपके सदस्य ID पर Rewards Zone अनुमति सक्रिय नहीं है।':msg;
+  $('memberSpinResult'+wheelNo).textContent=msg.includes('SPIN_COOLDOWN_ACTIVE')?'अगला Spin 24 घंटे बाद मिलेगा।':msg.includes('LOGIN_REQUIRED')?'पहले सदस्य सत्यापन पूरा करें।':msg.includes('VERIFIED_ACTIVE_MEMBER_REQUIRED')?'सक्रिय और सत्यापित सदस्य ही Spin कर सकते हैं।':msg.includes('ANNUAL_VERIFICATION_REQUIRED')?'इस वर्ष का सदस्य सत्यापन आवश्यक है।':msg.includes('REWARDS_ZONE_ACCESS_REQUIRED')?'आपके सदस्य ID पर Rewards Zone अनुमति सक्रिय नहीं है।':msg;
   await refreshSpinStatus().catch(()=>{});
  }
 }));
