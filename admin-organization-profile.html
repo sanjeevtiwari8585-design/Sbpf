@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SBPF संस्था परिचय — Admin</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{font-family:system-ui,"Noto Sans Devanagari",Arial,sans-serif;color:#28212a;background:#f7f5f2}*{box-sizing:border-box}body{margin:0}header{background:linear-gradient(120deg,#711222,#9b2634 62%,#c59b36);color:#fff;padding:18px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px}main{max-width:980px;margin:24px auto;padding:0 16px}.panel,.section{background:#fff;border:1px solid #eadfce;border-radius:14px;padding:20px;margin:14px 0;box-shadow:0 4px 16px #0000000a}input{width:100%;padding:12px;margin:7px 0;border:1px solid #cfc6bc;border-radius:8px}button{border:0;border-radius:9px;padding:11px 16px;background:#781626;color:#fff;font-weight:700;cursor:pointer;margin:5px}.secondary{background:#8a6a27}.hidden{display:none!important}.muted{color:#6b6265}.campaign{padding:12px;border-left:4px solid #c59b36;background:#fffaf1;border-radius:8px;margin:9px 0}.section h2{color:#781626;margin-top:0}.section p{line-height:1.8}.msg{white-space:pre-wrap;background:#fff3d7;padding:10px;border-radius:8px}
+@media print{body{background:#fff}header,.no-print,#login{display:none!important}main{max-width:none;margin:0;padding:0}.section,.panel{box-shadow:none;border:0;break-inside:avoid;padding:10px 0}.section h2{font-size:18px}h1{font-size:25px}}
+</style></head><body>
+<header><div><b>स्वर्णिम भारत परिवार फाउंडेशन</b><br><small>संस्था परिचय · Admin Management</small></div><button id="logout" class="hidden no-print">Logout</button></header>
+<main>
+<div id="login" class="panel no-print"><h2>Admin Login</h2><p class="muted">केवल अधिकृत SBPF Admin के लिए।</p><input id="email" type="email" placeholder="Admin Email" autocomplete="username"><input id="password" type="password" placeholder="Password" autocomplete="current-password"><button id="loginBtn">Login</button><div id="loginMsg" class="msg"></div></div>
+<div id="app" class="hidden">
+<div class="panel no-print"><h2>आधिकारिक संस्था परिचय</h2><p id="status" class="muted">Supabase से डेटा लोड हो रहा है…</p><button id="refresh">Refresh</button><button class="secondary" id="download">PDF डाउनलोड / प्रिंट</button><p class="muted">PDF बटन दबाने के बाद Print विकल्प में “Save as PDF” चुनें।</p></div>
+<div id="document"><div class="panel"><h1 id="docTitle">स्वर्णिम भारत परिवार फाउंडेशन</h1><p class="muted">आधिकारिक संगठनात्मक परिचय</p></div><div id="sections"></div><div class="panel"><small id="note" class="muted"></small></div></div>
+</div></main>
+<script>
+const URL="https://dxowhzghrdghfzoggorx.supabase.co";
+const KEY="sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo";
+const sb=supabase.createClient(URL,KEY);
+const $=id=>document.getElementById(id);
+async function boot(){
+ const {data,error}=await sb.auth.getSession();
+ if(error||!data.session){$("login").classList.remove("hidden");$("app").classList.add("hidden");$("logout").classList.add("hidden");return;}
+ const a=await sb.rpc("is_admin");
+ if(a.error||a.data!==true){await sb.auth.signOut();$("loginMsg").textContent="Admin permission सत्यापित नहीं हुआ।";return;}
+ $("login").classList.add("hidden");$("app").classList.remove("hidden");$("logout").classList.remove("hidden");await loadProfile();
+}
+async function loadProfile(){
+ $("status").textContent="Supabase से परिचय लोड हो रहा है…";
+ const {data,error}=await sb.from("sbpf_organization_profile").select("title,content,is_published,version,updated_at").eq("slug","official-introduction").single();
+ if(error){$("status").textContent="डेटा लोड नहीं हुआ: "+error.message;return;}
+ $("docTitle").textContent=data.title;
+ $("sections").innerHTML="";
+ (data.content.sections||[]).forEach((s,i)=>{
+  const el=document.createElement("section");el.className="section";
+  const h=document.createElement("h2");h.textContent=(i+1)+". "+s.heading;el.appendChild(h);
+  if(s.body){const p=document.createElement("p");p.textContent=s.body;el.appendChild(p);}
+  if(s.campaigns){s.campaigns.forEach(c=>{const d=document.createElement("div");d.className="campaign";const b=document.createElement("b");b.textContent=c.name;const p=document.createElement("p");p.textContent=c.description;d.append(b,p);el.appendChild(d);});}
+  if(i===7){const dl=document.createElement("dl");Object.entries(s).filter(([k])=>!["heading","body"].includes(k)).forEach(([k,v])=>{const dt=document.createElement("dt");dt.textContent=k.replaceAll("_"," ");const dd=document.createElement("dd");dd.textContent=String(v);dl.append(dt,dd);});el.appendChild(dl);}
+  $("sections").appendChild(el);
+ });
+ $("note").textContent=(data.content.publication_note||"")+" · Version "+data.version+" · "+new Date(data.updated_at).toLocaleString("hi-IN");
+ $("status").textContent="डेटा Supabase से सफलतापूर्वक लोड हुआ। प्रकाशन स्थिति: "+(data.is_published?"प्रकाशित":"ड्राफ्ट");
+}
+$("loginBtn").onclick=async()=>{const {error}=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});$("loginMsg").textContent=error?error.message:"";if(!error)await boot();};
+$("logout").onclick=async()=>{await sb.auth.signOut();await boot();};
+$("refresh").onclick=loadProfile;$("download").onclick=()=>window.print();
+sb.auth.onAuthStateChange(()=>setTimeout(boot,0));boot();
+</script></body></html>
