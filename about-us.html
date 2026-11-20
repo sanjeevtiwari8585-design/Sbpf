@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#781626">
+<meta name="description" content="Official profile, mission, vision, organizational structure and eight Swarnim campaigns of Swarnim Bharat Parivar Foundation (SBPF).">
+<title>About Us | Swarnim Bharat Parivar Foundation</title>
+<link rel="icon" href="public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png">
+<style>
+:root{--maroon:#781626;--gold:#d7b34b;--cream:#fff9ed;--ink:#282126;--muted:#675e62;--line:#eee2d1}
+*{box-sizing:border-box}body{margin:0;background:#fbfaf8;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.7}a{color:inherit}
+.top{background:#241d20;color:#f9f3ec;text-align:center;padding:8px 14px;font-size:12px}
+header{background:linear-gradient(120deg,#711222,#9b2634 62%,#c59b36);color:#fff;padding:20px max(18px,calc((100% - 1080px)/2));display:flex;align-items:center;gap:16px}
+.logo{width:82px;height:82px;object-fit:contain;background:#fff;border:3px solid #f2cf73;border-radius:50%;padding:3px}
+header h1{margin:0;font-size:clamp(20px,3vw,30px);line-height:1.25}header p{margin:5px 0 0;color:#ffedc4}
+nav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:11px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:4}
+nav a{padding:8px 13px;text-decoration:none;border-radius:9px;font-weight:650;font-size:14px}nav a:hover,nav a.active{background:var(--cream);color:var(--maroon)}
+.hero{padding:52px 18px;text-align:center;background:radial-gradient(circle at 85% 20%,#f8e9bd 0,transparent 28%),linear-gradient(130deg,#fffaf0,#fff);border-bottom:1px solid var(--line)}
+.hero small{color:var(--maroon);font-weight:800;letter-spacing:1.5px}.hero h2{color:var(--maroon);font-size:clamp(30px,5vw,46px);line-height:1.2;margin:10px auto;max-width:900px}.hero p{max-width:760px;margin:12px auto;color:var(--muted)}
+.wrap{max-width:1040px;margin:auto;padding:30px 18px 55px}.intro{text-align:center;color:var(--muted);margin:0 auto 24px;max-width:760px}
+#sections{display:grid;gap:16px}.section{background:#fff;border:1px solid var(--line);border-radius:17px;padding:24px 26px;box-shadow:0 5px 20px #3d1b1207}
+.section h2{color:var(--maroon);font-size:22px;margin:0 0 13px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.section p{margin:0 0 11px;white-space:pre-wrap}.detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
+.detail{background:#fffaf1;border:1px solid #eee2d1;border-radius:10px;padding:12px;overflow-wrap:anywhere}.detail b{display:block;color:#805b1a;font-size:12px;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
+ul{padding-left:22px}li{margin:5px 0}.loading,.error{padding:22px;text-align:center;background:#fff;border:1px solid var(--line);border-radius:14px}
+footer{background:#241d20;color:#f9f3ec;padding:28px 18px;text-align:center;font-size:13px}footer a{color:#e9d7a2;text-decoration:none}
+@media(max-width:620px){header{padding:15px 13px;gap:11px}.logo{width:62px;height:62px}.section{padding:19px 16px}.section h2{font-size:19px}.detail-grid{grid-template-columns:1fr}.hero{padding:40px 15px}.wrap{padding:22px 13px 40px}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head>
+<body>
+<div class="top">SWARNIM BHARAT PARIWAR FOUNDATION (SBPF) · OFFICIAL ORGANIZATIONAL PROFILE</div>
+<header><img class="logo" alt="SBPF official emblem" src="public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png"><div><h1>Swarnim Bharat Parivar Foundation</h1><p>Service · Cooperation · Self-Reliance · Empowerment</p></div></header>
+<nav><a href="index.html">Home</a><a class="active" href="about-us.html">About Us</a><a href="index.html#work">Work Areas</a><a href="index.html#campaigns">Campaigns</a></nav>
+<section class="hero"><small>OUR IDENTITY · OUR PURPOSE · OUR COMMITMENT</small><h2>Building an Aware, Inclusive and Self-Reliant Society</h2><p>Official organizational profile of Swarnim Bharat Parivar Foundation (SBPF).</p></section>
+<main class="wrap"><p class="intro">The following organizational information is published from the Foundation's approved About Us record.</p><div id="sections"><div class="loading">Loading official About Us information…</div></div></main>
+<footer>© 2026 Swarnim Bharat Parivar Foundation (SBPF) · <a href="index.html">Home</a> · <a href="https://swarnimbharatclub.in">swarnimbharatclub.in</a></footer>
+<script>
+(function(){
+ const SUPABASE_URL="https://dxowhzghrdghfzoggorx.supabase.co";
+ const SUPABASE_KEY="sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo";
+ const root=document.getElementById("sections");
+ const labels={legal_name:"Legal Name",common_name:"Common Name",abbreviation:"Abbreviation",legal_form:"Legal Form",cin:"CIN",date_of_incorporation:"Date of Incorporation",section_8_licence_number:"Section 8 Licence Number",registration_authority:"Registration Authority",operational_scope:"Operational Scope",ngo_darpan_id:"NGO Darpan ID","e_anuदान_id":"e-Anudaan Enrolment ID",website:"Official Website"};
+ function addText(parent,text){const p=document.createElement("p");p.textContent=text;parent.appendChild(p);}
+ function renderBody(parent,body){
+   String(body||"").split(/\n\s*\n/).forEach(block=>{
+     const clean=block.trim();if(!clean)return;
+     if(clean.split("\n").every(line=>/^\s*[•-]\s+/.test(line))){
+       const ul=document.createElement("ul");clean.split("\n").forEach(line=>{const li=document.createElement("li");li.textContent=line.replace(/^\s*[•-]\s+/,"");ul.appendChild(li)});parent.appendChild(ul);
+     }else addText(parent,clean);
+   });
+ }
+ async function load(){
+   try{
+     const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+     const {data,error}=await client.from("sbpf_organization_profile").select("title,content,is_published,version").eq("slug","official-introduction").eq("is_published",true).single();
+     if(error||!data){root.innerHTML="";const e=document.createElement("div");e.className="error";e.textContent="Official About Us information is temporarily unavailable. Please try again later.";root.appendChild(e);return;}
+     root.innerHTML="";
+     (data.content.sections||[]).forEach((s,i)=>{
+       const article=document.createElement("article");article.className="section";
+       const h=document.createElement("h2");h.textContent=(i+1)+". "+(s.heading||"");article.appendChild(h);
+       if(s.body)renderBody(article,s.body);
+       if(i===7){
+         const grid=document.createElement("div");grid.className="detail-grid";
+         Object.entries(labels).forEach(([key,label])=>{if(!s[key])return;const box=document.createElement("div");box.className="detail";const b=document.createElement("b");b.textContent=label;const v=document.createElement("span");v.textContent=s[key];box.append(b,v);grid.appendChild(box)});
+         article.appendChild(grid);
+         addText(article,"Registered office address and official contact details will be published after verification from current official records and authorized organizational sources.");
+         if(s.tax_status_note)addText(article,s.tax_status_note);
+         if(s.privacy_notice)addText(article,s.privacy_notice);
+         if(s.public_disclaimer)addText(article,s.public_disclaimer);
+       }
+       root.appendChild(article);
+     });
+   }catch(e){root.innerHTML="";const box=document.createElement("div");box.className="error";box.textContent="Unable to load the official profile at this time.";root.appendChild(box);}
+ }
+ load();
+})();
+</script></body></html>
