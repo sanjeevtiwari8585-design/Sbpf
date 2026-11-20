@@ -9,7 +9,7 @@
 <main>
 <div id="login" class="panel no-print"><h2>Admin Login</h2><p class="muted">केवल अधिकृत SBPF Admin के लिए।</p><input id="email" type="email" placeholder="Admin Email" autocomplete="username"><input id="password" type="password" placeholder="Password" autocomplete="current-password"><button id="loginBtn">Login</button><div id="loginMsg" class="msg"></div></div>
 <div id="app" class="hidden">
-<div class="panel no-print"><h2>आधिकारिक संस्था परिचय</h2><p id="status" class="muted">Supabase से डेटा लोड हो रहा है…</p><button id="refresh">Refresh</button><button class="secondary" id="download">PDF डाउनलोड / प्रिंट</button><p class="muted">PDF बटन दबाने के बाद Print विकल्प में “Save as PDF” चुनें।</p></div>
+<div class="panel no-print"><h2>आधिकारिक संस्था परिचय</h2><p id="status" class="muted">Supabase से डेटा लोड हो रहा है…</p><button id="refresh">Refresh</button><button class="secondary" id="download">PDF डाउनलोड / प्रिंट</button><p class="muted">प्रिंट स्क्रीन में “Save as PDF” चुनकर फाइल सेव करें। फिर नीचे अपलोड करें।</p><input id="pdfFile" type="file" accept="application/pdf"><button id="uploadPdf">सेव PDF को Supabase में अपलोड करें</button><button id="storedPdf" class="secondary hidden">Supabase से PDF डाउनलोड करें</button><div id="fileMsg" class="msg"></div></div>
 <div id="document"><div class="panel"><h1 id="docTitle">स्वर्णिम भारत परिवार फाउंडेशन</h1><p class="muted">आधिकारिक संगठनात्मक परिचय</p></div><div id="sections"></div><div class="panel"><small id="note" class="muted"></small></div></div>
 </div></main>
 <script>
@@ -26,7 +26,7 @@ async function boot(){
 }
 async function loadProfile(){
  $("status").textContent="Supabase से परिचय लोड हो रहा है…";
- const {data,error}=await sb.from("sbpf_organization_profile").select("title,content,is_published,version,updated_at").eq("slug","official-introduction").single();
+ const {data,error}=await sb.from("sbpf_organization_profile").select("title,content,is_published,version,updated_at,pdf_storage_path").eq("slug","official-introduction").single();
  if(error){$("status").textContent="डेटा लोड नहीं हुआ: "+error.message;return;}
  $("docTitle").textContent=data.title;
  $("sections").innerHTML="";
@@ -39,10 +39,12 @@ async function loadProfile(){
   $("sections").appendChild(el);
  });
  $("note").textContent=(data.content.publication_note||"")+" · Version "+data.version+" · "+new Date(data.updated_at).toLocaleString("hi-IN");
- $("status").textContent="डेटा Supabase से सफलतापूर्वक लोड हुआ। प्रकाशन स्थिति: "+(data.is_published?"प्रकाशित":"ड्राफ्ट");
+ $("status").textContent="डेटा Supabase से सफलतापूर्वक लोड हुआ। प्रकाशन स्थिति: "+(data.is_published?"प्रकाशित":"ड्राफ्ट"); $("storedPdf").classList.toggle("hidden",!data.pdf_storage_path); $("storedPdf").onclick=async()=>{const {data:link,error}=await sb.storage.from("sbpf-official-documents").createSignedUrl(data.pdf_storage_path,300);if(error){$("fileMsg").textContent=error.message;return;}window.open(link.signedUrl,"_blank","noopener");};
 }
 $("loginBtn").onclick=async()=>{const {error}=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});$("loginMsg").textContent=error?error.message:"";if(!error)await boot();};
 $("logout").onclick=async()=>{await sb.auth.signOut();await boot();};
 $("refresh").onclick=loadProfile;$("download").onclick=()=>window.print();
+$("uploadPdf").onclick=async()=>{const f=$("pdfFile").files[0];if(!f){$("fileMsg").textContent="पहले PDF फाइल चुनें।";return;}if(f.type!=="application/pdf"){ $("fileMsg").textContent="केवल PDF फाइल स्वीकार है।";return;}if(f.size>20*1024*1024){$("fileMsg").textContent="PDF 20 MB से छोटी होनी चाहिए।";return;}const path="official-introduction/SBPF-Official-Introduction.pdf";$("fileMsg").textContent="Supabase Storage में अपलोड हो रहा है…";const {error}=await sb.storage.from("sbpf-official-documents").upload(path,f,{contentType:"application/pdf",upsert:true});if(error){$("fileMsg").textContent="अपलोड असफल: "+error.message;return;}const {error:dbError}=await sb.from("sbpf_organization_profile").update({pdf_storage_path:path,updated_at:new Date().toISOString()}).eq("slug","official-introduction");if(dbError){$("fileMsg").textContent="PDF अपलोड हुई, पर रिकॉर्ड अपडेट नहीं हुआ: "+dbError.message;return;}$("fileMsg").textContent="PDF सफलतापूर्वक Supabase Storage में सेव हो गई।";await loadProfile();};
+
 sb.auth.onAuthStateChange(()=>setTimeout(boot,0));boot();
 </script></body></html>
