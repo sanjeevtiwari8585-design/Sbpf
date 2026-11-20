@@ -1,79 +1,40 @@
 <!doctype html>
-<html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#781626">
-<meta name="description" content="Official profile, mission, vision, organizational structure and eight Swarnim campaigns of Swarnim Bharat Parivar Foundation (SBPF).">
-<title>About Us | Swarnim Bharat Parivar Foundation</title>
-<link rel="icon" href="public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png">
-<style>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#781626"><meta name="description" content="Official About Us headings of Swarnim Bharat Parivar Foundation."><title>About Us | Swarnim Bharat Parivar Foundation</title><link rel="icon" href="public/assets/sbpf-logo.svg"><style>
 :root{--maroon:#781626;--gold:#d7b34b;--cream:#fff9ed;--ink:#282126;--muted:#675e62;--line:#eee2d1}
-*{box-sizing:border-box}body{margin:0;background:#fbfaf8;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.7}a{color:inherit}
-.top{background:#241d20;color:#f9f3ec;text-align:center;padding:8px 14px;font-size:12px}
-header{background:linear-gradient(120deg,#711222,#9b2634 62%,#c59b36);color:#fff;padding:20px max(18px,calc((100% - 1080px)/2));display:flex;align-items:center;gap:16px}
-.logo{width:82px;height:82px;object-fit:contain;background:#fff;border:3px solid #f2cf73;border-radius:50%;padding:3px}
-header h1{margin:0;font-size:clamp(20px,3vw,30px);line-height:1.25}header p{margin:5px 0 0;color:#ffedc4}
-nav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:11px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:4}
-nav a{padding:8px 13px;text-decoration:none;border-radius:9px;font-weight:650;font-size:14px}nav a:hover,nav a.active{background:var(--cream);color:var(--maroon)}
-.hero{padding:52px 18px;text-align:center;background:radial-gradient(circle at 85% 20%,#f8e9bd 0,transparent 28%),linear-gradient(130deg,#fffaf0,#fff);border-bottom:1px solid var(--line)}
-.hero small{color:var(--maroon);font-weight:800;letter-spacing:1.5px}.hero h2{color:var(--maroon);font-size:clamp(30px,5vw,46px);line-height:1.2;margin:10px auto;max-width:900px}.hero p{max-width:760px;margin:12px auto;color:var(--muted)}
-.wrap{max-width:1040px;margin:auto;padding:30px 18px 55px}.intro{text-align:center;color:var(--muted);margin:0 auto 24px;max-width:760px}
-#sections{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:18px}
-.section{min-width:0;background:#fff;border:1px solid var(--line);border-radius:17px;padding:24px 26px;box-shadow:0 5px 20px #3d1b1207}
-.section h2{overflow-wrap:anywhere}
-@media(max-width:760px){#sections{grid-template-columns:1fr}}
-.section h2{color:var(--maroon);font-size:22px;margin:0 0 13px;padding-bottom:10px;border-bottom:1px solid var(--line)}
-.section p{margin:0 0 11px;white-space:pre-wrap}.detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
-.detail{background:#fffaf1;border:1px solid #eee2d1;border-radius:10px;padding:12px;overflow-wrap:anywhere}.detail b{display:block;color:#805b1a;font-size:12px;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
-ul{padding-left:22px}li{margin:5px 0}.loading,.error{padding:22px;text-align:center;background:#fff;border:1px solid var(--line);border-radius:14px}
-footer{background:#241d20;color:#f9f3ec;padding:28px 18px;text-align:center;font-size:13px}footer a{color:#e9d7a2;text-decoration:none}
-@media(max-width:620px){header{padding:15px 13px;gap:11px}.logo{width:62px;height:62px}.section{padding:19px 16px}.section h2{font-size:19px}.detail-grid{grid-template-columns:1fr}.hero{padding:40px 15px}.wrap{padding:22px 13px 40px}}
-</style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head>
-<body>
-<div class="top">SWARNIM BHARAT PARIWAR FOUNDATION (SBPF) · OFFICIAL ORGANIZATIONAL PROFILE</div>
-<header><img class="logo" alt="SBPF official emblem" src="public/assets/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%A3%E0%A4%BF%E0%A4%AE%20%E0%A4%AD%E0%A4%BE%E0%A4%B0%E0%A4%A4%20%E0%A4%AA%E0%A4%B0%E0%A4%BF%E0%A4%B5%E0%A4%BE%E0%A4%B0%20%E0%A4%AB%E0%A4%BE%E0%A4%89%E0%A4%82%E0%A4%A1%E0%A5%87%E0%A4%B6%E0%A4%A8%20%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A4%A4%E0%A5%80%E0%A4%95.png"><div><h1>Swarnim Bharat Parivar Foundation</h1><p>Service · Cooperation · Self-Reliance · Empowerment</p></div></header>
-<nav><a href="index.html">Home</a><a class="active" href="about-us.html">About Us</a><a href="index.html#work">Work Areas</a><a href="index.html#campaigns">Campaigns</a></nav>
-<section class="hero"><small>OUR IDENTITY · OUR PURPOSE · OUR COMMITMENT</small><h2>Building an Aware, Inclusive and Self-Reliant Society</h2><p>Official organizational profile of Swarnim Bharat Parivar Foundation (SBPF).</p></section>
-<main class="wrap"><p class="intro">The following organizational information is published from the Foundation's approved About Us record.</p><div id="sections"><div class="loading">Loading official About Us information…</div></div></main>
-<footer>© 2026 Swarnim Bharat Parivar Foundation (SBPF) · <a href="index.html">Home</a> · <a href="https://swarnimbharatclub.in">swarnimbharatclub.in</a></footer>
+*{box-sizing:border-box}body{margin:0;background:#fbfaf8;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.75}
+.top{background:#241d20;color:#f9f3ec;text-align:center;padding:8px 14px;font-size:12px;letter-spacing:.5px}
+header{background:linear-gradient(120deg,#711222,#9b2634 62%,#c59b36);color:#fff;padding:18px max(18px,calc((100% - 1160px)/2));display:flex;align-items:center;gap:15px}
+.logo{width:72px;height:72px;object-fit:contain;background:#fff;border:3px solid #f2cf73;border-radius:50%;padding:4px}
+header h1{margin:0;font-size:clamp(20px,3vw,29px);line-height:1.25}header p{margin:5px 0 0;color:#ffedc4;font-size:14px}
+nav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:10px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:4}
+nav a{padding:7px 13px;text-decoration:none;border-radius:9px;font-weight:650;font-size:14px;color:var(--maroon)}nav a:hover{background:var(--cream)}
+.hero{padding:34px 18px;text-align:center;background:linear-gradient(130deg,#fffaf0,#fff);border-bottom:1px solid var(--line)}
+.hero small{color:var(--maroon);font-weight:800;letter-spacing:1.2px}.hero h2{color:var(--maroon);font-size:clamp(25px,4vw,36px);line-height:1.3;margin:8px auto;max-width:950px}
+.layout{max-width:1160px;margin:28px auto 55px;padding:0 18px;display:grid;grid-template-columns:300px minmax(0,1fr);gap:22px;align-items:start}
+.sidebar{position:sticky;top:75px;display:grid;gap:16px}.visual{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 5px 20px #3d1b1207;text-align:center}.visual img{width:100%;height:auto;object-fit:contain;display:block}.visual .emblem{max-height:205px}.visual h3{margin:5px 0 10px;color:var(--maroon);font-size:16px}
+.content{background:#fff;border:1px solid var(--line);border-radius:17px;padding:clamp(20px,3vw,34px);box-shadow:0 5px 20px #3d1b1207;min-width:0}
+.content h2{color:var(--maroon);font-size:clamp(22px,3vw,29px);line-height:1.35;margin:0 0 20px;padding-bottom:14px;border-bottom:2px solid var(--gold)}
+.content p{margin:0 0 15px;white-space:pre-wrap}.content ul{padding-left:23px;margin:0 0 17px}.content li{margin:6px 0}
+.detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:15px 0}.detail{background:#fffaf1;border:1px solid var(--line);border-radius:10px;padding:12px;overflow-wrap:anywhere}.detail b{display:block;color:#805b1a;font-size:12px;letter-spacing:.3px;margin-bottom:4px}
+.loading,.error{padding:22px;text-align:center;background:#fffaf1;border:1px solid var(--line);border-radius:12px}
+footer{background:#241d20;color:#f9f3ec;padding:25px 18px;text-align:center;font-size:13px}footer a{color:#e9d7a2;text-decoration:none}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.sidebar{position:static;grid-template-columns:repeat(2,minmax(0,1fr))}.visual{padding:10px}.visual .emblem{max-height:150px}}
+@media(max-width:520px){header{padding:14px 12px}.logo{width:58px;height:58px}.layout{padding:0 12px;margin:18px auto 35px;gap:14px}.sidebar{grid-template-columns:1fr 1fr}.visual h3{font-size:13px}.content{padding:19px 16px}.detail-grid{grid-template-columns:1fr}}
+</style><style>
+.wrap{max-width:1050px;margin:32px auto 55px;padding:0 18px}.intro{text-align:center;color:var(--muted);margin:0 auto 24px;max-width:780px}.heading-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.heading-card{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--line);border-radius:15px;padding:20px;text-decoration:none;box-shadow:0 5px 20px #3d1b1207;transition:transform .15s,border-color .15s}.heading-card:hover{transform:translateY(-2px);border-color:var(--gold)}.num{flex:0 0 42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#781626;color:#fff;font-weight:800}.heading-card strong{color:var(--maroon);line-height:1.4}.arrow{margin-left:auto;color:#9a7629;font-size:22px}@media(max-width:700px){.heading-list{grid-template-columns:1fr}.wrap{padding:0 13px}}
+</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head>
+<body><div class="top">SWARNIM BHARAT PARIWAR FOUNDATION (SBPF) · OFFICIAL ORGANIZATIONAL PROFILE</div>
+<header><img class="logo" src="public/assets/sbpf-logo.svg" alt="SBPF official logo"><div><h1>Swarnim Bharat Parivar Foundation</h1><p>Service · Cooperation · Self-Reliance · Empowerment</p></div></header>
+<nav><a href="index.html">Home</a><a href="about-us.html">About Us</a><a href="index.html#work">Work Areas</a><a href="index.html#campaigns">Campaigns</a></nav>
+<section class="hero"><small>OUR IDENTITY · OUR PURPOSE · OUR COMMITMENT</small><h2>About Us</h2><p>Choose a heading below to read its complete official information on a separate page.</p></section>
+<main class="wrap"><p class="intro">Each subject has its own dedicated page. Select any heading to open its full details with the official SBPF logo and purpose poster.</p><div id="headings" class="heading-list"><div class="loading">Loading official headings…</div></div></main>
+<footer>© 2026 Swarnim Bharat Parivar Foundation (SBPF) · <a href="index.html">Home</a></footer>
 <script>
-(function(){
- const SUPABASE_URL="https://dxowhzghrdghfzoggorx.supabase.co";
- const SUPABASE_KEY="sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo";
- const root=document.getElementById("sections");
- const labels={legal_name:"Legal Name",common_name:"Common Name",abbreviation:"Abbreviation",legal_form:"Legal Form",cin:"CIN",date_of_incorporation:"Date of Incorporation",section_8_licence_number:"Section 8 Licence Number",registration_authority:"Registration Authority",operational_scope:"Operational Scope",ngo_darpan_id:"NGO Darpan ID","e_anuदान_id":"e-Anudaan Enrolment ID",website:"Official Website"};
- function addText(parent,text){const p=document.createElement("p");p.textContent=text;parent.appendChild(p);}
- function renderBody(parent,body){
-   String(body||"").split(/\n\s*\n/).forEach(block=>{
-     const clean=block.trim();if(!clean)return;
-     if(clean.split("\n").every(line=>/^\s*[•-]\s+/.test(line))){
-       const ul=document.createElement("ul");clean.split("\n").forEach(line=>{const li=document.createElement("li");li.textContent=line.replace(/^\s*[•-]\s+/,"");ul.appendChild(li)});parent.appendChild(ul);
-     }else addText(parent,clean);
-   });
- }
- async function load(){
-   try{
-     const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-     const {data,error}=await client.from("sbpf_organization_profile").select("title,content,is_published,version").eq("slug","official-introduction").eq("is_published",true).single();
-     if(error||!data){root.innerHTML="";const e=document.createElement("div");e.className="error";e.textContent="Official About Us information is temporarily unavailable. Please try again later.";root.appendChild(e);return;}
-     root.innerHTML="";
-     (data.content.sections||[]).forEach((s,i)=>{
-       const article=document.createElement("article");article.className="section";
-       const h=document.createElement("h2");h.textContent=s.heading||"";article.appendChild(h);
-       if(s.body)renderBody(article,s.body);
-       if(i===7){
-         const grid=document.createElement("div");grid.className="detail-grid";
-         Object.entries(labels).forEach(([key,label])=>{if(!s[key])return;const box=document.createElement("div");box.className="detail";const b=document.createElement("b");b.textContent=label;const v=document.createElement("span");v.textContent=s[key];box.append(b,v);grid.appendChild(box)});
-         article.appendChild(grid);
-         addText(article,"Registered office address and official contact details will be published after verification from current official records and authorized organizational sources.");
-         if(s.tax_status_note)addText(article,s.tax_status_note);
-         if(s.privacy_notice)addText(article,s.privacy_notice);
-         if(s.public_disclaimer)addText(article,s.public_disclaimer);
-       }
-       root.appendChild(article);
-     });
-   }catch(e){root.innerHTML="";const box=document.createElement("div");box.className="error";box.textContent="Unable to load the official profile at this time.";root.appendChild(box);}
- }
- load();
+(async function(){
+ const links=["about-introduction.html","about-mission.html","about-vision.html","about-structure.html","about-leadership.html","about-campaigns.html","about-social-service.html","about-contact.html"];const root=document.getElementById("headings");
+ try{const c=window.supabase.createClient("https://dxowhzghrdghfzoggorx.supabase.co","sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo");
+ const {data,error}=await c.from("sbpf_organization_profile").select("content").eq("slug","official-introduction").eq("is_published",true).single();if(error||!data)throw error;
+ root.innerHTML="";(data.content.sections||[]).forEach((s,i)=>{const a=document.createElement("a");a.className="heading-card";a.href=links[i]||"#";const n=document.createElement("span");n.className="num";n.textContent=String(i+1).padStart(2,"0");const title=document.createElement("strong");title.textContent=s.heading||"Untitled";const ar=document.createElement("span");ar.className="arrow";ar.textContent="›";a.append(n,title,ar);root.appendChild(a)});
+ }catch(e){root.innerHTML='<div class="error">Official headings are temporarily unavailable. Please try again later.</div>'}
 })();
 </script></body></html>
