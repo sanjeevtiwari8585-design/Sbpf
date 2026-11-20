@@ -13,9 +13,7 @@ create table if not exists public.sbpf_spin_prize_options (
 
 insert into public.sbpf_spin_prize_options(prize_coins, probability_basis_points)
 values
-  (10,600),(20,600),(30,600),(40,600),(50,600),
-  (100,1675),(200,1675),(300,1675),(500,1675),
-  (1000,100),(2000,100),(5000,100)
+  (10,2500),(40,2500),(50,2500),(100,2500)
 on conflict (prize_coins) do nothing;
 
 create table if not exists public.sbpf_member_spin_permissions (
@@ -99,8 +97,8 @@ begin
     into v_count, v_total
   from jsonb_array_elements(p_prizes) x;
 
-  if v_count <> 12 or v_total <> 10000 then
-    raise exception 'EXACTLY_12_PRIZES_AND_100_PERCENT_REQUIRED';
+  if v_count <> 4 or v_total <> 10000 then
+    raise exception 'EXACTLY_4_PRIZES_AND_100_PERCENT_REQUIRED';
   end if;
   if exists (
     select 1 from jsonb_array_elements(p_prizes) x
@@ -108,8 +106,10 @@ begin
        or (x->>'probability_basis_points')::integer < 0
        or (x->>'probability_basis_points')::integer > 10000
   ) then raise exception 'INVALID_PRIZE_VALUE_OR_PROBABILITY'; end if;
-  if (select count(distinct (x->>'prize_coins')::integer) from jsonb_array_elements(p_prizes) x) <> 12
+  if (select count(distinct (x->>'prize_coins')::integer) from jsonb_array_elements(p_prizes) x) <> 4
   then raise exception 'PRIZE_VALUES_MUST_BE_UNIQUE'; end if;
+  if exists (select 1 from jsonb_array_elements(p_prizes) x where (x->>'prize_coins')::integer not in (10,40,50,100) or (x->>'probability_basis_points')::integer<>2500)
+  then raise exception 'APPROVED_SPIN_RULE_IS_10_40_50_100_AT_25_PERCENT_EACH'; end if;
 
   select coalesce(jsonb_agg(jsonb_build_object('prize_coins',prize_coins,'probability_basis_points',probability_basis_points) order by prize_coins),'[]'::jsonb)
     into v_before from public.sbpf_spin_prize_options;
@@ -220,13 +220,14 @@ begin
   select max(s.created_at) into v_last
   from public.sbpf_reward_spins s
   where s.member_profile_id=v_uid;
-  if v_last is not null and v_last > v_now-interval '3 hours' then
+  if v_last is not null and v_last > v_now-interval '24 hours' then
     raise exception 'SPIN_COOLDOWN_ACTIVE';
   end if;
 
   if not exists (select 1 from public.sbpf_spin_prize_options where probability_basis_points>0)
      or (select coalesce(sum(probability_basis_points),0) from public.sbpf_spin_prize_options) <> 10000
-     or (select count(*) from public.sbpf_spin_prize_options) <> 12 then
+     or (select count(*) from public.sbpf_spin_prize_options) <> 4
+     or exists(select 1 from public.sbpf_spin_prize_options where prize_coins not in (10,40,50,100) or probability_basis_points<>2500) then
     raise exception 'SPIN_PRIZE_CONFIGURATION_INVALID';
   end if;
 
@@ -249,9 +250,9 @@ begin
   insert into public.sbpf_reward_wallet_ledger(member_profile_id,entry_type,reference_id,points_delta,description,created_by)
   values(v_uid,'spin_reward',v_spin_id,v_prize,'SBPF Spin Wheel reward: '||v_prize||' Coin',v_uid);
 
-  v_next := v_now + interval '3 hours';
+  v_next := v_now + interval '24 hours';
   return jsonb_build_object('success',true,'spin_id',v_spin_id,'wheel_number',1,
-    'prize_coins',v_prize,'next_spin_at',v_next,'cooldown_seconds',10800);
+    'prize_coins',v_prize,'next_spin_at',v_next,'cooldown_seconds',86400);
 end;
 $function$;
 
