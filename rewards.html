@@ -707,7 +707,7 @@ async function loadAdmin(){
  const [taskRows,subRows,redRows,transferRows,productRows,pinRows]=await Promise.all([
   api('/rest/v1/sbpf_reward_tasks?select=id,title,task_type,points_reward,status,created_at&order=created_at.desc'),
   api('/rest/v1/sbpf_reward_submissions?select=id,task_id,member_profile_id,proof_note,evidence_url,created_at,sbpf_reward_tasks(title,points_reward)&status=eq.pending&order=created_at.asc'),
-  api('/rest/v1/sbpf_reward_redemptions?select=id,member_profile_id,points_requested,amount_inr,status,payout_method,created_at,withdrawal_tier_inr,fee_percent,fee_amount_inr,net_amount_inr,fee_payment_status,fee_payment_attempts,finance_decision,bank_account_last4,bank_ifsc&status=in.(pending,approved)&order=created_at.asc'),
+  api('/rest/v1/sbpf_reward_redemptions?select=id,member_profile_id,points_requested,amount_inr,status,payout_method,payout_reference,admin_note,reviewed_by,reviewed_at,paid_at,created_at&status=in.(pending,approved)&order=created_at.asc'),
   api('/rest/v1/sbpf_reward_wallet_transfers?select=id,sender_profile_id,recipient_profile_id,amount,status,created_at&status=eq.pending&order=created_at.asc'),
   api('/rest/v1/sbpf_reward_product_orders?select=id,member_profile_id,product_title,quantity,coins_cost,status,created_at&status=in.(pending,approved)&order=created_at.asc'),
   api('/rest/v1/sbpf_wallet_pin_reset_requests?select=id,member_profile_id,reason,created_at&status=eq.pending&order=created_at.asc')
