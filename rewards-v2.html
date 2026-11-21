@@ -70,9 +70,9 @@ async function login(event){event.preventDefault();const b=$('entryButton');b.di
  }catch(e){$('entryError').textContent=e.message||'सत्यापन असफल।'}finally{b.disabled=false;b.textContent='सदस्य सत्यापित करें'}}
 async function load(){try{
  if(!token){$('entryGate').classList.remove('hidden');return}
- user=await api('/auth/v1/user');const admins=await rpc('is_admin').catch(()=>false);const isAdmin=admins===true;
+ user=await api('/auth/v1/user');
  const rows=await api('/rest/v1/members?select=id,member_id,full_name,status,membership_status,payment_status,kyc_status,membership_end_date&user_id=eq.'+encodeURIComponent(user.id)+'&limit=1');member=Array.isArray(rows)?rows[0]:null;
- if(!verified(member)&&!isAdmin){$('entryGate').classList.remove('hidden');$('loginPrompt').classList.remove('hidden');say('सक्रिय सदस्यता, भुगतान और KYC सत्यापन आवश्यक है।','error');return}
+ if(!verified(member)){$('entryGate').classList.remove('hidden');$('loginPrompt').classList.remove('hidden');say('सक्रिय सदस्यता, भुगतान और KYC सत्यापन आवश्यक है।','error');return}
  const year=new Date().getFullYear();const annual=await api('/rest/v1/member_annual_verifications?select=status,valid_until&member_row_id=eq.'+encodeURIComponent(member.id)+'&verification_year=eq.'+year+'&status=eq.verified&limit=1');if(!annual[0]||annual[0].valid_until<new Date().toISOString().slice(0,10))throw new Error('इस वर्ष का वार्षिक सदस्य सत्यापन आवश्यक है।');
  const access=await api('/rest/v1/member_service_access?select=access_status,expires_at&member_row_id=eq.'+encodeURIComponent(member.id)+'&service_code=eq.rewards_zone&access_status=eq.active&limit=1');if(!access[0]||(access[0].expires_at&&new Date(access[0].expires_at)<=new Date()))throw new Error('आपकी Rewards Zone अनुमति सक्रिय नहीं है।');
  const settings=await api('/rest/v1/sbpf_rewards_config?select=coin_per_inr,rewards_enabled&id=eq.1');if(settings[0])config=settings[0];
