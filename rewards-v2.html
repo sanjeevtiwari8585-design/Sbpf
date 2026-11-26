@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#781626">
+<title>SBPF Reward Zone | स्वर्णिम भारत परिवार फाउंडेशन</title>
+<meta name="description" content="SBPF Reward Zone — सत्यापित सदस्यों के लिए Earn & Play और नई Coin सुविधाएँ।">
+<style>
+:root{--wine:#781626;--wine2:#a52c39;--gold:#d7b34b;--green:#145a38;--ink:#28232a;--muted:#6d6268;--line:#eadfd3;--cream:#fff9ed;--bg:#fbfaf8}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 system-ui,-apple-system,"Noto Sans Devanagari",sans-serif}a{color:inherit}
+header{position:sticky;top:0;z-index:20;background:linear-gradient(120deg,#65101f,#922337 60%,#c49b3e);color:#fff;padding:13px max(16px,calc((100% - 1080px)/2));display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+header a{text-decoration:none;font-weight:800}header .spacer{flex:1}header .brand{font-size:12px;color:#ffedc4;letter-spacing:.5px}.header-balance{border:1px solid #f3d98b;border-radius:999px;background:#fff;color:var(--wine);padding:7px 12px;font-weight:850}
+main{max-width:1080px;margin:auto;padding:22px 16px 48px}.hero{border:1px solid #e5c77e;border-radius:22px;padding:25px;background:radial-gradient(circle at 90% 10%,#f4e5bd,transparent 30%),linear-gradient(130deg,#fff7e4,#fff);text-align:center}
+.hero .coin{font-size:40px}.hero h1{margin:5px 0;color:var(--wine);font-size:clamp(27px,5vw,40px);line-height:1.2}.hero p{max-width:720px;margin:10px auto;color:#62595a}
+.notice{margin:14px 0;padding:12px 14px;border:1px solid #ead9a1;border-left:4px solid var(--gold);border-radius:12px;background:var(--cream);font-size:14px}.notice.error{border-color:#e9c6c9;background:#fff1f2;color:#8b1d2b}.notice.ok{border-color:#c9e4d1;background:#eff9f1;color:#155d35}
+.panel,.stat,.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px;box-shadow:0 4px 16px #25151008;min-width:0}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}.stat small{display:block;color:var(--muted);font-weight:700}.stat strong{display:block;color:var(--wine);font-size:clamp(22px,4vw,30px);margin-top:5px}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:26px 0 12px}.section-title h2{margin:0;color:var(--wine);font-size:21px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.category{display:flex;flex-direction:column;gap:9px;min-height:210px;padding:17px;border:1px solid #eadfc9;border-radius:17px;background:linear-gradient(155deg,#fff,#fffdf7);box-shadow:0 7px 20px #412a160c}
+.cat-head{display:flex;align-items:center;gap:10px}.cat-icon{width:48px;height:48px;display:grid;place-items:center;border-radius:14px;background:#fff4d8;font-size:25px}.category h3{margin:0;color:var(--wine);font-size:17px}.category p{margin:0;color:var(--muted);font-size:13px;flex:1}.tag{display:inline-flex;align-self:flex-start;padding:5px 9px;border-radius:99px;background:#f6efe4;color:#72531a;font-size:11px;font-weight:800}
+button,.btn{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:10px;padding:11px 15px;background:var(--wine);color:#fff;text-decoration:none;font:inherit;font-weight:800;cursor:pointer}button.alt,.btn.alt{background:var(--green)}button:disabled{opacity:.55;cursor:wait}
+form{display:grid;gap:10px}label{font-size:13px;font-weight:800}input{width:100%;padding:12px;border:1px solid #d8cfc7;border-radius:10px;background:#fff;font:inherit}
+.hidden{display:none!important}.muted{color:var(--muted);font-size:13px}
+.gate{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:16px;background:#190c10c9;backdrop-filter:blur(4px)}.gate.hidden{display:none!important}.gate-card{width:min(100%,460px);max-height:calc(100dvh - 32px);overflow:auto;padding:23px;border:1px solid #e5c77e;border-radius:20px;background:linear-gradient(145deg,#fffdf7,#fff7e6);box-shadow:0 22px 70px #0005}.gate-card h2{margin:0 0 8px;text-align:center;color:var(--wine)}.gate-card>p{text-align:center}
+.video-card{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:start}.video-card video{width:100%;border-radius:12px;background:#171717;aspect-ratio:16/9}.video-card h3{margin:0;color:var(--wine)}.video-card p{margin:5px 0;color:var(--muted);font-size:13px}
+.history-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #f0e9e2}.history-row:last-child{border:0}
+footer{max-width:1080px;margin:auto;padding:0 16px 28px;text-align:center;color:var(--muted);font-size:12px}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){main{padding:14px 12px 35px}.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.category{min-height:0}.video-card{grid-template-columns:1fr}.section-title h2{font-size:19px}header .brand{display:none}}
+</style>
+</head>
+<body>
+<header><a href="index.html">← SBPF मुख्य वेबसाइट</a><span class="brand">स्वर्णिम भारत परिवार फाउंडेशन</span><span class="spacer"></span><span id="memberIdentity" class="brand"></span><span class="header-balance">Wallet: <span id="headerBalance">0</span> Coins</span></header>
+<main>
+<section class="hero"><div class="coin">🎁</div><h1>SBPF Reward Zone</h1><p>सेवा, सहभागिता और सत्यापित गतिविधियों के लिए SBPF Coins। Reward Zone में प्रवेश केवल पात्र और सत्यापित सदस्यों के लिए है।</p><span class="tag">100 Coins = ₹1 (केवल संदर्भ मूल्य)</span></section>
+<div id="message" class="notice" role="status" aria-live="polite">सदस्य सत्यापन की जाँच हो रही है…</div>
+<section id="dashboard" class="hidden">
+<div class="stats"><div class="stat"><small>उपलब्ध Coins</small><strong id="coinBalance">0</strong></div><div class="stat"><small>अनुमानित INR मूल्य</small><strong id="inrBalance">₹0.00</strong></div><div class="stat"><small>Member ID</small><strong id="memberId">—</strong></div></div>
+<div class="section-title"><h2>आपकी Reward सुविधाएँ</h2><span class="tag">10 Categories</span></div>
+<div id="categories" class="grid"><div class="card">लोड हो रहा है…</div></div>
+<div class="section-title"><h2>🎬 Earn & Play</h2><span class="tag">Long 10 · Short 2 Coins</span></div>
+<div id="earnPlayNotice" class="notice">Earn & Play के वीडियो लोड हो रहे हैं…</div>
+<div id="videos" class="grid"><div class="card">वीडियो लोड हो रहे हैं…</div></div>
+<div class="section-title"><h2>मेरा Wallet</h2></div>
+<section class="panel"><div id="walletState" class="muted">Wallet स्थिति जाँची जा रही है…</div><div id="ledger" style="margin-top:10px"></div></section>
+</section>
+<section id="loginPrompt" class="panel hidden"><h2 style="color:var(--wine)">सदस्य सत्यापन आवश्यक</h2><p>अपनी सदस्यता सत्यापित करने के लिए सुरक्षित प्रवेश करें।</p><a class="btn" href="rewards-login.html">सुरक्षित प्रवेश करें</a></section>
+</main>
+<footer>SBPF Coin एक आंतरिक Reward Point है, बैंक जमा या निवेश उत्पाद नहीं। वास्तविक Coin वितरण लॉन्च स्वीकृति के बाद ही होगा।</footer>
+
+<div id="entryGate" class="gate"><section class="gate-card"><div style="text-align:center;font-size:34px">🔐</div><h2>SBPF सदस्य सत्यापन</h2><p class="muted">Reward Zone खोलने के लिए अपनी सदस्य जानकारी दर्ज करें।</p><form id="entryForm"><div><label for="entryMemberId">SBPF Member ID</label><input id="entryMemberId" maxlength="40" required autocomplete="off" placeholder="SBPF Member ID"></div><div><label for="entryMobile">पंजीकृत मोबाइल नंबर</label><input id="entryMobile" inputmode="numeric" maxlength="13" required placeholder="मोबाइल नंबर"></div><div><label for="entryName">सदस्य का पूरा नाम</label><input id="entryName" maxlength="120" required placeholder="पूरा नाम"></div><div><label for="entryPin">Member Login PIN</label><input id="entryPin" type="password" inputmode="numeric" maxlength="4" minlength="4" pattern="[0-9]{4}" required autocomplete="current-password"></div><div id="pinConfirmWrap" class="hidden"><label for="entryPinConfirm">पहली बार प्रवेश: PIN की पुष्टि करें</label><input id="entryPinConfirm" type="password" inputmode="numeric" maxlength="4" minlength="4" pattern="[0-9]{4}" autocomplete="off"></div><button id="entryButton" type="submit">सदस्य सत्यापित करें</button></form><p id="entryError" class="muted" role="alert"></p></section></div>
+<div id="walletGate" class="gate hidden"><section class="gate-card"><div style="text-align:center;font-size:34px">👛</div><h2>अपना SBPF Wallet बनाएँ</h2><p class="muted">Reward Zone की सुविधाओं के लिए पहले अपना सुरक्षित Wallet बनाएँ।</p><div id="walletCreateStep"><button id="createWalletButton" type="button" style="width:100%">Create Wallet</button></div><form id="walletPinForm" class="hidden"><div><label for="walletPin">4 अंकों का Wallet PIN बनाएँ</label><input id="walletPin" type="password" inputmode="numeric" maxlength="4" minlength="4" pattern="[0-9]{4}" autocomplete="new-password" required></div><div><label for="walletPinConfirm">Confirm Wallet PIN</label><input id="walletPinConfirm" type="password" inputmode="numeric" maxlength="4" minlength="4" pattern="[0-9]{4}" autocomplete="new-password" required></div><button id="walletPinButton" type="submit">PIN सुरक्षित करें</button></form><p id="walletMessage" class="muted" role="status"></p></section></div>
+
+<script>
+(()=>{'use strict';
+const API='https://dxowhzghrdghfzoggorx.supabase.co';
+const KEY='sb_publishable_Papyb2MMv6Sr3V3QMjVSNQ_3GWXCiCo';
+const $=id=>document.getElementById(id);
+let token=localStorage.getItem('sbpf_access_token')||'',user=null,member=null,config={coin_per_inr:100,rewards_enabled:false},activeSessions=new Map(),pinSetupRequired=false;
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function say(t,type=''){const m=$('message');m.textContent=t;m.className='notice'+(type?' '+type:'')}
+async function api(path,options={}){const headers={apikey:KEY,Authorization:token?'Bearer '+token:'Bearer '+KEY,...(options.headers||{})};let r=await fetch(API+path,{...options,headers});let d=null;try{d=await r.json()}catch{}if(!r.ok)throw new Error(d?.message||d?.msg||d?.error_description||d?.error||('HTTP '+r.status));return d}
+async function rpc(name,args={}){return api('/rest/v1/rpc/'+name,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(args)})}
+function verified(m){return !!m&&m.status==='active'&&m.membership_status==='active'&&m.payment_status==='paid'&&m.kyc_status==='verified'&&m.membership_end_date>=new Date().toISOString().slice(0,10)}
+async function login(event){event.preventDefault();const b=$('entryButton');b.disabled=true;b.textContent='जाँच हो रही है…';$('entryError').textContent='';try{
+ const member_id=$('entryMemberId').value.trim().toUpperCase(),mobile=$('entryMobile').value.replace(/\D/g,''),full_name=$('entryName').value.trim(),pin=$('entryPin').value,confirm_pin=$('entryPinConfirm').value;
+ if(pinSetupRequired&&pin!==confirm_pin)throw new Error('दोनों Member Login PIN एक जैसे होने चाहिए।');
+ const r=await fetch(API+'/functions/v1/member-id-pin-login',{method:'POST',headers:{apikey:KEY,'Content-Type':'application/json'},body:JSON.stringify({member_id,mobile,full_name,pin,...(pinSetupRequired?{confirm_pin}:{})})});const d=await r.json().catch(()=>({}));
+ if(!r.ok||!d.access_token){
+   if(d.code==='PIN_CONFIRMATION_REQUIRED'){pinSetupRequired=true;$('pinConfirmWrap').classList.remove('hidden');$('entryPinConfirm').required=true;$('entryPinConfirm').focus();$('entryError').textContent='पहली बार प्रवेश है। वही 4 अंकों का PIN दोबारा दर्ज करके पुष्टि करें।';return}
+   throw new Error(d.error||'सदस्य सत्यापन पूरा नहीं हुआ।');
+ }
+ token=d.access_token;localStorage.setItem('sbpf_access_token',d.access_token);if(d.refresh_token)localStorage.setItem('sbpf_refresh_token',d.refresh_token);$('entryPin').value='';$('entryPinConfirm').value='';pinSetupRequired=false;$('pinConfirmWrap').classList.add('hidden');$('entryPinConfirm').required=false;await load();
+ }catch(e){$('entryError').textContent=e.message||'सत्यापन असफल।'}finally{b.disabled=false;b.textContent='सदस्य सत्यापित करें'}}
+async function load(){try{
+ if(!token){$('entryGate').classList.remove('hidden');return}
+ user=await api('/auth/v1/user');
+ const rows=await api('/rest/v1/members?select=id,member_id,full_name,status,membership_status,payment_status,kyc_status,membership_end_date&user_id=eq.'+encodeURIComponent(user.id)+'&limit=1');member=Array.isArray(rows)?rows[0]:null;
+ if(!verified(member)){$('entryGate').classList.remove('hidden');$('loginPrompt').classList.remove('hidden');say('सक्रिय सदस्यता, भुगतान और KYC सत्यापन आवश्यक है।','error');return}
+ const year=new Date().getFullYear();const annual=await api('/rest/v1/member_annual_verifications?select=status,valid_until&member_row_id=eq.'+encodeURIComponent(member.id)+'&verification_year=eq.'+year+'&status=eq.verified&limit=1');if(!annual[0]||annual[0].valid_until<new Date().toISOString().slice(0,10))throw new Error('इस वर्ष का वार्षिक सदस्य सत्यापन आवश्यक है।');
+ const access=await api('/rest/v1/member_service_access?select=access_status,expires_at&member_row_id=eq.'+encodeURIComponent(member.id)+'&service_code=eq.rewards_zone&access_status=eq.active&limit=1');if(!access[0]||(access[0].expires_at&&new Date(access[0].expires_at)<=new Date()))throw new Error('आपकी Rewards Zone अनुमति सक्रिय नहीं है।');
+ const settings=await api('/rest/v1/sbpf_rewards_config?select=coin_per_inr,rewards_enabled&id=eq.1');if(settings[0])config=settings[0];
+ $('entryGate').classList.add('hidden');$('dashboard').classList.remove('hidden');$('memberIdentity').textContent=(member.full_name||'SBPF सदस्य')+' · '+member.member_id;$('memberId').textContent=member.member_id||'—';
+ await loadCategories();await loadWallet();
+ }catch(e){say('Reward Zone खोलने में समस्या: '+e.message,'error');if(/JWT|token|401/i.test(e.message)){localStorage.removeItem('sbpf_access_token');localStorage.removeItem('sbpf_refresh_token');token='';$('entryGate').classList.remove('hidden')}}}
+async function loadWallet(){const w=await rpc('sbpf_wallet_balance');const created=!!w.wallet_created,pinSet=!!w.pin_set;const needs=!(created&&pinSet);$('walletGate').classList.toggle('hidden',!needs);$('walletCreateStep').classList.toggle('hidden',created);$('walletPinForm').classList.toggle('hidden',!created||pinSet);
+ $('walletState').textContent=needs?'Wallet setup पूरा करें।':'Wallet सक्रिय है।';const balance=Number(w.balance||0),rate=Number(config.coin_per_inr||100);$('coinBalance').textContent=balance.toLocaleString('en-IN');$('inrBalance').textContent='₹'+(balance/rate).toFixed(2);$('headerBalance').textContent=balance.toLocaleString('en-IN');
+ if(!needs)await loadLedger();else $('walletMessage').textContent=created?'Wallet बन गया है। अब PIN और Confirm PIN दर्ज करें।':'पहले Create Wallet पर क्लिक करें।';
+}
+async function loadLedger(){try{const rows=await api('/rest/v1/sbpf_reward_wallet_ledger?select=points_delta,entry_type,description,created_at&member_profile_id=eq.'+encodeURIComponent(user.id)+'&order=created_at.desc&limit=15');$('ledger').innerHTML=rows.length?rows.map(x=>'<div class="history-row"><span><b>'+esc(x.description||x.entry_type)+'</b><br><small class="muted">'+new Date(x.created_at).toLocaleString('hi-IN')+'</small></span><b style="color:'+(Number(x.points_delta)>=0?'#176b42':'#a01828')+'">'+(x.points_delta>0?'+':'')+Number(x.points_delta).toLocaleString('en-IN')+'</b></div>').join(''):'<p class="muted">अभी कोई Coin लेन-देन नहीं है।</p>'}catch{$('ledger').textContent='Coin History अभी उपलब्ध नहीं है।'}}
+async function loadCategories(){const rows=await api('/rest/v1/sbpf_reward_categories?select=slug,title,description,icon,reward_label,is_enabled,display_order&order=display_order.asc');const icons={'watch-earn':'🎬','spin-wheel':'🎡','google-review':'⭐','social-follow':'📣','post-share':'🔗','daily-task':'📅','daily-checkin':'✅','referral-invite':'👥','campaign-participation':'🎯','volunteer-service':'🤝'};$('categories').innerHTML=rows.map(c=>'<article class="category"><div class="cat-head"><span class="cat-icon">'+(icons[c.slug]||'🎁')+'</span><h3>'+esc(c.title)+'</h3></div><p>'+esc(c.description)+'</p><span class="tag">'+esc(c.reward_label)+'</span>'+(c.slug==='watch-earn'?'<button type="button" class="alt" onclick="document.getElementById(\'videos\').scrollIntoView({behavior:\'smooth\'})">Earn & Play खोलें</button>':'<button type="button" disabled>'+(c.is_enabled?'जल्द उपलब्ध होगा':'परीक्षण के बाद उपलब्ध होगा')+'</button>')+'</article>').join('');await loadVideos()}
+async function loadVideos(){try{const rows=await api('/rest/v1/videos?select=id,title,video_url,thumbnail_url,description,video_type,duration_seconds,embed_url&published=eq.true&order=display_order.asc,created_at.desc');if(!rows.length){$('videos').innerHTML='<div class="card"><h3>अभी वीडियो उपलब्ध नहीं हैं</h3><p class="muted">Admin द्वारा प्रकाशित वीडियो यहाँ दिखाई देंगे।</p></div>';return}
+ $('videos').innerHTML=rows.map(v=>{const reward=v.video_type==='short'?2:10;const src=v.video_url||'';const media=src?'<video controls playsinline preload="metadata" data-video-id="'+v.id+'" src="'+esc(src)+'" '+(v.thumbnail_url?'poster="'+esc(v.thumbnail_url)+'"':'')+'></video>':(v.embed_url?'<a class="btn alt" href="'+esc(v.embed_url)+'" target="_blank" rel="noopener">वीडियो खोलें ↗</a>':'<div class="notice">वीडियो लिंक उपलब्ध नहीं है।</div>');return '<article class="card"><div class="video-card">'+(src?media:'<div>'+media+'</div>')+'<div><h3>'+esc(v.title)+'</h3><p>'+esc(v.description||'')+'</p><span class="tag">'+(v.video_type==='short'?'Short':'Long')+' Video · '+reward+' Coins</span><p class="muted">'+(v.duration_seconds?Math.ceil(v.duration_seconds/60)+' मिनट':'')+'</p></div></div></article>'}).join('');
+ document.querySelectorAll('video[data-video-id]').forEach(video=>wireVideo(video));
+ }catch(e){$('videos').innerHTML='<div class="card">वीडियो अभी लोड नहीं हो सके: '+esc(e.message)+'</div>'}}
+function wireVideo(video){let session=null,heartbeat=null;video.addEventListener('play',async()=>{if(!config.rewards_enabled){video.pause();$('earnPlayNotice').textContent='Earn & Play अभी परीक्षण मोड में है। Reward वितरण लॉन्च स्वीकृति के बाद शुरू होगा।';return}if(session)return;try{const r=await rpc('sbpf_watch_start',{p_video_id:Number(video.dataset.videoId)});if(r.already_rewarded){video.pause();$('earnPlayNotice').textContent='इस वीडियो का Reward पहले ही लिया जा चुका है।';return}session=r.session_id;heartbeat=setInterval(()=>{if(session)rpc('sbpf_watch_heartbeat',{p_session_id:session,p_playing:!video.paused&&!video.ended}).catch(()=>{})},15000)}catch(e){video.pause();$('earnPlayNotice').textContent='वीडियो Reward शुरू नहीं हुआ: '+e.message}});
+ video.addEventListener('pause',()=>{if(session)rpc('sbpf_watch_heartbeat',{p_session_id:session,p_playing:false}).catch(()=>{})});
+ video.addEventListener('ended',async()=>{if(!session)return;clearInterval(heartbeat);try{await rpc('sbpf_watch_heartbeat',{p_session_id:session,p_playing:false});const r=await rpc('sbpf_watch_complete',{p_session_id:session});$('earnPlayNotice').textContent=r.reward_coins?'वीडियो पूरा हुआ। '+r.reward_coins+' Coins Wallet में जोड़े गए।':'वीडियो पूरा हुआ; इस वीडियो का Reward पहले दिया जा चुका है।';session=null;await loadWallet()}catch(e){$('earnPlayNotice').textContent='पूरा वीडियो सत्यापित नहीं हुआ: '+e.message}});
+}
+$('entryForm').addEventListener('submit',login);
+$('createWalletButton').addEventListener('click',async()=>{const b=$('createWalletButton');b.disabled=true;try{const r=await rpc('sbpf_wallet_create');if(!r.success||!r.wallet_created)throw new Error('Wallet बनने की पुष्टि नहीं हुई।');$('walletCreateStep').classList.add('hidden');$('walletPinForm').classList.remove('hidden');$('walletMessage').textContent='Wallet बन गया है। अब PIN और Confirm PIN दर्ज करें।'}catch(e){$('walletMessage').textContent='Wallet नहीं बन पाया: '+e.message}finally{b.disabled=false}});
+$('walletPinForm').addEventListener('submit',async e=>{e.preventDefault();const pin=$('walletPin').value,confirm=$('walletPinConfirm').value;if(!/^[0-9]{4}$/.test(pin)||pin!==confirm){$('walletMessage').textContent='4 अंकों का समान PIN दोनों बॉक्स में दर्ज करें।';return}const b=$('walletPinButton');b.disabled=true;try{const r=await rpc('sbpf_wallet_setup_pin',{p_pin:pin});if(!r.success||!r.pin_set)throw new Error('PIN सेव होने की पुष्टि नहीं हुई।');$('walletPin').value='';$('walletPinConfirm').value='';$('walletGate').classList.add('hidden');say('Wallet PIN सुरक्षित रूप से सेट हो गया।','ok');await loadWallet()}catch(e){$('walletMessage').textContent='PIN सेट नहीं हुआ: '+e.message}finally{b.disabled=false}});
+load();
+})();
+</script>
+</body></html>
