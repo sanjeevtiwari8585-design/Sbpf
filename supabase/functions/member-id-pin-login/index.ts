@@ -40,10 +40,10 @@ Deno.serve(async (req: Request) => {
   const mobile = String(body.mobile ?? "").trim();
   const fullName = String(body.full_name ?? "").trim();
   const pin = String(body.pin ?? "");
-  const confirmPin = String(body.confirm_pin ?? "");
+  const confirmPin = body.confirm_pin == null ? "" : String(body.confirm_pin);
   if (!/^[A-Z0-9-]{6,40}$/.test(memberId) || !/^\d{10,13}$/.test(mobile.replace(/\D/g, ""))
       || fullName.length < 2 || fullName.length > 120 || !/^\d{4}$/.test(pin)
-      || !/^\d{4}$/.test(confirmPin)) {
+      || (confirmPin !== "" && !/^\d{4}$/.test(confirmPin))) {
     return reply({ error: "कृपया Member ID, मोबाइल, नाम और 4 अंकों का PIN सही दर्ज करें।" }, 400, origin);
   }
 
@@ -60,7 +60,7 @@ Deno.serve(async (req: Request) => {
     const admin = createClient(url, serviceKey, { auth: { persistSession: false, autoRefreshToken: false } });
     const { data: authResult, error: pinError } = await admin.rpc("sbpf_member_login_pin_check", {
       p_member_id: memberId, p_mobile: mobile, p_full_name: fullName,
-      p_pin: pin, p_confirm_pin: confirmPin,
+      p_pin: pin, p_confirm_pin: confirmPin || null,
     });
     if (pinError || !authResult) return reply({ error: "LOGIN_SERVICE_UNAVAILABLE" }, 503, origin);
     if (authResult.success !== true) {
@@ -73,6 +73,9 @@ Deno.serve(async (req: Request) => {
         INVALID_LOGIN_PIN: "PIN सही नहीं है।",
         LOGIN_PIN_LOCKED: "कई गलत प्रयास हुए हैं। 15 मिनट बाद पुनः प्रयास करें।",
       };
+      if (authResult.error === "PIN_CONFIRMATION_REQUIRED") {
+        return reply({ code: "PIN_CONFIRMATION_REQUIRED", error: "पहली बार प्रवेश के लिए PIN की पुष्टि आवश्यक है।" }, 409, origin);
+      }
       return reply({ error: messages[authResult.error] ?? "प्रवेश सत्यापित नहीं हुआ।" }, 403, origin);
     }
 
