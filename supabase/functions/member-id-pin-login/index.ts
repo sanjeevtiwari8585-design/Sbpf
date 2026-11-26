@@ -10,6 +10,7 @@ const allowedOrigins = new Set([
   "https://swarnimbharat.club",
   "https://www.swarnimbharat.club",
   "https://sanjeevtiwari8585-design.github.io",
+  "https://deploy-preview-30--swarnimbharatparivar.netlify.app",
 ]);
 const cors = (origin: string | null) => ({
   "Access-Control-Allow-Origin": origin && allowedOrigins.has(origin) ? origin : "https://swarnimbharatclub.in",
