@@ -35,7 +35,7 @@ begin
     and lower(coalesce(v_annual_status,''))='verified'
     and (v_annual_until is null or v_annual_until>=v_today);
 end;
-$;
+$$;
 revoke all on function private.sbpf_user_fully_verified(uuid) from public, anon, authenticated;
 
 create or replace function public.sbpf_social_list_active_members()

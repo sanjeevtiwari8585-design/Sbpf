@@ -42,7 +42,7 @@ begin
   if not found then raise exception 'TASK_NOT_FOUND'; end if;
 
   if p_decision='approved' then
-    if v_task.status not in ('published','active') then
+    if v_task.status <> 'published' then
       raise exception 'TASK_NOT_ACTIVE';
     end if;
     if v_task.points_reward is null or v_task.points_reward<=0 then
